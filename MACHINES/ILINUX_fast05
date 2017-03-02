@@ -1,0 +1,64 @@
+#ILINUX_fast05.static fast05.ftmc.uam.es 
+#
+#
+#SERIE       : Makefile: METHOD = DOUBLE    ; PARALLEL =      (diag. complex)
+#SERIE-GAMMA : Makefile: METHOD = GAMMA     ; PARALLEL =      (diag. real)
+##PARALELO    : Makefile: METHOD = SCALAPACK ; PARALLEL = MPI  (only one kpts GAMMA)
+#export PATH="/opt/intel/impi/4.1.0.024/bin64/":$PATH
+#export LD_LIBRARY_PATH="/opt/intel/impi/4.1.0.024/lib64/":$LD_LIBRARY_PATH
+
+#server
+#METHOD = DOUBLE GAMMA  ; PARALLEL = OPNMP (only 1 processor)
+##METHOD = SCALAPACK ; PARALLEL = MPI  (only one kpts GAMMA, n processors)) 
+
+ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
+	F77 = ifort
+	F90 = ifort
+	PATH_MKL = /opt/intel/composerxe-2011.2.137/mkl/lib/intel64/
+	PATH_INCL = -I/opt/intel/composerxe-2011.2.137/mkl/include/
+	PATH_FFTW_LIB = /opt/intel/composerxe-2011.2.137/mkl/interfaces/fftw3xf/
+	PATH_FFTW_INCL = -I/opt/intel/composerxe-2011.2.137/mkl/include/fftw/
+
+	ifneq (,$(findstring OPT, ${MODE}))
+		ifneq (,$(findstring YES, ${CCOMPILE}))
+			FFLAGS = -O3 -r8  -fno-alias -unroll -pg 
+		else
+			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -no-ipo -pg 
+		endif
+	endif
+	ifneq (,$(findstring DEBUG, ${MODE}))
+		FFLAGS = -g -r8 -check all -fpp  -check output_conversion -check format -no-ipo
+		DFLAGS = -g -r8 -check all -mp1 
+		LFLAGS = 
+	endif
+	ifneq (,$(findstring YES,${USEBLAS}))
+		LFLAGS = -L${PATH_MKL} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm \
+			${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a 
+		BLAS = 
+	endif
+	ifneq (,$(findstring OPENMP, ${PARALLEL}))
+       		F77 = mpif90
+        	F90 = mpif90
+       		PATH_MPI_LIB = /opt/openmpi/lib/
+        	PATH_MPI_INC = /opt/openmpi/include/
+		PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
+		${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_intel.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
+		LFLAGS = 
+ 		FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
+	endif
+	ifneq (,$(findstring MPI, ${PARALLEL}))
+		ifneq (,$(findstring SCALAPACK, ${METHOD}))
+        		F77 = mpiifort
+	        	F90 = mpiifort
+        		PATH_MPI_LIB = /opt/intel/impi/4.1.0.024/lib64/
+	        	PATH_MPI_INC = /opt/intel/impi/4.1.0.024/include64/
+			PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
+			${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_intel.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
+			LFLAGS = 
+ 			FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
+		endif
+	endif
+	CC = icc
+	CFLAGS = ${FFLAGS}
+endif
+

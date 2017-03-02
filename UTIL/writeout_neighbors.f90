@@ -1,0 +1,154 @@
+! copyright info:
+!
+!                             @Copyright 2001
+!                            Fireball Committee
+! Brigham Young University - James P. Lewis, Chair
+! Arizona State University - Otto F. Sankey
+! University of Regensburg - Juergen Fritsch
+! Universidad de Madrid - Jose Ortega
+
+! Other contributors, past and present:
+! Auburn University - Jian Jun Dong
+! Arizona State University - Gary B. Adams
+! Arizona State University - Kevin Schmidt
+! Arizona State University - John Tomfohr
+! Lawrence Livermore National Laboratory - Kurt Glaesemann
+! Motorola, Physical Sciences Research Labs - Alex Demkov
+! Motorola, Physical Sciences Research Labs - Jun Wang
+! Ohio University - Dave Drabold
+
+!
+! RESTRICTED RIGHTS LEGEND
+! Use, duplication, or disclosure of this software and its documentation
+! by the Government is subject to restrictions as set forth in subdivision
+! { (b) (3) (ii) } of the Rights in Technical Data and Computer Software
+! clause at 52.227-7013.
+ 
+! writeout_neighbors.f90
+! Program Description
+! ===========================================================================
+!       Write out the charges for restart capabilities.
+!
+! ===========================================================================
+! Code written by:
+! James P. Lewis
+! Department of Physics and Astronomy
+! Brigham Young University
+! N233 ESC P.O. Box 24658
+! Provo, UT 84602-4658
+! FAX (801) 422-2265
+! Office Telephone (801) 422-7444
+! ===========================================================================
+!
+! Program Declaration
+! ===========================================================================
+        subroutine writeout_neighbors (nprocs, ivdw, iwrtneigh)
+        use configuration
+        use neighbor_map
+        use interactions
+        implicit none
+ 
+! Argument Declaration and Description
+! ===========================================================================
+! Input
+        integer, intent (in) :: ivdw
+        integer, intent (in) :: iwrtneigh
+        integer, intent (in) :: nprocs
+
+ 
+! Local Parameters and Data Declaration
+! ===========================================================================
+ 
+! Local Variable Declaration and Description
+! ===========================================================================
+        integer iatom
+        integer imu
+        integer ineigh
+        integer jatom
+        integer mbeta
+        integer num_neigh
+        integer num_neigh_vdw
+
+        real distance
+
+        real, dimension (3) :: dvec
+ 
+! Allocate Arrays
+! ===========================================================================
+ 
+! Procedure
+! ===========================================================================
+        if (iwrtneigh .eq. 1) then
+         write (*,*) '  '
+         write (*,*) ' Neighbors of each atom: '
+         do iatom = 1, natoms
+          num_neigh = neighn(iatom)
+          write (*,*) '  ' 
+          write (*,*) ' num_neigh = ', num_neigh 
+          write (*,*) ' iatom ineigh mbeta jatom   distance            vector '
+          write (*,100) 
+          do ineigh = 1, num_neigh 
+           mbeta = neigh_b(ineigh,iatom) 
+           jatom = neigh_j(ineigh,iatom) 
+           distance = sqrt((xl(1,mbeta) + ratom(1,jatom) - ratom(1,iatom))**2& 
+     &                   + (xl(2,mbeta) + ratom(2,jatom) - ratom(2,iatom))**2& 
+     &                   + (xl(3,mbeta) + ratom(3,jatom) - ratom(3,iatom))**2) 
+           dvec(:) = xl(:,mbeta) + ratom(:,jatom) - ratom(:,iatom) 
+           write (*,101) iatom, ineigh, mbeta, jatom, distance, dvec 
+          end do 
+         end do 
+        end if 
+
+! ****************************************************************************
+!
+! W R I T E    O U T    N E I G H B O R S    F I L E
+! ****************************************************************************
+! Open the file NEIGHBORS which contain the neighbor map information for 
+! restart purposes.
+        if (wrtout) then
+          open (unit = 20, file = 'NEIGHBORS', status = 'unknown')
+          write (20,200) natoms, neigh_max, basisfile
+          do iatom = 1, natoms
+           num_neigh = neighn(iatom)
+           write (20,*) num_neigh
+           do ineigh = 1, num_neigh 
+            mbeta = neigh_b(ineigh,iatom) 
+            jatom = neigh_j(ineigh,iatom) 
+            write (20,*) iatom, ineigh, mbeta, jatom
+           end do 
+          end do 
+          close (unit = 20)
+        end if
+ 
+! ****************************************************************************
+!
+! W R I T E    O U T    N E I G H B O R S    F I L E    F O R    V D W
+! ****************************************************************************
+! Open the file NEIGHBORS_VDW which contain the van der Waals neighbor map 
+! information for restart purposes.
+        if (ivdw .eq. 1 .and. wrtout) then
+         open (unit = 21, file = 'NEIGHBORS_VDW', status = 'unknown')
+         write (21,200) natoms, neigh_max_vdw, basisfile
+         do iatom = 1, natoms
+          num_neigh_vdw = neighn_vdw(iatom)
+          write (21,*) num_neigh_vdw
+          do ineigh = 1, num_neigh_vdw 
+           mbeta = neigh_b_vdw(ineigh,iatom) 
+           jatom = neigh_j_vdw(ineigh,iatom) 
+           write (21,*) iatom, ineigh, mbeta, jatom
+          end do 
+         end do 
+         close (unit = 21)
+        end if
+ 
+! Deallocate Arrays
+! ===========================================================================
+ 
+! Format Statements
+! ===========================================================================
+100     format (70('='))
+101     format (2x, i5, 4x, i2, 3x, i3, 3x, i4, 2x, f9.4, 3x, 3f9.4)
+200     format (2x, i5, 2x, i4, 2x, a40)
+ 
+        return
+        end

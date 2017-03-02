@@ -1,0 +1,41 @@
+#RACHEL RACHEL RACHEL RACHEL RACHEL RACHEL RACHEL RACHEL RACHEL RACHEL RACHEL   
+ifneq (,$(findstring RACHEL, ${MACHINE}))
+	F77 = f90 -automatic -error_limit 0
+	F90 = f90 -automatic -error_limit 0
+	ifneq (,$(findstring OPT, ${MODE}))
+		FFLAGS = -arch ev67 -O4 -assume noaccuracy_sensitive \
+		-math_library fast -align all -tune ev67 -cpp
+	endif
+	ifneq (,$(findstring DEBUG, ${MODE}))
+		FFLAGS = -g -check bounds -check nopower -check overflow -align all -cpp
+	endif
+	DFLAGS = ${FFLAGS}
+	ifneq (,$(findstring YES,${USEBLAS}))
+		LFLAGS = -lcxml
+		BLAS =
+	endif
+	ifneq (,$(findstring NO, ${USEBLAS}))
+		LFLAGS = 
+		BLAS = blas.o minilapack.o
+	endif
+	ifneq (,$(findstring MPI, ${PARALLEL}))
+		PARLFLAGS = -LLIBRARIES -lscalapack \
+			-lblacsF77init -lblacs -lblacsF77init -lmpi
+	endif
+	ifneq (,$(findstring MPICH, ${PARALLEL}))
+		PARLFLAGS = -L/usr/local/lib -lscalapack -lpblas \
+			-lscalapack_tools -lblacs -lblacsF77init -lblacsF77init \
+			-lblacs -lblacs_redist
+		F77 = mpif90
+		F90 = mpif90
+	endif
+	ifneq (,$(findstring ORDERN, ${METHOD}))
+		PARLFLAGS = -lmpi
+	endif
+	ifneq (,$(findstring YES, ${TCLMD}))
+		VISFLAGS = 
+		VISUALIZATION = noTclMD.o nograce.o noxmgr.o
+	endif
+	CC = cc
+	CFLAGS = ${FFLAGS} -DCOMPAQ
+endif

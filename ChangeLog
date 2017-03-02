@@ -1,0 +1,70 @@
+		FIREBALL CZ
+
+==============================================================
+version: 1.0.1 
+date:    22/05/2008
+
+- included corrections of smoother of Enrique and Jose
+- corretion of interpolate_1D.f90 to fix spline interpolation
+files:
+INTERPOLATERS/buildspline_1d.f90,
+ASSEMBLERS/assemble_ca_2c.f90
+ASSEMBLERS/assemble_ca_3c.f90
+DASSEMBLERS/Dassemble_ca_2c.f90
+DASSEMBLERS/Dassemble_ca_3c.f90
+
+============================================================== 
+version: 1.0.2
+date:
+
+- fixing calculation with a charged system via the qstate variable
+files:
+fireball.f90
+FORM_RHO/fermie.f90
+FORM_RHO/denmat.f90
+
+
+============================================================== 
+version: 1.0.3
+date: 28/5/2008
+
+- add dipole calculation (within grid method)
+- add Finite difference solver for Poisson eqn. with the grid
+- add option to write out the density matrix in Lowdin basis set (iwrtcdcoefs = 3) 
+added files:
+ASSEMBLERS/laplace_fdm.f90
+
+changed files:
+ASSEMBLERS/assembleG_den0.f90
+ASSEMBLERS/assembleG_mat.f90
+UTIL/den2mesh.f90
+UTIL/ew2mesh.f90
+INITIALIZERS/initgrid.f90
+MODULES/grid.f90
+UTIL/writeout_cd.f90
+
+===============================================================
+version: 1.0.4
+
+- added the bias voltage module
+- linear shape of the potential shape
+- extra file needed bias.optional
+
+new files:
+MODULES/bias.f90
+READFILES/readbias.f90
+ASSEMBLERS/assemble_bias.f90
+ALLOCATIONS/allocate_bias.f90
+ALLOCATIONS/reallocate_bias.f90
+
+changed files:
+fireball.f90
+ASSEMBLERS/buildh.f90
+ASSEMBLERS/assemble_F.f90
+ALLOCATIONS/allocate_f.f90
+MODULES/forces.f90
+
+format of the input file bias.optional
+-2.0              ! Bias volatge
+5.6               ! upper z-axis limit, above the voltage equals Vbias
+-1.5              ! lower z-axis limit, bellow the voltage goes to zero 

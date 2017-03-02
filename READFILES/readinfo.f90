@@ -1,0 +1,326 @@
+! copyright info:
+!
+!                             @Copyright 2005
+!                     Fireball Enterprise Center, BYU
+! Brigham Young University - James P. Lewis, Chair
+! Arizona State University - Otto F. Sankey
+! Universidad de Madrid - Jose Ortega
+! Institute of Physics, Czech Republic - Pavel Jelinek
+
+! Other contributors, past and present:
+! Auburn University - Jian Jun Dong
+! Arizona State University - Gary B. Adams
+! Arizona State University - Kevin Schmidt
+! Arizona State University - John Tomfohr
+! Lawrence Livermore National Laboratory - Kurt Glaesemann
+! Motorola, Physical Sciences Research Labs - Alex Demkov
+! Motorola, Physical Sciences Research Labs - Jun Wang
+! Ohio University - Dave Drabold
+! University of Regensburg - Juergen Fritsch
+
+!
+! RESTRICTED RIGHTS LEGEND
+! Use, duplication, or disclosure of this software and its documentation
+! by the Government is subject to restrictions as set forth in subdivision
+! { (b) (3) (ii) } of the Rights in Technical Data and Computer Software
+! clause at 52.227-7013.
+
+! readinfo.f90
+! Program Description
+! ===========================================================================
+!       This routine reads the info.dat file.
+!
+! ===========================================================================
+! Code originally written by Juergen Fritsch and Otto F. Sankey
+ 
+! Code rewritten by:
+! James P. Lewis
+! Department of Physics and Astronomy
+! Brigham Young University
+! N233 ESC P.O. Box 24658
+! Provo, UT 84602-4658
+! FAX (801) 422-2265
+! Office Telephone (801) 422-7444
+! ===========================================================================
+!
+! Program Declaration
+! ===========================================================================
+        subroutine readinfo ()
+        use charges
+        use dimensions
+        use interactions
+        use configuration 
+        use integrals
+
+        implicit none
+ 
+! Argument Declaration and Description
+! ===========================================================================
+! Output
+
+! Local Parameters and Data Declaration
+! ===========================================================================
+ 
+! Local Variable Declaration and Description
+! ===========================================================================
+        integer ispec
+        integer jspec
+        integer iatom
+        integer iline
+        integer issh
+        integer imu
+        integer ins
+        integer temp_nsup
+        integer nzx_temp
+ 
+        integer, dimension (50) :: temp_nsu
+ 
+        real, dimension (:,:), allocatable :: cutoff  ! cutoff radius in bohr
+        real :: nucz
+ 
+        character (len=25) :: signature
+        character (len=2)  :: symbolA_temp
+ 
+! jel-grid
+        character (len=1)  :: charx
+        integer nchar
+!        character (len=25), dimension (:,:), allocatable :: wavefxn
+!        character (len=25), dimension (:,:), allocatable :: napot
+! end jel-grid
+ 
+        logical skip_it
+        logical new_one
+! zdenka chromcova - test that info.dat is ok
+		integer foundspecies
+ 		
+ 		foundspecies=0
+! Procedure
+! ===========================================================================
+! Initialize rcutoff array - we loop over all of it elsewhere
+		
+        write (*,*) '  '
+        write (*,100)
+        write (*,*) ' Now we are reading from the info.dat file. '
+        write (*,*) '  '
+
+ 
+! Open the data file.
+        open (unit = 12, file = trim(fdataLocation)//'/info.dat', status = 'old')
+ 
+        write (*,*) ' You are using the database created by: '
+        read (12,101) signature
+        write (*,101) signature
+        read (12,*) nspecies
+        write (*,*) '  '
+        write (*,*) ' Number of species in database = ', nspecies
+
+! Allocate nzx 
+        allocate (nzx (nspecies))
+        allocate (symbolA (nspecies)) 
+        allocate (etotatom (nspecies)) 
+        allocate (smass (nspecies)) 
+        allocate (rc_PP (nspecies)) 
+        allocate (rcutoff (nspecies, nsh_max)) 
+        rcutoff = 0.0d0
+
+! It's handy to not read all the files if you only want some of them
+!        open (unit = 41, file = 'script.input', status = 'old')
+!        read (41,*) basisfile
+!        close (unit = 41)
+        open  (unit = 69, file = basisfile, status = 'old')
+        read (69, *) natoms
+
+! Loop over the number of atoms
+        temp_nsup = 0
+        do iatom = 1, natoms
+         read (69,*) nucz
+         new_one = .true.
+         do imu = 1, temp_nsup
+          if (nucz .eq. temp_nsu(imu)) new_one = .false.
+         end do
+         if (new_one) then
+          temp_nsup = temp_nsup + 1
+          temp_nsu(temp_nsup) = nucz
+         end if
+        end do
+        close (unit = 69)
+        write (*,*) ' We will only read these atomic indexes: '
+        write (*,*) temp_nsu(1:temp_nsup)
+        write (*,*)
+
+        rewind (unit = 12)
+        read (12,*)
+        read (12,*)
+ 
+! Make sure that nspec is not greater than nspec_max
+        if (temp_nsup .gt. nspec_max) then
+         write (*,*) ' nspecies = ', temp_nsup,' nspec_max = ', nspec_max
+         write (*,*) ' Sorry -- redimension nspec_max in MODULES/dimensions.f90'
+         stop
+        end if
+
+! allocate interactions
+        allocate (cl_PP (0:nsh_max - 1, temp_nsup))
+        allocate (nssh (temp_nsup))
+        allocate (lssh (nsh_max, temp_nsup))
+        allocate (nsshPP (temp_nsup))
+        allocate (lsshPP (nsh_max, temp_nsup))
+        allocate (Qneutral (nsh_max, temp_nsup))
+
+! allocate local arrays
+        allocate (cutoff (nsh_max, temp_nsup))
+        allocate (wavefxn (nsh_max, temp_nsup))
+        allocate (napot (0:nsh_max, temp_nsup))
+
+! Now read in the data
+        ispec = 1
+        nsup = 0
+        do jspec = 1, nspecies
+         read (12,*)
+         read (12,*)
+         read (12,102) symbolA_temp
+         read (12,*) nzx_temp
+         write(*,102) symbolA_temp
+         write (*,*) nzx_temp
+         skip_it = .true.
+         do ins = 1, temp_nsup
+          if (temp_nsu(ins) .eq. nzx_temp) skip_it = .false.
+         end do
+
+! Just skip this atom
+         if (skip_it) then
+ 
+! nsu and nsup list the atoms the are skipped, by position in
+! the info.dat file.  This is the format that the rest of fireball
+! uses, since it is simpler to use in read1c, but we read in the atoms
+! we want, since they are nicer to input.
+! This means that the code in this subroutine is not nice to look at.
+          nsup = nsup + 1
+          nsu(nsup) = jspec
+          do iline = 1, 12
+           read (12,*)
+          end do
+         else
+          foundspecies=foundspecies+1
+          symbolA(ispec) = symbolA_temp
+          nzx(ispec) = nzx_temp
+
+          read (12,*) smass(ispec)
+          read (12,*) nssh(ispec)
+
+! Check and make sure that the number of shells is not greater than
+! the maximum - nsh_max
+          if (nssh(ispec) .gt. nsh_max) then
+           write (*,*) ' nssh(ispec) = ', nssh(ispec),' nsh_max = ', nsh_max
+           write (*,*) ' Sorry -- redimension nsh_max in MODULES/dimensions.f90'
+           stop
+          end if
+          if (nssh(ispec) .gt. 8) then
+           write (*,*) ' nssh(ispec) = ', nssh(ispec)
+           write (*,*) ' Sorry -- Currently the basis set cannot be larger '
+           write (*,*) ' than s, s*, p, p*, d, d*, f, and f* '
+           stop
+          end if
+ 
+          read (12,*) (lssh(issh,ispec), issh = 1, nssh(ispec))
+          read (12,*) nsshPP(ispec)
+          read (12,*) (lsshPP(issh,ispec), issh = 1, nsshPP(ispec))
+          read (12,*) rc_PP(ispec)
+          read (12,*) (Qneutral(issh,ispec), issh = 1, nssh(ispec))
+
+          read (12,*) (cutoff(issh,ispec), issh = 1, nssh(ispec))
+          do issh = 1, nssh(ispec)
+           rcutoff(ispec, issh) = cutoff(issh,ispec)*0.529177d0
+          end do
+ 
+          read (12,103) (wavefxn(issh,ispec), issh = 1, nssh(ispec))
+          read (12,103) (napot(issh,ispec), issh = 0, nssh(ispec))
+! jel-grid
+! adjust the potential file name
+          do issh = 0, nssh(ispec)
+           nchar = len_trim(napot(issh,ispec))
+           do imu = 1,nchar
+            charx = napot(issh,ispec)(imu:imu)
+            if ( lle(charx,'/') .and. lge(charx,'/') ) then 
+             ins = imu
+            endif
+           enddo ! do imu
+	   napot(issh,ispec) = trim('/basis/'//napot(issh,ispec)(ins+1:nchar))
+          enddo ! do issh
+! adjust the wavefunction file name
+          do issh = 1, nssh(ispec)
+           nchar = len_trim(wavefxn(issh,ispec))
+           do imu = 1,nchar
+            charx = wavefxn(issh,ispec)(imu:imu)
+            if ( lle(charx,'/') .and. lge(charx,'/') ) then 
+             ins = imu
+            endif
+           enddo ! do imu
+	   wavefxn(issh,ispec) = trim('/basis/'//wavefxn(issh,ispec)(ins+1:nchar))
+          enddo ! do issh 
+! end jel-grid
+          read (12,*) etotatom(ispec)
+          read (12,*)
+
+! Write out.
+          write (*,100)
+          write (*,301) ispec
+          write (*,302) symbolA(ispec)
+          write (*,303) nzx(ispec)
+          write (*,304) smass(ispec)
+          write (*,305) nssh(ispec)
+          write (*,306) (lssh(issh,ispec), issh = 1, nssh(ispec))
+          write (*,307) nsshPP(ispec)
+          write (*,308) (lsshPP(issh,ispec), issh = 1, nsshPP(ispec))
+          write (*,314) rc_PP(ispec)
+          write (*,309) (Qneutral(issh,ispec), issh = 1, nssh(ispec))
+          write (*,310) (cutoff(issh,ispec), issh = 1, nssh(ispec))
+          write (*,311) (wavefxn(issh,ispec), issh = 1, nssh(ispec))
+          write (*,312) (napot(issh,ispec), issh = 0, nssh(ispec))
+          write (*,313) etotatom(ispec)
+          write (*,100)
+ 
+! Increment ispec, since we read in data
+          ispec = ispec + 1
+         end if
+        end do
+        
+        nspecies = temp_nsup
+
+        if(foundspecies /= nspecies) then
+        	write(*,*)'In Fdata/info.dat is defined only ',foundspecies,' species from ',nspecies
+        	write(*,*)'Exiting. Please check the info.dat'
+			stop
+		end if
+
+! Deallocate Arrays
+! ===========================================================================
+! jel-grid
+        deallocate (cutoff)
+! end jel-grid
+ 
+! Format Statements
+! ===========================================================================
+100     format (2x, 70('='))
+101     format (2x, a25)
+102     format (2x, a2)
+103     format (9(2x,a25))
+301     format (2x, i2, ' - Information for this species ')
+302     format (2x, a2, ' - Element ')
+303     format (2x, i3, ' - Nuclear Z ')
+304     format (2x, f7.3, ' - Atomic Mass ')
+305     format (2x, i2, ' - Number of shells ')
+306     format (2x, 8(2x,i1), ' - L; quantum number for each shell ')
+307     format (2x, i2, ' - Number of shells (Pseudopotential) ')
+308     format (2x, 8(2x,i1), ' - L; quantum number for each shell ')
+309     format (2x, 8(2x,f5.2), ' - Occupation numbers ')
+310     format (2x, 8(2x,f5.2), ' - Radial cutoffs ')
+311     format (2x, 9(2x,a25), ' - Wavefunction files ')
+312     format (2x, 9(2x,a25), ' - (Non)-neutral atom potentials ')
+313     format (2x, f12.4, ' - Atomic energy ')
+314     format (2x, f12.4, ' - Radial cutoffs (Pseudopotential) ')
+        close (unit = 12)
+
+        return
+        end subroutine readinfo
+ 

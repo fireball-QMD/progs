@@ -1,0 +1,44 @@
+#AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX AIX
+ifneq (,$(findstring AIX,${MACHINE}))
+	F77 = xlf90 -qfixed
+        F90 = xlf90 -qfree=f90 -qsuffix=f=f90
+	ifneq (,$(findstring OPT, ${MODE}))
+		FFLAGS = -O3 -qstrict -qspillsize=32704
+	endif
+	ifneq (,$(findstring DEBUG, ${MODE}))
+		FFLAGS = -C -g -qinitauto=FF -qsigtrap \
+			-qflttrap=en:inv:zero:ov
+	endif
+	DFLAGS = ${FFLAGS}
+	ifneq (,$(findstring YES, ${USEBLAS}))
+		LFLAGS = -lmass -lblas -L/usr/local/lib/ -llapack \
+			-bmaxdata:0x70000000 
+		BLAS = 
+	endif
+	ifneq (,$(findstring NO, ${USEBLAS}))
+		LFLAGS = -bmaxdata:0x70000000
+		BLAS = blas.o minilapack.o
+	endif
+	ifneq (,$(findstring MPI, ${PARALLEL}))
+		PARLFLAGS = -LLIBRARIES/AIX/ -lscalapack -lblacsF77init \
+		-lblacs -lblacsF77init -L/usr/local/lib -lmpi
+		F77 = mpxlf90 -qfixed
+		F90 = mpxlf90 -qfree=f90 -qsuffix=f=f90
+# use the following instead for OpenMP
+#		F77 = mpxlf90_r -qfixed -qsmp=omp
+#		F90 = mpxlf90_r -qfree=f90 -qsuffix=f=f90 -qsmp=omp
+	endif
+	ifneq (,$(findstring MPICH, ${PARALLEL}))
+		F77 = mpif90 -qfixed
+		F90 = mpif90 -qsuffix=f=f90 -qfree=f90
+	endif
+	ifneq (,$(findstring ORDERN, ${METHOD}))
+		PARLFLAGS = -L/usr/local/lib/ -lmpi
+	endif
+        ifneq (,$(findstring YES, ${TCLMD}))
+                VISFLAGS = -L/usr/local/lib -lC -lgrace_np
+                VISUALIZATION = noTclMD.o noxmgr.o graceinit.o graceupdate.o
+        endif
+	CC = xlc
+	CFLAGS = ${FFLAGS} -DIBM32
+endif

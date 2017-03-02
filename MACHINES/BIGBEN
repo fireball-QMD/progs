@@ -1,0 +1,54 @@
+#BIGBEN BIGBEN BIGBEN BIGBEN BIGBEN BIGBEN BIGBEN BIGBEN BIGBEN BIGBEN BIGBEN BIGBEN
+ifneq (,$(findstring BIGBEN, ${MACHINE}))
+	F77 = mpif77
+	F90 = mpif90
+	ifneq (,$(findstring OPT, ${MODE}))
+		ifneq (,$(findstring DOUBLE, ${METHOD}))
+			FFLAGS = -fast -fastsse -r8 -Mpreprocess
+		else
+			FFLAGS = -fast -fastsse -Mpreprocess
+		endif
+	endif
+	ifneq (,$(findstring DEBUG, ${MODE}))
+		ifneq (,$(findstring DOUBLE, ${METHOD}))
+			FFLAGS = -g -Mbounds -r8 -Mpreprocess
+		else
+			FFLAGS = -g -Mbounds -Mpreprocess
+		endif
+	endif
+	DFLAGS = ${FFLAGS}
+
+	ifneq (,$(findstring YES, ${CCOMPILE}))
+		FFLAGS = ${FFLAGS} -MCCOMPILE
+	endif
+
+	ifneq (,$(findstring YES,${USEBLAS}))
+		LFLAGS = -lacml
+#	BLAS = minilapack.o
+	endif
+	ifneq (,$(findstring NO, ${USEBLAS}))
+		LFLAGS = 
+		BLAS = blas.o minilapack.o
+	endif
+	ifneq (,$(findstring MPI, ${PARALLEL}))
+		PARLFLAGS = -lsci
+#-lblacsF77init -lblacs -lblacsF77init -lpblas -ltools
+	endif
+	ifneq (,$(findstring MPICH, ${PARALLEL}))
+		F77 = mpif90
+		F90 = mpif90 -Mfreeform
+	endif
+	ifneq (,$(findstring ORDERN, ${METHOD}))
+		PARLFLAGS = -lmpi
+	endif
+	ifneq (,$(findstring YES, ${TCLMD}))
+		VISFLAGS = -L/usr/local/lib -L/usr/local/pgi/linux86/lib \
+			-L/usr/lib/gcc-lib/i386-redhat-linux/egcs-2.91.66 \
+			-ltclmd -ltcl8.2 -lstd -lC -lm -lpgc -lgcc -lc -lgcc \
+			-lgrace_np
+		VISUALIZATION = tclmdtransfer.o nograce.o xmgrinit.o \
+			xmgrupdate.o
+	endif
+	CC = pgcc
+	CFLAGS = ${FFLAGS}
+endif

@@ -1,0 +1,14 @@
+#SIMPLE SIMPLE SIMPLE SIMPLE SIMPLE SIMPLE SIMPLE SIMPLE SIMPLE SIMPLE SIMPLETON
+ifneq (,$(findstring SIMPLE,${MACHINE}))
+	F77 = pgf90
+	F90 = pgf90
+	BLAS = blas.o minilapack.o
+	FFLAGS = -O
+	DFLAGS = -O
+	ifneq (,$(findstring DEBUG, ${MODE}))
+		FFLAGS = -C -g
+	endif
+	CC = pgcc
+	CFLAGS = ${FFLAGS} -DLINUX
+endif
+

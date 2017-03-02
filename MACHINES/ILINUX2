@@ -1,0 +1,105 @@
+#ILINUX2 
+ifneq (,$(findstring ILINUX2, ${MACHINE}))
+	F77 = ifort
+	F90 = ifort
+	PATH_MKL_LIB = 	/opt/intel/mkl/10.0.1.014/lib/em64t
+	PATH_MKL_INCL = /opt/intel/mkl/10.0.1.014/include
+	PATH_FFTW_LIB = /opt/intel/mkl/10.0.1.014/lib/em64t
+	PATH_FFTW_INCL = -I${PATH_FFTW_LIB}/include/fftw
+	ifneq (,$(findstring OPT, ${MODE}))
+		ifneq (,$(findstring YES, ${CCOMPILE}))
+# Pvl			FFLAGS = -O3 -r8 -fno-alias -unroll -fpp -DCCOMPILE -no-ipo
+# Pvl			DFLAGS = -r8 -w90 -tpp7 -O3 -mp1 -fno-alias -unroll -no-ipo
+			FFLAGS = -O3 -r8  -fno-alias -unroll -static -pg
+			DFLAGS = -O3 -r8  -fno-alias -unroll -static -pg
+#			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -DCCOMPILE 
+#			DFLAGS = -r8 -w90 -tpp7 -O3 -mp1 -fno-alias -unroll
+		else
+			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -no-ipo -pg -g
+#			FFLAGS = -r8 -O3 -tpp7 -ipo -axP
+			DFLAGS = -r8 -w90 -tpp7 -mp1 -fno-alias -unroll -no-ipo
+		endif
+	endif
+	ifneq (,$(findstring DEBUG, ${MODE}))
+		FFLAGS = -g -r8 -check all -fpp  -check output_conversion -check format -no-ipo -g
+		DFLAGS = -g -r8 -check all -mp1 
+		LFLAGS = 
+	endif
+# standard LAPACK library
+	ifneq (,$(findstring YES,${USEBLAS}))
+#		LFLAGS = -llapack -lblas -lg2c
+#		LFLAGS = -L/opt/intel/mkl72cluster/lib/em64t -lmkl_lapack -lmkl_em64t -lguide -lpthread -lg2c
+#		LFLAGS = -L/opt/intel/mkl72/lib/em64t -lmkl_lapack -lmkl_em64t -lguide -lpthread /usr/lib/libf2c.a
+# MacOS X MKL 10.0.4.022 (only MKL)
+#		LFLAGS = -L/Library/Frameworks/Intel_MKL.framework/Versions/Current/lib/32 -lmkl_intel -lmkl_intel_thread -lmkl_core  -lguide -lpthread 
+# Marylou4 (MKL + FFTW3)
+		LFLAGS = -L${PATH_MKL} \
+		 -I${PATH_MKL_INCL} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread \
+		 -L${PATH_MKL} ${PATH_FFTW_INCL} -lfftw3xf_intel -lm 
+# Dec 08 
+#		LFLAGS = -L${PATH_MKL} \
+#		-lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core  -lguide -lpthread \
+#			-L${PATH_MKL} ${PATH_FFTW_INCL} -lfftw3xf_intel -lm 
+#		LFLAGS = -L/opt/intel/mkl72/lib/32 -lmkl_lapack -lmkl_def -lguide -lpthread 
+# Old		LFLAGS = -L/opt/intel/acml3.1.0/gfortran64/lib  -lacml -lacml_mv -lguide -lpthread -L/usr/lib64/gcc-lib/x86_64-suse-linux/3.3.5 -lgcc -lgfortran -static-libcxa -I/opt/intel/fce/9.0/include/omp_lib.mod
+# Prueb		LFLAGS = -L/opt/intel/acml3.1.0/gfortran64/lib  -lacml -lacml_mv -lguide -lpthread -L/usr/lib64/gcc/x86_64-suse-linux/4.0.2 -lgcc -lgfortran -static-libcxa -I/opt/intel/fce/9.0/include/omp_lib.mod
+#		LFLAGS = -L/opt/intel/acml3.1.0/gfortran64/lib  -lacml -lacml_mv -lguide -lpthread -lgfortran -static  
+		BLAS = 
+	endif
+	ifneq (,$(findstring NO, ${USEBLAS}))
+		ifneq (,$(findstring NO, ${CCOMPILE}))
+#			LFLAGS = -static
+		endif
+		BLAS = blas.o minilapack.o
+	endif
+# LAPACK95 library
+        ifneq (,$(findstring LAPACK95 ,${METHOD}))
+                LFLAGS = -llapack \
+                        -L/usr/lib/gcc-lib/i386-redhat-linux/3.2.2 \
+                        -lg2c \
+			-L/usr/local/lib -llapack95
+		MODLAP95   = -I/usr/local/lib/lapack95_modules
+                BLAS = -lblas
+        endif 
+# FIX ME - ADD CORRECT PATHS FOR MPI STUFF TO RUN PARALLEL CODE
+        ifneq (,$(findstring OPENMP, ${PARALLEL}))
+		F90 = ifort
+		F77 = ifort
+		ifneq (,$(findstring OPT, ${MODE}))
+		  FFLAGS = -O3 -r8 -tpp7 -openmp -opt_report -openmp_profile \
+			-assume cc_omp -fpp
+		endif 
+		ifneq (,$(findstring DEBUG, ${MODE}))
+#		  FFLAGS = -g -check all -r8 -openmp -opt_report \
+			-openmp_profile -assume cc_omp -fpp
+		  FFLAGS = -g -check all -openmp -opt_report \
+			-openmp_profile -assume cc_omp -fpp
+		endif 
+        endif
+	ifneq (,$(findstring SCALAPACK, ${METHOD}))
+                F77 = /opt/intel_mpi_10/bin64/mpiifort
+                F90 = /opt/intel_mpi_10/bin64/mpiifort
+#  above two lines are also possible
+#		F77 = mpiifort
+#		F90 = mpiifort
+# Scalapack & mpi_intel for Marylou4
+		PARLFLAGS = -L/opt/intel/mkl72cluster/lib/em64t \
+			-lmkl_scalapack -lmkl_blacsF77init_intelmpi \
+			-lmkl_blacs_intelmpi -lmkl_blacs_intelmpi \
+			-lmkl_blacs_intelmpi -lmkl_lapack -lmkl_def \
+			-lguide -lpthread -lg2c
+		LFLAGS =
+# line above includes bare options, further optimization is desired
+		FFLAGS = -O3 -r8 -tpp7
+	endif
+	ifneq (,$(findstring MPICH, ${PARALLEL}))
+		MODMPI  = -I/usr/local/mpich/include
+		F77 = mpif90
+		F90 = mpif90 
+	endif
+	CC = icc
+	CFLAGS = ${FFLAGS}
+#	ifneq (,$(findstring ORDERN, ${METHOD}))
+#		PARLFLAGS = -lmpi
+#	endif
+endif

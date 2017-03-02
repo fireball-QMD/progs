@@ -1,0 +1,53 @@
+# MARYLOU MARYLOU MARYLOU MARYLOU MARYLOU MARYLOU MARYLOU MARYLOU MARYLOU
+ifneq (,$(findstring MARYLOU,${MACHINE}))
+	F77 = f90 -fixedform
+	F90 = f90 -freeform
+	ifneq (,$(findstring OPT, ${MODE}))
+		FFLAGS = -O3 -64 -OPT:IEEE_arithmetic=3,roundoff=3,Olimit=0 \
+			-IPA:alias=true,use_intrinsic=ON,addressing=ON -cpp
+		DFLAGS = -O3 -64 -OPT:IEEE_arithmetic=3,roundoff=3 -cpp
+	endif
+	ifneq (,$(findstring DEBUG, ${MODE}))
+		FFLAGS = -g -64 -DEBUG:trap_uninitialized=ON:subscript_check=ON -cpp
+ 		DFLAGS = -g -64 -DEBUG:subscript_check=ON -cpp
+                USEBLAS = NO
+	endif
+	ifneq (,$(findstring YES, ${USEBLAS}))
+		LFLAGS = -lcomplib.sgimath -Wl,-woff,134 -Wl,-woff,85
+		BLAS =
+	endif
+	ifneq (,$(findstring NO, ${USEBLAS}))
+		LFLAGS =
+		BLAS = blas.o minilapack.o
+	endif
+	ifneq (,$(findstring MPICH, ${PARALLEL}))
+		F77 = mpif90 -fixedform
+		F90 = mpif90 -freeform
+	endif
+	ifneq (,$(findstring MPI, ${PARALLEL}))
+		ifneq (,$(findstring VAMPIR, ${PROFILER}))
+			PARLFLAGS = -L/auto/grp1/lewis/MARYLOU/lib \
+					-lscalapack64 -lmpiblacs64 \
+					-L/usr/local/packages/vampir/lib64 \
+					-lVT -lmpi -Wl,-woff,136
+		else
+			PARLFLAGS = -L/auto/grp1/lewis/MARYLOU/lib \
+					-lscalapack64 -lmpiblacs64 -lmpi \
+					-Wl,-woff,136
+		endif
+	endif
+	ifneq (,$(findstring ORDERN, ${METHOD}))
+		ifneq (,$(findstring VAMPIR, ${PROFILER}))
+	                PARLFLAGS = -L/usr/local/packages/vampir/lib64 -lVT \
+					-mp -lmpi 
+		else
+	                PARLFLAGS = -mp -lmpi 
+		endif
+	endif
+        ifneq (,$(findstring YES, ${TCLMD}))
+		VISFLAGS = -L/usr/local/lib -lacegr_np
+		VISUALIZATION = noTclMD.o nograce.o xmgrinit.o xmgrupdate.o
+        endif
+	CC = cc
+	CFLAGS = ${FFLAGS} -DSGI64
+endif

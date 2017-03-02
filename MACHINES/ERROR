@@ -1,0 +1,5 @@
+F77 = MACHINE_error_in_Makefile
+F90 = MACHINE_error_in_Makefile
+FFLAGS = MODE_error_in_Makefile.f
+BLAS = USEBLAS_error_in_Makefile
+CC = MACHINE_error_in_Makefile
