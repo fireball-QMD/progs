@@ -1,0 +1,15 @@
+#!/bin/bash
+
+rm -r Fdata_*
+cd distorted_benzene
+rm Fdata
+rm fireball.in
+rm CHARGES
+rm NEIGHBORS*
+rm *.out
+rm *.xsf
+rm Atomo_*
+rm *.dat
+rm answer*
+rm modes.xyz
+rm struc.inp

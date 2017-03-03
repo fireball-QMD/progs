@@ -1,0 +1,19 @@
+&OPTION
+basisfile = answer.bas
+nstepf = 1
+icluster = 1
+iqout = 1
+ifixcharge = 1
+dt = 0.5
+&END
+
+&OUTPUT
+iwrtewf    = 1	! print real-space wave-functions 
+iwrtatom   = 1	! print pieces of hamiltonian
+&END
+
+&MESH
+iewform = 1               ! individual levels listed bellow will be plotted in separated files 
+npbands = 4               ! number of molecular levels to be plotted
+pbands = 35,36,37,38      ! list of molecular levels to be plotted (35,36 -degenerated HOMO; 37,38 -degenerated LUMO)
+&END

@@ -1,0 +1,17 @@
+&OPTION
+basisfile = answer.bas 
+iquench = 0
+iendtemp = 0
+T_initial = 500
+T_final = 500
+iensemble = 2
+icluster = 1
+nstepf = 200
+dt = 0.1
+iqout = 3
+ifixcharge = 0
+&END
+
+&OUTPUT
+iwrtxyz = 1
+&END

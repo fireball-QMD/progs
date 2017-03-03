@@ -35,10 +35,12 @@ USEBLAS = YES
 # SGI_LANL/SIMPLE/ICEBOX/ALPHA/TRU64/ILINUX/GFORTRAN)
 #MACHINE = ILINUX_MAC
 MACHINE = ILINUX_fast05
+#MACHINE = SGI-krejci
 
 # Pick your parallel type: <blank for none>, MPI, MPICH (MUST set method below)
 # or OPENMP 
 PARALLEL = MPI
+#PARALLEL = OPENMP
 # Note: the linear-scaling option is in the testing stages only right now, so
 # setting to ORDERN here may mess things up.
 # Pick the method that you are using: <blank for nothing special>, SCALAPACK

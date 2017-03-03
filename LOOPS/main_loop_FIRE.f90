@@ -142,17 +142,22 @@ subroutine init_FIRE( )
 		read (33,*)  FIRE_falpha 
 		read (33,*)  FIRE_Nmin 
 		read (33,*)  FIRE_mass  
-		close (33)
+		read (33,*)  FIRE_Fclamp  
+		read (33,*)  FIRE_dtmax
+		read (33,*)  FIRE_dtmin
+		close (33)   
 	else
 		write (*,*) " No FIRE.optional => setting default parameters "
 		FIRE_finc     = 1.1D0
 		FIRE_fdec     = 0.5D0
 		FIRE_acoef0   = 0.1D0
 		FIRE_falpha   = 0.99D0
-		FIRE_Nmin     = 5     ! currently not used
+		FIRE_Nmin     = 5        ! currently not used
 		FIRE_mass     = 4.0D0
+		FIRE_Fclamp   = 10.0D0   ! too big force
+		FIRE_dtmax    = dt
+		FIRE_dtmin    = dt*0.1
 	end if
-	FIRE_dtmax    = dt
 	! set FIRE varaibles
 	FIRE_dt       = FIRE_dtmax * 0.25
 	FIRE_acoef    = FIRE_acoef0
@@ -189,7 +194,7 @@ subroutine move_ions_FIRE( istep )
 	ff = 0.D0
 	vv = 0.D0
 	vf = 0.D0
-        deltaFmax = 0.0d0
+    deltaFmax = 0.0d0
 	do iatom = 1, natoms
 		do k=1,3
 			if ( fragxyz(k,iatom) .eq. 0 ) then 
@@ -206,7 +211,8 @@ subroutine move_ions_FIRE( istep )
 	if ( vf .lt. 0 ) then
 		write (*,*) " DEBUG FIRE: <v|f>  < 0 "
 		vatom(:,:)   = 0 
-		FIRE_dt      = FIRE_dt * FIRE_fdec
+		!FIRE_dt      = FIRE_dt * FIRE_fdec
+		FIRE_dt      = max( FIRE_dt * FIRE_fdec, FIRE_dtmin )
 		FIRE_acoef   = FIRE_acoef0
     else
 		cF           =     FIRE_acoef * sqrt(vv/ff)
@@ -224,10 +230,14 @@ subroutine move_ions_FIRE( istep )
 
 !  normal MD step using leap-frog 
 	dtv  = FIRE_dt / FIRE_mass 
+	if( deltaFmax .gt. FIRE_Fclamp ) then  ! if force is too big
+		dtv        = dtv * FIRE_Fclamp / deltaFmax
+		vatom(:,:) = vatom(:,:) * 0.5 
+	end if
 	do iatom = 1, natoms
 		do k=1,3
 			if ( fragxyz(k,iatom) .eq. 0 ) then 
-				vatom(k,iatom) = vatom(k,iatom)   +  dtv     * ftot(k,iatom)
+				vatom(k,iatom) = vatom(k,iatom)   +  dtv     * ftot (k,iatom)
 				ratom(k,iatom) = ratom(k,iatom)   +  FIRE_dt * vatom(k,iatom)
 			end if
 		enddo

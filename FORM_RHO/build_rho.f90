@@ -136,9 +136,11 @@
 ! prokop-CoefsLCAO
          if (iwrtcdcoefs .eq. -2 ) then
 			if (allocated ( bbnkim )) then
-            	call writeCoefsLCAO ()
+			    write (*,*) "writing LCAO coefficients for PBC systems"
+			    call writeCoefsLCAO ()
 			else
-			!	call writeCoefsLCAO_G ()
+			    write (*,*) "writing LCAO coefficients for clusters"
+			    call writeCoefsLCAO_G ()
 			end if
          end if
 

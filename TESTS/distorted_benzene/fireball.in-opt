@@ -1,0 +1,12 @@
+&OPTION
+basisfile = benzene_distorted.bas
+nstepf = 5000
+iquench = -6	! optimalization -1 MDmin; -6 FIRE
+icluster = 1	! PBC: 0 3D PBC; 1 cluster
+iqout = 3
+dt = 0.5
+&END
+
+&OUTPUT
+iwrtxyz = 1
+&END

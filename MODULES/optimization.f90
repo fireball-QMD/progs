@@ -47,11 +47,13 @@
    real         :: FIRE_falpha
    integer      :: FIRE_Nmin
    real         :: FIRE_dtmax
+   real         :: FIRE_dtmin
    real         :: FIRE_dt
    real         :: FIRE_acoef0
    real         :: FIRE_acoef
    real         :: FIRE_mass
    real         :: FIRE_Ftot
+   real         :: FIRE_Fclamp
 
 
         end module
