@@ -1,0 +1,4 @@
+0.03              !elementary displacement
+1 1 1             !dimension vector
+dyn.dat           !output file  
+.false.            !flag on when only some of atoms are moved, otherwise move all atoms

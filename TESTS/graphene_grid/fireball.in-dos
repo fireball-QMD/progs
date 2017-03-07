@@ -1,0 +1,22 @@
+&OPTION
+basisfile = input.bas
+lvsfile   = input.lvs
+kptpreference = dos.kpts
+nstepf     = 1
+icluster   = 0
+ifixcharge = 0
+itdse      = 0
+iqout      = 1
+ifixcharge = 0
+dt         = 0.5
+iquench    = -1
+iks        = 1
+imcweda    = 0
+idogs      = 0
+bmix       = 0.05
+&END
+
+&OUTPUT
+iwrtdos    = 1	! print atom projected DOS
+iwrtatom   = 1	! print pieces of Hamilotonian (for STM)
+&END

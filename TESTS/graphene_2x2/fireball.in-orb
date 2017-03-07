@@ -1,0 +1,20 @@
+&OPTION
+basisfile = answer.bas
+lvsfile = input.lvs
+kptpreference = input.kpts
+nstepf = 1
+icluster = 0
+iqout = 1
+ifixcharge = 1
+dt = 0.5
+&END
+
+&OUTPUT
+iwrtewf    = 1	! print real-space wave-functions 
+&END
+
+MESH
+iewform = 2            ! sum density in energy window   
+ewfewin_min = +1.90    ! lower energy bound
+ewfewin_max = +2.10    ! upper energy bound
+&END

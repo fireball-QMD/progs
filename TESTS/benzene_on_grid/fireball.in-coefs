@@ -1,5 +1,5 @@
 &OPTION
-basisfile = answer.bas
+basisfile = input.bas
 nstepf = 1
 icluster = 1
 ifixcharge = 0
@@ -17,5 +17,4 @@ bmix       = 0.05
 &OUTPUT
 iwrtcdcoefs = -2	! write-out LCAO coefficients
 iwrtxsf     = 1		! write-out real-spce electron density & Hartree potential
-!!!iwrtdos     = 1
 &END

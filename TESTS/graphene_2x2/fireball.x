@@ -1,0 +1,1 @@
+/storage/praha1/home/krejcio/Fireball_progs/fireball.x

@@ -1,0 +1,27 @@
+&OPTION
+basisfile = answer.bas
+lvsfile   = input.lvs
+kptpreference = input.kpts
+nstepf     = 1
+icluster   = 0
+ifixcharge = 0
+itdse      = 0
+iqout      = 1
+ifixcharge = 0
+dt         = 0.5
+iquench    = -1
+iks        = 1
+imcweda    = 0
+idogs      = 0
+bmix       = 0.05
+&END
+
+&OUTPUT
+iwrtewf = 1
+&END
+
+&MESH
+iewform = 2               ! individual levels listed bellow will be plotted in separated files 
+ewfewin_min = +0.20       ! lower energy bound
+ewfewin_max = +0.40       ! upper energy bound
+&END

@@ -1,0 +1,14 @@
+&OPTION
+basisfile = input.bas
+lvsfile = input.lvs
+kptpreference = input.kpts
+nstepf = 5000
+iquench = -6	! optimalization -1 MDmin; -6 FIRE
+icluster = 0	! PBC: 0 3D PBC; 1 cluster
+iqout = 1
+dt = 1
+&END
+
+&OUTPUT
+iwrtxyz = 1
+&END

@@ -1,0 +1,13 @@
+&OPTION
+basisfile = answer.bas
+nstepf = 1
+icluster = 1
+iqout = 1
+ifixcharge = 1
+dt = 0.5
+&END
+
+&OUTPUT
+iwrtcdcoefs = -2	! write-out LCAO coefficients
+iwrtden     = 1		! write-out real-spce electron density & Hartree potential
+&END
