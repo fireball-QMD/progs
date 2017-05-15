@@ -1,0 +1,20 @@
+# ILINUX_gnu
+# git clone https://github.com/Reference-LAPACK/lapack
+# download and install fft from www.fftw.org
+#
+
+PATH_BLAS = ../lapack
+PATH_FFTW_LIB = ../fftw-3.3.6-pl2
+
+ifneq (,$(findstring ILINUX_gnu, ${MACHINE}))
+	F77 = gfortran
+	F90 = gfortran
+
+        FFLAGS = -O3 -ffree-form -fdefault-real-8 -ffree-line-length-none
+      
+        LFLAGS = ${PATH_BLAS}/liblapack.a  ${PATH_BLAS}/librefblas.a  ${PATH_BLAS}/libtmglib.a ${PATH_FFTW_LIB}/.libs/libfftw3.a
+
+	CC = gcc
+	CFLAGS = ${FFLAGS}
+endif
+
