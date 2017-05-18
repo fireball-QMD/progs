@@ -1,19 +1,31 @@
+
+#PATH_MKL = /Library/Frameworks/Intel_MKL.framework/Versions/Current
+#PATH_MKL = /opt/intel/mkl/10.1.0.015/lib/32
+#PATH_FFTW_LIB = /Library/Frameworks/Intel_MKL.framework/Versions/Current
+#PATH_FFTW_LIB = /opt/intel/mkl/10.1.0.025
+#PATH_FFTW_INCL = -I${PATH_FFTW_LIB}/include/fftw
+#PATH_FFTW_INCL = -I${PATH_FFTW_LIB}/include/fftw
+	
+	
+PATH_MKL       = /software/intelcdk-12/mkl/lib/intel64
+PATH_MKL_INCL  = /software/intelcdk-12/mkl/include
+PATH_FFTW_LIB  = /software/intelcdk-12/mkl/lib/intel64
+PATH_FFTW_INCL = /software/intelcdk-12/mkl/include/fftw
+PATH_MPI_LIB   = /software/openmpi-1.6.4/intel/lib
+PATH_MPI_INC   = /software/openmpi-1.6.4/intel/include	
+
+
 #GFORTRAN GFORTRAN GFORTRAN GFORTRAN GFORTRAN GFORTRAN GFORTRAN GFORTRAN 
 ifneq (,$(findstring GFORTRAN, ${MACHINE}))
 	F77 = gfortran
 	F90 = gfortran
-#	PATH_MKL = /Library/Frameworks/Intel_MKL.framework/Versions/Current
-	PATH_MKL = /opt/intel/mkl/10.1.0.015/lib/32
-#	PATH_FFTW_LIB = /Library/Frameworks/Intel_MKL.framework/Versions/Current
-	PATH_FFTW_LIB = /opt/intel/mkl/10.1.0.025
-#	PATH_FFTW_INCL = -I${PATH_FFTW_LIB}/include/fftw
-	PATH_FFTW_INCL = -I${PATH_FFTW_LIB}/include/fftw
+
 	ifneq (,$(findstring OPT, ${MODE}))
 		ifneq (,$(findstring YES, ${CCOMPILE}))
-			FFLAGS =  -ffree-form -fdefault-real-8 -cpp -DCCOMPILE
+			FFLAGS =  -ffree-form -ffree-line-length-none -freal-4-real-8 -cpp -DCCOMPILE
 			DFLAGS = 
 		else
-			FFLAGS = -O3 -ffree-form -fdefault-real-8 
+			FFLAGS = -O3 -ffree-form -ffree-line-length-none -freal-4-real-8
 #			FFLAGS = -r8 -O3 -tpp7 -ipo -axP
 			DFLAGS = 
 		endif
@@ -29,11 +41,23 @@ ifneq (,$(findstring GFORTRAN, ${MACHINE}))
 #		LFLAGS = -L/opt/intel/mkl72cluster/lib/em64t -lmkl_lapack -lmkl_em64t -lguide -lpthread -lg2c
 #		LFLAGS = -L/opt/intel/mkl72/lib/em64t -lmkl_lapack -lmkl_em64t -lguide -lpthread /usr/lib/libf2c.a
 #		LFLAGS = -L/opt/intel/mkl72/lib/32 -lmkl_lapack -lmkl_def -lguide -lpthread
-		LFLAGS = -L${PATH_MKL} \
-			-lmkl_intel -lmkl_sequential -lmkl_core -lpthread	 \
-			-L${PATH_MKL} ${PATH_FFTW_INCL} -lfftw3xf_intel -lm -lmkl_intel 
+#		LFLAGS = -L${PATH_MKL} \
+#			-lmkl_intel -lmkl_sequential -lmkl_core -lpthread	 \
+#			-L${PATH_MKL} ${PATH_FFTW_INCL} -lfftw3xf_intel -lm -lmkl_intel 
 #		LFLAGS = -L/opt/intel/mkl72/lib/32 -lmkl_lapack -lmkl_def -lguide -lpthread 
 #               BLAS = minilapack.o
+
+
+LFLAGS= -L${PATH_MKL} \
+-lmkl_scalapack_lp64 \
+-lmkl_blacs_openmpi_lp64 \
+-lmkl_lapack95_lp64 -lmkl_intel_lp64 -lmkl_intel_thread \
+-lmkl_core -liomp5 -lpthread \
+-L${PATH_FFTW_LIB} -I${PATH_FFTW_INCL} -lfftw3xf_intel\
+-lm \
+-Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} \
+-lmpi
+
 		BLAS = 
 	endif
 	ifneq (,$(findstring NO, ${USEBLAS}))

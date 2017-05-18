@@ -180,7 +180,11 @@
                write (*,*) 'EIG-e =',eigen_k(id_elec,ikpoint)
                wf_hole(:,ikpoint) = blowre(:,id_hole,ikpoint)
                wf_elec(:,ikpoint) = blowre(:,id_elec,ikpoint)
-               write (323,'(<norbitals>f10.4)')  (eigen_k(imu,ikpoint), imu=1,norbitals) 
+               
+               !write (323,'(<norbitals>f10.4)')  (eigen_k(imu,ikpoint), imu=1,norbitals) 
+               do imu=1,norbitals
+                write (323,'(f10.4)', advance='no')  eigen_k(imu,ikpoint)
+               end do
 ! just for a case also into file
                write (322,*)  'ikpts =',ikpoint
                write (322,*)  ((wf_hole(imu, ikpoint)),imu=1, norbitals)
@@ -213,7 +217,7 @@
            allocate (bbnkre_o(norbitals,norbitals,nkpoints))
            allocate (blowre_o(norbitals,norbitals,nkpoints))
          end if
-         if (scf_achieved .eq. .true.) then
+         if (scf_achieved) then
            blowre_o(:,:,1)=blowre(:,:,1)
          end if
 ! end VLADA-MDET

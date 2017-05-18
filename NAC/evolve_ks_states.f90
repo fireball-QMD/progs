@@ -137,7 +137,13 @@
            write (212,101) (eigen_k(imu,1), imu = 1, norbitals_new)
 
 !          write (216, '(<nele>f16.10)') (eigen_k(imu,1), imu = map_ks(1),map_ks(1)+nele-1)
-           write (216, '(<nele+2>f16.10)') (eigen_k(imu,1), imu = map_ks(1)-1,map_ks(1)+nele)
+!          write (216, '(<nele+2>f16.10)') (eigen_k(imu,1), imu = map_ks(1)-1,map_ks(1)+nele)
+        do  imu = map_ks(1)-1,map_ks(1)+nele
+            write (216, '(f16.10)', advance='no') eigen_k(imu,1)
+        end do
+        write (216,*)
+           
+           
 ! ===========================================================================
 ! Calculate d/dt c_{ak} at different time steps in between t and t+dt
 ! tt(it) = t + dt/Nsteps * it . We need to interpolate the values for

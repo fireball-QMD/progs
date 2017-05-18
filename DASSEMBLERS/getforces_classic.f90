@@ -66,7 +66,7 @@ subroutine getforces_classic()
         subroutine num_derivation(dx, ftot)
             use configuration, only: natoms
             real, intent(out) :: ftot(3, natoms)
-            real, intent(in) :: dx
+            real, intent(in)  :: dx
         end subroutine
     end interface
 
@@ -87,7 +87,7 @@ subroutine getforces_classic()
 !	ftot=numftot
     ftotold = ftotnew
     ftotnew = ftot
-    etot = e
+    etot    = e
     etotper = e/natoms
     etotnew = etotper
 
@@ -125,10 +125,10 @@ subroutine getLJforce(ratom, f, e, distance)
 	
     implicit none
     !    type(PotentialParam),intent(in), dimension(nspecies,nspecies) :: potential
-    real, intent(out) :: f(3, natoms)
-    double precision, intent(inout) :: e
-    real, intent(in) :: ratom(3, natoms)
-    real, intent(in) :: distance(natoms, natoms)
+    real, intent(out)   :: f(3, natoms)
+    real, intent(inout) :: e
+    real, intent(in)    :: ratom(3, natoms)
+    real, intent(in)    :: distance(natoms, natoms)
     integer i, ineigh, k
     real :: eps, ro, cutoff, r1
     real, dimension(3) :: rneigh, ftmp
@@ -165,7 +165,7 @@ subroutine num_derivation(dx, ftotn)
     real, intent(in) :: dx
     real, dimension(3, natoms) :: rat2
     real :: distancet(natoms, natoms)
-    double precision :: f(3, natoms), edx, e
+    real :: f(3, natoms), edx, e
     integer :: i, j
 
     rat2 = ratom
@@ -191,7 +191,7 @@ subroutine getClassForce(ratom, ftot, e, distance)
     real, dimension(3, natoms), intent(in) :: ratom
     real, dimension(3, natoms), intent(inout) :: ftot
     real, dimension(3, natoms) :: ftotn
-    double precision, intent(inout) :: e
+    real, intent(inout) :: e
     real, dimension(natoms, natoms), intent(inout) :: distance
 
     e = 0.0

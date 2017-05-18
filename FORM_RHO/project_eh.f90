@@ -158,8 +158,11 @@
        write (*,300) id_elec, projel(id_elec), foccupy(id_elec,ikpoint)
        write (*,301) id_hole, projh(id_hole), foccupy(id_hole,ikpoint)
        write (*,301) id_hole-1, projh(id_hole-1), foccupy(id_hole-1,ikpoint)
-       write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
-
+       !write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
+       do iband=1,norbitals
+          write (111,'(f6.1)',advance='no') foccupy(iband,ikpoint)
+       end do
+       write (111,*)
        return
       endif 
 
@@ -188,8 +191,11 @@
        write (*,300) id_elec, projel(id_elec), foccupy(id_elec,ikpoint)
        write (*,301) id_hole, projh(id_hole), foccupy(id_hole,ikpoint) 
        write (*,301) id_hole-1, projh(id_hole-1), foccupy(id_hole-1,ikpoint) 
-       write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
-
+       !write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
+       do iband=1,norbitals
+          write (111,'(f6.1)',advance='no') foccupy(iband,ikpoint)
+       end do
+       write (111,*)
        return
      endif
 
@@ -214,8 +220,11 @@
        write (*,300) id_elec, projel(id_elec), foccupy(id_elec,ikpoint)
        write (*,301) id_hole, projh(id_hole), foccupy(id_hole,ikpoint) 
        write (*,301) id_hole-1, projh(id_hole-1), foccupy(id_hole-1,ikpoint) 
-       write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
-
+       !write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
+       do iband=1,norbitals
+          write (111,'(f6.1)',advance='no') foccupy(iband,ikpoint)
+       end do
+       write (111,*)
        return
 
      endif
@@ -239,8 +248,11 @@
 
       write (*,300) id_elec, projel(id_elec), foccupy(id_elec,ikpoint)
       write (*,301) id_hole, projh(id_hole), foccupy(id_hole,ikpoint) 
-      write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
-
+      !write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
+      do iband=1,norbitals
+         write (111,'(f6.1)',advance='no') foccupy(iband,ikpoint)
+      end do
+      write (111,*)
 
 200     format (' Band n = ', i4, ' k-points: ioccupy = ', i2)
 201     format (' Band n = ', i4, ' foccupy = ', f6.3)

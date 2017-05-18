@@ -157,13 +157,21 @@ write(2222,*) " map_ks map_proj ", Kscf, itime_step
 ! change occupancy (map_ks foccupy_na, ioccupy_na ) of orbital according to projection    
 
       write (123,*) Kscf, itime_step
-      write (123,'(<norbitals>f6.2)') (foccupy_na(inu,1), inu = 1, norbitals)
+      !write (123,'(<norbitals>f6.2)') (foccupy_na(inu,1), inu = 1, norbitals)
+      do inu = 1, norbitals
+         write (123,'(f6.1)',advance='no') foccupy_na(inu,1)
+      end do
+      write (123,*)
 
       write (124,*) Kscf, itime_step
-      write (124,'(<norbitals>i6.2)') (ioccupy_na(inu,1), inu = 1, norbitals)
+      !write (124,'(<norbitals>i6.2)') (ioccupy_na(inu,1), inu = 1, norbitals)
+      do inu = 1, norbitals
+          write (124,'(i6.1)',advance='no') ioccupy_na(inu,1)
+      end do
+      write (124,*)
 
   do ielec = 1, nele
-     if (map_ks(ielec) .neqv. map_proj(ielec)) then          
+     if (map_ks(ielec) .ne. map_proj(ielec)) then          
 
 
     !     foccupy_na(map_ks(ielec),1)=foccupy_na(map_ks(ielec),1)-0.5d0 
@@ -185,10 +193,18 @@ end if !( itime_step .gt. 2000  )
 
 
       write (1233,*) Kscf, itime_step
-      write (1233,'(<norbitals>f6.1)') (foccupy_na(inu,1), inu = 1, norbitals)
+      !write (1233,'(<norbitals>f6.1)') (foccupy_na(inu,1), inu = 1, norbitals)
+      do inu = 1, norbitals
+         write (1233,'(f6.1)',advance='no') foccupy_na(inu,1)
+      end do
+      write (1233,*)
 
       write (1244,*) Kscf, itime_step
-      write (1244,'(<norbitals>i6.1)') (ioccupy_na(inu,1), inu = 1, norbitals)
+      !write (1244,'(<norbitals>i6.1)') (ioccupy_na(inu,1), inu = 1, norbitals)
+      do inu = 1, norbitals
+          write (1244,'(i6.1)',advance='no') ioccupy_na(inu,1)
+      end do
+      write (1244,*)
 
  !     write (12444,*) Kscf, itime_step
  !     write (12444,'(<norbitals>i6.1)') (ioccupy_na_TS(inu,1), inu = 1, norbitals)

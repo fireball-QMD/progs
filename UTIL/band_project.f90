@@ -139,7 +139,11 @@ do itype = 1, ntypes
 	open (unit = 33, file = 'Projected_wk_'//filenstr//'.dat', status = 'unknown')
     Write (33,'(3i10,4f18.10)')  nfound, iFirst, iLast, eigen_k(iFirst,1),eigen_k(iLast,1), Emin, Emax
 	do ifound = 1,nfound
-  		write  (33,'(<nkpoints>f18.10)') ( wk ( ifound, ik, itype ), ik=1,nkpoints )
+  		!write  (33,'(<nkpoints>f18.10)') ( wk ( ifound, ik, itype ), ik=1,nkpoints )
+  		do ik=1,nkpoints
+  		    write  (33,'(f18.10)',advance='no')  wk ( ifound, ik, itype )
+  		end do
+  		write  (33,*)
 	end do ! iband
 	close (33)
 end do ! itype

@@ -1,0 +1,12 @@
+*~
+*.x
+*.o
+*.mod
+*.so
+*.pyc
+*.pyd
+*_backup
+
+*.npy
+*.xsf
+*.png

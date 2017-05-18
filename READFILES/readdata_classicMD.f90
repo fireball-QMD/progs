@@ -253,15 +253,15 @@ subroutine fillVdWparams(element1,element2,filename,nparam, msg, potId)
     implicit none
     interface
         subroutine readPotParam(element1, element2, filename, nparamIn, msg, potId)
-            character(2), intent(in) :: element1, element2
+            character(2),  intent(in) :: element1, element2
             character(64), intent(in) :: filename
-            integer, intent(in) :: nparamIn
+            integer,       intent(in) :: nparamIn
             character(20), intent(in) :: msg
-            integer, intent(in) :: potId
+            integer,       intent(in) :: potId
         end subroutine
     end interface
     
-    character(2), intent(in) :: element1, element2
+    character(2), intent(in)  :: element1, element2
     character(64), intent(in) :: filename
     character(20), intent(in) :: msg
     integer, intent(in) :: potId, nparam
@@ -310,7 +310,7 @@ subroutine readPotParam(element1,element2,filename,nparamIn,msg,potId)
 
 	implicit none
 	character(2), intent(in) :: element1,element2
-	character(56), intent(in) :: filename
+	character(64), intent(in) :: filename
 	integer, intent(in) :: nparamIn
 	character(20), intent(in) :: msg
 	integer, intent(in) :: potId

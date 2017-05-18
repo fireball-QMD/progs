@@ -243,12 +243,12 @@ write (*,*)   " DEBUG: norbin *  ",norbin
 do iorbin = 1,norbin
 write ( 33, '(A, f10.5)' ) "               ",results_E ( iorbin)
  do k = 1, rm3
-!write  (33,'(f16.10)', advance='no') results_depth ( iorbin, k )
-!  do ikp = 1, nkps
-!  write  (33,'(f16.8)', advance='no') results ( iorbin, ikp, k )
-!  end do
-! write (33,*)
-  write  (33,'(f16.10,6x,<nkps>f14.10)') results_depth ( iorbin, k ), ( results ( iorbin, ikp, k ), ikp=1,nkps )
+  write  (33,'(f16.10)', advance='no') results_depth ( iorbin, k )
+  do ikp = 1, nkps
+    write  (33,'(f16.8)', advance='no') results ( iorbin, ikp, k )
+  end do
+  write (33,*)
+  !write  (33,'(f16.10,6x,<nkps>f14.10)') results_depth ( iorbin, k ), ( results ( iorbin, ikp, k ), ikp=1,nkps )
  end do
 end do
 

@@ -304,7 +304,7 @@
 360     format ( '  Mode :',i4,' frequency  = ',f18.10,' [cm-1]')
 450     format ( '  Mode :',i4,' has a negative value  = ',f16.6 )
 460     format ( '    e-ph coupling = ',f16.6,' [eV] ' )
-401     format (<ndim>f8.3)
+!401     format (<ndim>f8.3)
 400     format ( 9f8.3 )
 600     format ( '  == Vib. mode no.',i6,' with frequency  = ',f16.6,' [eV] amplitude = ',f16.6,'[Ang]' )
 610     format ( '     El. level no.',i6,' with energy  = ',f16.6,' [eV] e-ph couplong = ',f16.6,'[eV]' )

@@ -140,7 +140,12 @@ enddo ! iband
 
  open (unit = 34, file = 'ARPES_Emap_all.dat', status = 'unknown')
  do iE = 1,nE
-	write  (34,'(f10.5, 6x, <nkpoints>f18.10)')  (Estep*iE + Emin),   ( EmapTot ( iE, ikpoint ), ikpoint=1,nkpoints )
+	!write  (34,'(f10.5, 6x, <nkpoints>f18.10)')  (Estep*iE + Emin),   ( EmapTot ( iE, ikpoint ), ikpoint=1,nkpoints )
+	write  (34,'(f10.5)',advance='no') (Estep*iE + Emin)
+	do ikpoint=1,nkpoints
+	    write  (34,'(f18.10)',advance='no') EmapTot ( iE, ikpoint )
+	end do
+	write (34,*)
  end do ! norbin
  close (34)
 
@@ -151,7 +156,12 @@ if (decompose .gt. 0) then
 
 	open (unit = 34, file = 'ARPES_Emap_'//filenstr//'.dat', status = 'unknown')
 	do iE = 1,nE
-  		write  (34,'(f10.5, 6x, <nkpoints>f18.10)')  (Estep*iE + Emin),   ( Emap ( iE, ikpoint, itype ), ikpoint=1,nkpoints )
+  		!write  (34,'(f10.5, 6x, <nkpoints>f18.10)')  (Estep*iE + Emin),   ( Emap ( iE, ikpoint, itype ), ikpoint=1,nkpoints )
+  	    write  (34,'(f10.5)',advance='no') (Estep*iE + Emin)
+	    do ikpoint=1,nkpoints
+	        write  (34,'(f18.10)',advance='no') Emap ( iE, ikpoint, itype )
+	    end do
+	    write (34,*)
 	end do ! norbin
 	close (34)
  end do ! itype

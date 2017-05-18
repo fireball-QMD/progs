@@ -1541,7 +1541,7 @@
         enddo
       endif
 ! remove common factors
-      i=factor(4,ivec)
+      i=factor(4,ivec) ! FIXME : this does not make sense (?) should be i=factor*ivec(4) ?
       end
 
 !****************************************************************************
