@@ -1,0 +1,22 @@
+   dani                                                                 
+           1  - Number of species 
+======================================================================
+   1          - Information for this species 
+  Si          - Element 
+   14         - Nuclear Z 
+   28.090     - Atomic Mass 
+   2          - Number of shells; L for each shell 
+    0  1
+   2          - Number of shells; L for each shell  (Pseudopotential) 
+    0  1
+   1.14 - Radial cutoffs PP 
+   1.00   3.00
+   6.00   6.00
+  cinput/014_600.wf1         cinput/014_600.wf2       
+  cinput/014_600.na0         cinput/014_600.na1         cinput/014_600.na2       
+       0.00000   - Atomic energy 
+======================================================================
+Sun Mar 10 01:07:09 CET 2013                 
+ ( 1,  1,  1,  0,  0,  0,  1)
+ ( 0,  4,
+ ( 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  1,  1,  1,  0,  0,  0,  0) 
