@@ -10,7 +10,7 @@ ifneq (,$(findstring ILINUX_gnu, ${MACHINE}))
 	F77 = gfortran
 	F90 = gfortran
  
-        #version 5.4.0
+        #gcc version 5.4.0
         #FFLAGS = -O3 -ffree-form -ffree-line-length-none -freal-4-real-8
         #gcc versión 4.4.7 
         FFLAGS = -O3 -ffree-form -fdefault-real-8 -ffree-line-length-none
