@@ -1,8 +1,8 @@
 &option
 nstepf = 1
-basisfile = ini.bas
-lvsfile = ini.lvs
-kptpreference = ini.kpts
+basisfile = 'ini.bas'
+lvsfile = 'ini.lvs'
+kptpreference = 'ini.kpts'
 sigmatol = 0.000001
 iquench = 0
 &end
