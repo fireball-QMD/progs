@@ -36,7 +36,8 @@ USEBLAS = YES
 #MACHINE = ILINUX_MAC
 #MACHINE = ILINUX_fast05
 #MACHINE = SGI-krejci
-MACHINE = GFORTRAN
+MACHINE = ILINUX_gnu
+#MACHINE = GFORTRAN
 
 # Pick your parallel type: <blank for none>, MPI, MPICH (MUST set method below)
 # or OPENMP 
