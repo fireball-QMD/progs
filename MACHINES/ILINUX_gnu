@@ -5,6 +5,7 @@
 
 PATH_BLAS = ../lapack
 PATH_FFTW_LIB = ../fftw-3.3.6-pl2
+#PATH_FFTW_LIB = /usr/lib/powerpc64le-linux-gnu/
 
 ifneq (,$(findstring ILINUX_gnu, ${MACHINE}))
 	F77 = gfortran
