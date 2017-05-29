@@ -1,0 +1,33 @@
+
+Las pruebas han sido realizadas en 16 cores Intel(R) Xeon(R) CPU X5550  @ 2,67GHz, de los cuales 8 son reales, y MemTotal:     24 GB
+
+n_atom =  2    : time =  0.39294100000000  :  ETOT = -212.756614
+n_atom =  16   : time =  2.33064600000000  :  ETOT = -1702.052751
+n_atom =  128  : time =  36.9373850000000  :  ETOT = -13616.480004
+n_atom =  512  : time =  879.227337000000  :  ETOT = -54462.126254
+n_atom =  1024 : time =  2834.53608600000  :  ETOT = -108931.880617
+n_atom =  2048 : time =  19175.8158330000  :  ETOT = -217863.579315
+
+Utilizando fireball.12.11_intel64-double.x (-static)
+n_atom =  2    : time =  0.386940000000000  :  ETOT = -212.756614
+n_atom =  16   : time =  2.28865200000000  :  ETOT = -1702.052751
+n_atom =  128  : time =  36.4174630000000  :  ETOT = -13616.480004
+n_atom =  512  : time =  876.484753000000  :  ETOT = -54462.126254
+n_atom =  1024 : time =  2853.41421400000  :  ETOT = -108931.880617
+n_atom =  2048 : time =  19217.3975110000  :  ETOT = -217863.579315
+
+
+
+Las pruebas han sido realizadas en 16 cores Intel(R) Xeon(R) CPU E5-2650 0 @ 2.00GHz y MemTotal : 126 GB
+
+Utilizando fireball.12.11_intel64-double.x (-static)
+n_atom =  2    : time =  0.44693200000000  :  ETOT = -212.756614
+n_atom =  16   : time =  1.95070300000000  :  ETOT = -1702.052751
+n_atom =  128  : time =  26.2200130000000  :  ETOT = -13616.480004
+n_atom =  512  : time =  606.374817000000  :  ETOT = -54462.126254
+n_atom =  1024 : time =  1901.07999100000  :  ETOT = -108931.880617
+n_atom =  2048 : time =  11696.6578370000  :  ETOT = -217863.579315
+
+Utilizando fireball.12.11_intel64-double.x (dynamic)
+n_atom =  1024 : time =  1914.11101100000  :  ETOT = -108931.880617
+n_atom =  2048 : time =  11873.8838950000  :  ETOT = -217863.579315
