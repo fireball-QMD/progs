@@ -616,9 +616,9 @@
         endif
 
 ! initialize cDFT
-        if (icDFT .eq. 1) then
-         call initcDFT ()
-        endif
+    !    if (icDFT .eq. 1) then
+    !     call initcDFT ()
+    !    endif
 
 ! GAP ENRIQUE-FF
         if (igap .eq. 1) then

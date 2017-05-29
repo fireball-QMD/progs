@@ -188,11 +188,11 @@
 
 ! cDFT vlada
 ! Create electron and hole
-        if (cDFT_active) then
-         do ikpoint = 1, nkpoints
-          call project_eh (ioccupy_k, foccupy, ikpoint)
-         end do
-        end if 
+   !     if (cDFT_active) then
+   !      do ikpoint = 1, nkpoints
+   !       call project_eh (ioccupy_k, foccupy, ikpoint)
+   !      end do
+   !     end if 
 ! cDFT vlada
  
 ! Print warning for going over maximum iterations.

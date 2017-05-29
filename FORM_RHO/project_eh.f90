@@ -55,21 +55,19 @@
 !
 ! Program Declaration
 ! ===========================================================================
-        subroutine project_eh(ioccupy_k, foccupy, ikpoint)
+!        subroutine project_eh(ioccupy_k, foccupy, ikpoint)
+        subroutine project_eh()
+
 
         use dimensions
-        use constants_fireball
         use kpoints
         use charges
         use scf  
         use configuration
-        
-        use density
-      
-        use interactions
-        use neighbor_map
-        
-
+        use MD
+        use density    
+        use interactions       
+        use nonadiabatic ! vlada
         implicit none
  
 ! Argument Declaration and Description
@@ -77,9 +75,9 @@
 ! Input
      
 ! Output
-     integer, intent(inout), dimension (norbitals, nkpoints) :: ioccupy_k  
-     real, intent(inout), dimension (norbitals, nkpoints) :: foccupy
-     integer, intent (in) :: ikpoint
+ !    integer, intent(inout), dimension (norbitals, nkpoints) :: ioccupy_k  
+ !    real, intent(inout), dimension (norbitals, nkpoints) :: foccupy
+ !    integer, intent (in) :: ikpoint
  
 ! Local Parameters
 ! ===========================================================================
@@ -87,176 +85,169 @@
  
 ! Local Variable Declaration and Description
 ! ===========================================================================
-        integer iband
         integer imu
+        integer jmu
         integer inu
         integer ielec
-
-        real pmax
-        real dqorb
-        real dqelec
-        real dqhole
-        real, dimension (norbitals) :: projel
-        real, dimension (norbitals) :: projh
+        integer jelec
+        integer itime_step
+        integer i 
+        integer j 
+        integer map_ks_fix(nele)
+        real, dimension (norbitals) :: AAA
+        integer nel
+        integer save_map_ks
+        integer loc_orb(nele)
+        real pmax(nele)
+        real norm_aux
+        real, dimension (norbitals) :: map_proj_list
+        real, dimension (norbitals) :: norm
+        real, dimension (norbitals) :: save_wf
 
 ! Procedure
 ! ===========================================================================
-! project electron and hole on actual wf
-      projel(:) = 0.0d0
-      projh(:) = 0.0d0
-      do iband = 1, norbitals
-        do inu = 1, norbitals
-         projh(iband) = projh(iband) + (wf_hole(inu, ikpoint)*blowre(inu,iband,1))  
-         projel(iband) = projel(iband) + (wf_elec(inu,ikpoint)*blowre(inu,iband,1))
-        end do
-      end do         
-! inquire state occupations of electron  
-      pmax = 0.0d0
+!   itime_step = itime_step_g
+!   flag_proj=1
+    if (itime_step_g .ne. 0 ) then
+!     write(33333,*) itime_step_g
+!     write(11333,*) itime_step_g
+!    write (171717,*) "ielec, loc_orb, map_ks(ielec),iocc(ielec)"
+!    write(88888,'(i4,i4,<norbitals>f6.1)') itime_step, Kscf, (foccupy_na(j,1),j=1,norbitals)
+
+! ==== w.f. projection ====
+! loop over tracked electronic states
+     do ielec=1,nele
+! reset norm
+      norm(:)=0.0d0
+
+! loop over previous eigenstates
+      do i=1,n_hist
+
+        AAA(:)= wf_weight(i)*blowre_hist(:,ielec,i)
+! loop over each eigenstate
+        do imu=1,norbitals
+
+! loop over dimension of the jmu-eigenstate
+         norm_aux=0.0d0
+          do inu=1,norbitals
+            norm_aux = norm_aux + AAA(inu)*blowre(inu,imu,1)
+          end do ! end do imu
+          norm(imu) = norm(imu) + abs(norm_aux)
+        end do  ! end do imu
+      end do ! end do n_hist
+
+! ===== estimate the best projection for each state ====
+! which eigenstate has biggest overlap with the history?
+      pmax(ielec) = 0.0d0
       do imu = 1, norbitals
-       if (abs(projel(imu)) .gt. pmax) then  
-          pmax = abs(projel(imu)) 
-          id_elec = imu
-       end if   
-      end do 
+        if (abs(norm(imu)) .gt. pmax(ielec)) then
+          pmax(ielec) = abs(norm(imu))   
+          loc_orb(ielec)=imu
+        end if
+      end do ! enddo imu
+      
+!      write(11333,*) ielec, map_ks(ielec), loc_orb(ielec),pmax(ielec)
 
-! inquire state occupations of hole
-      pmax = 0.0d0
-      do imu = 1, norbitals
-       if (abs(projh(imu)) .gt. pmax) then  
-          pmax = abs(projh(imu)) 
-          id_hole = imu
-       end if   
-      end do 
+     end do ! nele
 
-! several checks need to be done before we switch electron
-! 1. state where electron will be placed is higher than state from which is taken
-      if (id_hole .gt. id_elec) then
-        write (*,*) "hole higher than electron, no switch"
-        return
-      endif 
+! ==== check of degeneracy =====
+     flag_proj = 0
+! loop over electrons
+     do ielec=1, nele
 
-      dqhole = foccupy(id_hole,ikpoint) - occup_elec
-      dqelec = foccupy(id_elec,ikpoint) + occup_elec  
-! 2. hole and excited electron states are crossing; smearing effect
-      if ((dqhole .lt. 0.0d0) .and. (dqelec .gt. 1.0d0)) then
-       dqorb = dqelec - 1.0d0
-       if (abs(dqhole) .gt. (dqelec-1.0d0)) dqorb = dqhole
-       foccupy(id_hole,ikpoint) = foccupy(id_hole,ikpoint) - occup_elec + dqorb
-       foccupy(id_elec,ikpoint) = foccupy(id_elec,ikpoint) + occup_elec - dqorb
-       if (foccupy(id_hole,ikpoint) .gt. 1.0d-5) then
-         ioccupy_k(id_hole,ikpoint) = 1
+! check of multiple occupancies
+       map_ks_fix(:) = 0
+       do jelec= 1, nele
+         if ((loc_orb(ielec) .eq. loc_orb(jelec)) .and. (ielec .ne. jelec)) then
+            map_ks_fix(ielec) = map_ks_fix(ielec) + 1
+            map_ks_fix(jelec) = 1
+         endif
+       end do ! do jelec
+! no degeneracy:
+       if (map_ks_fix(ielec) .eq. 0) then
+
+! check the projection
+!         if((pmax(ielec) .gt. 0.75) .and. (loc_orb(ielec) .eq. map_ks(ielec)) ) then
+         if(loc_orb(ielec) .eq. map_ks(ielec)) then
+           if(hist_fix(ielec) .eq. 0) then
+             write(*,*) "save wf to hist: step, ielec", itime_step_g, ielec
+! projection is good, so update the eigenstate history
+             do i= 1,n_hist-1
+               blowre_hist(:,ielec,i) = blowre_hist(:,ielec,i+1)
+             end do !
+             blowre_hist(:,ielec,n_hist) = blowre(:,loc_orb(ielec),1)
+           else
+             blowre_hist(:,ielec,n_hist)   = blowre(:,loc_orb(ielec),1)
+             blowre_hist(:,ielec,n_hist-1) = blowre(:,loc_orb(ielec),1)
+             blowre_hist(:,ielec,n_hist-2) = blowre(:,loc_orb(ielec),1)
+             hist_fix(ielec) = 0  
+           end if ! hist_fix(ielec)
+         else
+           hist_fix(ielec) = 1
+         endif ! loc_orb(ielec) .eq. map_ks(ielec)
+
        else
-         ioccupy_k(id_hole,ikpoint) = 0
+
+! multiple degeneracy: stay with the previous time step and reset the reference projection
+! reset degenerated states to previous time step
+         loc_orb(ielec) = map_ks(ielec)
+         flag_proj = 1
+! set the ref. projection to given state
+         do i= 1,n_hist
+           blowre_hist(:,ielec,i) = blowre(:,loc_orb(ielec),1)
+         end do !
+         do jelec = 1, nele
+! select the degenerate states
+           if (map_ks_fix(jelec) .eq. 1) then
+             loc_orb(jelec) = map_ks(jelec)
+! set the ref. projection to the previous time step
+             do i= 1,n_hist
+              blowre_hist(:,jelec,i) = blowre(:,map_ks(jelec),1)
+             end do !
+!              blowre_hist(:,jelec,n_hist) = blowre(:,map_ks(jelec),1)
+           endif !if map_ks
+         end do ! do jelec
+       end if ! if map_ks_fix
+
+     end do ! do iele
+
+
+! update map_ks from actual loc_orb (free of the degeneracy)
+    map_ks = loc_orb
+!write (1004,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
+    do ielec=1, nele
+       if (iocc(ielec) .eq. 1.0) then
+          foccupy_na(loc_orb(ielec),1) = iocc(ielec)*0.5d0
+          ioccupy_na(loc_orb(ielec),1) = iocc(ielec)        
        end if
-       if (foccupy(id_elec,ikpoint) .gt. 1.0d-5) then
-         ioccupy_k(id_elec,ikpoint) = 1
-       else
-         ioccupy_k(id_elec,ikpoint) = 0
-       end if
+    end do ! do iele
+!write (1005,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
 
-! dump it
-       write (*,300) id_elec, projel(id_elec), foccupy(id_elec,ikpoint)
-       write (*,301) id_hole, projh(id_hole), foccupy(id_hole,ikpoint)
-       write (*,301) id_hole-1, projh(id_hole-1), foccupy(id_hole-1,ikpoint)
-       !write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
-       do iband=1,norbitals
-          write (111,'(f6.1)',advance='no') foccupy(iband,ikpoint)
-       end do
-       write (111,*)
-       return
-      endif 
+! ???
+!     foccupy_na_o=foccupy_na 
+     
+! check degeneracy again
+     do ielec=1, nele
+       do jelec= 1, nele
+         if ((loc_orb(ielec) .eq. loc_orb(jelec)) .and. (ielec .ne. jelec)) then
+!         if (loc_orb(ielec) .eq. loc_orb(jelec)) then
+          write(*,*) "WARNING_degeneracy", itime_step_g, loc_orb(ielec), loc_orb(jelec) 
+         endif
+       end do ! do jelec
+!       write(33333,*) ielec, map_ks(ielec), loc_orb(ielec),pmax(ielec)
+     end do ! ielec
 
-! 3. hole state becomes empty; we use second lower state to be empty
-     if (dqhole .lt. 0.0d0) then 
-       foccupy(id_hole,ikpoint) = foccupy(id_hole,ikpoint) - occup_elec - dqhole
-       foccupy(id_hole-1,ikpoint) = foccupy(id_hole-1,ikpoint) + dqhole
-       foccupy(id_elec,ikpoint) = foccupy(id_elec,ikpoint) + occup_elec 
-       if (foccupy(id_hole,ikpoint) .gt. 1.0d-5) then
-         ioccupy_k(id_hole,ikpoint) = 1
-       else
-         ioccupy_k(id_hole,ikpoint) = 0
-       end if
-       if (foccupy(id_hole-1,ikpoint) .gt. 1.0d-5) then
-         ioccupy_k(id_hole-1,ikpoint) = 1
-       else
-         ioccupy_k(id_hole-1,ikpoint) = 0
-       end if
-       if (foccupy(id_elec,ikpoint) .gt. 1.0d-5) then
-         ioccupy_k(id_elec,ikpoint) = 1
-       else
-         ioccupy_k(id_elec,ikpoint) = 0
-       end if
+     nel = 0
+     do ielec=1, norbitals   
+      if (foccupy_na(ielec,1) .eq. 0.5) then
+         nel = nel +1
+         loc_el(nel) = ielec 
+      end if 
+     end do
 
-! dump it
-       write (*,300) id_elec, projel(id_elec), foccupy(id_elec,ikpoint)
-       write (*,301) id_hole, projh(id_hole), foccupy(id_hole,ikpoint) 
-       write (*,301) id_hole-1, projh(id_hole-1), foccupy(id_hole-1,ikpoint) 
-       !write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
-       do iband=1,norbitals
-          write (111,'(f6.1)',advance='no') foccupy(iband,ikpoint)
-       end do
-       write (111,*)
-       return
-     endif
-
-! 4. electron state becomes filled; we 
-     if (dqelec .gt. 1.0d0) then 
-       dqorb = dqelec - 1.0d0
-       foccupy(id_elec,ikpoint) = foccupy(id_elec, ikpoint) + occup_elec - dqorb
-       foccupy(id_hole,ikpoint) = foccupy(id_hole,ikpoint) - occup_elec + dqorb
-       if (foccupy(id_hole,ikpoint) .gt. 1.0d-5) then
-         ioccupy_k(id_hole,ikpoint) = 1
-       else
-         ioccupy_k(id_hole,ikpoint) = 0
-       end if
-       foccupy(id_hole-1,ikpoint) = foccupy(id_hole,ikpoint) + dqorb
-       if (foccupy(id_hole-1,ikpoint) .gt. 1.0d-5) then
-         ioccupy_k(id_hole-1,ikpoint) = 1
-       else
-         ioccupy_k(id_hole-1,ikpoint) = 0
-       end if
-
-! dump it
-       write (*,300) id_elec, projel(id_elec), foccupy(id_elec,ikpoint)
-       write (*,301) id_hole, projh(id_hole), foccupy(id_hole,ikpoint) 
-       write (*,301) id_hole-1, projh(id_hole-1), foccupy(id_hole-1,ikpoint) 
-       !write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
-       do iband=1,norbitals
-          write (111,'(f6.1)',advance='no') foccupy(iband,ikpoint)
-       end do
-       write (111,*)
-       return
-
-     endif
-
- 
-! remove an electron charge; i.e. form a hole     
-      foccupy(id_hole,ikpoint) = foccupy(id_hole,ikpoint) - occup_elec
-      if (foccupy(id_hole,ikpoint) .lt. 0.0d0) foccupy(id_hole,ikpoint) = 0.0d0
-      if (foccupy(id_hole,ikpoint) .gt. 1.0d-5) then
-        ioccupy_k(id_hole,ikpoint) = 1
-      else
-        ioccupy_k(id_hole,ikpoint) = 0
-      end if
-! add an electron charge; i.e. form an excited state     
-      foccupy(id_elec,ikpoint) = foccupy(id_elec, ikpoint) + occup_elec
-      if (foccupy(id_elec,ikpoint) .gt. 1.0d-5) then
-        ioccupy_k(id_elec,ikpoint) = 1
-      else
-        ioccupy_k(id_elec,ikpoint) = 0
-      endif
-
-      write (*,300) id_elec, projel(id_elec), foccupy(id_elec,ikpoint)
-      write (*,301) id_hole, projh(id_hole), foccupy(id_hole,ikpoint) 
-      !write (111,'(<norbitals>f6.1)')  (foccupy(iband,ikpoint), iband=1,norbitals)
-      do iband=1,norbitals
-         write (111,'(f6.1)',advance='no') foccupy(iband,ikpoint)
-      end do
-      write (111,*)
-
+  end if ! if itime_step_g
+  
 200     format (' Band n = ', i4, ' k-points: ioccupy = ', i2)
 201     format (' Band n = ', i4, ' foccupy = ', f6.3)
-300     format (' Excited e- :', i4, f12.6, f6.2)
-301     format (' Left h+    :', i4, f12.6, f6.2)
 
   end subroutine project_eh

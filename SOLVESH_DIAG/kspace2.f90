@@ -347,7 +347,6 @@
 
         endif  ! end if (iqout .eq. 3)
 
-
 ! DIAGONALIZE THE OVERLAP MATRIX
 ! ****************************************************************************
 ! If you are within the scf loop, you do not have to recalculate the overlap.
@@ -365,6 +364,7 @@
            call zheevd('V', 'U', norbitals, zzzz, norbitals, slam, work,      &
      &               lwork, rwork , lrwork, iwork, liwork, info )
          else
+
 ! first find optimal working space
            call zheev ('V', 'U', norbitals, zzzz, norbitals, slam, work,      &
                        -1, rwork, info)
@@ -380,9 +380,9 @@
          if (info .ne. 0) call diag_error (info, 0)
 
          if (ishort .eq. 1 .and. wrtout) then
-          write (*,100) slam(1), slam(norbitals)
+!          write (*,100) slam(1), slam(norbitals)
          else if (wrtout) then
-          write (*,200) (slam(imu), imu = 1, norbitals)
+!          write (*,200) (slam(imu), imu = 1, norbitals)
          end if
 
 ! xxxx = unused
@@ -583,7 +583,7 @@
           write (*,*) '            The energy eigenvalues: '
           write (*,*) ' *********************************************** '
         end if
-
+ 
 ! Eigenvectors are needed to calculate the charges and for forces!
         if (divide) then
           call zheevd('V', 'U', norbitals, yyyy, norbitals, eigen, work,       &
@@ -672,7 +672,7 @@
 100     format (2x, ' eigenvalue(1) = ', f16.8, &
      &              ' eigenvalue(norbitals) = ', f16.8)
 200     format (4(2x, f12.4))
-!300     format (2x, <norbitals>f12.4)
+300     format (2x, <norbitals>f12.4)
 301     format (2x, 2i4,2f12.4)
 302     format (2x, 4i4,3f12.4)
 

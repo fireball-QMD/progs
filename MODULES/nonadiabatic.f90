@@ -53,6 +53,17 @@
 	 real, dimension (:,:), allocatable :: ratom_opt
 	 real, dimension (:,:), allocatable :: dnac_opt
 
-         integer trans ! VLADA
-
+! vlada-cdft-mdet
+         real gs_scf
+         integer num_dV
+         integer n_hist
+         real, dimension (:), allocatable :: wf_weight 
+         real, dimension (:), allocatable :: iocc
+         real, dimension (:), allocatable :: sgn_wf
+         integer flag_proj
+         integer flag_es
+         real, dimension (2) :: loc_el
+         real, dimension (:),    allocatable :: Wmu_glob
+         integer, dimension (:), allocatable :: hist_fix
+         integer, dimension (: ),    allocatable :: map_ks_o
         end module

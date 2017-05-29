@@ -89,6 +89,15 @@
 
         deallocate (rhoPP)
         allocate (rhoPP (numorb_max, numorb_max, neighPP_max**2, natoms))
+
+        deallocate (cape_es)
+        deallocate (rho_es)
+        allocate (cape_es (numorb_max, numorb_max, neigh_max, natoms))
+        allocate (rho_es (numorb_max, numorb_max, neigh_max, natoms))
+
+        deallocate (rhoPP_es)
+        allocate (rhoPP_es (numorb_max, numorb_max, neighPP_max**2, natoms))
+
         
         if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2) then 
          deallocate (arho_on)

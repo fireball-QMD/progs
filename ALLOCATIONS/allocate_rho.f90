@@ -87,6 +87,11 @@
         allocate (rho (numorb_max, numorb_max, neigh_max, natoms))
         allocate (rhoPP (numorb_max, numorb_max, neighPP_max**2, natoms))
 
+        allocate (cape_es (numorb_max, numorb_max, neigh_max, natoms))
+        allocate (rho_es (numorb_max, numorb_max, neigh_max, natoms))
+        allocate (rhoPP_es (numorb_max, numorb_max, neighPP_max**2, natoms))
+
+
 ! jel-grid
         if (igrid .eq. 1) then
          allocate (rhoA (numorb_max, natoms))

@@ -51,18 +51,12 @@
         use options
         use configuration
         use options
-!        use outputs
         use MD
-!        use neb
         use forces
-!        use fragments
         use constants_fireball
         use energy
-!        use barrier
         use optimization
-!        use interactions
-!        use charges
-	use scf
+        use scf
 
         implicit none
 
@@ -84,9 +78,9 @@
 ! in case of constrain DFT, first we perform SCF loop for the ground state;
 ! This will be used later as a reference state
         if(icDFT .eq. 1 ) then
-          call scf_loop (0)
-          call getenergy (0)
-          cDFT_active = .true.
+         call initcDFT ()
+         call getenergy (0)
+         cDFT_active = .true.
         endif  ! end icDFT 
 
 ! ===========================================================================
@@ -105,6 +99,7 @@
 ! ===========================================================================
 
         do itime_step = nstepi, nstepf
+         itime_step_g = itime_step
          if (iimage .ge. 1)                                                  &
      &    call imaged (icluster, iimage, itime_step, nstepi)
 

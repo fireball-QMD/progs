@@ -36,7 +36,8 @@ USEBLAS = YES
 #MACHINE = ILINUX_MAC
 #MACHINE = ILINUX_fast05
 #MACHINE = SGI-krejci
-MACHINE = GFORTRAN
+MACHINE = SGI
+#MACHINE = GFORTRAN
 
 # Pick your parallel type: <blank for none>, MPI, MPICH (MUST set method below)
 # or OPENMP 
@@ -55,8 +56,8 @@ PARALLEL =
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-METHOD = DOUBLE 
-#METHOD = GAMMA 
+#METHOD = DOUBLE 
+METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
@@ -71,7 +72,7 @@ PROFILER = -pg
 
 # Set some defaults for non-MPI
 ORDERN = 
-FORM_RHO = denmat.o denmat_KS.o fermie.o denmata_ordern_fk.o \
+FORM_RHO = denmat.o denmat_es.o denmat_KS.o fermie.o denmata_ordern_fk.o \
 	denmatb_ordern_fk.o denmatc_ordern_fk.o ss12_fk.o build_rho.o \
 	build_rho_KS.o build_Ji.o koopman.o build_nij.o project_eh.o project_wfmdet.o
 KSPACE = kspace.o kspace_KS.o kspace_ordern_fk.o diag_error.o diag_k.o \
@@ -818,6 +819,8 @@ denmat.o : FORM_RHO/denmat.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c FORM_RHO/denmat.f90
 denmat_fk.o : FORM_RHO/denmat_fk.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c FORM_RHO/denmat_fk.f90
+denmat_es.o : FORM_RHO/denmat_es.f90
+	$(F90) $(FFLAGS) -c FORM_RHO/denmat_es.f90
 denmata_ordern.o : FORM_RHO/denmata_ordern.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c FORM_RHO/denmata_ordern.f90
 denmatb_ordern.o : FORM_RHO/denmatb_ordern.f90 $(MODULES)

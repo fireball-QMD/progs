@@ -14,6 +14,12 @@
          real, dimension (:, :, :, :), allocatable :: cape
          real, dimension (:, :, :, :), allocatable :: rho
          real, dimension (:, :, :, :), allocatable :: rhoPP
+
+! These arrays store the densities in excited state.
+         real, dimension (:, :, :, :), allocatable :: cape_es
+         real, dimension (:, :, :, :), allocatable :: rho_es
+         real, dimension (:, :, :, :), allocatable :: rhoPP_es
+
 ! jel-grid
          real, dimension (:, :), allocatable :: rhoA
          real, dimension (:, :, :, :), allocatable :: rho_old
@@ -32,9 +38,13 @@
 ! JOM-nonadiabatic
          real, dimension ( :, :), allocatable :: foccupy_na
          integer, dimension ( :, :), allocatable :: ioccupy_na
-! VLADA-nonadiabatic
-         real, dimension ( :, :), allocatable :: foccupy_na_TS    
-         integer, dimension ( :, :), allocatable :: ioccupy_na_TS   
+! VLADA-nonadiabatic & cdft-mdet
          real, dimension (:, :, :), allocatable :: bbnkre_o 
          real, dimension (:, :, :), allocatable :: blowre_o  
+         real, dimension (:, :, :), allocatable :: blowre_hist
+         real, dimension ( :, :), allocatable :: foccupy_wr_gs    
+         real, dimension ( :, :), allocatable :: foccupy_wr_gs_check  
+         real, dimension ( :, :), allocatable :: foccupy_wr_proj
+         real, dimension ( :, :), allocatable :: foccupy_na_o
+         integer, dimension ( :, :), allocatable :: ioccupy_na_o
        end module density

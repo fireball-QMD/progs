@@ -15,6 +15,7 @@
  logical  cDFT_active
  real, dimension (:,:), allocatable :: wf_elec
  real, dimension (:,:), allocatable :: wf_hole
+ real tempfe_eh    ! Fermi temperature of electron and hole (Smearing)
 ! cDFT vlada
 
 ! idmix: Defines the mixing procedure: idmix=1 means simple mixing

@@ -86,7 +86,7 @@
         integer jele
         integer istp
         integer nfermi
-        integer, dimension (:), allocatable :: iocc
+ !       integer, dimension (:), allocatable :: iocc
  
         real qztot
         real qcharge

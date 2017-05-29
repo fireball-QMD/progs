@@ -43,7 +43,7 @@ ifneq (,$(findstring SGI, ${MACHINE}))
 # Dec 08 
 		LFLAGS = -I${PATH_MKL_INCL} -L${PATH_MKL} \
 			-Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core \
-			-Wl,--end-group -lguide -lpthread \
+			-Wl,--end-group -liomp5 -lpthread \
 			${PATH_FFTW_INCL} -lfftw3xf_intel  -lm 
 #			-L${PATH_MKL} ${PATH_FFTW_INCL} -lfftw3xf_intel -lm 
 		BLAS = 
@@ -99,7 +99,7 @@ ifneq (,$(findstring SGI, ${MACHINE}))
 			-lmkl_scalapack_lp64 \
 			-lmkl_blacs_openmpi_lp64 \
 			-lmkl_lapack -lmkl_intel_lp64 -lmkl_intel_thread \
-			-lmkl_core -lguide -lpthread \
+			-lmkl_core -liomp5 -lpthread \
 			-L${PATH_FFTW_LIB} ${PATH_FFTW_INCL} -L${PATH_MKL}  -lfftw3xf_intel  \
 			-lm -lmkl_em64t \
 			-Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} \

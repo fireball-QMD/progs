@@ -21,6 +21,12 @@
          real, dimension (:), allocatable :: QLowdin_TOT
          real, dimension (:), allocatable :: QMulliken_TOT
 
+! vlada-cdft-mdet
+         real, dimension (:, :), allocatable :: Qin_es
+         real, dimension (:, :), allocatable :: Qout_es      !vlada cdft
+         real, dimension (:), allocatable :: QLowdin_TOT_es  !vlada cdft
+
+
 ! anderson iteration procedure
         real, allocatable, dimension(:,:) :: Fv   ! x_try-x_old 
         real, allocatable, dimension(:,:) :: Xv   ! x_old 

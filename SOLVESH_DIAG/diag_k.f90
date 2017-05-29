@@ -103,7 +103,7 @@
 ! JOM
 ! jel-nac
 !        if (itdse .eq. 1 .or. imdet .eq. 1) then
-        if (itdse .eq. 1 .or. imdet .ne. 0) then
+        if (itdse .eq. 1 .or. imdet .ne. 0 .or. icDFT .eq. 1) then
 ! nothing to do, we already allocated these arrays
 ! JOM-info : for mdet they are allocated in init_mdet.f90
           write (*,*) ' save eigenstuff '

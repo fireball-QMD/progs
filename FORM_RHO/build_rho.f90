@@ -60,6 +60,8 @@
         use kpoints
         use nonadiabatic
         use dynamo ! e-ph coupling
+        use charges ! vlada cdft 
+
 
         implicit none
 
@@ -74,8 +76,8 @@
 ! Local Variable Declaration and Description
 ! ===========================================================================
 	integer imu
-        integer ikpoint
-
+       integer ikpoint
+       integer i
 ! Procedure
 ! ===========================================================================
 
@@ -86,6 +88,7 @@
 ! Compute the density matrices. The results rho and cape are computed.
 ! The bandstructure energy is also computed.
 ! First initialize the density matrices to zero.
+
           rho = 0.0d0
           cape = 0.0d0
           if (tempfe .le. 50.0d0) tempfe = 50.0d0 ! Can't be zero
@@ -94,17 +97,24 @@
 ! jel-nac
 !         if (imdet .eq. 1) then
          if (imdet .ne. 0) then
-          if (iProjWF .eq. 1) then
-              call project_wfmdet ()
-           end if
+!          if (iProjWF .eq. 1) then
+!              call project_wfmdet ()
+!           end if
 ! jel-nac
 !          call check_swap (itime_step,Kscf)
           call mdetdenmat (ifixcharge, iqout, icluster, iwrtefermi,     &
      &                  tempfe, ebs, iwrtpop)
          else
 !         if (tempfe .le. 50.0d0) tempfe = 50.0d0 ! Can't be zero
-          call denmat (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
-     &                  iwrtpop,bmix,Kscf,igap)
+
+           if (icDFT .eq. 1) then
+            call denmat_es (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
+       &                  iwrtpop,bmix,Kscf,igap)
+           else 
+            call denmat (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
+       &                  iwrtpop,bmix,Kscf,igap)
+           end if ! end (icDFT .eq. 1)
+
 
      ! GAP ENRIQUE-FF
            if ((igap .eq. 1).or.(igap .eq. 2)) then
@@ -163,37 +173,48 @@
 ! ===========================================================================
 ! call mixer
          call mixer (natoms, itheory, ifixcharge, iwrtcharges)
-
+         flag_es = 0 
 ! Check convergence of charge; sigmatol is in scf.optional
          if (sigma .lt. sigmatol) then
            scf_achieved = .true.
-
-! cDFT
-           if (icDFT .eq. 1 ) then
-
-              write (*,*) 'write out WF-cDFT'
-              open  (322, file = 'el-h.dat', status = 'unknown')
-
-! save e and h wf for next projection
-              do ikpoint = 1, nkpoints
-               write (*,*) 'EIG-h =',eigen_k(id_hole,ikpoint)
-               write (*,*) 'EIG-e =',eigen_k(id_elec,ikpoint)
-               wf_hole(:,ikpoint) = blowre(:,id_hole,ikpoint)
-               wf_elec(:,ikpoint) = blowre(:,id_elec,ikpoint)
-               
-               !write (323,'(<norbitals>f10.4)')  (eigen_k(imu,ikpoint), imu=1,norbitals) 
-               do imu=1,norbitals
-                write (323,'(f10.4)', advance='no')  eigen_k(imu,ikpoint)
-               end do
-! just for a case also into file
-               write (322,*)  'ikpts =',ikpoint
-               write (322,*)  ((wf_hole(imu, ikpoint)),imu=1, norbitals)
-               write (322,*)  ((wf_elec(imu, ikpoint)),imu=1, norbitals)
-              end do ! ikpoint
-              close (322)
-
-           endif ! endif icDFT
+           flag_es = 1
          endif ! (sigma)
+
+! call projection
+         if ((scf_achieved .eqv. .true. .or. Kscf .eq. max_scf_iterations) .and. (icDFT .eq. 1 .or. iProjWF .eq. 1 )) then    
+            if (itime_step .gt. 0) then
+              call project_eh()
+              write (3005,'(<norbitals>f10.4)') (eigen_k(imu,1), imu=1,norbitals)
+              write (4004,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
+!             write (217,'(2i4,4f6.1)') itime_step,flag_proj,loc_el(1),loc_el(2),Wmu_glob(loc_el(1)),Wmu_glob(loc_el(2))
+!              write(217,'(i4,27f10.4)') itime_step,(Wmu_glob(imu) , imu = 1, 27)
+!              call denmat (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
+!              &     iwrtpop,bmix,Kscf,igap)
+              call denmat_es (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
+              &     iwrtpop,bmix,Kscf,igap)
+
+!              write (4044,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
+!             write(8888,'(i4,i4,<norbitals>f6.1)') itime_step, Kscf, (0.0d0 ,imu=1,norbitals)
+              rho = rho_es
+              cape = cape_es
+              rhoPP = rhoPP_es
+!             Qout_kscf_1 = Qout
+              Qout(:,:) = Qout_es(:,:)
+              QLowdin_TOT(:) = QLowdin_TOT_es(:)
+            end if
+         end if
+
+!         if (iwrtewf .eq. 1) then
+!          if (scf_achieved .eqv. .true.) then
+!           if (mod(itime_step,3) .eq. 0) then
+!            if (itime_step .lt. 101 ) then
+!             write (*,*) ' Call ewf2mesh subroutine '            
+!               call ew2mesh (icluster,itime_step/3)
+!            end if  
+!           end if
+!          end if   
+!         end if
+
 
 ! If ifixcharge = 1 then do not iterate to self=consistancy...
          if (ifixcharge .eq. 1) then
@@ -213,7 +234,7 @@
           call writeout_cd (icluster, iwrtcdcoefs, itime_step)
 
 ! begin VLADA-MDET  
-         if ( itime_step .eq. 1 .and. Kscf .eq. 1 ) then
+         if ( itime_step .eq. 0 .and. Kscf .eq. 1 ) then
            allocate (bbnkre_o(norbitals,norbitals,nkpoints))
            allocate (blowre_o(norbitals,norbitals,nkpoints))
          end if
@@ -223,7 +244,7 @@
 ! end VLADA-MDET
 ! JOM-MDET
 ! save SCF-wavefunctions for TDSE or MDET run
-         if (itdse .eq. 1 .or. imdet .ne. 0) then
+         if (itdse .eq. 1 .or. imdet .ne. 0 .or. icDFT .eq. 1) then
           write (*,*) ' save eigenstuff '
 !
          else
