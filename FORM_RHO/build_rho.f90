@@ -184,8 +184,10 @@
          if ((scf_achieved .eqv. .true. .or. Kscf .eq. max_scf_iterations) .and. (icDFT .eq. 1 .or. iProjWF .eq. 1 )) then    
             if (itime_step .gt. 0) then
               call project_eh()
-              write (3005,'(<norbitals>f10.4)') (eigen_k(imu,1), imu=1,norbitals)
-              write (4004,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
+              do imu=1, norbitals
+                write (3005,'(f10.4)') eigen_k(imu,1)
+                write (4004,'(f10.4)') foccupy_na(imu,1)
+              end do
 !             write (217,'(2i4,4f6.1)') itime_step,flag_proj,loc_el(1),loc_el(2),Wmu_glob(loc_el(1)),Wmu_glob(loc_el(2))
 !              write(217,'(i4,27f10.4)') itime_step,(Wmu_glob(imu) , imu = 1, 27)
 !              call denmat (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
