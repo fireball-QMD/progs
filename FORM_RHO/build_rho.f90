@@ -235,8 +235,8 @@
          if (iwrtcdcoefs .gt. 0 .and. (scf_achieved .or. (igap .eq. 2)) )   &
           call writeout_cd (icluster, iwrtcdcoefs, itime_step)
 
-! begin VLADA-MDET  
-         if ( itime_step .eq. 0 .and. Kscf .eq. 1 ) then
+! begin VLADA-MDET ' if itime_step=0 don't allocate with gfortran 
+         if ( itime_step .eq. 1 .and. Kscf .eq. 1 ) then
            allocate (bbnkre_o(norbitals,norbitals,nkpoints))
            allocate (blowre_o(norbitals,norbitals,nkpoints))
          end if
