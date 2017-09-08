@@ -82,6 +82,7 @@
         integer nswitchs
         integer is
         integer ia
+        integer i
         integer iele
         integer jele
         integer istp
@@ -117,6 +118,16 @@
 ! JOM-info : number of states involved in transitions
          open (unit = 22, file = 'mdet.input', status = 'old' )
          write (*,*) ' Reading from mdet.input file! '
+! read the information about projection
+         if (iProjWF .eqv. 1) then
+           read (22,*) n_hist
+! Weights used for construction reference function from history
+           allocate (wf_weight (n_hist))
+           do i=1,n_hist 
+             read(22,*) wf_weight(i)    
+           end do
+         end if 
+
 ! JOM-info number of switches
          read(22,*) nele
          allocate (map_ks (nele) )
@@ -128,8 +139,9 @@
            map_ks(iele) = iband
          end do
          close (22)
-
 !---------------------------------------------------------------------
+        if (iProjWF .eqv. 1)  allocate (blowre_hist(norbitals,nele,n_hist))
+        if (iProjWF .eqv. 1)  allocate (hist_fix (nele))
 
         allocate (gks (3, natoms, nele, nele))
         allocate (dnac (nele, nele))
@@ -211,7 +223,8 @@
          end do
         end do
         
-! change occupations using mdet.input values  (iocc(iele))        
+! change occupations using mdet.input values  (iocc(iele))     
+
         do ikpoint = 1, nkpoints
          do iele = 1, nele
           iband = map_ks(iele)
@@ -219,7 +232,7 @@
           ioccupy_na(iband,ikpoint) = iocc(iele)
          end do
         end do
-        
+
 ! check
         qcharge = 0.0d0
         do ikpoint = 1, nkpoints

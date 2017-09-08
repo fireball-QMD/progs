@@ -72,7 +72,7 @@
 !
 ! Program Declaration
 ! ===========================================================================
- subroutine ew2mesh_gamma (icluster,itime_step)
+ subroutine ew2mesh_gamma (icluster)
   
    use configuration
    use dimensions
@@ -83,6 +83,7 @@
    use charges
    use kpoints
    use tdse
+   use MD
    
    implicit none
 
@@ -90,7 +91,7 @@
 ! ===========================================================================
 ! Input
    integer, intent (in) :: icluster
-   integer, intent (in) :: itime_step
+!   integer, intent (in) :: itime_step
 !Output
 
 
@@ -171,7 +172,7 @@
 ! Procedure
 ! ===========================================================================
 
-write (*,*) " itimestep ",itime_step
+!write (*,*) " itimestep ",itime_step
 
 write (*,*) " HEY !  ew2mesh_gamma   HERE! " 
 
@@ -351,8 +352,8 @@ if (iewform .eq. 4) then
    maxv = 0.0
    positive = 0.0
    negative = 0.0
-   write (*,'(i4.4,"-",i4.4)') iband,itime_step
-   write (name,'(i4.4,"-",i4.4)') iband,itime_step
+   write (*,'(i4.4,"-",i4.4)') iband,itime_step_g
+   write (name,'(i4.4,"-",i4.4)') iband,itime_step_g
   ! write (name1,'(i4.4)') itime_step
    namewf = 'orb_'//name//'.ppm'
    open ( unit = 302, file = namewf, status = 'unknown' )
@@ -391,7 +392,7 @@ endif
 if (iewform .eq. 3) then
      ! file = 100 + iband
     ! write (name,'(i4.4)') iband
-     write (name,'(i4.4,"-",i4.4)') iband,itime_step
+     write (name,'(i4.4,"-",i4.4)') iband,itime_step_g
      namewf = 'orbital_'//name//'.xsf'
      write (*,*) '  writting down band no.',iband,' into the file ',namewf
      pmat => ewfaux

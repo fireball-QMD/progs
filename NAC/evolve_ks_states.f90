@@ -115,7 +115,7 @@
 ! JOM-test
 !	write(*,*) 'entramos en evolve states'
 !       write(*,*)'c_na',c_na(2,2,1),cabs(c_na(2,2,1))
- 
+
         aim = cmplx(0.0d0, 1.0d0)
         a0 = cmplx(0.0d0, 0.0d0)
         a1 = cmplx(1.0d0, 0.0d0)
@@ -138,12 +138,12 @@
 
 !          write (216, '(<nele>f16.10)') (eigen_k(imu,1), imu = map_ks(1),map_ks(1)+nele-1)
 !          write (216, '(<nele+2>f16.10)') (eigen_k(imu,1), imu = map_ks(1)-1,map_ks(1)+nele)
-        do  imu = map_ks(1)-1,map_ks(1)+nele
-            write (216, '(f16.10)', advance='no') eigen_k(imu,1)
-        end do
-        write (216,*)
-           
-           
+
+!           write (216, '(<nele+2>f16.10)') (eigen_k(imu,1), imu = map_ks(1)-1,map_ks(1)+nele)
+
+           write (216, '(<norbitals>f16.8)') (eigen_k(imu,1), imu = 1,norbitals)
+
+
 ! ===========================================================================
 ! Calculate d/dt c_{ak} at different time steps in between t and t+dt
 ! tt(it) = t + dt/Nsteps * it . We need to interpolate the values for
@@ -258,7 +258,6 @@
           write(214,102) iele, jele, real(c_na(iele,jele,1)),aimag(c_na(iele,jele,1))
 	 end do
 	end do
- 
 
 ! Deallocate Arrays
 ! ===========================================================================

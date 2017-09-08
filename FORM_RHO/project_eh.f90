@@ -68,6 +68,7 @@
         use density    
         use interactions       
         use nonadiabatic ! vlada
+        use options
         implicit none
  
 ! Argument Declaration and Description
@@ -90,9 +91,11 @@
         integer inu
         integer ielec
         integer jelec
+        integer iband
         integer itime_step
         integer i 
         integer j 
+        integer iele 
         integer map_ks_fix(nele)
         real, dimension (norbitals) :: AAA
         integer nel
@@ -113,7 +116,19 @@
 !     write(11333,*) itime_step_g
 !    write (171717,*) "ielec, loc_orb, map_ks(ielec),iocc(ielec)"
 !    write(88888,'(i4,i4,<norbitals>f6.1)') itime_step, Kscf, (foccupy_na(j,1),j=1,norbitals)
-
+! in the case of projection within MDET the blowre_hist will be inialized here in the first step
+! store initial history of wf (in this case all stored wf are the same) 
+       if (itime_step_g .eqv. 1 ) then 
+        if (iProjWF .eqv. 1 .and. imdet .eqv. 1) then
+          do iband = 1, norbitals  
+             do iele = 1,nele
+               do i = 1,n_hist
+                 blowre_hist(iband,iele,i)=blowre(iband,map_ks(iele),1)
+               end do
+             end do
+          end do 
+        end if
+       end if  
 ! ==== w.f. projection ====
 ! loop over tracked electronic states
      do ielec=1,nele
@@ -217,6 +232,7 @@
 !write (1004,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
     do ielec=1, nele
        if (iocc(ielec) .eq. 1.0) then
+          write(*,*) "ielec", ielec, iocc(ielec), loc_orb(ielec), foccupy_na(loc_orb(ielec),1)
           foccupy_na(loc_orb(ielec),1) = iocc(ielec)*0.5d0
           ioccupy_na(loc_orb(ielec),1) = iocc(ielec)        
        end if
@@ -244,7 +260,6 @@
          loc_el(nel) = ielec 
       end if 
      end do
-
   end if ! if itime_step_g
   
 200     format (' Band n = ', i4, ' k-points: ioccupy = ', i2)

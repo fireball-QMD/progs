@@ -202,12 +202,13 @@
          call fewest_switches (itime_step)
 
 ! Write out occupancy
-    ! write(213,'(i4,<nele>f6.1)') itime_step, (2*foccupy_na(map_ks(iele),1),iele=1,nele)
-    write (213,'(i4)',advance='no') itime_step
-    do iele=1,nele
-       write(213,'(f6.1)',advance='no') 2*foccupy_na(map_ks(iele),1) 
-    end do
-    write (213)
+ !    write(213,'(i4,<nele>f6.1)') itime_step, (2*foccupy_na(map_ks(iele),1),iele=1,nele)
+       write(213,'(i4,<norbitals>f6.1)') itime_step, (foccupy_na(iele,1),iele=1,norbitals)
+ !   write (213,'(i4)',advance='no') itime_step
+ !   do iele=1,nele
+ !      write(213,'(f6.1)',advance='no') 2*foccupy_na(map_ks(iele),1) 
+ !   end do
+  !  write (213)
 
 ! ----------------------------------------------------------------------------
 ! JOM-  we need to save eigen_old, psi_old,
