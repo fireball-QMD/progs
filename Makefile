@@ -34,9 +34,10 @@ USEBLAS = YES
 # What machine? (AIX/AIX_LLNL/BLUEHORIZON/LINUX/LAPTOP/MARYLOU/MARYLOU10/
 # SGI_LANL/SIMPLE/ICEBOX/ALPHA/TRU64/ILINUX/GFORTRAN)
 #MACHINE = ILINUX_MAC
-#MACHINE = ILINUX_fast05
+MACHINE = ILINUX_fast05
+#MACHINE = ILINUX_gnu
 #MACHINE = SGI-krejci
-MACHINE = SGI
+#MACHINE = SGI
 #MACHINE = GFORTRAN
 
 # Pick your parallel type: <blank for none>, MPI, MPICH (MUST set method below)
@@ -56,8 +57,8 @@ PARALLEL =
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-#METHOD = DOUBLE 
-METHOD = GAMMA 
+METHOD = DOUBLE 
+#METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.

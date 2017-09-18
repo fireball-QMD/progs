@@ -185,15 +185,14 @@
             if (itime_step .gt. 0) then
               call project_eh()
                if (icDFT .eq. 1) then 
-                write (3005,'(<norbitals>f10.4)') (eigen_k(imu,1), imu=1,norbitals)
-                write (4004,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
-!              write (217,'(2i4,4f6.1)') itime_step,flag_proj,loc_el(1),loc_el(2),Wmu_glob(loc_el(1)),Wmu_glob(loc_el(2))
-!               write(217,'(i4,27f10.4)') itime_step,(Wmu_glob(imu) , imu = 1, 27)
-!               call denmat (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
-!               &     iwrtpop,bmix,Kscf,igap)
-                call denmat_es (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
-                &     iwrtpop,bmix,Kscf,igap)
-
+!                write (3005,'(<norbitals>f10.4)') (eigen_k(imu,1), imu=1,norbitals)
+!                write (4004,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
+!             write (217,'(2i4,4f6.1)') itime_step,flag_proj,loc_el(1),loc_el(2),Wmu_glob(loc_el(1)),Wmu_glob(loc_el(2))
+!              write(217,'(i4,27f10.4)') itime_step,(Wmu_glob(imu) , imu = 1, 27)
+!              call denmat (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
+!              &     iwrtpop,bmix,Kscf,igap)
+              call denmat_es (ifixcharge, iqout, icluster, iwrtefermi, tempfe, ebs, &
+              &     iwrtpop,bmix,Kscf,igap)
 !              write (4044,'(<norbitals>f10.4)') (foccupy_na(imu,1), imu = 1, norbitals)
 !             write(8888,'(i4,i4,<norbitals>f6.1)') itime_step, Kscf, (0.0d0 ,imu=1,norbitals)
                 rho = rho_es
@@ -235,8 +234,8 @@
          if (iwrtcdcoefs .gt. 0 .and. (scf_achieved .or. (igap .eq. 2)) )   &
           call writeout_cd (icluster, iwrtcdcoefs, itime_step)
 
-! begin VLADA-MDET  
-         if ( itime_step .eq. 0 .and. Kscf .eq. 1 ) then
+! begin VLADA-MDET ' if itime_step=0 don't allocate with gfortran 
+         if ( itime_step .eq. 1 .and. Kscf .eq. 1 ) then
            allocate (bbnkre_o(norbitals,norbitals,nkpoints))
            allocate (blowre_o(norbitals,norbitals,nkpoints))
          end if
