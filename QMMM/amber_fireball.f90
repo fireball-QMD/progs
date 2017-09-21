@@ -28,6 +28,8 @@ write (16,605) "nddt = ", qmmm_nml%fb_nddt
 write (16,602) "iqmmm = ", qmmm_nml%qmmm_int
 write (16,602) "ifixcharge =",qmmm_nml%fb_ifixcharge
 write (16,600) 'iquench = 4'
+write (16,605) "tempfe =",qmmm_nml%fb_tempfe
+write (16,602) "idftd3 =",qmmm_nml%fb_idftd3
 write (16,600) "&end"
 write (16,600) "&output"
 write (16,600) "iwrtcharges = 1"!, qmmm_nml%wrtcharges

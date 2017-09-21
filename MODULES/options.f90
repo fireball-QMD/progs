@@ -51,6 +51,7 @@
         integer iProjWF                ! do projection within MDET simulations 
         integer iqmmm                  ! QM/MM Electrostatic embedding 
 	integer iephc                  ! do e-ph coupling
+        integer idftd3                 ! DFTD3 corrections
 ! ---------------------------------------------------------------------------
 ! Other controls
 ! ---------------------------------------------------------------------------

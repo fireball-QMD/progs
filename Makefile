@@ -403,6 +403,8 @@ NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
 QMMM =  amber_fireball.o coords_to_fireball.o coords_forces_charges_to_amber.o \
         fireball_qmmm.o fireball_first_call.o main_loop_MDET_qmmm.o main_loop_MD_qmmm.o
 
+DFTD3 = sizes.o pars.o core.o common.o api.o dftd3_corrections.o
+
 #NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
 #      mdetdenmat.o getforces_mdet.o save_mdetstuff.o evolve_ks_states.o \
 #      deallocate_nac.o dcdt_nac.o Dassemble_2c_mdet.o \
@@ -414,7 +416,7 @@ QMMM =  amber_fireball.o coords_to_fireball.o coords_forces_charges_to_amber.o \
 #      Dassemble_ca_olsxc_3c_mdet.o move_correc.o move_predic.o
 
 
-OBJECTS_COM =  $(INITMPI) $(ORDERN) $(ALLOCATIONS) $(ASSEMBLERS) \
+OBJECTS_COM = $(DFTD3) $(INITMPI) $(ORDERN) $(ALLOCATIONS) $(ASSEMBLERS) \
         $(DASSEMBLERS) $(INITIALIZERS) $(INTERACTIONS) $(INTERPOLATERS) \
         $(LOOPS) $(MD) $(NEIGHBORS) $(PRESSURE) $(READFILES) \
         $(ROTATIONS) $(SOLVESH_DIAG) $(FORM_RHO) $(UMBRELLA) $(UTIL) \
@@ -1731,3 +1733,18 @@ main_loop_MDET_qmmm.o : QMMM/main_loop_MDET_qmmm.f90
 	$(F90) $(FFLAGS) -c QMMM/main_loop_MDET_qmmm.f90
 main_loop_MD_qmmm.o : QMMM/main_loop_MD_qmmm.f90
 	$(F90) $(FFLAGS) -c QMMM/main_loop_MD_qmmm.f90
+# *****************************************************************************
+# dftd3
+# *****************************************************************************
+api.o: dftd3/api.f90
+	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/api.f90
+core.o: dftd3/core.f90
+	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/core.f90
+sizes.o: dftd3/sizes.f90
+	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/sizes.f90
+pars.o: dftd3/pars.f90
+	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/pars.f90
+common.o: dftd3/common.f90
+	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/common.f90
+dftd3_corrections.o : dftd3/dftd3_corrections.f90
+	$(F90) $(FFLAGS) -c dftd3/dftd3_corrections.f90

@@ -95,7 +95,7 @@
   					 kptpreference, acfile, xvfile, nstepi, nstepf, dt,           &
   					 T_initial, T_final, max_scf_iterations, bmix, sigmatol,      &
   					 tempfe, itdse, ibias, rescal, xyz2line, imdet, iProjWF, nddt,	      &
-					 igap, ialgmix, iclassicMD, icDFT, iqmmm, iephc	
+					 igap, ialgmix, iclassicMD, icDFT, iqmmm, iephc, idftd3 	
 
 ! Procedure
 ! ===========================================================================
@@ -174,6 +174,8 @@
         iqmmm = 0
 ! e-ph coupling 
         iephc = 0
+! DFTD3 corrections
+        idftd3 = 0
 
 ! ------  DEFAULT OUTPUTS  ------
         iwrtcdcoefs = 0
@@ -675,10 +677,21 @@
         endif
 
 ! QM/MM
-     if (iqmmm .eq. 1) then
-         write (*,*)  'iqmmm = 1'
-          write (*,*) 'QM/MM with electrostatic embedding'
-     end if
+        if (iqmmm .eq. 1) then
+         write (*,100)
+         write (*,*) ' iqmmm = 1'
+         write (*,*) 'QM/MM with electrostatic embedding'
+         write (*,100)
+        end if
+
+!DFTD3
+        if (idftd3 .eq. 1) then
+         write (*,100)
+         write (*,*) ' idftd3 = 1'
+         write (*,*) ' DFTD3 corrections, J. Chem. Phys. 132, 154104 (2010)'
+         write (*,100)
+        end if
+
 
 ! SECTION OUTPUTS
         if (iwrtcdcoefs .gt. 0)                                              &
@@ -756,6 +769,7 @@
         write (50, *) '  rescalar          : ',rescal
         write (50, *) '  icDFT             : ',icdft
         write (50, *) '  iqmmm             : ',iqmmm
+        write (50, *) '  idftd3            : ',idftd3
         write (50,100)
         write (50, *) ''
         write (50, *) ' SCF'

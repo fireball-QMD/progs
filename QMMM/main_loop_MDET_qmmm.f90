@@ -169,6 +169,13 @@
          write(*,*)'call getforces_mdet'
          call getforces_mdet ()
 
+! ---------------------------------------------------------------------------
+!                         DFTD3 corrections
+! ---------------------------------------------------------------------------
+        if (idftd3 .eq. 1) then
+          call dftd3_corrections
+        endif
+
 ! Calculate numerically the non-adiabatic contribution from the time evolution of the kohn-sham states
 ! Numerical non-adiabatic contribution is not used  for time evolution or calculating of probabilities.
          write(*,*)'call delta_t_ks'
