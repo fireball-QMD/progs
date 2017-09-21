@@ -1737,14 +1737,14 @@ main_loop_MD_qmmm.o : QMMM/main_loop_MD_qmmm.f90
 # dftd3
 # *****************************************************************************
 api.o: dftd3/api.f90
-	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/api.f90
+	$(F90) $(FFLAGS) -c dftd3/api.f90
 core.o: dftd3/core.f90
-	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/core.f90
+	$(F90) $(FFLAGS) -c dftd3/core.f90
 sizes.o: dftd3/sizes.f90
-	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/sizes.f90
+	$(F90) $(FFLAGS) -c dftd3/sizes.f90
 pars.o: dftd3/pars.f90
-	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/pars.f90
+	$(F90) $(FFLAGS) -c dftd3/pars.f90
 common.o: dftd3/common.f90
-	$(F90) $(FFLAGS) -c dftd3/dftd3-lib-0.9/lib/common.f90
+	$(F90) $(FFLAGS) -c dftd3/common.f90
 dftd3_corrections.o : dftd3/dftd3_corrections.f90
 	$(F90) $(FFLAGS) -c dftd3/dftd3_corrections.f90
