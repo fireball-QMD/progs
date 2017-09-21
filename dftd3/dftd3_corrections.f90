@@ -48,6 +48,7 @@
         use forces
         use charges, only: nzx
         use options
+       
 
         implicit none
 
@@ -63,12 +64,12 @@
 ! ===========================================================================
         type(dftd3_input) :: input
         type(dftd3_calc) :: dftd3
-        integer :: iatom,in1
+        integer :: iatom,in1,i
         real :: edisp
         integer :: atomic_mass(natoms)
-        real :: ratom_au(3,natoms)  
         real :: grads(3, natoms)
-
+        real :: stress(3,3)
+        real :: lvs33(3,3)  
 
 ! Procedure
 ! ===========================================================================
@@ -78,7 +79,7 @@
         write(*,*) 'DFTD3 corrections subroutine'
         call dftd3_init(dftd3, input)
         !write(*,*) 'finish dftd3_init'
-       
+
         call dftd3_set_functional(dftd3, dftd3_func, dftd3_version, dftd3_tz)
 
         !write(*,*) 'finish dftd3_set_functional'
@@ -87,19 +88,25 @@
         !inputs   coords: coordinate, izp: Atomic number
         !outputs  disp: energy correction, grads: gradient correction
 
+        do i = 1,3
+          lvs33(1,i)=a1vec(i)
+          lvs33(2,i)=a2vec(i)
+          lvs33(3,i)=a3vec(i)
+        enddo
+
         do iatom = 1, natoms
           in1 = imass(iatom)
           atomic_mass(iatom) = nzx(in1)
         enddo
 
-        !write(*,*) ratom
-        !write(*,*) atomic_mass
+        !atomic positions and lvs vectors in atomic units
 
-        do iatom = 1, natoms
-         ratom_au(:,iatom) = ratom(:,iatom) / 0.52917726
-        enddo
+        if (icluster .eq. 1) then
+          call dftd3_dispersion(dftd3, ratom / 0.52917726, atomic_mass, edisp, grads)
+        else 
+          call dftd3_pbc_dispersion(dftd3,  ratom / 0.52917726,  atomic_mass,lvs33 / 0.52917726, edisp, grads, stress)
+        endif
 
-        call dftd3_dispersion(dftd3, ratom_au, atomic_mass, edisp, grads)
         !la distancias van en bohr para dftd3: ratom/0.52917726
         write(*,*) 'energy disp correction =', edisp
         !energia en a.u. para pasar a eV * 27.2107
