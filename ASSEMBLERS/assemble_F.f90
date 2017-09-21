@@ -58,6 +58,7 @@
         use dimensions
         use forces
         use neighbor_map
+        use options
         implicit none
 
 ! Argument Declaration and Description
