@@ -30,5 +30,7 @@
         real Uexc_1c
 ! QM/MM energy
         real eqmmm
+! DFTD3 energy  
+        real etot_dftd3
 
  end module energy 

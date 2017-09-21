@@ -16,6 +16,8 @@
 
 ! QM/MM forces
          real, dimension (:, :), allocatable :: flrew_qmmm
+! DFTD3  forces
+         real, dimension (:, :), allocatable :: ftot_dftd3
  
 ! Derivatives of interactions
          real, dimension (:, :, :, :, :), allocatable :: dipp

@@ -145,13 +145,6 @@
 
           call getforces ()
 
-! ---------------------------------------------------------------------------
-!                         DFTD3 corrections
-! ---------------------------------------------------------------------------
-        if (idftd3 .eq. 1) then
-          call dftd3_corrections
-        endif
-
 
 ! Move ions now
           write (*,*) 'move_ions'

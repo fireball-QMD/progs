@@ -101,6 +101,12 @@
          call get_vdw () 
          etot = etot + vdw
         end if
+
+         if (idftd3 .eq. 1) then
+          call dftd3_corrections
+          etot = etot + etot_dftd3
+         end if
+
         if (iharmonic .eq. 1) then
          call getHarmonic() 
          etot = etot + enHarmonic

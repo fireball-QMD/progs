@@ -71,7 +71,8 @@
 
 ! Procedure
 ! ===========================================================================
-
+        etot_dftd3 = 0.0d0
+        ftot_dftd3 = 0.0d0
         
         write(*,*) 'DFTD3 corrections subroutine'
         call dftd3_init(dftd3, input)
@@ -101,12 +102,12 @@
         !la distancias van en bohr para dftd3: ratom/0.52917726
         write(*,*) 'energy disp correction =', edisp
         !energia en a.u. para pasar a eV * 27.2107
-        etot = etot + edisp * 27.2107
+        etot_dftd3 = edisp * 27.2107
         !1write(*,*) 'force disp correcion ='
         !write(*,*) grads
         !fuerzas en a.u. (Eh/ao) para pasar a eV/A * 51.421
         do iatom = 1, natoms
-          ftot(:,iatom) = ftot(:,iatom) - grads(:,iatom) * 51.421
+          ftot_dftd3(:,iatom) = - grads(:,iatom) * 51.421
         enddo
 
         endsubroutine dftd3_corrections

@@ -134,6 +134,7 @@
           call assemble_F (natoms, itheory, itheory_xc, igauss, ivdw,       &
      &     iharmonic, iwrtfpieces)
 
+
 ! Reassign forces for tolerance testing. 
           ftotold = ftotnew
           ftotnew = ftot
