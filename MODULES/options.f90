@@ -52,6 +52,9 @@
         integer iqmmm                  ! QM/MM Electrostatic embedding 
 	integer iephc                  ! do e-ph coupling
         integer idftd3                 ! DFTD3 corrections
+        character (len = 40) dftd3_func
+        integer dftd3_version 
+        logical dftd3_tz
 ! ---------------------------------------------------------------------------
 ! Other controls
 ! ---------------------------------------------------------------------------

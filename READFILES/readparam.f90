@@ -95,7 +95,8 @@
   					 kptpreference, acfile, xvfile, nstepi, nstepf, dt,           &
   					 T_initial, T_final, max_scf_iterations, bmix, sigmatol,      &
   					 tempfe, itdse, ibias, rescal, xyz2line, imdet, iProjWF, nddt,	      &
-					 igap, ialgmix, iclassicMD, icDFT, iqmmm, iephc, idftd3 	
+					 igap, ialgmix, iclassicMD, icDFT, iqmmm, iephc, idftd3, dftd3_func, &
+                                         dftd3_version, dftd3_tz 	
 
 ! Procedure
 ! ===========================================================================
@@ -176,7 +177,9 @@
         iephc = 0
 ! DFTD3 corrections
         idftd3 = 0
-
+        dftd3_func = 'b-lyp'
+        dftd3_version = 4
+        dftd3_tz = .false.  
 ! ------  DEFAULT OUTPUTS  ------
         iwrtcdcoefs = 0
         iwrtcharges = 0
@@ -687,7 +690,7 @@
 !DFTD3
         if (idftd3 .eq. 1) then
          write (*,100)
-         write (*,*) ' idftd3 = 1'
+         write (*,*) ' idftd3 = 1', 'dftd3_func = ', dftd3_func, 'dftd3_version = ', dftd3_version, 'tz =', dftd3_tz
          write (*,*) ' DFTD3 corrections, J. Chem. Phys. 132, 154104 (2010)'
          write (*,100)
         end if
@@ -770,6 +773,9 @@
         write (50, *) '  icDFT             : ',icdft
         write (50, *) '  iqmmm             : ',iqmmm
         write (50, *) '  idftd3            : ',idftd3
+        write (50, *) '  dftd3_func        : ',dftd3_func
+        write (50, *) '  dftd3_version     : ',dftd3_version
+        write (50, *) '  dftd3_tz          : ',dftd3_tz
         write (50,100)
         write (50, *) ''
         write (50, *) ' SCF'

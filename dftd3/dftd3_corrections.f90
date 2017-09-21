@@ -47,6 +47,7 @@
         use energy
         use forces
         use charges, only: nzx
+        use options
 
         implicit none
 
@@ -77,8 +78,8 @@
         write(*,*) 'DFTD3 corrections subroutine'
         call dftd3_init(dftd3, input)
         !write(*,*) 'finish dftd3_init'
-        
-        call dftd3_set_functional(dftd3, func='b-lyp', version=4, tz=.false.)
+       
+        call dftd3_set_functional(dftd3, dftd3_func, dftd3_version, dftd3_tz)
 
         !write(*,*) 'finish dftd3_set_functional'
 
