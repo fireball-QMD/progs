@@ -58,7 +58,7 @@
         use dimensions
         use forces
         use neighbor_map
-        use options
+        use options, only : idftd3
         implicit none
 
 ! Argument Declaration and Description
