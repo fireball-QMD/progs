@@ -403,7 +403,7 @@ NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
 QMMM =  amber_fireball.o coords_to_fireball.o coords_forces_charges_to_amber.o \
         fireball_qmmm.o fireball_first_call.o main_loop_MDET_qmmm.o main_loop_MD_qmmm.o
 
-DFTD3 = sizes.o pars.o core.o common.o api.o dftd3_corrections.o
+DFTD3 = common.o sizes.o pars.o core.o api.o dftd3_corrections.o
 
 #NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
 #      mdetdenmat.o getforces_mdet.o save_mdetstuff.o evolve_ks_states.o \
