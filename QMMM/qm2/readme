@@ -1,0 +1,22 @@
+
+mpdboot
+
+export PATH=/opt/intel/impi/4.1.0.024/bin64/:$PATH
+export LD_LIBRARY_PATH=/opt/intel/impi/4.1.0.024/lib64/:$LD_LIBRARY_PATH
+PATH=$PATH:~/bin/xeo/:~/bin
+module load intel/intel-12
+mpdboot
+
+export PATH=/opt/intel/impi/4.1.0.024/bin64/:$PATH
+export LD_LIBRARY_PATH=/opt/intel/impi/4.1.0.024/lib64/:$LD_LIBRARY_PATH
+PATH=$PATH:~/bin/xeo/:~/bin
+module load intel/intel-12
+
+export PATH=$PATH:/scratch/jesus/test-qmmm-sept_1
+
+mpiexec -n 1 -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ./fireball_server
+rm -fr outmd ; mpiexec -n 1  -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock /home/jesus/amber16/bin/sander.MPI -O -i amber.in -o outmd -p input.tpp -c ini.rst -x answer.mdcrd -r answer.rst -ref ref.rst ; tail outmd
+export PATH=$PATH:/scratch/jesus/test-qmmm-sept_1
+
+mpiexec -n 1 -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ./fireball_server
+rm -fr outmd ; mpiexec -n 1  -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock /home/jesus/amber16/bin/sander.MPI -O -i amber.in -o outmd -p input.tpp -c ini.rst -x answer.mdcrd -r answer.rst -ref ref.rst ; tail outmd
