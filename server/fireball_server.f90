@@ -75,12 +75,11 @@
 
         program fireball_server
         use mpi_main
-        use interactions
-        use options
-        use configuration
-        use charges
         use fmpi
-
+        use qmmm_module
+        use energy
+        use forces
+        use configuration
   
 ! Parameters and Data Declaration
 ! ===========================================================================
@@ -93,8 +92,9 @@
 ! --------------------------------------------------------------------------
         real time_begin
         real time_end
-        !real,allocatable :: R(:,:)
-        real,allocatable,dimension(:,:) :: R
+        integer :: itime_step
+        logical :: finish_qmmm=.true.
+        !double precision,allocatable,dimension(:,:) :: R
 
 ! Procedure
 ! ===========================================================================
@@ -118,48 +118,45 @@
 
          call MPI_RECV(mpi,1,MPI_INTEGER,  0, 0,intercomm, status, ierr_mpi) 
          call cpu_time (time_begin)
-         call initbasics () 
+        
+         call initbasics ()    
          call readdata ()
-         allocate(R(3,natoms))
+ 
+         itime_step = 1
+        
+        do while (finish_qmmm)
+
+            call MPI_RECV(ratom,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,status,ierr_mpi)
+            call MPI_RECV(qmmm_struct%qm_mm_pairs,1, MPI_INTEGER,0,0, intercomm,status,ierr_mpi)
+            allocate(qmmm_struct%qm_xcrd(4,qmmm_struct%qm_mm_pairs))
+            allocate(qmmm_struct%dxyzcl(3,qmmm_struct%qm_mm_pairs))
+            call MPI_RECV(qmmm_struct%qm_xcrd,4*qmmm_struct%qm_mm_pairs,MPI_DOUBLE_PRECISION,0,0,intercomm,status,ierr_mpi)
+
+print *,'ratom, qmmm_struct%qm_mm_pairs, qmmm_struct%qm_xcrd', ratom, qmmm_struct%qm_mm_pairs, qmmm_struct%qm_xcrd 
+
+
+            call scf_loop (itime_step)
+            call postscf ()
+            call getenergy (itime_step)
+            call getforces ()
+
+            call MPI_SEND(etot*23.061d0,1, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+            call MPI_SEND(-ftot*23.061d0,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+            call MPI_SEND(qmmm_struct%dxyzcl,3*qmmm_struct%qm_mm_pairs, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+print *,'etot,-ftot,qmmm_struct%dxyzcl,3',etot*23.061d0,ftot*23.061d0,qmmm_struct%dxyzcl
+            itime_step = itime_step +1
+
+        end do
+
+         
+        !   print *,'sec .alllo. n atom = ',natoms  
+        ! allocate(R(3,natoms))
+        ! call main_loop_server(first_call)
         !basisfile read from fireball.in
 
-         if (iqmmm .eq. 1) then
-           !!   call main_loop_qmm_server ()
-           !Send Client ftot(3xnatom), vatom(3xnatom), etot, QLowdin_TOT(natom), ftot_rij_qmmm_atoms(nqmmm_atoms)
-           !! SEND....
-         else
-           !**************** RECV **************************   
-           ! natoms == natoms read in input.bas, Z == Z read input.bas
-           ! call MPI_RECV(natoms,1, MPI_INTEGER, 0, 0, intercomm, status,ierr_mpi)
-           ! call MPI_RECV(S,2*natoms, MPI_CHARACTER, 0, 0, intercomm,status,ierr_mpi)
-           call MPI_RECV(R,3*natoms, MPI_REAL, 0, 0, intercomm,status,ierr_mpi)
- 
-           print *,'recv'
-           do iatom = 1, natoms
-            ratom(:,iatom)=R(:,iatom)+shifter
-            write (*,'(2x, 3(2x,f12.6))') R(:,iatom)
-           end do
-           xdot(0,:,1:natoms) = ratom(:,1:natoms)        
-  
-           ! *************** RUN Fireball ********************
- 
-           call main_loop ()
- 
-           !**************** SEND **************************   
-           print *,'send'
-           do iatom = 1, natoms
-            R(:,iatom)=ratom(:,iatom)-shifter 
-            write (*,'(2x, 3(2x,f12.6))') R(:,iatom)
-           end do
-         
-           call cpu_time (time_end)
-           write (*,*) ' FIREBALL RUNTIME : ',time_end-time_begin,'[sec]'
-           call MPI_SEND(R,3*natoms, MPI_REAL, 0, 0, intercomm, ierr_mpi)
- 
-         end if
          call MPI_UNPUBLISH_NAME(serv_name, MPI_INFO_NULL, port_name, ierr_mpi)
          call MPI_CLOSE_PORT(port_name, ierr_mpi)
-        end if
+        end if 
         call MPI_FINALIZE(ierr_mpi)
  
 ! timer
