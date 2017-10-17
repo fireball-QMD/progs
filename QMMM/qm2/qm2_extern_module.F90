@@ -303,7 +303,7 @@ module qm2_extern_module
   subroutine qm2_extern_finalize()
   
     use qm2_extern_tc_module    , only: tc_finalize
-!    use qm2_extern_fb_module    , only: fb_finalize
+    use qm2_extern_fb_module    , only: fb_finalize
 #ifdef MPI
     use qm2_extern_genmpi_module, only: genmpi_finalize
 #endif
@@ -314,8 +314,8 @@ module qm2_extern_module
     select case (extern_program)
       case('tc')
         call tc_finalize()
-!      case('fb')
-!        call fb_finalize()
+      case('fb')
+        call fb_finalize()
 #ifdef MPI
       case('genmpi')
         call genmpi_finalize()
