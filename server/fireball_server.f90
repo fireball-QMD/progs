@@ -127,24 +127,29 @@
         do while (finish_qmmm)
 
             call MPI_RECV(ratom,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,status,ierr_mpi)
-            call MPI_RECV(qmmm_struct%qm_mm_pairs,1, MPI_INTEGER,0,0, intercomm,status,ierr_mpi)
-            allocate(qmmm_struct%qm_xcrd(4,qmmm_struct%qm_mm_pairs))
-            allocate(qmmm_struct%dxyzcl(3,qmmm_struct%qm_mm_pairs))
-            call MPI_RECV(qmmm_struct%qm_xcrd,4*qmmm_struct%qm_mm_pairs,MPI_DOUBLE_PRECISION,0,0,intercomm,status,ierr_mpi)
+            print*,'ratoms, ' ,ratom
+            if(ratom(1,1).ne.null) then
+              call MPI_RECV(qmmm_struct%qm_mm_pairs,1, MPI_INTEGER,0,0, intercomm,status,ierr_mpi)
+              allocate(qmmm_struct%qm_xcrd(4,qmmm_struct%qm_mm_pairs))
+              allocate(qmmm_struct%dxyzcl(3,qmmm_struct%qm_mm_pairs))
+              call MPI_RECV(qmmm_struct%qm_xcrd,4*qmmm_struct%qm_mm_pairs,MPI_DOUBLE_PRECISION,0,0,intercomm,status,ierr_mpi)
 
-print *,'ratom, qmmm_struct%qm_mm_pairs, qmmm_struct%qm_xcrd', ratom, qmmm_struct%qm_mm_pairs, qmmm_struct%qm_xcrd 
+!print *,'ratom, qmmm_struct%qm_mm_pairs, qmmm_struct%qm_xcrd', ratom, qmmm_struct%qm_mm_pairs, qmmm_struct%qm_xcrd 
 
 
-            call scf_loop (itime_step)
-            call postscf ()
-            call getenergy (itime_step)
-            call getforces ()
+              call scf_loop (itime_step)
+              call postscf ()
+              call getenergy (itime_step)
+              call getforces ()
 
-            call MPI_SEND(etot*23.061d0,1, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
-            call MPI_SEND(-ftot*23.061d0,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
-            call MPI_SEND(qmmm_struct%dxyzcl,3*qmmm_struct%qm_mm_pairs, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
-print *,'etot,-ftot,qmmm_struct%dxyzcl,3',etot*23.061d0,ftot*23.061d0,qmmm_struct%dxyzcl
-            itime_step = itime_step +1
+              call MPI_SEND(etot*23.061d0,1, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+              call MPI_SEND(-ftot*23.061d0,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+              call MPI_SEND(qmmm_struct%dxyzcl,3*qmmm_struct%qm_mm_pairs, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+!print *,'etot,-ftot,qmmm_struct%dxyzcl,3',etot*23.061d0,ftot*23.061d0,qmmm_struct%dxyzcl
+              itime_step = itime_step +1
+           else
+              finish_qmmm=.false.
+           end if
 
         end do
 
@@ -154,10 +159,14 @@ print *,'etot,-ftot,qmmm_struct%dxyzcl,3',etot*23.061d0,ftot*23.061d0,qmmm_struc
         ! call main_loop_server(first_call)
         !basisfile read from fireball.in
 
-         call MPI_UNPUBLISH_NAME(serv_name, MPI_INFO_NULL, port_name, ierr_mpi)
-         call MPI_CLOSE_PORT(port_name, ierr_mpi)
-        end if 
-        call MPI_FINALIZE(ierr_mpi)
+         !call MPI_UNPUBLISH_NAME(serv_name, MPI_INFO_NULL, port_name, ierr_mpi)
+         !call MPI_CLOSE_PORT(port_name, ierr_mpi)
+         print*,'mpi_f1' 
+         end if 
+
+         print*,'mpi_f2' 
+      !  call MPI_FINALIZE(ierr_mpi)
+         print*,'mpi_f3' 
  
 ! timer
 
