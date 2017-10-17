@@ -159,7 +159,7 @@ contains
 #endif
 
 
-        fb_nml%executable      = executable
+        fb_nml%executable   = executable
         fb_nml%debug        =  0
     ! Need this variable so we don't call MPI_Send in the finalize subroutine
     if (mpi==1 ) then
@@ -175,6 +175,7 @@ contains
        fb_nml, escf, dxyzqm, dxyzcl, dipmom, qmcharges, do_grad, id, charge, spinmult )
     
     use ElementOrbitalIndex, only : elementSymbol
+    use qm2_extern_util_module, only: check_installation    
     
     implicit none
     include 'mpif.h'
@@ -203,6 +204,9 @@ contains
     integer             :: i, status(MPI_STATUS_SIZE)
     integer             :: ierr
 
+    integer :: system
+    integer :: stat
+
     call debug_enter_function( 'mpi_hook', module_name, fb_nml%debug )
 
 
@@ -217,6 +221,14 @@ contains
     if (first_call) then 
       first_call=.false.
       write (6,*) 'connect_to_fireball only first time'
+
+      write (6,'(/,a,/)') '   >>> Running QM calculation with Fireball <<<'
+      !call get_namelist( ntpr_default, fb_nml )
+!      call check_installation( trim(fb_nml%executable), id, .true., fb_nml%debug)
+      !call print_namelist(fb_nml)
+      print *,'mpiexec -n 1 -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ./fireball_server'
+!      stat = system('mpiexec -n 1 -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ./fireball_server &')
+      print *,'jesus'
       call connect_to_fireball( fb_nml, nqmatoms, atom_types, do_grad, id, charge, spinmult )
     end if
 
@@ -412,9 +424,7 @@ print *,'escf,dxyzqm,dxyzcl,',escf,dxyzqm,dxyzcl
     integer :: ierr
     _REAL_  :: empty
     if (do_mpi) then
-
       call MPI_Send( empty, 1, MPI_DOUBLE_PRECISION, 0, 0, newcomm, ierr )
-
     end if
 #endif
 
