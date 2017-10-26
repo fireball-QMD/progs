@@ -1,14 +1,14 @@
 #include "../include/dprec.fh"
 module qm2_extern_fb_module
 ! ----------------------------------------------------------------
-! Interface for TeraChem based QM and QM/MM MD 
+! Interface for Fireball based QM and QM/MM MD 
 !
 ! Currently supports:
 ! pure QM
 ! QM/MM with cutoff for QM-MM electrostatics under periodic
 ! boundary conditions
 !
-! Author: Andreas Goetz (agoetz@sdsc.edu)
+! Author: Jesus I. Mendieta-Moreno (jesus.mendieta@uam.es)
 !
 ! Date: November 2010
 !
@@ -27,8 +27,29 @@ module qm2_extern_fb_module
   type fb_nml_type
         ! Poner los input de fireball
      character(len=20) :: executable
+     integer :: max_scf_iterations
+     integer :: qmmm_int
+     integer :: idftd3
      integer :: debug
      integer :: mpi
+     integer :: iqout
+     integer :: imcweda
+     integer :: ihorsfield
+     integer :: iensemble
+     integer :: imdet
+     integer :: nddt
+     integer :: icluster
+     integer :: iwrtpop
+     integer :: iwrtvel
+     integer :: iwrteigen
+     integer :: iwrtefermi
+     integer :: iwrtdos
+     integer :: ifixcharge
+     integer :: iwrtewf
+     integer :: iwrtatom
+     integer :: iewform
+     integer :: npbands
+     integer, dimension(200) :: pbands     
   end type fb_nml_type
 
   integer, save         :: newcomm ! Initialized in mpi_init subroutine
@@ -76,24 +97,17 @@ contains
       first_call = .false.
       write (6,*) '>>> Running QM calculation with Fireball  <<<'
       write(6,*) 'call get_namelist( ntpr_default, fb_nml )',ntpr_default,fb_nml
-      call get_namelist( ntpr_default, fb_nml )
+      call get_namelist( fb_nml )
       call check_installation( trim(fb_nml%executable), id, .true., fb_nml%debug )
      ! call print_namelist(fb_nml)
     end if
 
-      write (6,*)'3dgt fb_nml%mpi,nqmatoms,,',fb_nml%mpi,nqmatoms, qmcoords, &
-         qmtypes, nclatoms, clcoords, &
-        fb_nml, escf, dxyzqm, dxyzcl, dipmom, qmcharges, do_grad, id, charge,&
-        spinmult
 #ifdef MPI
 # ifndef MPI_1
     if (fb_nml%mpi==1 ) then ! Do mpi (forced to 0 ifndef MPI)
-      print *,'mpi_hook'
       call mpi_hook( nqmatoms, qmcoords, qmtypes, nclatoms, clcoords,&
         fb_nml, escf, dxyzqm, dxyzcl, dipmom, qmcharges, do_grad, id, charge, spinmult )
-      print *,'mpi_hook'
     else
-      write (6,'(/,a,/)')'1dgt'
 # else
     ! If we are using MPI 1.x the code will not compile since
     ! MPI_LOOKUP_NAME is part of the MPI 2 standard, so  just quit
@@ -113,9 +127,9 @@ contains
 
     if ( do_grad ) then
        ! Convert Hartree/Bohr -> kcal/(mol*A)
-       dxyzqm(:,:) = dxyzqm(:,:) * CODATA08_AU_TO_KCAL * CODATA08_A_TO_BOHRS
+       dxyzqm(:,:) = dxyzqm(:,:) * 14.39975d0 * 23.061d0
        if ( nclatoms > 0 ) then
-          dxyzcl(:,:) = dxyzcl(:,:) * CODATA08_AU_TO_KCAL * CODATA08_A_TO_BOHRS
+          dxyzcl(:,:) = dxyzcl(:,:)
        end if
     else
        dxyzqm = ZERO
@@ -124,27 +138,59 @@ contains
 
     escf = escf * CODATA08_AU_TO_KCAL
 
-    !call print_results( 'qm2_extern_fb_module', escf, nqmatoms, dxyzqm, nclatoms, dxyzcl )
 
 
   end subroutine get_fb_forces
 
 
-  subroutine get_namelist( ntpr_default, fb_nml)
+  subroutine get_namelist(fb_nml)
 
     use UtilitiesModule, only: Upcase
     implicit none
     character(len=20) :: executable
-    integer, intent(in) :: ntpr_default
+    !integer, intent(in) :: ntpr_default
     type(fb_nml_type), intent(out) :: fb_nml
-    integer :: mpi
-    namelist /fb/ mpi
+    integer :: mpi, max_scf_iterations, qmmm_int, idftd3, debug, iqout, iensemble,        &
+               imcweda, ihorsfield, imdet, nddt, icluster, iwrtpop, iwrtvel, iwrteigen,   &
+               iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom, iewform, npbands
+    integer, dimension(200) :: pbands
+    namelist /fb/ mpi, executable, max_scf_iterations, qmmm_int, idftd3, debug, iqout,   &
+               imcweda, ihorsfield, iensemble, imdet, nddt, icluster, iwrtpop, iwrtvel,  &
+               iwrteigen, iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom,         &
+               iewform, npbands, pbands
     integer :: i, ierr
      executable      = 'fireball_server'
    
     mpi          = 1 ! Default to using MPI if available
 
-    ! Read namelist
+
+    ! Default values
+    executable = 'fireball_server'
+    max_scf_iterations = 70
+    qmmm_int = 1
+    idftd3 = 0
+    debug = 0
+    mpi = 1
+    iqout = 1
+    imcweda = 1
+    ihorsfield = 0
+    iensemble = 0
+    imdet = 0
+    nddt = 1000
+    icluster = 1
+    iwrtpop = 0
+    iwrtvel = 0
+    iwrteigen = 0
+    iwrtefermi = 0 
+    iwrtdos = 0
+    ifixcharge = 0
+    iwrtewf = 0
+    iwrtatom = 0
+    iewform = 0
+    npbands = 0
+    pbands = 0
+
+    ! Read namelist, 
     rewind 5
     read(5,nml=fb,iostat=ierr)
 
@@ -158,15 +204,112 @@ contains
         fb_nml%mpi         = mpi
 #endif
 
+    ! Assign namelist values to fb_nml data type
+    fb_nml%executable           = executable
+    fb_nml%max_scf_iterations   = max_scf_iterations
+    fb_nml%qmmm_int             = qmmm_int
+    fb_nml%idftd3               = idftd3
+    fb_nml%debug                = debug
+    fb_nml%iqout                = iqout
+    fb_nml%imcweda              = imcweda
+    fb_nml%ihorsfield           = ihorsfield
+    fb_nml%iensemble            = iensemble
+    fb_nml%imdet                = imdet
+    fb_nml%nddt                 = nddt
+    fb_nml%icluster             = icluster  
+    fb_nml%iwrtpop              = iwrtpop
+    fb_nml%iwrtvel              = iwrtvel
+    fb_nml%iwrteigen            = iwrteigen
+    fb_nml%iwrtefermi           = iwrtefermi  
+    fb_nml%iwrtdos              = iwrtdos
+    fb_nml%ifixcharge           = ifixcharge
+    fb_nml%iwrtewf              = iwrtewf
+    fb_nml%iwrtatom             = iwrtatom
+    fb_nml%iewform              = iewform
+    fb_nml%npbands              = npbands
+    fb_nml%pbands               = pbands
 
-        fb_nml%executable   = executable
-        fb_nml%debug        =  0
     ! Need this variable so we don't call MPI_Send in the finalize subroutine
     if (mpi==1 ) then
       do_mpi=.true.
     end if
 
   end subroutine get_namelist
+
+  ! --------------------------------
+  ! Print Fireball namelist settings
+  ! --------------------------------
+  subroutine write_inpfile( fb_nml, qmcoords, nqmatoms, charge)
+
+    use qmmm_module, only : qmmm_struct
+
+    implicit none
+    type(fb_nml_type), intent(in) :: fb_nml
+    _REAL_           , intent(in) :: qmcoords(:,:)
+    integer          , intent(in) :: charge
+    integer          , intent(in) :: nqmatoms
+    integer :: k
+
+    open (unit = 226, file = 'fireball.in', status = 'unknown')
+
+    write (226,600) "&option"
+    
+    if (fb_nml%ihorsfield .eq. 1) then
+    write (226,600) "imcweda = 0"
+    write (226,600) "ihorsfield = 1"
+    end if
+    write (226,601) "qstate = ", -1*charge
+    write (226,602) "icluster = ", fb_nml%icluster
+    write (226,602) "iqout = ", fb_nml%iqout
+    write (226,603) "max_scf_iterations = ", fb_nml%max_scf_iterations
+    write (226,602) "iensemble = ", fb_nml%iensemble
+    write (226,602) "imdet = ", fb_nml%imdet
+    write (226,605) "nddt = ", fb_nml%nddt
+    write (226,602) "iqmmm = ", fb_nml%qmmm_int
+    write (226,602) "ifixcharge =",fb_nml%ifixcharge
+    write (226,600) 'iquench = 4'
+    write (226,602) "idftd3 =",fb_nml%idftd3
+    write (226,600) "&end"
+    write (226,600) "&output"
+    write (226,600) "iwrtcharges = 1" 
+    write (226,602) "iwrtpop = ", fb_nml%iwrtpop
+    write (226,602) "iwrtvel = ", fb_nml%iwrtvel
+    write (226,602) "iwrteigen = ", fb_nml%iwrteigen
+    write (226,602) "iwrtefermi = ", fb_nml%iwrtefermi
+    write (226,602) "iwrtdos = ", fb_nml%iwrtdos
+    write (226,602) "iwrtewf =",fb_nml%iwrtewf
+    write (226,602) "iwrtatom =",fb_nml%iwrtatom
+    write (226,600) "&end"
+    if (fb_nml%iwrtewf .eq. 1) then
+    write (226,600) "&mesh"
+    write (226,603) "iewform = ", fb_nml%iewform
+    write (226,603) "npbands = ", fb_nml%npbands
+    write (226,608) "pbands = ", fb_nml%pbands
+    write (226,600) "&end"
+    end if
+
+    open (unit = 227, file = 'input.bas', status = 'unknown')
+
+    write (227,*) nqmatoms
+    do k = 1, nqmatoms
+      write (227,700) qmmm_struct%iqm_atomic_numbers(k), qmcoords(:,k)
+    end do
+
+
+
+! Format Statements
+! ===========================================================================
+600     format (a)!(a,f8.5)
+601     format (a,i2)
+602     format (a,i1)
+603     format (a,i3)
+604     format (a,i1)
+605     format (a,i4)
+608     format (a,199(i4,','),i3)
+700     format (i2, 3(2x,f8.4))
+
+  end subroutine write_inpfile
+
 
 
 #if defined(MPI) && !defined(MPI_1)
@@ -220,70 +363,18 @@ contains
 
     if (first_call) then 
       first_call=.false.
-      write (6,*) 'connect_to_fireball only first time'
-
-      write (6,'(/,a,/)') '   >>> Running QM calculation with Fireball <<<'
-      !call get_namelist( ntpr_default, fb_nml )
-!      call check_installation( trim(fb_nml%executable), id, .true., fb_nml%debug)
-      !call print_namelist(fb_nml)
-      print *,'mpiexec -n 1 -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ./fireball_server'
-!      stat = system('mpiexec -n 1 -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ./fireball_server &')
-      print *,'jesus'
       call connect_to_fireball( fb_nml, nqmatoms, atom_types, do_grad, id, charge, spinmult )
+      call write_inpfile( fb_nml, qmcoords, nqmatoms, charge)
     end if
 
-       print *,'send'
-       !call MPI_Send( nqmatoms, 1, MPI_INTEGER, 0, 0, newcomm, ierr )
-       !write(*,*) 'qmcoords'
-       !write(*,*) qmcoords
        call MPI_SEND(qmcoords,3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm, ierr) 
        call MPI_SEND(nclatoms, 1, MPI_INTEGER, 0, 0, newcomm, ierr )
        call MPI_SEND(clcoords,4*nclatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,ierr)
 
-print *,'qmcoords,nclatoms,clcoords', qmcoords,nclatoms,clcoords
-       !call MPI_Send( qmcoords, 3*nqmatoms, MPI_REAL, 0, 2, newcomm, ierr )
-       !call MPI_SEND(qmcoords,3*nqmatoms, MPI_REAL, 0, 0, newcomm, ierr)
-       !call MPI_SEND(S,2*natoms, MPI_CHARACTER, 0, 0, intercomm, ierr)
-       !call MPI_RECV(qmcoords,3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm, status,ierr)
        call MPI_Recv(escf, 1, MPI_DOUBLE_PRECISION, 0, 0, newcomm, status, ierr )
        call MPI_RECV(dxyzqm,3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
        call MPI_RECV(dxyzcl,3*nclatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
 
-print *,'escf,dxyzqm,dxyzcl,',escf,dxyzqm,dxyzcl
-       !call MPI_RECV(qmcharges,nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
-       !write(*,*) 'qmcoords'
-       !write(*,*) qmcoords
-       !call MPI_RECV(S,2*natoms, MPI_CHARACTER, 0, 0, intercomm,status,ierr)
-       !print *,'rec'
-
-
-    !call MPI_SEND(R,3*natoms, MPI_REAL, 0, 0, intercomm, ierr)
-!    call MPI_Send( qmcoords, 3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 2, newcomm, ierr ) 
-
-    !call MPI_Send( nclatoms, 1, MPI_INTEGER, 0, 2, newcomm, ierr ) 
-
-
-    !call MPI_Send( charges, nclatoms, MPI_DOUBLE_PRECISION, 0, 2, newcomm, ierr ) 
-    ! call MPI_Send( coords, 3*nclatoms, MPI_DOUBLE_PRECISION, 0, 2, newcomm, ierr ) 
-
-    !call MPI_Recv( escf, 1, MPI_DOUBLE_PRECISION, MPI_ANY_SOURCE, MPI_ANY_TAG, newcomm, status, ierr )
-    !call MPI_Recv( qmcharges(:), nqmatoms, MPI_DOUBLE_PRECISION, MPI_ANY_SOURCE, MPI_ANY_TAG, newcomm, status, ierr )
-   ! if ( do_grad ) then
-   !   call MPI_Recv( dxyz_all, 3*(nqmatoms+nclatoms), MPI_DOUBLE_PRECISION, &
-   !         MPI_ANY_SOURCE, MPI_ANY_TAG, newcomm, status, ierr )
-       
-       ! Poplulate our output arrays with gradients from terachem
-    !   do i=1, nqmatoms
-    !      dxyzqm(:,i)=dxyz_all(:,i)
-    !   end do
-    !   do i=1, nclatoms
-    !      dxyzcl(:,i)=dxyz_all(:,i+nqmatoms)
-    !   end do
-
-    !end if
-
-!    call MPI_RECV(iR,3*natoms, MPI_REAL, 0, 0, intercomm, status,ierr)
-!    call MPI_Recv( qmcoords, 3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 2, newcomm,status, ierr ) 
 
     do i=1,nqmatoms
      write (*,'(2x, 3(2x,f12.6))') qmcoords(:,i)
@@ -328,37 +419,14 @@ print *,'escf,dxyzqm,dxyzcl,',escf,dxyzqm,dxyzcl
     ! After 60 seconds, exit if not found
     ! -----------------------------------
 
-    print *,'fb_nml, nqmatoms, atom_types, do_grad, id, charge, spinmult', fb_nml, nqmatoms, atom_types, do_grad, id, charge, spinmult
-    print *,'server_name=',server_name
-    print *,'id =', id 
     if ( trim(id) /= '' ) then
       server_name = trim(server_name)//'.'//trim(id)
     end if
-    !if ( fb_nml%debug > 1 ) then
-    !  write(6,'(2a)') 'Looking up server under name:', trim(server_name)
-    !  call flush(6)
-    !end if
+
     timer = MPI_WTIME(ierr)
     do while (done .eqv. .false.)
-   !port_name='4160094208.0;tcp://10.1.255.253:54296+4160094209.0;tcp://10.1.255.253:43662:300'
-   
-
- !   print *, '-------------------'
- !      server_name = 'fireball_server'
- !      call MPI_INIT ( ierr )
- !      print *,'ierr =',ierr
- !      call MPI_COMM_SIZE(MPI_COMM_WORLD, size, ierr)
- !      call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)
- !      print*, 'rank', rank, ': size ',size
- !      if(rank == 0) then
- !       call MPI_LOOKUP_NAME (server_name, MPI_INFO_NULL, port_name, ierr)
- !       call MPI_COMM_CONNECT(port_name, MPI_INFO_NULL,0,MPI_COMM_SELF,intercomm, ierr)
- !      end if
-
-
 
  
-    print *,'server_name', server_name, 'port_name', port_name 
     call MPI_LOOKUP_NAME(trim(server_name), MPI_INFO_NULL, port_name, ierr)
       if (ierr == MPI_SUCCESS) then
         if ( fb_nml%debug > 1 ) then
@@ -379,33 +447,18 @@ print *,'escf,dxyzqm,dxyzcl,',escf,dxyzqm,dxyzcl
 
     ! ----------------------------------------
     ! Establish new communicator via port name
-    print *,'test'
     ! ----------------------------------------
 
 
        call MPI_COMM_SIZE(MPI_COMM_WORLD, size, ierr)
        call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)
-       print*, 'rank', rank, ': size ',size
 
 
-    print *,'port_name, MPI_INFO_NULL, 0, MPI_COMM_SELF, newcomm, ierr', port_name,MPI_INFO_NULL, 0, MPI_COMM_SELF, newcomm, ierr
 
     call MPI_COMM_CONNECT(port_name, MPI_INFO_NULL, 0, MPI_COMM_SELF, newcomm, ierr)
 
-    print *,'test'
-  !  if ( fb_nml%debug > 1 ) then
-  !    write(6,'(a,i0)') 'Established new communicator:', newcomm
-    !print *,'test'
 
-!    call SendRecv(natoms,ratom)
-
-
-   !   call flush(6)
-   ! end if
-
-    print *,'test'
     mp=0
-    print *,'(mp,1, MPI_INTEGER, 0, 0, intercomm, ierr',mp, MPI_INTEGER,  intercomm, ierr
     call MPI_SEND(mp,1, MPI_INTEGER, 0, 0, newcomm, ierr)
 
 
