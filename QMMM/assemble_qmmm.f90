@@ -93,12 +93,12 @@
 !          mm_charges(katom) = qmmm_struct%qm_xcrd(4,katom) - out_charge
 !        end do
 
-        do gatom = 1, qmmm_struct%qm_mm_pairs
-          if ( qmmm_struct%qm_xcrd_dist(gatom) > 0.8*qmmm_nml%qmcut ) then
-            qmmm_struct%qm_xcrd(4,gatom) = qmmm_struct%qm_xcrd(4,gatom)*(((qmmm_nml%qmcut - qmmm_struct%qm_xcrd_dist(gatom))/(0.2*qmmm_nml%qmcut)))
-!            write(*,*) 'prueba',gatom,sqrt(qmmm_struct%qm_xcrd_dist(gatom)), qmmm_struct%qm_xcrd(4,gatom)
-          end if
-        end do
+!        do gatom = 1, qmmm_struct%qm_mm_pairs
+!          if ( qmmm_struct%qm_xcrd_dist(gatom) > 0.8*qmmm_nml%qmcut ) then
+!            qmmm_struct%qm_xcrd(4,gatom) = qmmm_struct%qm_xcrd(4,gatom)*(((qmmm_nml%qmcut - qmmm_struct%qm_xcrd_dist(gatom))/(0.2*qmmm_nml%qmcut)))
+!            write(*,*) 'prueba',gatom,sqrt(qmmm_struct%qm_xcrd_dist(gatom)), qmmm_struct%qm_xcrd(4,gatom)!
+!          end if
+!        end do
 
 ! Calculate the charge on jatom
 
