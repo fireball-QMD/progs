@@ -139,8 +139,8 @@
               call getenergy (itime_step)
               call getforces ()
 
-              call MPI_SEND(etot*23.061d0,1, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
-              call MPI_SEND(-ftot*23.061d0,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+              call MPI_SEND(etot,1, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+              call MPI_SEND(-ftot,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
               call MPI_SEND(qmmm_struct%dxyzcl,3*qmmm_struct%qm_mm_pairs, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
               itime_step = itime_step +1
            else
