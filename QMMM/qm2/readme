@@ -4,8 +4,10 @@ change ILINUX and Makefile use:
 PARALLEL = MPI
 METHOD = SCALAPACK
 
+comentar ../progs/QMMM/assemble_qmmm.f90
 make server
 to get : fireball_server.x
+
 
 tar -xvf AmberTools17.tar
 export MKL_HOME=/opt/intel/mkl
