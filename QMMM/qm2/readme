@@ -1,4 +1,37 @@
+git clone https://github.com/fireball-QMD/progs
 
+change ILINUX and Makefile use:
+PARALLEL = MPI
+METHOD = SCALAPACK
+
+make server
+to get : fireball_server.x
+
+tar -xvf AmberTools17.tar
+export MKL_HOME=/opt/intel/mkl
+cp ../progs/QMMM/qm2/qm2_extern_fb_module.F90 AmberTools/src/sander/
+cp ../progs/QMMM/qm2/qm2_extern_module.F90 AmberTools/src/sander/
+grep fb AmberTools/src/sander/Makefile
+    qm2_extern_gau_module.o qm2_extern_orc_module.o  qm2_extern_fb_module.o\
+    ArrayList.o qm2_extern_gms_module.o qm2_extern_tc_module.o qm2_extern_fb_module.o\
+    qm2_extern_genmpi_module.o qm2_extern_fb_module.o\
+
+ grep fb_ AmberTools/src/sander/depend 
+                    qm2_extern_fb_module.o\
+                    qm2_extern_fb_module.o\
+qm2_extern_fb_module.o: \
+qm2_extern_fb_module.o:   qm2_extern_fb_module.F90
+	$(FC) $(FWARNFLAGS) $(FPPFLAGS) -c $(FNOOPTFLAGS) $(FFLAGS) $(AMBERFFLAGS) $(RISMSANDER) -o $@ qm2_extern_fb_module.F90
+
+./configure -intelmpi intel
+make
+mpdboot
+#run fireball_server
+mpiexec -n 1 -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ../progs/fireball_server.x
+#run_amber
+mpiexec -n 1  -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ../amber16/bin/sander.MPI -O -i amber.in -o outmd -p input.tpp -c ini.rst -x answer.mdcrd -r answer.rst -ref ref.rst ; tail outmd
+
+/--------------------------------------------------------------
 mpdboot
 
 export PATH=/opt/intel/impi/4.1.0.024/bin64/:$PATH
