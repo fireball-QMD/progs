@@ -31,7 +31,7 @@ mpdboot
 #run fireball_server
 mpiexec -n 1 -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ../progs/fireball_server.x
 #run_amber
-mpiexec -n 1  -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ../amber16/bin/sander.MPI -O -i amber.in -o outmd -p input.tpp -c ini.rst -x answer.mdcrd -r answer.rst -ref ref.rst ; tail outmd
+mpiexec -n 1  -env I_MPI_DEBUG 2 -env I_MPI_DEVICE sock ../amber16/bin/sander.MPI -O -i amber.in -o outmd -p prmtop -c ini.rst -x answer.mdcrd -r answer.rst -ref ref.rst ; tail outmd
 
 /--------------------------------------------------------------
 mpdboot
