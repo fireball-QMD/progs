@@ -127,7 +127,7 @@ contains
 
     if ( do_grad ) then
        ! Convert Hartree/Bohr -> kcal/(mol*A)
-       dxyzqm(:,:) = dxyzqm(:,:) * 14.39975d0 * 23.061d0
+       dxyzqm(:,:) = dxyzqm(:,:) * 23.061d0
        if ( nclatoms > 0 ) then
           dxyzcl(:,:) = dxyzcl(:,:)
        end if
@@ -136,7 +136,7 @@ contains
        if ( nclatoms > 0 ) dxyzcl = ZERO
     end if
 
-    escf = escf * CODATA08_AU_TO_KCAL
+    escf = escf * 23.061d0
 
 
 
