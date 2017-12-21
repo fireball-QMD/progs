@@ -1711,7 +1711,7 @@ coords_forces_charges_to_amber.o : QMMM/coords_forces_charges_to_amber.f90
 # qmm_module_null do nothing, only if you want libfireball.a use qmmm_module
 qmmm_module_null.o : QMMM/qmmm_module_null.f90
 	$(F90) $(FFLAGS) -c QMMM/qmmm_module_null.f90
-qmmm_module.o: ../amber11/AmberTools/src/sqm/qmmm_module.f
+qmmm_module.o: ../sqm/qmmm_module.F90
 	cd ../sqm && $(MAKE) qmmm_module.o
 	cp ../sqm/qmmm_module.mod .
 	cp ../sqm/qmmm_module.o .
