@@ -452,7 +452,7 @@ all:
 libfireball: $(OBJECTS_QMMM)
 	ar rv libfireball.a $(OBJECTS_QMMM)
 	ranlib libfireball.a
-	cp libfireball.a ../amber11/lib/
+	cp libfireball.a ../../lib/
 
 server: $(OBJECTS_SERVER)
 	$(F90)  -o  fireball_server.x $(FFLAGS) $(OBJECTS_SERVER) $(VISFLAGS) $(PARLFLAGS) \
@@ -1712,9 +1712,9 @@ coords_forces_charges_to_amber.o : QMMM/coords_forces_charges_to_amber.f90
 qmmm_module_null.o : QMMM/qmmm_module_null.f90
 	$(F90) $(FFLAGS) -c QMMM/qmmm_module_null.f90
 qmmm_module.o: ../amber11/AmberTools/src/sqm/qmmm_module.f
-	cd ../amber11/AmberTools/src/sqm && $(MAKE) qmmm_module.o
-	cp ../amber11/AmberTools/src/sqm/qmmm_module.mod .
-	cp ../amber11/AmberTools/src/sqm/qmmm_module.o .
+	cd ../sqm && $(MAKE) qmmm_module.o
+	cp ../sqm/qmmm_module.mod .
+	cp ../sqm/qmmm_module.o .
 cambio_coordenadas.o : QMMM/cambio_coordenadas.f90
 	$(F90) $(FFLAGS) -c QMMM/cambio_coordenadas.f90
 fireball_first_call.o : QMMM/fireball_first_call.f90
