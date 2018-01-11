@@ -127,7 +127,7 @@ contains
 
     if ( do_grad ) then
        ! Convert Hartree/Bohr -> kcal/(mol*A)
-       dxyzqm(:,:) = dxyzqm(:,:) * 23.061d0
+       dxyzqm(:,:) = dxyzqm(:,:) !* 14.39975d0 * 23.061d0
        if ( nclatoms > 0 ) then
           dxyzcl(:,:) = dxyzcl(:,:)
        end if
@@ -136,7 +136,7 @@ contains
        if ( nclatoms > 0 ) dxyzcl = ZERO
     end if
 
-    escf = escf * 23.061d0
+    !escf = escf * CODATA08_AU_TO_KCAL
 
 
 
@@ -374,7 +374,7 @@ contains
        call MPI_Recv(escf, 1, MPI_DOUBLE_PRECISION, 0, 0, newcomm, status, ierr )
        call MPI_RECV(dxyzqm,3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
        call MPI_RECV(dxyzcl,3*nclatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
-
+print*,'escf=',escf
 
     do i=1,nqmatoms
      write (*,'(2x, 3(2x,f12.6))') qmcoords(:,i)
