@@ -68,5 +68,7 @@
         integer ioff2c (1:24)              ! for diagnostic purposes
         integer ioff3c (1:4)
         real testrange
+        real  dftd3_s6, dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp
+        real dftd3_params (5)
 
  end module options
