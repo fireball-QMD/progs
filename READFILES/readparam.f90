@@ -96,7 +96,8 @@
   					 T_initial, T_final, max_scf_iterations, bmix, sigmatol,      &
   					 tempfe, itdse, ibias, rescal, xyz2line, imdet, iProjWF, nddt,	      &
 					 igap, ialgmix, iclassicMD, icDFT, iqmmm, iephc, idftd3, dftd3_func, &
-                                         dftd3_version, dftd3_tz 	
+                                         dftd3_version, dftd3_tz, dftd3_s6, dftd3_rs6, dftd3_s18,        &
+                                         dftd3_rs18, dftd3_alp	
 
 ! Procedure
 ! ===========================================================================
@@ -179,7 +180,12 @@
         idftd3 = 0
         dftd3_func = 'b-lyp'
         dftd3_version = 4
-        dftd3_tz = .false.  
+        dftd3_tz = .false.
+        dftd3_s6 = 1.0d0
+        dftd3_rs6 = 0.4298
+        dftd3_s18  = 2.6996
+        dftd3_rs18  = 4.2359
+        dftd3_alp = 14.0d0 
 ! ------  DEFAULT OUTPUTS  ------
         iwrtcdcoefs = 0
         iwrtcharges = 0
@@ -686,13 +692,24 @@
          write (*,*) 'QM/MM with electrostatic embedding'
          write (*,100)
         end if
-
+	
 !DFTD3
         if (idftd3 .eq. 1) then
          write (*,100)
          write (*,*) ' idftd3 = 1', 'dftd3_func = ', dftd3_func, 'dftd3_version = ', dftd3_version, 'tz =', dftd3_tz
          write (*,*) ' DFTD3 corrections, J. Chem. Phys. 132, 154104 (2010)'
          write (*,100)
+        end if
+
+        if (idftd3 .eq. 2) then
+         write (*,100)
+         write (*,*) ' idftd3 = 2 ', 'dftd3_s6 =', dftd3_s6,'dftd3_rs6 =', dftd3_rs6,'dftd3_s18 =', dftd3_s18, &
+                     'dftd3_rs18 =', dftd3_rs18,'dftd3_alp =',dftd3_alp
+         dftd3_params(1)=dftd3_s6
+         dftd3_params(2)=dftd3_rs6
+         dftd3_params(3)=dftd3_s18
+         dftd3_params(4)=dftd3_rs18
+         dftd3_params(5)=dftd3_alp
         end if
 
 
