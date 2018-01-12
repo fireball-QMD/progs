@@ -80,8 +80,14 @@
         call dftd3_init(dftd3, input)
         !write(*,*) 'finish dftd3_init'
 
-        call dftd3_set_functional(dftd3, dftd3_func, dftd3_version, dftd3_tz)
 
+        if (idftd3 .eq. 1) then
+          call dftd3_set_functional(dftd3, dftd3_func, dftd3_version, dftd3_tz)
+        endif
+
+        if (idftd3 .eq. 2) then
+          call dftd3_set_params(dftd3, dftd3_params, dftd3_version)
+        endif
         !write(*,*) 'finish dftd3_set_functional'
 
         !dftd3_dispersion(this, coords, izp, disp, grads)
