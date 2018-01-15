@@ -102,7 +102,7 @@
          etot = etot + vdw
         end if
 
-         if (idftd3 .eq. 1) then
+         if (idftd3 .ge. 1) then
           call dftd3_corrections
           etot = etot + etot_dftd3
          end if
