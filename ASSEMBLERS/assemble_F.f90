@@ -523,7 +523,7 @@
          ftot(:,iatom) = fbs(:,iatom) + dusr(:,iatom) + dxcv(:,iatom)        &
      &                                + fro(:,iatom)
          if (ivdw .eq. 1) ftot(:,iatom) = ftot(:,iatom) + fvdw(:,iatom)
-         if (idftd3 .eq. 1) ftot(:,iatom) = ftot(:,iatom) + ftot_dftd3(:,iatom)
+         if (idftd3 .ge. 1) ftot(:,iatom) = ftot(:,iatom) + ftot_dftd3(:,iatom)
          if (iharmonic .eq. 1) ftot(:,iatom) = ftot(:,iatom)                 &
      &                                        + fharmonic(:,iatom)
          if (ibias .eq. 1) ftot(:,iatom) = ftot(:,iatom)                     &
