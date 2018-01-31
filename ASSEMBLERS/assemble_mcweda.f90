@@ -244,10 +244,11 @@
            call assemble_olsxc_off (nprocs, my_proc, iordern, itheory)
           end if ! if (itheory_xc = 2)
 
-
+!JIMM
           if (itheory .eq. 1) then
            write (*,*) ' Assemble two-center DOGS interactions. '
-           call assemble_ca_2c (nprocs, iforce, iordern)
+           if (idipole .eq. 0) call assemble_ca_2c (nprocs, iforce, iordern)
+           if (idipole .eq. 1) call assemble_ca_2c_dip (nprocs, iforce, iordern)
           endif
 ! ===========================================================================
 !                               assemble_3c
@@ -262,22 +263,26 @@
            call assemble_3c (nprocs, iordern, igauss, itheory_xc)
            write (*,*) ' Assemble three-center PP interactions. '
            call assemble_3c_PP (nprocs, iordern)
+! JIMM
            if (iqmmm .eq.1 ) then
              write (*,*) ' Assemble qm/mm interactions. '
-             call assemble_qmmm (nprocs, iordern)
+             if (idipole .eq. 0) call assemble_qmmm (nprocs, iordern)
+             if (idipole .eq. 1) call assemble_qmmm_dip (nprocs, iordern)
            else
              eqmmm = 0.0d0
              ewaldqmmm = 0.0d0
            end if
           end if
-
+!JIMM
           if (itheory .eq. 1) then
            write (*,*) ' Assemble three-center DOGS interactions. '
-           call assemble_ca_3c (nprocs, iordern, igauss)
+           if (idipole .eq. 0) call assemble_ca_3c (nprocs, iordern, igauss)
+           if (idipole .eq. 1) call assemble_ca_3c_dip (nprocs, iordern, igauss)
 
 ! Add assemble_lr here for the long long-range ewald contributions
            write (*,*) ' Assemble long-range interactions. '
-           call assemble_lr (nprocs, iordern)
+           if (idipole .eq. 0) call assemble_lr (nprocs, iordern)
+           if (idipole .eq. 1) call assemble_lr_dip (nprocs, iordern)
           endif
 
           write (*,*) ' ***************************************************** '

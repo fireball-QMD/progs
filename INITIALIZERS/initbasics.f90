@@ -272,6 +272,13 @@
 ! We now call make_munuS
         call make_munuS (nspecies)
 
+! JIMM: New long-range theory idipole = 1
+!  We now call make_munuDipY and make_munuDipX
+        if (idipole .eq. 1) then
+         call make_munuDipY (nspecies)
+         call make_munuDipX (nspecies)
+        end if
+
 ! Read the dos.input file if iwrtdos is greater than 1 CGP
         if (iwrtdos.ge.1 .or. iwrtatom .ge. 1) then
           call readdos ( )

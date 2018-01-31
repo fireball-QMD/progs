@@ -90,7 +90,8 @@
 
           if (itheory .eq. 1) then
            write (*,*) ' Dassemble two-center DOGS force contributions. '
-           call Dassemble_ca_2c (nprocs, iordern)
+           if (idipole .eq. 0) call Dassemble_ca_2c (nprocs, iordern)
+           if (idipole .eq. 1) call Dassemble_ca_2c_dip (nprocs, iordern)
           endif
 
 ! ===========================================================================
@@ -105,9 +106,19 @@
 
           if (itheory .eq. 1) then
            write (*,*) ' Dassemble three-center DOGS force contributions. '
-           call Dassemble_ca_3c (nprocs, iordern, igauss)
+           if (idipole .eq. 0) call Dassemble_ca_3c (nprocs, iordern, igauss)
+           if (idipole .eq. 1) call Dassemble_ca_3c_dip (nprocs, iordern, igauss)
            write (*,*) ' Dassemble three-center long-range contributions. '
-           call Dassemble_lr (nprocs, iordern)
+           if (idipole .eq. 0) call Dassemble_lr (nprocs, iordern)
+           if (idipole .eq. 1) call Dassemble_lr_dip (nprocs, iordern)
+           if (iqmmm .eq. 1) then
+             write (*,*) ' Dassemble three-center qm/mm contributions. '
+             if (idipole .eq. 0) call Dassemble_qmmm (nprocs, iordern)
+             if (idipole .eq. 1) call Dassemble_qmmm_dip (nprocs, iordern)
+           else
+             flrew_qmmm = 0.0d0
+!             qmmm_struct%dxyzcl = 0.0d0
+           end if
           end if
 
 ! Call the exchange-correlation interactions based on method chosen

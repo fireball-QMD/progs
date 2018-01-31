@@ -34,36 +34,15 @@
 ! along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  
-! Dassemble_lr.f90
+! assemble_lr.f90
 ! Program Description
 ! ===========================================================================
-!       This routine calculated the long long-range ewald forces -
-! flrew(3, natoms).
+!       This routine calculated the long range force for
+!       the qm/mm embedding with the true dipole term
 !
 ! ===========================================================================
 ! Code originally written by:
-! Alex A. Demkov
-! Predictive Engineering Laboratory
-! Motorola, Inc.  M360
-! Mesa, AZ 85202 USA
-! (602) 655-2454, r37591@email.sps.mot.com
- 
-! and Otto F. Sankey
-! Campus Box 1504
-! Department of Physics
-! Arizona State University
-! Tempe, AZ 85287-1504
-! (602) 965-4334 (office)      email: otto.sankey@asu.edu
- 
-! Code rewritten by:
-! James P. Lewis
-! Department of Physics and Astronomy
-! Brigham Young University
-! N233 ESC P.O. Box 24658
-! Provo, UT 84602-4658
-! FAX (801) 422-2265
-! Office Telephone (801) 422-7444
-! ===========================================================================
+! Jesús I. Mendieta-Moreno
 !
 ! Program Declaration
 ! ===========================================================================

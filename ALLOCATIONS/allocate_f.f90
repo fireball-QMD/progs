@@ -132,6 +132,9 @@
 ! Allocate components of the forces - needed for DOGS   
         if (itheory .eq. 1) then
          allocate (dipp (3, numorb_max, numorb_max, neigh_max, natoms))
+! JIMM
+         allocate (dippcm (3, 3, numorb_max, numorb_max))
+         allocate (dippc (3, 3, numorb_max, numorb_max, neigh_max, natoms))
 
          allocate (faca (3, neigh_max, natoms))
          allocate (faxc_ca (3, neigh_max, natoms))

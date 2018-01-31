@@ -57,8 +57,8 @@ PARALLEL =
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-METHOD = DOUBLE 
-#METHOD = GAMMA 
+#METHOD = DOUBLE 
+METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
@@ -99,11 +99,13 @@ DASSEMBLERS = Dassemble_2c.o Dassemble_3c.o Dassemble_ca_2c.o \
 	Dassemble_snxc_2c.o Dassemble_snxc_3c.o Dassemble_2c_PP.o \
 	Dassemble_3c_PP.o Dassemble_ca_olsxc_on.o Dassemble_ca_snxc_on.o \
 	Dassemble_ca_snxc_3c.o Dassemble_ca_olsxc_3c.o \
-	Dassemble_ca_snxc_2c.o Dassemble_ca_olsxc_2c.o Dassemble_qmmm.o \
+	Dassemble_ca_snxc_2c.o Dassemble_ca_olsxc_2c.o Dassemble_qmmm.o Dassemble_qmmm_dip.o \
+	Dassemble_ca_2c_dip.o Dassemble_ca_3c_dip.o Dassemble_lr_dip.o \
 	getforces_mcweda.o getforces_eh.o getforces_hxc.o \
 	getforces_KS.o getforces_classic.o getforces_classic_RGL.o getforces_classic_vdw.o getforces.o getforces_classic_tersoff.o
 
 INTERACTIONS = cl_value.o Dtrescentros.o doscentros.o doscentrosPP.o  \
+	doscentrosDipY.o doscentrosDipX.o  \
 	get_ewald.o get_vdw.o getHarmonic.o trescentros.o unocentros.o \
 	smoother.o  doscentrosS.o trescentrosS.o DtrescentrosS.o \
 	dosgaussians.o \
@@ -152,7 +154,7 @@ endif
 	Dassemble_snxc_2c.o Dassemble_snxc_3c.o Dassemble_2c_PP.o \
 	Dassemble_3c_PP.o Dassemble_ca_olsxc_on.o Dassemble_ca_snxc_on.o \
 	Dassemble_ca_snxc_3c.o Dassemble_ca_olsxc_3c.o \
-	Dassemble_ca_snxc_2c.o Dassemble_ca_olsxc_2c.o Dassemble_qmmm.o \
+	Dassemble_ca_snxc_2c.o Dassemble_ca_olsxc_2c.o Dassemble_qmmm.o Dassemble_qmmm_dip.o\
 	getforces_mcweda.o getforces_eh.o getforces_hxc.o \
 	getforces_KS.o getforces_classic.o getforces_classic_vdw.o getforces_classic_RGL.o getforces_classic_tersoff.o
 
@@ -296,7 +298,8 @@ ASSEMBLERS = assemble_olsxc_1c.o assemble_hxc_1c.o assemble_2c.o assemble_3c.o \
 	assemble_h.o assemble_mcweda.o assemble_hxc.o assemble_eh.o \
 	getenergy.o getenergy_hxc.o getenergy_mcweda.o getenergy_eh.o \
 	assemble_h_ks.o getenergy_KS.o assemble_S.o assemble_2c_S.o \
-	assemble_hartree.o assemble_scissor.o assemble_qmmm.o
+	assemble_hartree.o assemble_scissor.o assemble_qmmm.o assemble_qmmm_dip.o\
+	assemble_ca_2c_dip.o assemble_ca_3c_dip.o assemble_lr_dip.o
 
 GRID = assemble_KS_den0.o assemble_KS_den.o assemble_KS_usr.o laplace_fft.o \
 	assemble_KS_dcc.o assemble_KS_mat.o mixer_KS.o writeout_charges_KS.o \
@@ -306,12 +309,14 @@ GRID = assemble_KS_den0.o assemble_KS_den.o assemble_KS_usr.o laplace_fft.o \
 INITIALIZERS = diagnostics.o initatomicE.o initconstraints.o initcharges.o \
 	initconstants.o initboxes.o initkpoints.o initmasses.o initneighbors.o \
 	welcome.o make_mu2shell.o make_munu.o make_munuPP.o restart.o \
+        make_munuDipY.o make_munuDipX.o \
 	zero_ang_mom.o initamat.o make_munuS.o initNH.o getkpoints.o \
 	greatKAuto.o greatKsubsAuto.o initgrid.o initdenmat.o \
 	get_info_orbital.o initbasics.o initcharges_KS.o initcDFT.o 
 
 INTERPOLATERS = buildspline_1d.o interpolate_1d.o interpolate_2d.o \
 	recover_2c.o recover_3c.o recover_PP.o recoverC.o setterp_2d.o \
+	recover_2cDipY.o recover_2cDipX.o \
 	recover_S.o buildspline2_1d.o getpsi.o getYlm.o getvna.o
 
 LOOPS = main_loop.o main_loop_MD.o main_loop_CG.o scf_loop.o scf_loop_harris.o \
@@ -688,7 +693,12 @@ assemble_hartree.o : ASSEMBLERS/assemble_hartree.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_hartree.f90
 assemble_scissor.o : ASSEMBLERS/assemble_scissor.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_scissor.f90
-
+assemble_ca_2c_dip.o : ASSEMBLERS/assemble_ca_2c_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_ca_2c_dip.f90
+assemble_ca_3c_dip.o : ASSEMBLERS/assemble_ca_3c_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_ca_3c_dip.f90
+assemble_lr_dip.o : ASSEMBLERS/assemble_lr_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_lr_dip.f90
 # *****************************************************************************
 # Grid objects
 # *****************************************************************************
@@ -776,6 +786,12 @@ Dassemble_ca_snxc_2c.o : DASSEMBLERS/Dassemble_ca_snxc_2c.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_ca_snxc_2c.f90
 Dassemble_ca_olsxc_2c.o : DASSEMBLERS/Dassemble_ca_olsxc_2c.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_ca_olsxc_2c.f90
+Dassemble_ca_2c_dip.o : DASSEMBLERS/Dassemble_ca_2c_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_ca_2c_dip.f90
+Dassemble_ca_3c_dip.o : DASSEMBLERS/Dassemble_ca_3c_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_ca_3c_dip.f90
+Dassemble_lr_dip.o : DASSEMBLERS/Dassemble_lr_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_lr_dip.f90
 
 getforces_mcweda.o : DASSEMBLERS/getforces_mcweda.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DASSEMBLERS/getforces_mcweda.f90
@@ -897,6 +913,10 @@ make_munuPP.o : INITIALIZERS/make_munuPP.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c INITIALIZERS/make_munuPP.f90
 make_munuS.o : INITIALIZERS/make_munuS.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c INITIALIZERS/make_munuS.f90
+make_munuDipY.o : INITIALIZERS/make_munuDipY.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c INITIALIZERS/make_munuDipY.f90
+make_munuDipX.o : INITIALIZERS/make_munuDipX.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c INITIALIZERS/make_munuDipX.f90
 restart.o : INITIALIZERS/restart.f90 $(MODULES) 
 	$(F90) $(FFLAGS) -c INITIALIZERS/restart.f90
 zero_ang_mom.o : INITIALIZERS/zero_ang_mom.f90 $(MODULES) 
@@ -937,6 +957,10 @@ doscentrosPP.o : INTERACTIONS/doscentrosPP.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c INTERACTIONS/doscentrosPP.f90
 doscentrosS.o : INTERACTIONS/doscentrosS.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c INTERACTIONS/doscentrosS.f90
+doscentrosDipY.o : INTERACTIONS/doscentrosDipY.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c INTERACTIONS/doscentrosDipY.f90
+doscentrosDipX.o : INTERACTIONS/doscentrosDipX.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c INTERACTIONS/doscentrosDipX.f90
 get_ewald.o : INTERACTIONS/get_ewald.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c INTERACTIONS/get_ewald.f90
 get_ewald_OMP.o : INTERACTIONS/get_ewald_OMP.f90 $(MODULES)
@@ -1042,6 +1066,10 @@ recover_S.o : INTERPOLATERS/recover_S.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c INTERPOLATERS/recover_S.f90
 recover_3c.o : INTERPOLATERS/recover_3c.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c INTERPOLATERS/recover_3c.f90
+recover_2cDipY.o : INTERPOLATERS/recover_2cDipY.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c INTERPOLATERS/recover_2cDipY.f90
+recover_2cDipX.o : INTERPOLATERS/recover_2cDipX.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c INTERPOLATERS/recover_2cDipX.f90
 buildspline2_1d.o : INTERPOLATERS/buildspline2_1d.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c INTERPOLATERS/buildspline2_1d.f90
 getpsi.o : INTERPOLATERS/getpsi.f90 $(MODULES)
@@ -1725,8 +1753,12 @@ fireball_qmmm.o : QMMM/fireball_qmmm.f90
 	$(F90) $(FFLAGS) -c QMMM/fireball_qmmm.f90
 assemble_qmmm.o : QMMM/assemble_qmmm.f90
 	$(F90) $(FFLAGS) -c QMMM/assemble_qmmm.f90
+assemble_qmmm_dip.o : QMMM/assemble_qmmm_dip.f90
+	$(F90) $(FFLAGS) -c QMMM/assemble_qmmm_dip.f90
 Dassemble_qmmm.o : QMMM/Dassemble_qmmm.f90
 	$(F90) $(FFLAGS) -c QMMM/Dassemble_qmmm.f90
+Dassemble_qmmm_dip.o : QMMM/Dassemble_qmmm_dip.f90
+	$(F90) $(FFLAGS) -c QMMM/Dassemble_qmmm_dip.f90
 Dassemble_qmmm_mdet.o : QMMM/Dassemble_qmmm_mdet.f90
 	$(F90) $(FFLAGS) -c QMMM/Dassemble_qmmm_mdet.f90
 main_loop_MDET_qmmm.o : QMMM/main_loop_MDET_qmmm.f90

@@ -60,6 +60,7 @@
         use forces
         use interactions
         use neighbor_map
+        use options, only: idipole
         implicit none
  
 ! Argument Declaration and Description
@@ -95,6 +96,9 @@
         integer mneigh_self
         integer my_proc
         integer natomsp
+        integer ix
+        integer iy
+        integer iz
  
         real y
  
@@ -111,6 +115,8 @@
         real, dimension (3, numorb_max, numorb_max) :: spx
         real, dimension (numorb_max, numorb_max) :: tx
         real, dimension (3, numorb_max, numorb_max) :: tpx
+        real, dimension (numorb_max, numorb_max) :: dipx
+        real, dimension (3, numorb_max, numorb_max) :: dippx
 
 ! BTN communication domain
         integer MPI_BTN_WORLD, MPI_OPT_WORLD, MPI_BTN_WORLD_SAVE
@@ -130,6 +136,10 @@
         t_mat = 0.0d0
         sp_mat = 0.0d0
         tp_mat = 0.0d0
+        dipcm = 0.0d0
+        dipc = 0.0d0
+        dippcm = 0.0d0
+        dippc = 0.0d0
 
 ! Determine which atoms are assigned to this processor.
         if (iordern .eq. 1) then
@@ -311,6 +321,90 @@
 
 ! End if for r1 .ne. r2 case
           end if
+
+! JIMM: we read here the Z,Y,X dipole matrix elements and derivatives
+!       for the dipole long-range theory
+          if (idipole .eq. 1) then
+
+! ****************************************************************************
+! CALL DOSCENTROS AND GET DIP Z
+! ****************************************************************************
+           isorp = 0
+           interaction = 9
+           in3 = in2
+           call doscentros (interaction, isorp, iforce, in1, in2, in3, y,     &
+      &                     eps, deps, dipx, dippx)
+
+           do inu = 1, num_orb(in2)
+            do imu = 1, num_orb(in1)
+             dipcm(3,imu,inu) = dipx(imu,inu)
+             if (iforce .eq. 1) dippcm(:,3,imu,inu) = dippx(:,imu,inu)
+            end do
+           end do
+
+
+! ****************************************************************************
+! CALL DOSCENTROS AND GET DIP Y
+! ****************************************************************************
+           isorp = 0
+           interaction = 10
+           in3 = in2
+           call doscentrosDipY (interaction, isorp, iforce, in1, in2, in3, y,   &
+      &                     eps, deps, dipx, dippx)
+
+           do inu = 1, num_orb(in2)
+            do imu = 1, num_orb(in1)
+             dipcm(2,imu,inu) = dipx(imu,inu)
+             if (iforce .eq. 1) dippcm(:,2,imu,inu) = dippx(:,imu,inu)
+            end do
+           end do
+
+! ****************************************************************************
+! CALL DOSCENTROS AND GET DIP X
+! ****************************************************************************
+           isorp = 0
+           interaction = 11
+           in3 = in2
+           call doscentrosDipX (interaction, isorp, iforce, in1, in2, in3, y,   &
+      &                     eps, deps, dipx, dippx)
+
+           do inu = 1, num_orb(in2)
+            do imu = 1, num_orb(in1)
+             dipcm(1,imu,inu) = dipx(imu,inu)
+             if (iforce .eq. 1) dippcm(:,1,imu,inu)  = dippx(:,imu,inu)
+            end do
+           end do
+
+! ****************************************************************************
+! Rotate dipole vector to finally obtain dipole-vector in crystal coordinates 
+!(2-nd rotation; the orbitals are already rotated in "doscentros")
+! ****************************************************************************
+           do ix = 1, 3
+            do iy = 1, 3
+             dipc(ix,:,:,ineigh,iatom) = dipc(ix,:,:,ineigh,iatom) + eps(ix,iy) *dipcm(iy,:,:)
+            enddo
+           enddo
+
+!  DERIVATIVES: Compute dippc from dippcm, eps and deps. First index (ix): x,y,z:
+!  derivation coordinate. Second index: component of the dipole (X,Y,Z). third
+!  e.g. dippc(2,3,:,:,:,:) means the derivative with respect to y of the z-component of
+!  the dipole vector;
+!  fourth indexes: mu,nu orbitals.  
+!  The final value is dippc.
+!  dippcm from "doscentros" is an intermediate value in which the orbitals are rotated 
+!  but not the dipole-vector 
+!
+           do ix = 1,3
+            do iy = 1,3
+             do iz = 1,3
+              dippc(ix,iy,:,:,ineigh,iatom) = dippc(ix,iy,:,:,ineigh,iatom)+deps(ix,iy,iz)*dipcm(iz,:,:) &
+                &                             + eps(iy,iz)*dippcm(ix,iz,:,:)
+             enddo
+            enddo
+           enddo
+
+          end if ! idipole = 1
+
 ! ****************************************************************************
 ! End loop over iatom and its neighbors - jatom.
          end do

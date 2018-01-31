@@ -1,3 +1,49 @@
+! copyright info:
+!
+!                             @Copyright 2002
+!                           Fireball Committee
+! Brigham Young University - James P. Lewis, Chair
+! Arizona State University - Otto F. Sankey
+! Universidad de Madrid - Jose Ortega
+
+! Other contributors, past and present:
+! Auburn University - Jian Jun Dong
+! Arizona State University - Gary B. Adams
+! Arizona State University - Kevin Schmidt
+! Arizona State University - John Tomfohr
+! Lawrence Livermore National Laboratory - Kurt Glaesemann
+! Motorola, Physical Sciences Research Labs - Alex Demkov
+! Motorola, Physical Sciences Research Labs - Jun Wang
+! Ohio University - Dave Drabold
+! University of Regensburg - Juergen Fritsch
+
+!
+! fireball-qmd is a free (GPLv3) open project.
+
+! This program is free software: you can redistribute it and/or modify
+! it under the terms of the GNU General Public License as published by
+! the Free Software Foundation, either version 3 of the License, or
+! (at your option) any later version.
+!
+! This program is distributed in the hope that it will be useful,
+! but WITHOUT ANY WARRANTY; without even the implied warranty of
+! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+! GNU General Public License for more details.
+!
+! You should have received a copy of the GNU General Public License
+! along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ 
+! assemble_lr.f90
+! Program Description
+! ===========================================================================
+!       This routine calculated the long range matrix elements for
+!       the qm/mm embedding
+!
+! ===========================================================================
+! Code originally written by:
+! Jesús I. Mendieta-Moreno
+!
 ! Program Declaration
 ! ===========================================================================
         subroutine assemble_qmmm (nprocs, iordern) 

@@ -123,9 +123,12 @@
         end if
 
 ! Interactions needed only for DOGS
-        if (itheory .eq. 1)                                                  &
-     &   allocate (dip (numorb_max, numorb_max, neigh_max, natoms))
-
+        if (itheory .eq. 1) then
+         allocate (dip (numorb_max, numorb_max, neigh_max, natoms))
+! JIMM
+         allocate (dipcm (3, numorb_max, numorb_max))
+         allocate (dipc (3, numorb_max, numorb_max, neigh_max, natoms))
+        endif
 ! Interactions needed only for extended-Hubbard
         if (itheory .eq. 2) then
          allocate (Vcoulomb (nsh_max, natoms))

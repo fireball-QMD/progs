@@ -52,9 +52,7 @@
         integer iqmmm                  ! QM/MM Electrostatic embedding 
 	integer iephc                  ! do e-ph coupling
         integer idftd3                 ! DFTD3 corrections
-        character (len = 40) dftd3_func
-        integer dftd3_version 
-        logical dftd3_tz
+        integer idipole                ! Long range term with XYZ dipole
 ! ---------------------------------------------------------------------------
 ! Other controls
 ! ---------------------------------------------------------------------------
@@ -69,6 +67,9 @@
         integer ioff3c (1:4)
         real testrange
         real  dftd3_s6, dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp
+        character (len = 40) dftd3_func
+        integer dftd3_version
+        logical dftd3_tz 
         real dftd3_params (5)
 
  end module options

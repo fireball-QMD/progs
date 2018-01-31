@@ -94,10 +94,10 @@
   					 iconstraints, iendtemp, ineb, itrans, basisfile, lvsfile,    &
   					 kptpreference, acfile, xvfile, nstepi, nstepf, dt,           &
   					 T_initial, T_final, max_scf_iterations, bmix, sigmatol,      &
-  					 tempfe, itdse, ibias, rescal, xyz2line, imdet, iProjWF, nddt,	      &
-					 igap, ialgmix, iclassicMD, icDFT, iqmmm, iephc, idftd3, dftd3_func, &
-                                         dftd3_version, dftd3_tz, dftd3_s6, dftd3_rs6, dftd3_s18,        &
-                                         dftd3_rs18, dftd3_alp	
+  					 tempfe, itdse, ibias, rescal, xyz2line, imdet, iProjWF, nddt,&
+					 igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
+                                         idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
+                                         dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp
 
 ! Procedure
 ! ===========================================================================
@@ -186,6 +186,8 @@
         dftd3_s18  = 2.6996
         dftd3_rs18  = 4.2359
         dftd3_alp = 14.0d0 
+! Long range dipole
+        idipole = 0
 ! ------  DEFAULT OUTPUTS  ------
         iwrtcdcoefs = 0
         iwrtcharges = 0
@@ -692,7 +694,15 @@
          write (*,*) 'QM/MM with electrostatic embedding'
          write (*,100)
         end if
-	
+!JIMM
+! XYZ Dipole
+        if (idipole .eq. 1) then
+         write (*,100)
+         write (*,*) ' idipole = 1'
+         write (*,*) 'Long range interactions with XYZ dipole'
+         write (*,100)
+        end if
+!JIMM
 !DFTD3
         if (idftd3 .eq. 1) then
          write (*,100)
@@ -703,8 +713,10 @@
 
         if (idftd3 .eq. 2) then
          write (*,100)
+	 write (*,*) ' choose your own parameters for dftd3 (van der Waals) '
          write (*,*) ' idftd3 = 2 ', 'dftd3_s6 =', dftd3_s6,'dftd3_rs6 =', dftd3_rs6,'dftd3_s18 =', dftd3_s18, &
                      'dftd3_rs18 =', dftd3_rs18,'dftd3_alp =',dftd3_alp
+         write (*,*) ' DFTD3 corrections, J. Chem. Phys. 132, 154104 (2010)'
          dftd3_params(1)=dftd3_s6
          dftd3_params(2)=dftd3_rs6
          dftd3_params(3)=dftd3_s18
@@ -789,6 +801,7 @@
         write (50, *) '  rescalar          : ',rescal
         write (50, *) '  icDFT             : ',icdft
         write (50, *) '  iqmmm             : ',iqmmm
+        write (50, *) '  idipole           ; ',idipole
         write (50, *) '  idftd3            : ',idftd3
         write (50, *) '  dftd3_func        : ',dftd3_func
         write (50, *) '  dftd3_version     : ',dftd3_version

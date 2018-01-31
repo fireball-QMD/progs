@@ -21,6 +21,8 @@
  
 ! Derivatives of interactions
          real, dimension (:, :, :, :, :), allocatable :: dipp
+         real, dimension (:, :, :, :), allocatable :: dippcm
+         real, dimension (:, :, :, :, :, :), allocatable :: dippc
          real, dimension (:, :, :, :, :), allocatable :: sp_mat
          real, dimension (:, :, :, :, :), allocatable :: spm_mat
          real, dimension (:, :, :, :, :), allocatable :: spVNL

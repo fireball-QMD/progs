@@ -374,7 +374,7 @@ contains
        call MPI_Recv(escf, 1, MPI_DOUBLE_PRECISION, 0, 0, newcomm, status, ierr )
        call MPI_RECV(dxyzqm,3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
        call MPI_RECV(dxyzcl,3*nclatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
-print*,'escf=',escf
+
 
     do i=1,nqmatoms
      write (*,'(2x, 3(2x,f12.6))') qmcoords(:,i)

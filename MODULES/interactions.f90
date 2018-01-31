@@ -43,6 +43,8 @@
 ! Examples: s ==> 1, sp^3 ==>  6, ss*p^3p*^3 ==> 24, sp^3d^5 ==> 39
          integer :: ME2c_max
          integer :: ME2cPP_max
+         integer :: ME2cDipY_max
+         integer :: ME2cDipX_max
 
 
 ! Maximum number of three-center matrix elements: (calculated in make_munu.f90)
@@ -56,6 +58,8 @@
 
          integer, dimension (:, :), allocatable :: index_max2c
          integer, dimension (:, :), allocatable :: index_max3c
+         integer, dimension (:, :), allocatable :: index_max2cDipY
+         integer, dimension (:, :), allocatable :: index_max2cDipX
          integer, dimension (:, :), allocatable :: lssh
          integer, dimension (:, :, :), allocatable :: mu
          integer, dimension (:, :, :), allocatable :: mvalue
@@ -63,6 +67,10 @@
          integer  nssh_tot
          integer, dimension (:, :, :), allocatable :: nu
          integer, dimension (:), allocatable :: num_orb
+         integer, dimension (:, :, :), allocatable :: muDipY
+         integer, dimension (:, :, :), allocatable :: nuDipY
+         integer, dimension (:, :, :), allocatable :: muDipX
+         integer, dimension (:, :, :), allocatable :: nuDipX
 
 ! To get information of the orbitals, re loaded in getinfo_orbital
          integer, dimension (:), allocatable :: getmssh
@@ -124,6 +132,9 @@
          real, dimension (:, :, :, :), allocatable :: vca
          real, dimension (:, :, :, :), allocatable :: vxc_ca
          real, dimension (:, :, :, :), allocatable :: ewaldqmmm
+! Dipole with XYZ components
+         real, dimension (:, :, :), allocatable :: dipcm
+         real, dimension (:, :, :, :, :), allocatable :: dipc
 
 ! These arrays store interactions which are needed for the extended-Hubbard
 ! contributions to the Hamiltonian matrix. 

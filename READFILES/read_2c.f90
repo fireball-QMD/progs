@@ -313,6 +313,10 @@
 ! the wavefunctions are both located only on in1!
            if (interaction .eq. 4 .or. interaction .eq. 7)                   &
      &      num_nonzero = index_max2c(in1,in1)
+! JIMM
+           if (interaction .eq. 10)  num_nonzero = index_max2cDipY(in1,in2)
+           if (interaction .eq. 11)  num_nonzero = index_max2cDipX(in1,in2)
+!
            if (interaction .eq. 17)  num_nonzero = index_max2c(in1,in1)
            if (interaction .eq. 22)  num_nonzero = index_maxS(in1,in1)
 

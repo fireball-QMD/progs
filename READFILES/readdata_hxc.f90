@@ -125,8 +125,31 @@
          call read_2c (interaction, nspecies, itheory,                  &
      &                 ioff2c(interaction), nzx)
         end if
- 
-!       interaction = 10, 11 are x and y dipole
+
+! JIMM
+!       interaction = 10, 11 are y and x dipole 
+        if (idipole .eq. 1) then
+
+         if (itheory .eq. 1) then
+          interaction = 10
+          write (*,*) '  '
+          write (*,*) ' Calling read_2c for 2-Center Interaction # ', interaction
+          write (*,100)
+          call read_2c (interaction, nspecies, itheory,                  &
+     &                  ioff2c(interaction), nzx)
+         end if
+
+         if (itheory .eq. 1) then
+          interaction = 11
+          write (*,*) '  '
+          write (*,*) ' Calling read_2c for 2-Center Interaction # ', interaction
+          write (*,100)
+          call read_2c (interaction, nspecies, itheory,                  &
+     &                  ioff2c(interaction), nzx)
+         end if
+
+        end if ! idipole .eq. 1
+
         interaction = 12
         write (*,*) '  '
         write (*,*) ' Calling read_2c for 2-Center Interaction # ', interaction

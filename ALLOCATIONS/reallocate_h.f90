@@ -137,7 +137,13 @@
 
         if (itheory .eq. 1) then
          deallocate (dip)
+!JIMM
+         deallocate (dipcm)
+         deallocate (dipc)
+
          allocate (dip (numorb_max, numorb_max, neigh_max, natoms))
+         allocate (dipcm (3, numorb_max, numorb_max))
+         allocate (dipc (3, numorb_max, numorb_max, neigh_max, natoms))
         end if
  
 ! Interactions needed for Sankey-Niklewski type average densities.
