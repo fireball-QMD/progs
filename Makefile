@@ -1749,6 +1749,8 @@ qmmm_module.o: ../sqm/qmmm_module.F90
 	cd ../sqm && $(MAKE) qmmm_module.o
 	cp ../sqm/qmmm_module.mod .
 	cp ../sqm/qmmm_module.o .
+fireball_qmmm_loop.o : QMMM/fireball_qmmm_loop.f90
+	$(F90) $(FFLAGS) -c QMMM/fireball_qmmm_loop.f90
 cambio_coordenadas.o : QMMM/cambio_coordenadas.f90
 	$(F90) $(FFLAGS) -c QMMM/cambio_coordenadas.f90
 fireball_first_call.o : QMMM/fireball_first_call.f90

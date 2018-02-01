@@ -14,27 +14,36 @@
 ! --------------------------------------------------------------------------
         real time_begin
         real time_end
-	integer, intent (in) :: itime_step
+        integer, intent (in) :: itime_step
         real, dimension(3,natoms), intent (in) :: qmcoords_recv
         integer, intent (in) :: nclatoms_recv
         integer, dimension(4,nclatoms_recv), intent (in) :: clcoords_recv
-	integer k
+        integer k
         real , intent(out) :: escf_send
         real , dimension(3,natoms), intent (out) :: dxyzqm_send
-        real , dimension(:,:), allocatable, intent(out) :: dxyzcl_send
+        real , dimension(3,nclatoms_recv), intent(out) :: dxyzcl_send
 
 ! Procedure
 ! ===========================================================================
        
         ratom = qmcoords_recv
-
-        !itime_step = itime_step + 1
- 
-        allocate(qmmm_struct%qm_xcrd(4,nclatoms_recv))
         qmmm_struct%qm_mm_pairs = nclatoms_recv
-        qmmm_struct%qm_xcrd = clcoords_recv
-        allocate(qmmm_struct%dxyzcl(3,nclatoms_recv))
 
+
+        if (itime_step .eq. 1) then
+         allocate(qmmm_struct%qm_xcrd(4,nclatoms_recv))
+         qmmm_struct%qm_xcrd = clcoords_recv
+         allocate(qmmm_struct%dxyzcl(3,nclatoms_recv))
+        else
+         write(*,*) 'else allocate'
+         deallocate(qmmm_struct%dxyzcl)
+         deallocate(qmmm_struct%qm_xcrd)
+         allocate(qmmm_struct%dxyzcl(3,nclatoms_recv))
+         allocate(qmmm_struct%qm_xcrd(4,nclatoms_recv))
+         qmmm_struct%qm_xcrd = clcoords_recv
+        end if
+
+        
 
 ! ***************************************************************************
 !                           MPI Specific Stuff
@@ -56,8 +65,12 @@
 
         escf_send = etot*23.061d0
         dxyzqm_send = -ftot*23.061d0 
-        allocate(dxyzcl_send(3,nclatoms_recv)) 
         dxyzcl_send = qmmm_struct%dxyzcl
+
+        !deallocate(qmmm_struct%qm_xcrd)
+        !deallocate(qmmm_struct%dxyzcl)
+        !deallocate(dxyzcl_send)
+
 ! Format Statements
 ! ===========================================================================
 100     format (2x, 70('='))
