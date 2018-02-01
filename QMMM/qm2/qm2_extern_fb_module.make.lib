@@ -20,7 +20,6 @@ module qm2_extern_fb_module
 
   private
   public :: get_fb_forces, fb_finalize
-  logical, save :: do_mpi = .false.  ! Used in finalize subroutine
 
   character(len=*), parameter :: module_name = "qm2_extern_fb_module"
 
@@ -30,8 +29,8 @@ module qm2_extern_fb_module
      integer :: max_scf_iterations
      integer :: qmmm_int
      integer :: idftd3
+     integer :: idipole
      integer :: debug
-     integer :: mpi
      integer :: iqout
      integer :: imcweda
      integer :: ihorsfield
@@ -52,7 +51,6 @@ module qm2_extern_fb_module
      integer, dimension(200) :: pbands     
   end type fb_nml_type
 
-  integer, save         :: newcomm ! Initialized in mpi_init subroutine
 
 contains
 
@@ -130,14 +128,14 @@ contains
     character(len=20) :: executable
     !integer, intent(in) :: ntpr_default
     type(fb_nml_type), intent(out) :: fb_nml
-    integer :: mpi, max_scf_iterations, qmmm_int, idftd3, debug, iqout, iensemble,        &
+    integer ::  max_scf_iterations, qmmm_int, idftd3, debug, iqout, iensemble,        &
                imcweda, ihorsfield, imdet, nddt, icluster, iwrtpop, iwrtvel, iwrteigen,   &
-               iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom, iewform, npbands
+               iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom, iewform, npbands, idipole
     integer, dimension(200) :: pbands
-    namelist /fb/ mpi, executable, max_scf_iterations, qmmm_int, idftd3, debug, iqout,   &
+    namelist /fb/ executable, max_scf_iterations, qmmm_int, idftd3, debug, iqout,   &
                imcweda, ihorsfield, iensemble, imdet, nddt, icluster, iwrtpop, iwrtvel,  &
                iwrteigen, iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom,         &
-               iewform, npbands, pbands
+               iewform, npbands, pbands, idipole
     integer :: i, ierr
      executable      = 'fireball_server'
    
@@ -149,7 +147,6 @@ contains
     qmmm_int = 1
     idftd3 = 0
     debug = 0
-    mpi = 1
     iqout = 1
     imcweda = 1
     ihorsfield = 0
@@ -168,6 +165,7 @@ contains
     iewform = 0
     npbands = 0
     pbands = 0
+    idipole = 0
 
     ! Read namelist, 
     rewind 5
@@ -179,6 +177,7 @@ contains
     fb_nml%max_scf_iterations   = max_scf_iterations
     fb_nml%qmmm_int             = qmmm_int
     fb_nml%idftd3               = idftd3
+    fb_nml%idipole              = idipole
     fb_nml%debug                = debug
     fb_nml%iqout                = iqout
     fb_nml%imcweda              = imcweda
@@ -234,8 +233,8 @@ contains
     write (226,605) "nddt = ", fb_nml%nddt
     write (226,602) "iqmmm = ", fb_nml%qmmm_int
     write (226,602) "ifixcharge =",fb_nml%ifixcharge
-    write (226,600) 'iquench = 4'
     write (226,602) "idftd3 =",fb_nml%idftd3
+    write (226,602) "idipole =",fb_nml%idipole
     write (226,600) "&end"
     write (226,600) "&output"
     write (226,600) "iwrtcharges = 1" 
@@ -311,7 +310,7 @@ contains
     logical,save        :: first_call=.true.
     integer             :: i
     integer             :: ierr
-    integer             :: itime_step
+    integer             :: itime_step = 0
 
     integer :: system
     integer :: stat
@@ -336,6 +335,7 @@ contains
     end if
 
       itime_step = itime_step +1
+      write(*,*) 'itime_step_amber =', itime_step 
        call fireball_qmmm_loop(itime_step,qmcoords,nclatoms,clcoords,escf,dxyzqm,dxyzcl)
 print*,'escf=',escf
 
