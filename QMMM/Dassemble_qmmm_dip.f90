@@ -124,6 +124,7 @@
 ! Initialize interactions to zero.
 
         flrew_qmmm = 0.0d0
+        qmmm_struct%dxyzcl = 0.0d0
 
 ! Determine which atoms are assigned to this processor.
         if (iordern .eq. 1) then
@@ -148,11 +149,12 @@
           mbeta = neigh_b(ineigh,iatom)
           jatom = neigh_j(ineigh,iatom)
           r2(:) = ratom(:,jatom) + xl(:,mbeta)
+          in2 = imass(jatom)
           do katom = 1, qmmm_struct%qm_mm_pairs
            rna(1) = qmmm_struct%qm_xcrd(1,katom)
            rna(2) = qmmm_struct%qm_xcrd(2,katom)
            rna(3) = qmmm_struct%qm_xcrd(3,katom)
-           dq3 = qmmm_struct%qm_xcrd(4,katom)
+           dq3 = - qmmm_struct%qm_xcrd(4,katom) ! charge in amber have opposite sign
            r21(:) = r2(:) - r1(:)
            rnabc(:) = rna(:) - (r1(:) + r21(:)/2.0d0)
            x = sqrt(rnabc(1)**2 + rnabc(2)**2 + rnabc(3)**2)
@@ -190,10 +192,10 @@
              do ix = 1, 3
               qmmm_struct%dxyzcl(ix,katom)  = qmmm_struct%dxyzcl(ix,katom) &
       &                                      +rho(imu,inu,ineigh,iatom)*demnplA(ix,imu,inu)*eq2*23.061d0
-              flrew(ix,iatom) = flrew(ix,iatom) &
-      &                        -rho(imu,inu,ineigh,iatom)*demnplB(ix,imu,inu)*eq2
-              flrew(ix,jatom) = flrew(ix,jatom) &
-      &                        -rho(imu,inu,ineigh,iatom)*demnplC(ix,imu,inu)*eq2
+              flrew(ix,iatom) =  flrew(ix,iatom) &
+      &                        - rho(imu,inu,ineigh,iatom)*demnplB(ix,imu,inu)*eq2
+              flrew(ix,jatom) =  flrew(ix,jatom) &
+      &                        - rho(imu,inu,ineigh,iatom)*demnplC(ix,imu,inu)*eq2
              end do ! do ix
 
             end do !end do imu = 1, num_orb(in1)
@@ -222,6 +224,7 @@
 
            qmmm_struct%dxyzcl(ix,katom) = qmmm_struct%dxyzcl(ix,katom) - dq4*qmmm_struct%qm_xcrd(4,katom)*(vij(ix) / dij**3)*eq2*23.061d0
            flrew_qmmm(ix,iatom) = flrew_qmmm(ix,iatom) - dq4*qmmm_struct%qm_xcrd(4,katom)*(vij(ix) / dij**3)*eq2
+
           enddo
 
          end do

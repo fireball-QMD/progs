@@ -140,7 +140,7 @@
            rna(1) = qmmm_struct%qm_xcrd(1,katom)
            rna(2) = qmmm_struct%qm_xcrd(2,katom)
            rna(3) = qmmm_struct%qm_xcrd(3,katom)
-           dq3 = qmmm_struct%qm_xcrd(4,katom)
+           dq3 = - qmmm_struct%qm_xcrd(4,katom) ! charge in amber have opposite sign
            r21(:) = r2(:) - r1(:)
            rnabc(:) = rna(:) - (r1(:) + r21(:)/2.0d0)
            x = sqrt(rnabc(1)**2 + rnabc(2)**2 + rnabc(3)**2)
@@ -178,7 +178,7 @@
                       (qmmm_struct%qm_xcrd(2,katom)-ratom(2,iatom))*(qmmm_struct%qm_xcrd(2,katom)-ratom(2,iatom)) + & 
                       (qmmm_struct%qm_xcrd(3,katom)-ratom(3,iatom))*(qmmm_struct%qm_xcrd(3,katom)-ratom(3,iatom)) )
 
-          eqmmm = (dq4*qmmm_struct%qm_xcrd(4,katom) / dij)*eq2
+          eqmmm = eqmmm + (dq4*qmmm_struct%qm_xcrd(4,katom) / dij)*eq2
          end do
         end do
 
