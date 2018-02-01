@@ -53,7 +53,7 @@
         use mpi_main
         use configuration
         use forces
-        use qmmm_module, only : qmmm_struct
+        !use qmmm_module, only : qmmm_struct
 
         implicit none
 

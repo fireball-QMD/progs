@@ -62,7 +62,7 @@
         use kpoints
         use nonadiabatic
         use options
-        use qmmm_module, only : qmmm_struct
+        !use qmmm_module, only : qmmm_struct
         implicit none
 
 ! Argument Declaration and Description

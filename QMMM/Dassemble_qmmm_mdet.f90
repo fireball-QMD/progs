@@ -77,7 +77,7 @@
         use interactions
         use neighbor_map
         use nonadiabatic
-        use qmmm_module, only : qmmm_struct, qmmm_nml
+!        use qmmm_module, only : qmmm_struct, qmmm_nml
         implicit none
  
 ! Argument Declaration and Description

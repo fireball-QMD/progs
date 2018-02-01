@@ -328,6 +328,8 @@ MAIN = fireball.o
 
 MAIN_SERVER = fireball_server.o
 
+MAIN_SERVER_AMBER = fireball_server_amber.o
+
 MD = cross.o factorial.o predictor.o gaussT.o corrector.o imaged.o setgear.o \
 	phimat.o bvec.o soldm.o NHCThermostat.o get_enk.o writeHNose.o resetNHC.o \
 	move_ions.o
@@ -405,8 +407,8 @@ NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
       Dassemble_ca_olsxc_3c_mdet.o move_correc.o move_predic.o overlap_sign.o \
       check_swap.o overlap_numeric.o getnac.o MCsolar.o Dassemble_qmmm_mdet.o
 
-QMMM =  amber_fireball.o coords_to_fireball.o coords_forces_charges_to_amber.o \
-        fireball_qmmm.o fireball_first_call.o main_loop_MDET_qmmm.o main_loop_MD_qmmm.o
+QMMM =  main_loop_MDET_qmmm.o main_loop_MD_qmmm.o fireball_qmmm_loop.o
+
 
 DFTD3 = common.o sizes.o pars.o core.o api.o dftd3_corrections.o
 
@@ -429,11 +431,11 @@ OBJECTS_COM = $(DFTD3) $(INITMPI) $(ORDERN) $(ALLOCATIONS) $(ASSEMBLERS) \
         $(NEB) $(TRANS) $(GRID) $(TDSE) $(BIAS) $(NAC)
 
 
-OBJECTS = $(MODULES_C) qmmm_module_null.o $(OBJECTS_COM) $(MAIN)
+OBJECTS = $(MODULES_C) $(OBJECTS_COM) $(MAIN)
 
-OBJECTS_QMMM = $(MODULES_C) qmmm_module.o $(OBJECTS_COM) $(QMMM)
+OBJECTS_QMMM = $(MODULES_C) $(OBJECTS_COM) $(QMMM)
 
-OBJECTS_SERVER = $(MODULES_C) qmmm_module_null.o \
+OBJECTS_SERVER = $(MODULES_C)  \
 	$(OBJECTS_COM) $(MAIN_SERVER)
 
 fireball.x: $(OBJECTS)
@@ -457,7 +459,7 @@ all:
 libfireball: $(OBJECTS_QMMM)
 	ar rv libfireball.a $(OBJECTS_QMMM)
 	ranlib libfireball.a
-	cp libfireball.a ../../lib/
+	cp libfireball.a ../../../lib/
 
 server: $(OBJECTS_SERVER)
 	$(F90)  -o  fireball_server.x $(FFLAGS) $(OBJECTS_SERVER) $(VISFLAGS) $(PARLFLAGS) \
@@ -554,6 +556,10 @@ classicMD.o : MODULES/classicMD.f90
 fireball.o : fireball.f90 $(MODULES)
 	$(F90) $(FFLAGS) -I/usr/local/include -c fireball.f90
 
+ifneq (,$(findstring SCALAPACK, ${METHOD}))
+fireball_server_amber.o : server/fireball_server_amber.f90 $(MODULES) 
+	$(F90) -c server/fireball_server_amber.f90
+endif
 ifneq (,$(findstring SCALAPACK, ${METHOD}))
 fireball_server.o : server/fireball_server.f90 $(MODULES) 
 	$(F90) -c server/fireball_server.f90

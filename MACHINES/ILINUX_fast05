@@ -14,10 +14,10 @@
 ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	F77 = ifort
 	F90 = ifort
-	PATH_MKL = /opt/intel/mkl/lib/intel64/
-	PATH_INCL = -I/opt/intel/mkl/include/
-	PATH_FFTW_LIB = /opt/intel/mkl/interfaces/fftw3xf/
-	PATH_FFTW_INCL = -I/opt/intel/mkl/include/fftw/
+	PATH_MKL = /opt/intel/composerxe-2011.2.137/mkl/lib/intel64/
+	PATH_INCL = -I/opt/intel/composerxe-2011.2.137/mkl/include/
+	PATH_FFTW_LIB = /opt/intel/composerxe-2011.2.137/mkl/interfaces/fftw3xf/
+	PATH_FFTW_INCL = -I/opt/intel/composerxe-2011.2.137/mkl/include/fftw/
 
 	ifneq (,$(findstring OPT, ${MODE}))
 		ifneq (,$(findstring YES, ${CCOMPILE}))
