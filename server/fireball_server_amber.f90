@@ -59,7 +59,7 @@
         subroutine connect()
          use fmpi
          implicit none
-         serv_name = 'fireball_server_amber'
+         serv_name = 'fireball_server'
          call MPI_COMM_SIZE(MPI_COMM_WORLD, size, ierr_mpi)
          if(rank==0) then
           call MPI_OPEN_PORT(MPI_INFO_NULL, port_name, ierr_mpi)
