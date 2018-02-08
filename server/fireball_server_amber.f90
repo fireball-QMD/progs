@@ -74,7 +74,6 @@
         program fireball_server_amber
         use mpi_main
         use fmpi
-        use qmmm_module
         use energy
         use forces
         use configuration

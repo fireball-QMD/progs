@@ -42,9 +42,9 @@ MACHINE = ILINUX_fast05
 
 # Pick your parallel type: <blank for none>, MPI, MPICH (MUST set method below)
 # or OPENMP 
-#PARALLEL = MPI
+PARALLEL = MPI
 #PARALLEL = OPENMP
-PARALLEL = 
+#PARALLEL = 
 # Note: the linear-scaling option is in the testing stages only right now, so
 # setting to ORDERN here may mess things up.
 # Pick the method that you are using: <blank for nothing special>, SCALAPACK
@@ -58,8 +58,8 @@ PARALLEL =
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
 #METHOD = DOUBLE 
-METHOD = GAMMA 
-#METHOD = SCALAPACK
+#METHOD = GAMMA 
+METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
 CCOMPILE = NO
@@ -438,6 +438,8 @@ OBJECTS_QMMM = $(MODULES_C) $(OBJECTS_COM) $(QMMM)
 OBJECTS_SERVER = $(MODULES_C)  \
 	$(OBJECTS_COM) $(MAIN_SERVER)
 
+OBJECTS_SERVER_AMBER = $(MODULES_C) $(OBJECTS_COM) $(MAIN_SERVER_AMBER)
+
 fireball.x: $(OBJECTS)
 	$(F90) -o  fireball.x $(FFLAGS) $(OBJECTS) $(VISFLAGS) $(PARLFLAGS) \
 	$(LFLAGS) 
@@ -465,6 +467,9 @@ server: $(OBJECTS_SERVER)
 	$(F90)  -o  fireball_server.x $(FFLAGS) $(OBJECTS_SERVER) $(VISFLAGS) $(PARLFLAGS) \
 	$(LFLAGS) 
 
+server_amber: $(OBJECTS_SERVER_AMBER)
+	$(F90)  -o  fireball_server_amber.x $(FFLAGS) $(OBJECTS_SERVER_AMBER) $(VISFLAGS) $(PARLFLAGS) \
+	$(LFLAGS) 
 
 #*****************************************************************************
 # modules
