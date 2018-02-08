@@ -468,7 +468,7 @@ server: $(OBJECTS_SERVER)
 	$(LFLAGS) 
 	
 server_amber: $(OBJECTS_SERVER_AMBER)
-	$(F90)  -o  fireball_server.x $(FFLAGS) $(OBJECTS_SERVER_AMBER) $(VISFLAGS) $(PARLFLAGS) \
+	$(F90)  -o  fireball_server $(FFLAGS) $(OBJECTS_SERVER_AMBER) $(VISFLAGS) $(PARLFLAGS) \
 	$(LFLAGS) 
 
 #*****************************************************************************
