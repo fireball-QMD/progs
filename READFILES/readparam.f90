@@ -702,6 +702,14 @@
          write (*,*) 'Long range interactions with XYZ dipole'
          write (*,100)
         end if
+	
+        if (idipolee .eq. 1 .and. icluster .eq. 0) then
+         write (*,*) ' ******************** NOTE ********************* '
+         write (*,*) ' idipole = 1 theory is not compatible with periodic systems '
+         write (*,*) ' STOPPING!'
+         write (*,*) ' ******************** NOTE ********************* '
+         STOP
+        end if
 !JIMM
 !DFTD3
         if (idftd3 .eq. 1) then
