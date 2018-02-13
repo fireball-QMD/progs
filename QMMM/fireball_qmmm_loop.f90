@@ -17,7 +17,7 @@
         integer, intent (in) :: itime_step
         real, dimension(3,natoms), intent (in) :: qmcoords_recv
         integer, intent (in) :: nclatoms_recv
-        integer, dimension(4,nclatoms_recv), intent (in) :: clcoords_recv
+        real, dimension(4,nclatoms_recv), intent (in) :: clcoords_recv
         integer k
         real , intent(out) :: escf_send
         real , dimension(3,natoms), intent (out) :: dxyzqm_send
