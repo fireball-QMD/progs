@@ -50,6 +50,7 @@
         integer icDFT                  ! do the constrain DFT
         integer iProjWF                ! do projection within MDET simulations 
         integer iqmmm                  ! QM/MM Electrostatic embedding 
+        integer mix_embedding          ! mix electrostatic and mechanical embedding
 	integer iephc                  ! do e-ph coupling
         integer idftd3                 ! DFTD3 corrections
         integer idipole                ! Long range term with XYZ dipole
@@ -66,6 +67,7 @@
         integer ioff2c (1:24)              ! for diagnostic purposes
         integer ioff3c (1:4)
         real testrange
+        real  cut_embedding          ! cutoff for the mix embedding
         real  dftd3_s6, dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp
         character (len = 40) dftd3_func
         integer dftd3_version

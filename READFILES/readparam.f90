@@ -97,7 +97,8 @@
   					 tempfe, itdse, ibias, rescal, xyz2line, imdet, iProjWF, nddt,&
 					 igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
-                                         dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp
+                                         dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
+                                         cut_embedding
 
 ! Procedure
 ! ===========================================================================
@@ -174,6 +175,8 @@
 
 ! QM/MM 
         iqmmm = 0
+        mix_embedding = 0
+        cut_embedding = 999
 ! e-ph coupling 
         iephc = 0
 ! DFTD3 corrections
@@ -809,6 +812,8 @@
         write (50, *) '  rescalar          : ',rescal
         write (50, *) '  icDFT             : ',icdft
         write (50, *) '  iqmmm             : ',iqmmm
+        write (50, *) '  mix_embedding     : ',mix_embedding
+        write (50, *) '  cut_embedding     : ',cut_embedding
         write (50, *) '  idipole           ; ',idipole
         write (50, *) '  idftd3            : ',idftd3
         write (50, *) '  dftd3_func        : ',dftd3_func
