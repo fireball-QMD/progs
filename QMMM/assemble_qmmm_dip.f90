@@ -126,7 +126,7 @@
          natomsp = natoms
         end if
 
-        do iatom = 1, natoms
+        do iatom = iatomstart, iatomstart - 1 + natomsp
          r1(:) = ratom(:,iatom)
          in1 = imass(iatom)
 

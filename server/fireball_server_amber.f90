@@ -76,6 +76,8 @@
         use fmpi
         use energy
         use forces
+        use charges
+        use options
         use configuration
         use interactions
   
@@ -90,6 +92,10 @@
 ! --------------------------------------------------------------------------
         real time_begin
         real time_end
+        integer :: i
+        integer :: in1
+        integer :: iatom
+        integer :: issh
         integer :: itime_step
         logical :: finish_qmmm=.true.
 
@@ -119,36 +125,57 @@
         
          call initbasics ()    
          call readdata ()
+
+         allocate(qmmm_struct%Qneutral_TOT(natoms))
+         allocate(qmmm_struct%scf_mchg(natoms))
  
          itime_step = 1
         
         do while (finish_qmmm)
 
             call MPI_RECV(ratom,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,status,ierr_mpi)
-            print*,'ratoms, ' ,ratom
             if(ratom(1,1).ne.null) then
               call MPI_RECV(qmmm_struct%qm_mm_pairs,1, MPI_INTEGER,0,0, intercomm,status,ierr_mpi)
               allocate(qmmm_struct%qm_xcrd(4,qmmm_struct%qm_mm_pairs))
               allocate(qmmm_struct%dxyzcl(3,qmmm_struct%qm_mm_pairs))
               call MPI_RECV(qmmm_struct%qm_xcrd,4*qmmm_struct%qm_mm_pairs,MPI_DOUBLE_PRECISION,0,0,intercomm,status,ierr_mpi)
 
-
-
               call scf_loop (itime_step)
               call postscf ()
               call getenergy (itime_step)
               call getforces ()
 
+
+              qmmm_struct%Qneutral_TOT = 0.0d0
+              qmmm_struct%scf_mchg = 0.0d0
+              do iatom = 1, natoms
+               qmmm_struct%Qneutral_TOT(iatom) = 0
+               in1 = imass(iatom)
+               do issh = 1, nssh(in1)
+                qmmm_struct%Qneutral_TOT(iatom) = qmmm_struct%Qneutral_TOT(iatom) + Qneutral(issh,in1)
+               end do
+              end do
+
+              if (iqout .eq. 1) then
+               qmmm_struct%scf_mchg = -(QLowdin_TOT - qmmm_struct%Qneutral_TOT) 
+              else if (iqout .eq. 2) then
+               qmmm_struct%scf_mchg = -(QMulliken_TOT - qmmm_struct%Qneutral_TOT) 
+              else if (iqout .eq. 3) then
+               qmmm_struct%scf_mchg = -(QLowdin_TOT - qmmm_struct%Qneutral_TOT)
+              end if
+
               call MPI_SEND((etot*23.061d0),1, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
               call MPI_SEND(-ftot*23.061d0,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
               call MPI_SEND(qmmm_struct%dxyzcl,3*qmmm_struct%qm_mm_pairs, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
+              call MPI_SEND(qmmm_struct%scf_mchg,natoms,MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
               itime_step = itime_step +1
+              deallocate(qmmm_struct%qm_xcrd)
+              deallocate(qmmm_struct%dxyzcl)
            else
               finish_qmmm=.false.
            end if
 
         end do
-
          
          call MPI_UNPUBLISH_NAME('fireball_server_amber', MPI_INFO_NULL, port_name, ierr_mpi)
          call MPI_CLOSE_PORT(port_name, ierr_mpi)

@@ -30,6 +30,7 @@ module qm2_extern_fb_module
      integer :: max_scf_iterations
      integer :: qmmm_int
      integer :: idftd3
+     integer :: idipole
      integer :: debug
      integer :: mpi
      integer :: iqout
@@ -49,6 +50,8 @@ module qm2_extern_fb_module
      integer :: iwrtatom
      integer :: iewform
      integer :: npbands
+     integer :: mix_embedding
+     real :: cut_embedding
      integer, dimension(200) :: pbands     
   end type fb_nml_type
 
@@ -99,7 +102,6 @@ contains
       write(6,*) 'call get_namelist( ntpr_default, fb_nml )',ntpr_default,fb_nml
       call get_namelist( fb_nml )
       call check_installation( trim(fb_nml%executable), id, .true., fb_nml%debug )
-     ! call print_namelist(fb_nml)
     end if
 
 #ifdef MPI
@@ -152,12 +154,14 @@ contains
     type(fb_nml_type), intent(out) :: fb_nml
     integer :: mpi, max_scf_iterations, qmmm_int, idftd3, debug, iqout, iensemble,        &
                imcweda, ihorsfield, imdet, nddt, icluster, iwrtpop, iwrtvel, iwrteigen,   &
-               iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom, iewform, npbands
+               iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom, iewform, idipole,      &
+               npbands, mix_embedding
+    real :: cut_embedding
     integer, dimension(200) :: pbands
     namelist /fb/ mpi, executable, max_scf_iterations, qmmm_int, idftd3, debug, iqout,   &
                imcweda, ihorsfield, iensemble, imdet, nddt, icluster, iwrtpop, iwrtvel,  &
                iwrteigen, iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom,         &
-               iewform, npbands, pbands
+               iewform, npbands, idipole, pbands, mix_embedding, cut_embedding
     integer :: i, ierr
      executable      = 'fireball_server'
    
@@ -169,6 +173,7 @@ contains
     max_scf_iterations = 70
     qmmm_int = 1
     idftd3 = 0
+    idipole = 1
     debug = 0
     mpi = 1
     iqout = 1
@@ -189,6 +194,8 @@ contains
     iewform = 0
     npbands = 0
     pbands = 0
+    mix_embedding = 0
+    cut_embedding = 99.0d0
 
     ! Read namelist, 
     rewind 5
@@ -209,6 +216,7 @@ contains
     fb_nml%max_scf_iterations   = max_scf_iterations
     fb_nml%qmmm_int             = qmmm_int
     fb_nml%idftd3               = idftd3
+    fb_nml%idipole              = idipole
     fb_nml%debug                = debug
     fb_nml%iqout                = iqout
     fb_nml%imcweda              = imcweda
@@ -228,6 +236,8 @@ contains
     fb_nml%iewform              = iewform
     fb_nml%npbands              = npbands
     fb_nml%pbands               = pbands
+    fb_nml%mix_embedding        = mix_embedding
+    fb_nml%cut_embedding        = cut_embedding
 
     ! Need this variable so we don't call MPI_Send in the finalize subroutine
     if (mpi==1 ) then
@@ -259,16 +269,19 @@ contains
     write (226,600) "ihorsfield = 1"
     end if
     write (226,601) "qstate = ", -1*charge
-    write (226,602) "icluster = ", fb_nml%icluster
     write (226,602) "iqout = ", fb_nml%iqout
+    write (226,602) "icluster = ", fb_nml%icluster
     write (226,603) "max_scf_iterations = ", fb_nml%max_scf_iterations
     write (226,602) "iensemble = ", fb_nml%iensemble
     write (226,602) "imdet = ", fb_nml%imdet
     write (226,605) "nddt = ", fb_nml%nddt
     write (226,602) "iqmmm = ", fb_nml%qmmm_int
     write (226,602) "ifixcharge =",fb_nml%ifixcharge
-    write (226,600) 'iquench = 4'
-    write (226,602) "idftd3 =",fb_nml%idftd3
+    write (226,600) 'iquench = 0'
+    write (226,602) "idftd3 = ",fb_nml%idftd3
+    write (226,602) "idipole = ",fb_nml%idipole
+    write (226,602) "mix_embedding = ", fb_nml%mix_embedding
+    write (226,*) "cut_embedding = ", fb_nml%cut_embedding
     write (226,600) "&end"
     write (226,600) "&output"
     write (226,600) "iwrtcharges = 1" 
@@ -277,8 +290,8 @@ contains
     write (226,602) "iwrteigen = ", fb_nml%iwrteigen
     write (226,602) "iwrtefermi = ", fb_nml%iwrtefermi
     write (226,602) "iwrtdos = ", fb_nml%iwrtdos
-    write (226,602) "iwrtewf =",fb_nml%iwrtewf
-    write (226,602) "iwrtatom =",fb_nml%iwrtatom
+    write (226,602) "iwrtewf = ",fb_nml%iwrtewf
+    write (226,602) "iwrtatom = ",fb_nml%iwrtatom
     write (226,600) "&end"
     if (fb_nml%iwrtewf .eq. 1) then
     write (226,600) "&mesh"
@@ -306,6 +319,7 @@ contains
 604     format (a,i1)
 605     format (a,i4)
 608     format (a,199(i4,','),i3)
+609     format (a,f6.3)
 700     format (i2, 3(2x,f8.4))
 
   end subroutine write_inpfile
@@ -358,8 +372,6 @@ contains
     ! newcomm (global), send relevant namelist variables.
     ! ---------------------------------------------------
 
-    write(6,*)'dgt connect', first_call
-
 
     if (first_call) then 
       first_call=.false.
@@ -374,12 +386,12 @@ contains
        call MPI_Recv(escf, 1, MPI_DOUBLE_PRECISION, 0, 0, newcomm, status, ierr )
        call MPI_RECV(dxyzqm,3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
        call MPI_RECV(dxyzcl,3*nclatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
-print*,'escf=',escf
+       call MPI_Recv(qmcharges, nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm,status,ierr)
 
-    do i=1,nqmatoms
-     write (*,'(2x, 3(2x,f12.6))') qmcoords(:,i)
-    end do
-
+!       write(*,*) 'Received the following charges from server:'
+!       do i=1, nqmatoms
+!          write(*,*) 'Atom ',i, ': ', qmcharges(i)
+!       end do
 
 
   end subroutine mpi_hook

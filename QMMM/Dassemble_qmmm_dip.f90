@@ -142,7 +142,7 @@
          natomsp = natoms
         end if
 
-        do iatom = 1, natoms
+        do iatomstart, iatomstart - 1 + natomsp
          r1(:) = ratom(:,iatom)
          in1 = imass(iatom)
          do ineigh = 1, neighn(iatom)
