@@ -375,8 +375,8 @@ contains
 
     if (first_call) then 
       first_call=.false.
-      call connect_to_fireball( fb_nml, nqmatoms, atom_types, do_grad, id, charge, spinmult )
       call write_inpfile( fb_nml, qmcoords, nqmatoms, charge)
+      call connect_to_fireball( fb_nml, nqmatoms, atom_types, do_grad, id, charge, spinmult )
     end if
 
        call MPI_SEND(qmcoords,3*nqmatoms, MPI_DOUBLE_PRECISION, 0, 0, newcomm, ierr) 
