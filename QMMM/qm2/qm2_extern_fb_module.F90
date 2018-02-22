@@ -51,6 +51,7 @@ module qm2_extern_fb_module
      integer :: iewform
      integer :: npbands
      integer :: mix_embedding
+     integer :: iwrtcharges
      real :: cut_embedding
      integer, dimension(200) :: pbands     
   end type fb_nml_type
@@ -63,7 +64,7 @@ contains
   ! Get QM energy and forces from TeraChem
   ! --------------------------------------
   subroutine get_fb_forces( do_grad, nstep, ntpr_default, id, nqmatoms, qmcoords,&
-       qmtypes, nclatoms, clcoords, escf, dxyzqm, dxyzcl, charge, spinmult )
+       qmtypes, nclatoms, clcoords, escf, dxyzqm, dxyzcl, charge, spinmult, qmcharges )
 
     use qm2_extern_util_module, only: print_results, check_installation, write_dipole, write_charges
     use constants, only: CODATA08_AU_TO_KCAL, CODATA08_A_TO_BOHRS, ZERO
@@ -83,7 +84,7 @@ contains
     integer, intent(in) :: charge, spinmult     ! Charge and spin multiplicity
 
     _REAL_              :: dipmom(4,3)          ! Dipole moment {x, y, z, |D|}, {QM, MM, TOT}
-    _REAL_              :: qmcharges(nqmatoms)  ! QM charges from population analysis
+    _REAL_, intent(out) :: qmcharges(nqmatoms)  ! QM charges from population analysis
 
     type(fb_nml_type), save :: fb_nml
     logical, save :: first_call = .true.
@@ -154,13 +155,13 @@ contains
     integer :: mpi, max_scf_iterations, qmmm_int, idftd3, debug, iqout, iensemble,        &
                imcweda, ihorsfield, imdet, nddt, icluster, iwrtpop, iwrtvel, iwrteigen,   &
                iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom, iewform, idipole,      &
-               npbands, mix_embedding
+               npbands, mix_embedding, iwrtcharges
     real :: cut_embedding
     integer, dimension(200) :: pbands
     namelist /fb/ mpi, executable, max_scf_iterations, qmmm_int, idftd3, debug, iqout,   &
                imcweda, ihorsfield, iensemble, imdet, nddt, icluster, iwrtpop, iwrtvel,  &
                iwrteigen, iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom,         &
-               iewform, npbands, idipole, pbands, mix_embedding, cut_embedding
+               iewform, npbands, idipole, pbands, mix_embedding, cut_embedding, iwrtcharges
     integer :: i, ierr
      executable      = 'fireball_server'
    
@@ -195,6 +196,7 @@ contains
     pbands = 0
     mix_embedding = 0
     cut_embedding = 99.0d0
+    iwrtcharges = 0
 
     ! Read namelist, 
     rewind 5
@@ -237,6 +239,7 @@ contains
     fb_nml%pbands               = pbands
     fb_nml%mix_embedding        = mix_embedding
     fb_nml%cut_embedding        = cut_embedding
+    fb_nml%iwrtcharges           = iwrtcharges
 
     ! Need this variable so we don't call MPI_Send in the finalize subroutine
     if (mpi==1 ) then
@@ -283,7 +286,7 @@ contains
     write (226,*) "cut_embedding = ", fb_nml%cut_embedding
     write (226,600) "&end"
     write (226,600) "&output"
-    write (226,600) "iwrtcharges = 1" 
+    write (226,602) "iwrtcharges = ",fb_nml%iwrtcharges 
     write (226,602) "iwrtpop = ", fb_nml%iwrtpop
     write (226,602) "iwrtvel = ", fb_nml%iwrtvel
     write (226,602) "iwrteigen = ", fb_nml%iwrteigen
