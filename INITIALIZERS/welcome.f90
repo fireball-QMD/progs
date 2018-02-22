@@ -68,7 +68,7 @@
 
 ! Procedure
 ! ===========================================================================
-        write (*,*) '               Welcome to FIREBALL CZ !     '
+        write (*,*) '               Welcome to FIREBALL QMD !     '
         write (*,*) '          A fast local orbital QMD Package    '
         write (*,*) '              Version  1.2.0 17/5/2010    '
         write (*,*) '     brought to you by the Fireball Committee: '
@@ -84,7 +84,7 @@
         write (*,*) '                  Jose Ortega '
         write (*,*) '             Departmento de Fisica '
         write (*,*) '       Teorica de la Materia Condensada '
-        write (*,*) '             Universidad de Madrid '
+        write (*,*) '        Universidad Autonoma de Madrid '
         write (*,*) '  '
         write (*,*) '                Pavel Jelinek '
         write (*,*) '             Institute of Physics '
@@ -104,9 +104,11 @@
         write (*,*) ' Spencer Shellman (University of Utah) '
         write (*,*) ' John Tomfohr (Arizona State University) '
         write (*,*) ' Hao Wang (Brigham Young University) '
+        write (*,*) ' Daniel G. Trabada (Universidad Autonoma de Madrid) '
+        write (*,*) ' Jesus I. Mendieta-Moreno (Universidad Autonoma de Madrid) '
 
         write (*,*) '  '
-        write (*,*) '     Latest version 10 Jan. 2005 '
+        write (*,*) '     Latest version Feb. 2018 '
         write (*,*) '  '
         write (*,*) '         See Copyright information: '
         write (*,*) '           !!!Proprietory Code!!! '
