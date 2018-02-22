@@ -70,7 +70,6 @@
 ! ===========================================================================
         write (*,*) '               Welcome to FIREBALL QMD !     '
         write (*,*) '          A fast local orbital QMD Package    '
-        write (*,*) '              Version  1.2.0 17/5/2010    '
         write (*,*) '     brought to you by the Fireball Committee: '
         write (*,*) '  '
         write (*,*) '                 James P. Lewis '
