@@ -99,7 +99,6 @@ contains
     if ( first_call ) then
       first_call = .false.
       write (6,*) '>>> Running QM calculation with Fireball  <<<'
-      write(6,*) 'call get_namelist( ntpr_default, fb_nml )',ntpr_default,fb_nml
       call get_namelist( fb_nml )
       call check_installation( trim(fb_nml%executable), id, .true., fb_nml%debug )
     end if
