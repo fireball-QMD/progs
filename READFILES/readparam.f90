@@ -65,6 +65,7 @@
         use charges
         use barrier
         use nonadiabatic
+	use integrals, only : fdataLocation
         implicit none
 
 ! Argument Declaration and Description
@@ -98,7 +99,7 @@
 					 igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
-                                         cut_embedding
+                                         cut_embedding, fdataLocation
 
 ! Procedure
 ! ===========================================================================
@@ -135,6 +136,7 @@
 		basisfile = 'input.bas'
 		lvsfile = 'input.lvs'
 		kptpreference = 'input.kpts'
+		fdataLocation = 'Fdata'
 		acfile = 'ac.dat'
 		xvfile = 'xv.dat'
 		nstepi = 1
