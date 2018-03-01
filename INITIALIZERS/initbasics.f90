@@ -125,9 +125,6 @@
 ! particular interactions on or off.
         call diagnostics (ioff2c, ioff3c, itestrange, testrange)
 
-! Initialize Fdata location
-        call findFdata (fdataLocation)
-
 ! Read the parameter file - fireball.param
         call readparam ()
 
