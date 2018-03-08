@@ -99,7 +99,7 @@
 					 igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
-                                         cut_embedding, fdataLocation
+                                         cut_embedding, fdataLocation, verbosity
 
 ! Procedure
 ! ===========================================================================
@@ -153,6 +153,7 @@
         ibias = 0
         rescal = 1.0d0
         xyz2line = 1
+        verbosity = 0
 !JOm-add
         imdet = 0
         iProjWF = 0 
@@ -274,6 +275,8 @@
         write (*,100)
         write (*,*) ' The name of the k-points file: '
         write (*,201) kptpreference
+
+        if (verbosity .ge. 3) then
 
         write (*,*) '  '
         write (*,100)
@@ -766,6 +769,8 @@
         if (iwrtxsf .gt. 0) write (*,*) ' Writing out xsf-format file  '
         if (idensimport .gt. 0) write (*,*) ' Importing density file for projection  '
 
+        endif ! verbosity = 3
+ 
 
 ! writeout resume of the input variables into param.dat file
         open (unit = 50, file = 'param.dat', status = 'unknown')
@@ -821,6 +826,8 @@
         write (50, *) '  dftd3_func        : ',dftd3_func
         write (50, *) '  dftd3_version     : ',dftd3_version
         write (50, *) '  dftd3_tz          : ',dftd3_tz
+        write (50, *) '  verbosity         : ',verbosity
+        write (50, *) '  fdatalocation     : ',fdatalocation
         write (50,100)
         write (50, *) ''
         write (50, *) ' SCF'

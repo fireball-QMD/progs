@@ -58,6 +58,7 @@
         subroutine initmasses (natoms, symbol, smass, xmass)
         use dimensions
         use interactions
+        use options, only : verbosity
         implicit none
  
 ! Argument Declaration and Description
@@ -114,6 +115,7 @@
         end if
  
 ! Write out the input masses.
+        if (verbosity .ge. 3) then
         write (*,*) '  '
         write (*,*) '  '
         write (*,*) ' The Input Masses Are: '
@@ -124,7 +126,7 @@
          write (*,102) iatom, symbol(iatom), xmass(iatom)
         end do
         write (*,100)
- 
+        endif !verbosity
 ! Format Statements
 ! ===========================================================================
 100     format (2x, 70('='))

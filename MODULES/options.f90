@@ -73,5 +73,6 @@
         integer dftd3_version
         logical dftd3_tz 
         real dftd3_params (5)
+        integer verbosity ! 0 minimal, 10 max         
 
  end module options

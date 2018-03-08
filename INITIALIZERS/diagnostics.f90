@@ -81,7 +81,7 @@
 ! We multiply the data file by 0 if ioff is off.
         inquire (file = 'diagnostics.input', exist = readdiag)
         if (.not. readdiag) then
-          write (*,*) ' No diagnostics.input file to read. Will run normally '
+!          write (*,*) ' No diagnostics.input file to read. Will run normally '
           ioff2c(:) = 1
           ioff3c(:) = 1
           itestrange= 1

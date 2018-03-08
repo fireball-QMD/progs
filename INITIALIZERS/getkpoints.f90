@@ -58,6 +58,7 @@
         use constants_fireball
         use dimensions
         use kpoints
+        use options, only : verbosity
         implicit none
 
 ! Argument Declaration and Description
@@ -195,9 +196,9 @@ print*, 'Use this for quick calcs. Do kpoint convergence tests if serious.'
         open (unit = 54, file = kptsfile, status = 'old')
         read (54,*) nkpoints 
         write (*,*) '  '
-        write (*,*) ' The k-points from File: '
-        write (*,100)
-        write (*,*) ' nkpoints = ', nkpoints
+        write (*,*) ' Reading k-points '
+        if (verbosity .ge. 3) write (*,100)
+        if (verbosity .ge. 3) write (*,*) ' nkpoints = ', nkpoints
         if (nkpoints .le. 0) then
          write (*,*) ' nkpoints .le. 0 Huh! Fix XXX.kpts file! '
          stop
@@ -214,7 +215,7 @@ print*, 'Use this for quick calcs. Do kpoint convergence tests if serious.'
          do ki=1,3
            special_k_orig(ki,ikpoint)=special_k_orig(ki,ikpoint)/rescal
          end do
-         write (*,300) ikpoint, special_k_orig(:,ikpoint),                   &
+         if (verbosity .ge. 3) write (*,300) ikpoint, special_k_orig(:,ikpoint),                   &
      &              weight_k_orig(ikpoint)
          sum_weight = sum_weight + weight_k_orig(ikpoint)
         end do

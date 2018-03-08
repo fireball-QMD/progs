@@ -61,6 +61,7 @@
         use interactions
         use configuration 
         use integrals
+        use options, only : verbosity
 
         implicit none
  
@@ -109,7 +110,7 @@
 ! Initialize rcutoff array - we loop over all of it elsewhere
 		
         write (*,*) '  '
-        write (*,100)
+!       write (*,100)
         write (*,*) ' Now we are reading from the info.dat file. '
         write (*,*) '  '
 
@@ -117,12 +118,12 @@
 ! Open the data file.
         open (unit = 12, file = trim(fdataLocation)//'/info.dat', status = 'old')
  
-        write (*,*) ' You are using the database created by: '
+        if (verbosity .ge. 3)  write (*,*) ' You are using the database created by: '
         read (12,101) signature
-        write (*,101) signature
+        if (verbosity .ge. 3) write (*,101) signature
         read (12,*) nspecies
-        write (*,*) '  '
-        write (*,*) ' Number of species in database = ', nspecies
+        if (verbosity .ge. 3) write (*,*) '  '
+        if (verbosity .ge. 3) write (*,*) ' Number of species in database = ', nspecies
 
 ! Allocate nzx 
         allocate (nzx (nspecies))
@@ -154,9 +155,9 @@
          end if
         end do
         close (unit = 69)
-        write (*,*) ' We will only read these atomic indexes: '
-        write (*,*) temp_nsu(1:temp_nsup)
-        write (*,*)
+        if (verbosity .ge. 3) write (*,*) ' We will only read these atomic indexes: '
+        if (verbosity .ge. 3) write (*,*) temp_nsu(1:temp_nsup)
+        if (verbosity .ge. 3) write (*,*)
 
         rewind (unit = 12)
         read (12,*)
@@ -190,8 +191,8 @@
          read (12,*)
          read (12,102) symbolA_temp
          read (12,*) nzx_temp
-         write(*,102) symbolA_temp
-         write (*,*) nzx_temp
+         if (verbosity .ge. 3) write(*,102) symbolA_temp
+         if (verbosity .ge. 3) write (*,*) nzx_temp
          skip_it = .true.
          do ins = 1, temp_nsup
           if (temp_nsu(ins) .eq. nzx_temp) skip_it = .false.
@@ -273,23 +274,24 @@
           read (12,*)
 
 ! Write out.
-          write (*,100)
-          write (*,301) ispec
-          write (*,302) symbolA(ispec)
-          write (*,303) nzx(ispec)
-          write (*,304) smass(ispec)
-          write (*,305) nssh(ispec)
-          write (*,306) (lssh(issh,ispec), issh = 1, nssh(ispec))
-          write (*,307) nsshPP(ispec)
-          write (*,308) (lsshPP(issh,ispec), issh = 1, nsshPP(ispec))
-          write (*,314) rc_PP(ispec)
-          write (*,309) (Qneutral(issh,ispec), issh = 1, nssh(ispec))
-          write (*,310) (cutoff(issh,ispec), issh = 1, nssh(ispec))
-          write (*,311) (wavefxn(issh,ispec), issh = 1, nssh(ispec))
-          write (*,312) (napot(issh,ispec), issh = 0, nssh(ispec))
-          write (*,313) etotatom(ispec)
-          write (*,100)
- 
+          if (verbosity .ge. 3)  then
+            write (*,100)
+            write (*,301) ispec
+            write (*,302) symbolA(ispec)
+            write (*,303) nzx(ispec)
+            write (*,304) smass(ispec)
+            write (*,305) nssh(ispec)
+            write (*,306) (lssh(issh,ispec), issh = 1, nssh(ispec))
+            write (*,307) nsshPP(ispec)
+            write (*,308) (lsshPP(issh,ispec), issh = 1, nsshPP(ispec))
+            write (*,314) rc_PP(ispec)
+            write (*,309) (Qneutral(issh,ispec), issh = 1, nssh(ispec))
+            write (*,310) (cutoff(issh,ispec), issh = 1, nssh(ispec))
+            write (*,311) (wavefxn(issh,ispec), issh = 1, nssh(ispec))
+            write (*,312) (napot(issh,ispec), issh = 0, nssh(ispec))
+            write (*,313) etotatom(ispec)
+            write (*,100)
+          endif !verbosity 
 ! Increment ispec, since we read in data
           ispec = ispec + 1
          end if

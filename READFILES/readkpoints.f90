@@ -56,6 +56,7 @@
         subroutine readkpoints (kptsfile, nkpoints, icluster)
         use dimensions
         use kpoints
+        use options, only : verbosity
         implicit none
  
 ! Argument Declaration and Description
@@ -98,10 +99,10 @@
         open (unit = 54, file = kptsfile, status = 'old')
         read (54,*) nkpoints
  
-        write (*,*) '  '
-        write (*,*) ' The k-points from File: '
-        write (*,100)
-        write (*,*) ' nkpoints = ', nkpoints
+        if (verbosity .ge. 3) write (*,*) '  '
+        write (*,*) '  Reading k-points '
+        if (verbosity .ge. 3) write (*,100)
+        if (verbosity .ge. 3) write (*,*) ' nkpoints = ', nkpoints
  
         if (nkpoints .le. 0) then
          write (*,*) ' nkpoints .le. 0 Huh! Fix XXX.kpts file! '
@@ -118,11 +119,11 @@
         sum_weight = 0.0d0
         do ikpoint = 1, nkpoints
          read (54,*) special_k_orig(:,ikpoint), weight_k_orig(ikpoint)
-         write (*,300) ikpoint, special_k_orig(:,ikpoint),                   &
+         if (verbosity .ge. 3) write (*,300) ikpoint, special_k_orig(:,ikpoint),                   &
      &                 weight_k_orig(ikpoint)
          sum_weight = sum_weight + weight_k_orig(ikpoint)
         end do
-        write (*,100)
+        if (verbosity .ge. 3) write (*,100)
  
         if (abs(sum_weight - 1.0d0) .gt. 1.0d-3) then
          write (*,*) ' Sum of k-point weights = ', sum_weight

@@ -68,8 +68,8 @@
 
 ! Procedure
 ! ===========================================================================
-        write (*,*) '               Welcome to FIREBALL QMD !     '
-        write (*,*) '          A fast local orbital QMD Package    '
+        write (*,*) '              Welcome to FIREBALL QMD !        '
+        write (*,*) '          A fast local orbital QMD Package     '
         write (*,*) '     brought to you by the Fireball Committee: '
         write (*,*) '  '
         write (*,*) '                 James P. Lewis '
@@ -107,17 +107,10 @@
         write (*,*) ' Jesus I. Mendieta-Moreno (Universidad Autonoma de Madrid) '
 
         write (*,*) '  '
-        write (*,*) '     Latest version Feb. 2018 '
         write (*,*) '  '
-        write (*,*) '         See Copyright information: '
-        write (*,*) '           !!!Proprietory Code!!! '
+        write (*,*) '  fireball-qmd is a free (GPLv3) open project  '
         write (*,*) '  '
-        write (*,*) ' Usable only with permission from the Fireball executive '
-        write (*,*) ' committee. This program is NOT, under any circumstances, '
-        write (*,*) ' to be transfered to an unauthorized user. '
         write (*,*) '  '
-
-        write (*,*) ' This source code is completely dynamical in memory. '
 
 ! Format Statements
 ! ===========================================================================

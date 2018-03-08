@@ -66,6 +66,7 @@
         subroutine initboxes (itime)
 
         use configuration
+        use options, only : verbosity
         implicit none
 
 ! Argument Declaration and Description
@@ -258,7 +259,7 @@
         end if ! if (itime)
 
          mbeta_max = lbeta
-         write(*,*) 'mbeta_max = ', mbeta_max
+         if (verbosity .ge. 3) write(*,*) 'mbeta_max = ', mbeta_max
 ! allocate xl
          allocate ( xl(3,0:mbeta_max) )
 

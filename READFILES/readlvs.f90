@@ -53,7 +53,9 @@
 !
 ! Program Declaration
 ! ===========================================================================
+ 
         subroutine readlvs (lvsfile, a1vec, a2vec, a3vec, icluster, rescal)
+        use options, only : verbosity
         implicit none
  
 ! Argument Declaration and Description
@@ -97,41 +99,42 @@
         open (unit = 72, file = lvsfile, status = 'old')
  
         write (*,*) '  '
-        write (*,*) ' Lattice Vectors from File: '
-        write (*,100)
-        write (*,*) ' (a1x,a1y,a1z) (in angstroms): '
+        write (*,*) ' reading lattice Vectors '
+        
+        if (verbosity .ge. 3) write (*,100)
+        if (verbosity .ge. 3) write (*,*) ' (a1x,a1y,a1z) (in angstroms): '
         read (72,*) a1vec(:)
         do ilvs=1,3
           a1vec(ilvs)=a1vec(ilvs)*rescal
         end do
-        write (*,101) a1vec(:)
+        if (verbosity .ge. 3) write (*,101) a1vec(:)
         a1 = sqrt(a1vec(1)**2 + a1vec(2)**2 + a1vec(3)**2)
-        write (*,*) ' Magnitude of a1 = ', a1
+        if (verbosity .ge. 3) write (*,*) ' Magnitude of a1 = ', a1
  
-        write (*,*) '  '
-        write (*,*) ' (a2x,a2y,a2z) (in angstroms): '
+        if (verbosity .ge. 3) write (*,*) '  '
+        if (verbosity .ge. 3) write (*,*) ' (a2x,a2y,a2z) (in angstroms): '
         read (72,*) a2vec(:)
         do ilvs=1,3
           a2vec(ilvs)=a2vec(ilvs)*rescal
         end do
-        write (*,101) a2vec(:)
+        if (verbosity .ge. 3) write (*,101) a2vec(:)
         a2 = sqrt(a2vec(1)**2 + a2vec(2)**2 + a2vec(3)**2)
-        write (*,*) ' Magnitude of a2 = ', a2
+        if (verbosity .ge. 3) write (*,*) ' Magnitude of a2 = ', a2
  
-        write (*,*) '  '
-        write (*,*) ' (a3x,a3y,a3z) (in angstroms): '
+        if (verbosity .ge. 3) write (*,*) '  '
+        if (verbosity .ge. 3) write (*,*) ' (a3x,a3y,a3z) (in angstroms): '
         read (72,*) a3vec(:)
         do ilvs=1,3
           a3vec(ilvs)=a3vec(ilvs)*rescal
         end do
-        write (*,101) a3vec(:)
+        if (verbosity .ge. 3) write (*,101) a3vec(:)
         a3 = sqrt(a3vec(1)**2 + a3vec(2)**2 + a3vec(3)**2)
-        write (*,*) ' Magnitude of a3 = ', a3
+        if (verbosity .ge. 3) write (*,*) ' Magnitude of a3 = ', a3
  
         close (unit = 72)
  
-        write (*,100)
-        write (*,*) '  '
+        if (verbosity .ge. 3) write (*,100)
+        if (verbosity .ge. 3) write (*,*) '  '
  
 ! Format Statements
 ! ===========================================================================

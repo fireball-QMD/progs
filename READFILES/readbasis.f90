@@ -64,6 +64,7 @@
         subroutine readbasis ( nzx, imass)
         use configuration
         use dimensions
+        use options, only : verbosity
         implicit none
  
 ! Argument Declaration and Description
@@ -127,20 +128,17 @@
         end do 
 
 ! Now write out the basis file information.
-        write (*,*) '  '
-        write (*,*) '  '
-        write (*,*) ' Atom Coordinates from Basis File: '
-        write (*,200)
-        write (*,201)
-        write (*,200)
-        do iatom = 1, natoms
-         in1 = imass(iatom)
-         symbol(iatom) = symbolA(in1)
-         write (*,202) iatom, symbol(iatom), ratom(:,iatom), imass(iatom)
-        end do
-        write (*,200)
-        write (*,*) '  '
- 
+        write (*,*) ' Reading atom Coordinates from Basis File '
+        if (verbosity .ge. 3)  write (*,200)
+        if (verbosity .ge. 3)  write (*,201)
+        if (verbosity .ge. 3)  write (*,200)
+          do iatom = 1, natoms
+           in1 = imass(iatom)
+           symbol(iatom) = symbolA(in1)
+           if (verbosity .ge. 3) write (*,202) iatom, symbol(iatom), ratom(:,iatom), imass(iatom)
+          end do
+          if (verbosity .ge. 3) write (*,200)
+          if (verbosity .ge. 3) write (*,*) '  '
 ! Format Statements
 ! ===========================================================================
 200     format (2x, 70('='))
