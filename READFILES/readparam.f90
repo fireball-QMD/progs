@@ -733,11 +733,6 @@
          write (*,*) ' idftd3 = 2 ', 'dftd3_s6 =', dftd3_s6,'dftd3_rs6 =', dftd3_rs6,'dftd3_s18 =', dftd3_s18, &
                      'dftd3_rs18 =', dftd3_rs18,'dftd3_alp =',dftd3_alp
          write (*,*) ' DFTD3 corrections, J. Chem. Phys. 132, 154104 (2010)'
-         dftd3_params(1)=dftd3_s6
-         dftd3_params(2)=dftd3_rs6
-         dftd3_params(3)=dftd3_s18
-         dftd3_params(4)=dftd3_rs18
-         dftd3_params(5)=dftd3_alp
         end if
 
 
@@ -770,6 +765,14 @@
         if (idensimport .gt. 0) write (*,*) ' Importing density file for projection  '
 
         endif ! verbosity = 3
+	
+	if (idftd3 .eq. 2) then
+         dftd3_params(1)=dftd3_s6
+         dftd3_params(2)=dftd3_rs6
+         dftd3_params(3)=dftd3_s18
+         dftd3_params(4)=dftd3_rs18
+         dftd3_params(5)=dftd3_alp
+        end if
  
 
 ! writeout resume of the input variables into param.dat file
