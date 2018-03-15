@@ -140,9 +140,9 @@
 !          write (216, '(<nele+2>f16.10)') (eigen_k(imu,1), imu = map_ks(1)-1,map_ks(1)+nele)
 
 !           write (216, '(<nele+2>f16.10)') (eigen_k(imu,1), imu = map_ks(1)-1,map_ks(1)+nele)
-
-           write (216, '(<norbitals>f16.8)') (eigen_k(imu,1), imu = 1,norbitals)
-
+           do imu = 1,norbitals
+             write (216, '(f16.8)',advance="no") eigen_k(imu,1)
+           end do
 
 ! ===========================================================================
 ! Calculate d/dt c_{ak} at different time steps in between t and t+dt

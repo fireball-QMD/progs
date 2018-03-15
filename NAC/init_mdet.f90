@@ -119,7 +119,7 @@
          open (unit = 22, file = 'mdet.input', status = 'old' )
          write (*,*) ' Reading from mdet.input file! '
 ! read the information about projection
-         if (iProjWF .eqv. 1) then
+         if (iProjWF .eq. 1) then
            read (22,*) n_hist
 ! Weights used for construction reference function from history
            allocate (wf_weight (n_hist))
@@ -140,8 +140,8 @@
          end do
          close (22)
 !---------------------------------------------------------------------
-        if (iProjWF .eqv. 1)  allocate (blowre_hist(norbitals,nele,n_hist))
-        if (iProjWF .eqv. 1)  allocate (hist_fix (nele))
+        if (iProjWF .eq. 1)  allocate (blowre_hist(norbitals,nele,n_hist))
+        if (iProjWF .eq. 1)  allocate (hist_fix (nele))
 
         allocate (gks (3, natoms, nele, nele))
         allocate (dnac (nele, nele))

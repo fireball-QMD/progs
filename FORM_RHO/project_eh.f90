@@ -118,8 +118,8 @@
 !    write(88888,'(i4,i4,<norbitals>f6.1)') itime_step, Kscf, (foccupy_na(j,1),j=1,norbitals)
 ! in the case of projection within MDET the blowre_hist will be inialized here in the first step
 ! store initial history of wf (in this case all stored wf are the same) 
-       if (itime_step_g .eqv. 1 ) then 
-        if (iProjWF .eqv. 1 .and. imdet .eqv. 1) then
+       if (itime_step_g .eq. 1 ) then 
+        if (iProjWF .eq. 1 .and. imdet .eq. 1) then
           do iband = 1, norbitals  
              do iele = 1,nele
                do i = 1,n_hist

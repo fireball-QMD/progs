@@ -14,16 +14,16 @@
 # pid=$(cat PID) && mpif90 client.f90 -o client && mpirun --ompi-server pid:$pid client
 
 PATH_BLAS = ../lapack
-PATH_FFTW_LIB = ../fftw-3.3.6-pl2
+PATH_FFTW_LIB = ../fftw-3.3.7
 
 ifneq (,$(findstring ILINUX_gnu, ${MACHINE}))
 	F77 = gfortran
 	F90 = gfortran
 	CC = gcc
 	#gcc version 5.4.0
-        #FFLAGS = -O3 -ffree-form -ffree-line-length-none -freal-4-real-8
+        FFLAGS = -O3 -ffree-form -ffree-line-length-none -freal-4-real-8
         #gcc versión 4.4.7 
-        FFLAGS = -O3 -ffree-form -fdefault-real-8 -ffree-line-length-none   
+        #FFLAGS = -O3 -ffree-form -fdefault-real-8 -ffree-line-length-none   
         LFLAGS = ${PATH_BLAS}/liblapack.a  ${PATH_BLAS}/librefblas.a  ${PATH_BLAS}/libtmglib.a ${PATH_FFTW_LIB}/.libs/libfftw3.a
 	CFLAGS = ${FFLAGS}
         ifneq (,$(findstring OPENMP, ${PARALLEL}))

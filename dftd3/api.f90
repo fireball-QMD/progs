@@ -143,7 +143,7 @@ contains
   !!
   subroutine dftd3_set_params(this, pars, version)
     type(dftd3_calc), intent(inout) :: this
-    real(wp), intent(in) :: pars(:)
+    real, intent(in) :: pars(:)
     integer, intent(in) :: version
 
     if (size(pars) /= 5) then
@@ -171,7 +171,7 @@ contains
   !!
   subroutine dftd3_dispersion(this, coords, izp, disp, grads)
     type(dftd3_calc), intent(in) :: this
-    real(wp), intent(in) :: coords(:,:)
+    real, intent(in) :: coords(:,:)
     integer, intent(in) :: izp(:)
     real(wp), intent(out) :: disp
     real(wp), optional, intent(out) :: grads(:,:)
@@ -224,7 +224,7 @@ contains
   subroutine dftd3_pbc_dispersion(this, coords, izp, latvecs, disp, grads, &
       & stress)
     type(dftd3_calc), intent(in) :: this
-    real(wp), intent(in) :: coords(:,:)
+    real, intent(in) :: coords(:,:)
     integer, intent(in) :: izp(:)
     real(wp), intent(in) :: latvecs(:,:)
     real(wp), intent(out) :: disp
