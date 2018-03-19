@@ -418,6 +418,14 @@
 
 ! New long-range dipole theory
 !
+         if (x .lt. 1.0d-05) then
+                 emnpl = 0.0d0
+                 demnplA = 0.0d0
+                 demnplB = 0.0d0
+                 demnplC = 0.0d0
+
+         else
+
            do inu = 1, num_orb(in2)
             do imu = 1, num_orb(in1)
 
@@ -453,7 +461,7 @@
              demnplC(:,imu,inu) = - demnplA(:,imu,inu) - demnplB(:,imu,inu)
             end do
            end do
- 
+         end if
  
 ! ****************************************************************************
 !

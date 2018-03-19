@@ -276,7 +276,7 @@
         write (*,*) ' The name of the k-points file: '
         write (*,201) kptpreference
 
-        if (verbosity .ge. 3) then
+        !if (verbosity .ge. 3) then
 
         write (*,*) '  '
         write (*,100)
@@ -764,7 +764,7 @@
         if (iwrtxsf .gt. 0) write (*,*) ' Writing out xsf-format file  '
         if (idensimport .gt. 0) write (*,*) ' Importing density file for projection  '
 
-        endif ! verbosity = 3
+        !endif ! verbosity = 3
 	
 	if (idftd3 .eq. 2) then
          dftd3_params(1)=dftd3_s6

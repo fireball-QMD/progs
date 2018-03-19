@@ -410,6 +410,11 @@
 !         ==============  NEW STUFF : COMPUTE THE TRUE DIPOLE ===========
 !        Compute the scalar product between dipc (the dipole) and rnabc (the
 !        vector from the center of the bond-charge to the third center)
+
+         if (x .lt. 1.0d-05) then
+                 emnpl = 0.0d0
+
+         else
  
            do inu = 1, num_orb(in2)
             do imu = 1, num_orb(in1)
@@ -427,7 +432,7 @@
 
             end do
            end do
- 
+         end if   ! end if (x .lt. 1.0d-05)  
 ! ****************************************************************************
 !
 ! PERFORM ACTUAL CALCULATIONS

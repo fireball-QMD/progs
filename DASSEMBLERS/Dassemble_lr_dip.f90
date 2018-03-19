@@ -198,6 +198,15 @@
              r21(:) = r2(:) - r1(:)
              rnabc(:) = rna(:) - (r1(:) + r21(:)/2.0d0)
              x = sqrt(rnabc(1)**2 + rnabc(2)**2 + rnabc(3)**2)
+
+             if (x .lt. 1.0d-05) then
+                 emnpl = 0.0d0
+                 demnplA = 0.0d0
+                 demnplB = 0.0d0
+                 demnplC = 0.0d0
+
+             else
+
              do inu = 1, num_orb(in2)
               do imu = 1, num_orb(in1)
                sterm = s_mat(imu,inu,ineigh,iatom)
@@ -240,10 +249,10 @@
                end do ! do ix
 
               end do  !  do imu = 1, num_orb(in1)
-             end do  ! end  do inu = 1, num_orb(in2)
-
+             end do   ! end  do inu = 1, num_orb(in2)
+             end if   ! (x .lt. 1.0d-05)
             end if
-           end do    ! end do ialp = 1, natoms
+           end do     ! end do ialp = 1, natoms
 
           end do  ! end do ineigh = 1, neighn(iatom)
          end do   ! end do iatom = 1, natoms

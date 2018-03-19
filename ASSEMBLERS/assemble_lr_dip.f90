@@ -174,6 +174,11 @@
              rnabc(:) = rna(:) - (r1(:) + r21(:)/2.0d0)
              x = sqrt(rnabc(1)**2 + rnabc(2)**2 + rnabc(3)**2)
 
+             if (x .lt. 1.0d-05) then
+                 emnpl = 0.0d0
+
+             else
+
              do inu = 1, num_orb(in2)
               do imu = 1, num_orb(in1)
 
@@ -190,7 +195,8 @@
 
              end do !end do imu = 1, num_orb(in1)
             end do  ! end do inu = 1, num_orb(in2)
-           end if
+           end if   ! end if (x .lt. 1.0d-05)
+           end if   ! (dist13 .lt. 1.0d-5) .or. (dist23 .lt. 1.0d-5)
           end do    ! end do ialp = 1, natoms
 
 
