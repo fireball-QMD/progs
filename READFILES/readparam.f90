@@ -184,7 +184,7 @@
         iephc = 0
 ! DFTD3 corrections
         idftd3 = 0
-        dftd3_func = 'b-lyp'
+        dftd3_func = 'fb_bio'
         dftd3_version = 4
         dftd3_tz = .false.
         dftd3_s6 = 1.0d0

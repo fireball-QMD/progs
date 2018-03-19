@@ -510,6 +510,10 @@ contains
         rs6=0.4860d0
         s18=0.0000d0
         rs18=4.5000d0
+      case ("fb_bio")
+        rs6=0.62
+        s18=1.80
+        rs18=2.40
 
       case DEFAULT
         call stoprun( 'functional name unknown' )
