@@ -53,6 +53,9 @@ module qm2_extern_fb_module
      integer :: mix_embedding
      integer :: iwrtcharges
      real :: cut_embedding
+     real :: tempfe
+     real :: sigmatol
+     character(len=100) :: basis
      integer, dimension(200) :: pbands     
   end type fb_nml_type
 
@@ -64,7 +67,7 @@ contains
   ! Get QM energy and forces from TeraChem
   ! --------------------------------------
   subroutine get_fb_forces( do_grad, nstep, ntpr_default, id, nqmatoms, qmcoords,&
-       qmtypes, nclatoms, clcoords, escf, dxyzqm, dxyzcl, charge, spinmult )
+       qmtypes, nclatoms, clcoords, escf, dxyzqm, dxyzcl, charge, spinmult)
 
     use qm2_extern_util_module, only: print_results, check_installation, write_dipole, write_charges
     use constants, only: CODATA08_AU_TO_KCAL, CODATA08_A_TO_BOHRS, ZERO
@@ -107,7 +110,7 @@ contains
 # ifndef MPI_1
     if (fb_nml%mpi==1 ) then ! Do mpi (forced to 0 ifndef MPI)
       call mpi_hook( nqmatoms, qmcoords, qmtypes, nclatoms, clcoords,&
-        fb_nml, escf, dxyzqm, dxyzcl, dipmom, qmcharges, do_grad, id, charge, spinmult )
+        fb_nml, escf, dxyzqm, dxyzcl, dipmom, do_grad, id, charge, spinmult )
     else
 # else
     ! If we are using MPI 1.x the code will not compile since
@@ -155,20 +158,22 @@ contains
                imcweda, ihorsfield, imdet, nddt, icluster, iwrtpop, iwrtvel, iwrteigen,   &
                iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom, iewform, idipole,      &
                npbands, mix_embedding, iwrtcharges
-    real :: cut_embedding
+    real :: cut_embedding, tempfe, sigmatol
+    character (len = 100) :: basis
     integer, dimension(200) :: pbands
     namelist /fb/ mpi, executable, max_scf_iterations, qmmm_int, idftd3, debug, iqout,   &
                imcweda, ihorsfield, iensemble, imdet, nddt, icluster, iwrtpop, iwrtvel,  &
-               iwrteigen, iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom,         &
-               iewform, npbands, idipole, pbands, mix_embedding, cut_embedding, iwrtcharges
+               iwrteigen, iwrtefermi, iwrtdos, ifixcharge, iwrtewf, iwrtatom,            &
+               iewform, npbands, idipole, pbands, mix_embedding, cut_embedding,          &
+               iwrtcharges, tempfe, sigmatol, basis
     integer :: i, ierr
-     executable      = 'fireball_server'
+     executable      = "fireball_server"
    
     mpi          = 1 ! Default to using MPI if available
 
 
     ! Default values
-    executable = 'fireball_server'
+    executable = "fireball_server"
     max_scf_iterations = 70
     qmmm_int = 1
     idftd3 = 0
@@ -196,6 +201,9 @@ contains
     mix_embedding = 0
     cut_embedding = 99.0d0
     iwrtcharges = 0
+    tempfe = 100.0d0
+    sigmatol = 1.0E-8
+    basis = 'Fdata'
 
     ! Read namelist, 
     rewind 5
@@ -238,7 +246,10 @@ contains
     fb_nml%pbands               = pbands
     fb_nml%mix_embedding        = mix_embedding
     fb_nml%cut_embedding        = cut_embedding
-    fb_nml%iwrtcharges           = iwrtcharges
+    fb_nml%iwrtcharges          = iwrtcharges
+    fb_nml%tempfe               = tempfe
+    fb_nml%sigmatol             = sigmatol
+    fb_nml%basis                = basis
 
     ! Need this variable so we don't call MPI_Send in the finalize subroutine
     if (mpi==1 ) then
@@ -277,12 +288,15 @@ contains
     write (226,602) "imdet = ", fb_nml%imdet
     write (226,605) "nddt = ", fb_nml%nddt
     write (226,602) "iqmmm = ", fb_nml%qmmm_int
-    write (226,602) "ifixcharge =",fb_nml%ifixcharge
-    write (226,600) 'iquench = 0'
+    write (226,602) "ifixcharge =", fb_nml%ifixcharge
+    write (226,600) "iquench = 0"
     write (226,602) "idftd3 = ",fb_nml%idftd3
+    write (226,606) "tempfe =", fb_nml%tempfe
+    write (226,607) "sigmatol =", fb_nml%sigmatol
+    write (226,609) "fdataLocation = '", fb_nml%basis,"'"
     write (226,602) "idipole = ",fb_nml%idipole
     write (226,602) "mix_embedding = ", fb_nml%mix_embedding
-    write (226,*) "cut_embedding = ", fb_nml%cut_embedding
+    write (226,606) "cut_embedding = ", fb_nml%cut_embedding
     write (226,600) "&end"
     write (226,600) "&output"
     write (226,602) "iwrtcharges = ",fb_nml%iwrtcharges 
@@ -319,8 +333,10 @@ contains
 603     format (a,i3)
 604     format (a,i1)
 605     format (a,i4)
+606     format (a,f8.3)
+607     format (a,e13.6)
 608     format (a,199(i4,','),i3)
-609     format (a,f6.3)
+609     format (a,a,a)
 700     format (i2, 3(2x,f8.4))
 
   end subroutine write_inpfile
@@ -330,7 +346,7 @@ contains
 #if defined(MPI) && !defined(MPI_1)
   ! Perform MPI communications with terachem. Requires MPI 2.0 or above to use
   subroutine mpi_hook( nqmatoms, qmcoords, qmtypes, nclatoms, clcoords,&
-       fb_nml, escf, dxyzqm, dxyzcl, dipmom, qmcharges, do_grad, id, charge, spinmult )
+       fb_nml, escf, dxyzqm, dxyzcl, dipmom, do_grad, id, charge, spinmult )
     
     use ElementOrbitalIndex, only : elementSymbol
     use qm2_extern_util_module, only: check_installation    
@@ -348,12 +364,12 @@ contains
     _REAL_, intent(out) :: dxyzqm(3,nqmatoms)
     _REAL_, intent(out) :: dxyzcl(3,nclatoms)
     _REAL_, intent(out) :: dipmom(4,3)
-    _REAL_, intent(out) :: qmcharges(nqmatoms)
     logical, intent(in) :: do_grad
     character(len=3), intent(in) :: id
     integer         , intent(in) :: charge, spinmult
 
     character(len=2)    :: atom_types(nqmatoms)
+    _REAL_              :: qmcharges(nqmatoms)
     _REAL_              :: coords(3,nqmatoms+nclatoms)
     _REAL_              :: charges(nclatoms)
     _REAL_              :: dxyz_all(3,nclatoms+nqmatoms)
@@ -372,7 +388,6 @@ contains
     ! Initialization: Connect to "terachem_port", set    
     ! newcomm (global), send relevant namelist variables.
     ! ---------------------------------------------------
-
 
     if (first_call) then 
       first_call=.false.
@@ -414,9 +429,9 @@ contains
     character(len=3) , intent(in) :: id
     integer          , intent(in) :: charge, spinmult
 
-    character(len=17) :: server_name="fireball_server"
+    character(len=15) :: server_name= "fireball_server"
     integer, parameter  :: clen=128 ! Length of character strings we are using
-    character(255) :: port_name
+    character(len=255) :: port_name
     character(len=clen) :: dbuffer(2,32)
     _REAL_          :: timer
     integer         :: ierr, i, j, irow
@@ -424,6 +439,7 @@ contains
  
     integer rank,  intercomm, status, size, mp
 
+    print *, 'hola'
 
     !call debug_enter_function( 'connect_to_fireball', module_name, fb_nml%debug )
 
@@ -439,8 +455,8 @@ contains
     timer = MPI_WTIME(ierr)
     do while (done .eqv. .false.)
 
- 
     call MPI_LOOKUP_NAME(trim(server_name), MPI_INFO_NULL, port_name, ierr)
+      ierr=MPI_SUCCESS
       if (ierr == MPI_SUCCESS) then
         if ( fb_nml%debug > 1 ) then
           write(6,'(2a)') 'Found port: ', trim(port_name)
@@ -455,16 +471,15 @@ contains
           '"'//trim(server_name)//'" not found. Timed out after 60 seconds.', &
           'Will quit now')
       end if
-
     end do
 
-    ! ----------------------------------------
+ ! ----------------------------------------
     ! Establish new communicator via port name
     ! ----------------------------------------
 
 
-       call MPI_COMM_SIZE(MPI_COMM_WORLD, size, ierr)
-       call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)
+      ! call MPI_COMM_SIZE(MPI_COMM_WORLD, size, ierr)
+      ! call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)
 
 
 

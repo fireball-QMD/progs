@@ -69,6 +69,7 @@ module qm2_extern_module
     _REAL_, intent(out) :: dxyzqm(3,nqmatoms)   ! SCF QM gradient
     _REAL_, intent(out) :: dxyzcl(3,nclatoms)   ! SCF MM gradient
 
+
     ! List of supported external programs; will search for namelists in this order
     character(len=20), save :: extern_program
     character(len=3) :: id
@@ -258,8 +259,8 @@ module qm2_extern_module
 
     if ( trim(extern_program) == 'fb' ) then
        write (6,'(/a/a/a/a/a/a)') &
-            '| Jesús I. Mendieta-Moreno, Ross C. Walker, James P. Lewis,', &
-            '| Paulino Gómez-Puertas, Jesús Mendieta, and José Ortega', &
+            '| Jesus I. Mendieta-Moreno, Ross C. Walker, James P. Lewis,', &
+            '| Paulino Gomez-Puertas, Jesus Mendieta, and Jose Ortega', &
             '| "FIREBALL / AMBER :An Efficient Local-Orbital DFT', &
             '| QM/MM Method for Biomolecular Systems"', &
             '| J. Chem. Theory Comput., 2014, 10 (5), pp 2185–2193', &
