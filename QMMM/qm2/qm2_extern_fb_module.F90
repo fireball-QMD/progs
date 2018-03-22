@@ -64,7 +64,7 @@ contains
   ! Get QM energy and forces from TeraChem
   ! --------------------------------------
   subroutine get_fb_forces( do_grad, nstep, ntpr_default, id, nqmatoms, qmcoords,&
-       qmtypes, nclatoms, clcoords, escf, dxyzqm, dxyzcl, charge, spinmult, qmcharges )
+       qmtypes, nclatoms, clcoords, escf, dxyzqm, dxyzcl, charge, spinmult )
 
     use qm2_extern_util_module, only: print_results, check_installation, write_dipole, write_charges
     use constants, only: CODATA08_AU_TO_KCAL, CODATA08_A_TO_BOHRS, ZERO
