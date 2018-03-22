@@ -84,7 +84,6 @@ contains
     integer, intent(in) :: charge, spinmult     ! Charge and spin multiplicity
 
     _REAL_              :: dipmom(4,3)          ! Dipole moment {x, y, z, |D|}, {QM, MM, TOT}
-    _REAL_, intent(out) :: qmcharges(nqmatoms)  ! QM charges from population analysis
 
     type(fb_nml_type), save :: fb_nml
     logical, save :: first_call = .true.
