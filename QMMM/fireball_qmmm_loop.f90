@@ -1,4 +1,4 @@
-        subroutine fireball_qmmm_loop(itime_step,qmcoords_recv,nclatoms_recv,clcoords_recv,escf_send,dxyzqm_send,dxyzcl_send)
+        subroutine fireball_qmmm_loop(itime_step,qmcoords_recv,nclatoms_recv,clcoords_recv,escf_send,dxyzqm_send,dxyzcl_send,qm_charges_send)
   
         use mpi_main
         use interactions
@@ -7,6 +7,7 @@
         use configuration
         use energy
         use forces
+        use charges
 
         implicit none
 ! --------------------------------------------------------------------------
@@ -19,9 +20,13 @@
         integer, intent (in) :: nclatoms_recv
         real, dimension(4,nclatoms_recv), intent (in) :: clcoords_recv
         integer k
+        integer in1
+        integer issh
+        integer iatom
         real , intent(out) :: escf_send
         real , dimension(3,natoms), intent (out) :: dxyzqm_send
         real , dimension(3,nclatoms_recv), intent(out) :: dxyzcl_send
+        real , dimension(natoms), intent (out) :: qm_charges_send
 
 ! Procedure
 ! ===========================================================================
@@ -34,6 +39,8 @@
          allocate(qmmm_struct%qm_xcrd(4,nclatoms_recv))
          qmmm_struct%qm_xcrd = clcoords_recv
          allocate(qmmm_struct%dxyzcl(3,nclatoms_recv))
+         allocate(qmmm_struct%Qneutral_TOT(natoms))
+         allocate(qmmm_struct%scf_mchg(natoms))
         else
          write(*,*) 'else allocate'
          deallocate(qmmm_struct%dxyzcl)
@@ -63,9 +70,30 @@
            call main_loop_MD_qmmm (itime_step)
         endif
 
-        escf_send = etot*23.061d0
-        dxyzqm_send = -ftot*23.061d0 
+        qmmm_struct%Qneutral_TOT = 0.0d0
+        qmmm_struct%scf_mchg = 0.0d0
+        do iatom = 1, natoms
+         qmmm_struct%Qneutral_TOT(iatom) = 0
+         in1 = imass(iatom)
+         do issh = 1, nssh(in1)
+          qmmm_struct%Qneutral_TOT(iatom) = qmmm_struct%Qneutral_TOT(iatom) + Qneutral(issh,in1)
+         end do
+        end do
+
+        if (iqout .eq. 1) then
+         qmmm_struct%scf_mchg = -(QLowdin_TOT - qmmm_struct%Qneutral_TOT) 
+        else if (iqout .eq. 2) then
+         qmmm_struct%scf_mchg = -(QMulliken_TOT - qmmm_struct%Qneutral_TOT) 
+        else if (iqout .eq. 3) then
+         qmmm_struct%scf_mchg = -(QLowdin_TOT - qmmm_struct%Qneutral_TOT)
+        end if
+
+
+
+        escf_send = etot
+        dxyzqm_send = -ftot
         dxyzcl_send = qmmm_struct%dxyzcl
+        qm_charges_send = qmmm_struct%scf_mchg
 
         !deallocate(qmmm_struct%qm_xcrd)
         !deallocate(qmmm_struct%dxyzcl)
