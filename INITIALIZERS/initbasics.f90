@@ -601,12 +601,18 @@
         if (igrid .eq. 1 ) then
          call neighbors (nprocs, my_proc, iordern, icluster,      &
      &                      iwrtneigh, ivdw)
+         !SFIRE  APRIL 2018
+         call neighbors_pairs(icluster)
+         !SFIRE  APRIL 2018
          write (*,*) 'Initialize density matrix'
          call initdenmat (natoms)
 ! end jel-grid
 !CHROM
         elseif ( iclassicMD > 0 .and. igrid /= 1 )then
 		 	call neighbors (nprocs, my_proc, iordern, icluster, iwrtneigh, ivdw)
+                         !SFIRE  APRIL 2018
+                        call neighbors_pairs(icluster)
+                         !SFIRE  APRIL 2018
 		endif
 !END CHROM
 

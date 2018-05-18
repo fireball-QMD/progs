@@ -172,6 +172,11 @@ subroutine allocate_neigh (nprocs, my_proc, iordern, &
 	allocate (nPPx_point (neighPP_max, natoms))
 	allocate (nPPxn (natoms))
 	allocate (nPPx_self (natoms))
+        allocate (neigh_pair_a1 (neigh_max*natoms))
+        allocate (neigh_pair_a2 (neigh_max*natoms))
+        allocate (neigh_pair_n1 (neigh_max*natoms))
+        allocate (neigh_pair_n2 (neigh_max*natoms))
+
 ! neighPP
  	allocate (neighPP_b (neighPP_max**2, natoms))
  	allocate (neighPP_j (neighPP_max**2, natoms))

@@ -277,12 +277,13 @@
            do inu = 1, num_orb(in2)
             do imu = 1, num_orb(in1)
              do ix = 1, 3
+                !multiply by 2 to use the "symmetrization" argument
               f3naa(ix,ialp) = f3naa(ix,ialp)                           &
-     &         + rho(imu,inu,mneigh,iatom)*f3naXa(ix,imu,inu)*eq2
+     &         + 2*rho(imu,inu,mneigh,iatom)*f3naXa(ix,imu,inu)*eq2
               f3nab(ix,iatom) = f3nab(ix,iatom)                         &
-     &        + rho(imu,inu,mneigh,iatom)*f3naXb(ix,imu,inu)*eq2
+     &        + 2*rho(imu,inu,mneigh,iatom)*f3naXb(ix,imu,inu)*eq2
               f3nac(ix,jatom) = f3nac(ix,jatom)                         &
-     &         + rho(imu,inu,mneigh,iatom)*f3naXc(ix,imu,inu)*eq2
+     &        + 2*rho(imu,inu,mneigh,iatom)*f3naXc(ix,imu,inu)*eq2
              end do
             end do
            end do

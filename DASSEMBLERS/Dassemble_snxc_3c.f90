@@ -444,11 +444,11 @@
             do imu = 1, num_orb(in1)
              do ix = 1, 3
               f3xca(ix,ialp) = f3xca(ix,ialp)                                &
-     &         - rho(imu,inu,mneigh,iatom)*mxca(ix,imu,inu)
+     &         - 2*rho(imu,inu,mneigh,iatom)*mxca(ix,imu,inu)
               f3xcb(ix,iatom) = f3xcb(ix,iatom)                              &
-     &        - rho(imu,inu,mneigh,iatom)*mxcb(ix,imu,inu)
+     &        - 2*rho(imu,inu,mneigh,iatom)*mxcb(ix,imu,inu)
               f3xcc(ix,jatom) = f3xcc(ix,jatom)                              &
-     &         - rho(imu,inu,mneigh,iatom)*mxcc(ix,imu,inu)
+     &         - 2*rho(imu,inu,mneigh,iatom)*mxcc(ix,imu,inu)
              end do
             end do
            end do

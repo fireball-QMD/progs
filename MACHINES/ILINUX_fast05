@@ -21,9 +21,9 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 
 	ifneq (,$(findstring OPT, ${MODE}))
 		ifneq (,$(findstring YES, ${CCOMPILE}))
-			FFLAGS = -O3 -r8  -fno-alias -unroll -pg 
+			FFLAGS = -O3 -r8  -fno-alias -unroll 
 		else
-			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -no-ipo -pg 
+			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -no-ipo
 		endif
 	endif
 	ifneq (,$(findstring DEBUG, ${MODE}))

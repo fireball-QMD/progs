@@ -77,6 +77,15 @@
          integer, dimension(:,:),   allocatable     ::  neigh_b_classic
 !END CHROM                     
 
+!SYMMETRIC FIREBALL
+         integer :: tot_pairs
+         integer, dimension(:), allocatable :: neigh_pair_a1
+         integer, dimension(:), allocatable :: neigh_pair_a2
+         integer, dimension(:), allocatable :: neigh_pair_n1
+         integer, dimension(:), allocatable :: neigh_pair_n2 
+!END SYMMETRIC FIREBALL
+
+
 ! Cutoff range for vdw interactions
          real range_vdw
         end module

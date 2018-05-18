@@ -117,8 +117,11 @@
            end if
 
            call backnay ()
+            !SFIRE
            call common_neighbors (nprocs, my_proc, iordern, iwrtneigh_com)
-
+           !SFIRE
+           call neighbors_pairs (icluster)
+           !SFIRE
           end if ! end if (Kscf .eq. 1)
 
 

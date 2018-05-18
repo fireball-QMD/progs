@@ -97,6 +97,7 @@
         integer isorp
         integer issh
         integer jatom
+        integer jneigh
         integer jbeta
         integer jssh
         integer l1
@@ -430,7 +431,7 @@
            jbeta = neigh_comb(2,ineigh,ialp)
            r2(:) = ratom(:,jatom) + xl(:,jbeta)
            in2 = imass(jatom)
-
+           jneigh = neigh_back(iatom,mneigh)
 ! SET-UP STUFF
 ! ****************************************************************************
 ! Find r21 = vector pointing from r1 to r2, the two ends of the bondcharge.
@@ -497,6 +498,7 @@
 !$omp atomic
               rho_off(imu,inu,mneigh,iatom) =                                 &
      &         rho_off(imu,inu,mneigh,iatom) + rhomx(imu,inu)*Qin(isorp,ialp)
+             rho_off(inu,imu,jneigh,jatom) = rho_off(imu,inu,mneigh,iatom)
              end do
             end do
 
@@ -505,6 +507,7 @@
 !$omp atomic
               rhom_3c(imu,inu,mneigh,iatom) =                                 &
      &         rhom_3c(imu,inu,mneigh,iatom) + rhomm(imu,inu)*Qin(isorp,ialp)
+      rhom_3c(inu,imu,jneigh,jatom) = rhom_3c(imu,inu,mneigh,iatom) 
              end do
             end do
 !!$omp end critical (rho3)

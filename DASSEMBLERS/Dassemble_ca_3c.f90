@@ -514,19 +514,19 @@
             do imu = 1, num_orb(in1)
              do ix = 1, 3
               f3caa(ix,ialp) = f3caa(ix,ialp)                                &
-     &         + rho(imu,inu,mneigh,iatom)*eq2                               &
+     &         + 2*rho(imu,inu,mneigh,iatom)*eq2                               &
      &           *(stn1(imu,inu)*f3caXa(ix,imu,inu)                          &
      &             - dstnA(ix,imu,inu)*bcca(imu,inu)                         &
      &             - stn2(imu,inu)*demnplA(ix,imu,inu)                       &
      &             + dstnA(ix,imu,inu)*emnpl(imu,inu))
               f3cab(ix,iatom) = f3cab(ix,iatom)                              &
-     &         + rho(imu,inu,mneigh,iatom)*eq2                               &
+     &         + 2*rho(imu,inu,mneigh,iatom)*eq2                               &
      &           *(stn1(imu,inu)*f3caXb(ix,imu,inu)                          &
      &             - dstnB(ix,imu,inu)*bcca(imu,inu)                         &
      &             - stn2(imu,inu)*demnplB(ix,imu,inu)                       &
      &             + dstnB(ix,imu,inu)*emnpl(imu,inu))
               f3cac(ix,jatom) = f3cac(ix,jatom)                              &
-     &         + rho(imu,inu,mneigh,iatom)*eq2                               &
+     &         + 2*rho(imu,inu,mneigh,iatom)*eq2                               &
      &           *(stn1(imu,inu)*f3caXc(ix,imu,inu)                          &
      &             - dstnC(ix,imu,inu)*bcca(imu,inu)                         &
      &             - stn2(imu,inu)*demnplC(ix,imu,inu)                       &
@@ -541,11 +541,11 @@
             do imu = 1, num_orb(in1)
              do ix = 1, 3
               f3caa(ix,ialp) = f3caa(ix,ialp)                                &
-     &         + rho(imu,inu,mneigh,iatom)*demnplA(ix,imu,inu)*eq2
+     &         + 2*rho(imu,inu,mneigh,iatom)*demnplA(ix,imu,inu)*eq2
               f3cab(ix,iatom) = f3cab(ix,iatom)                              &
-     &         + rho(imu,inu,mneigh,iatom)*demnplB(ix,imu,inu)*eq2
+     &         + 2*rho(imu,inu,mneigh,iatom)*demnplB(ix,imu,inu)*eq2
               f3cac(ix,jatom) = f3cac(ix,jatom)                              &
-     &         + rho(imu,inu,mneigh,iatom)*demnplC(ix,imu,inu)*eq2
+     &         + 2*rho(imu,inu,mneigh,iatom)*demnplC(ix,imu,inu)*eq2
              end do ! do ix
             end do ! do imu
            end do ! do inu

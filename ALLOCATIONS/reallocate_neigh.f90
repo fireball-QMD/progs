@@ -112,6 +112,11 @@
          deallocate (neigh_comj)
          deallocate (neigh_comm)
          deallocate (neigh_back)
+         deallocate (neigh_pair_a1)
+         deallocate (neigh_pair_a2)
+         deallocate (neigh_pair_n1)
+         deallocate (neigh_pair_n2)
+
 
 ! new allocation
          allocate (neigh_b (neigh_max, natoms))
@@ -120,6 +125,11 @@
          allocate (neigh_comj (2, neigh_max**2, natoms))
          allocate (neigh_comm (neigh_max**2, natoms))
          allocate (neigh_back (natoms, neigh_max))
+         allocate (neigh_pair_a1 (neigh_max*natoms))
+         allocate (neigh_pair_a2 (neigh_max*natoms))
+         allocate (neigh_pair_n1 (neigh_max*natoms))
+         allocate (neigh_pair_n2 (neigh_max*natoms))
+         
 
          call reallocate_h (natoms, neigh_max, neighPP_max, itheory,   &
      &                     itheory_xc, igauss)

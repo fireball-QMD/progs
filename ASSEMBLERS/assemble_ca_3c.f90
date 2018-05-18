@@ -110,6 +110,7 @@
         integer isorp
         integer issh
         integer jatom
+        integer jneigh
         integer jbeta
         integer jcount
         integer jcount_sav
@@ -296,6 +297,7 @@
            jbeta = neigh_comb(2,ineigh,ialp)
            r2(:) = ratom(:,jatom) + xl(:,jbeta)
            in2 = imass(jatom)
+           jneigh = neigh_back(iatom,mneigh)
 ! ENRIQUE-JOM: calculate rcutoff_j for smoother 
           rcutoff_j = 0
           do imu = 1, nssh(in2)
@@ -424,6 +426,9 @@
      &                       + (sterm + dterm)/distance_23
              ewaldsr(imu,inu,mneigh,iatom) =                            &
      &        ewaldsr(imu,inu,mneigh,iatom) + emnpl(imu,inu)*eq2
+            !SFIRE
+            ewaldsr(inu,imu,jneigh,jatom)=ewaldsr(imu,inu,mneigh,iatom)
+            !SFIRE
             end do
            end do
  
@@ -471,6 +476,11 @@
              vca(imu,inu,mneigh,iatom) = vca(imu,inu,mneigh,iatom) +    &
                                       (stn1(imu,inu)*bcca(imu,inu) +    &
      &                                 stn2(imu,inu)*emnpl(imu,inu))*eq2
+
+             !Symmetrize Hamiltonian (April 2018): jneigh is the
+            !back_neigh:
+              vca(inu,imu,jneigh,jatom) = vca(imu,inu,mneigh,iatom)
+
             end do
            end do
  

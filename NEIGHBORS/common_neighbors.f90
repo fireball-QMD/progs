@@ -118,10 +118,10 @@
  
 ! Procedure
 ! ===========================================================================
-        if (my_proc .eq. 0 .and. wrtout) then
-         write (*,*) ' Welcome to common_neighbors - determine mapping of '
-         write (*,*) ' common neighbors. '
-        end if
+     if (my_proc .eq. 0 .and. wrtout) then
+      write (*,*) ' Welcome to common_neighbors - determine mapping of '
+      write (*,*) ' common neighbors. '
+     end if
 
 ! Determine which atoms are assigned to this processor.
         if (iordern .eq. 1) then
@@ -142,7 +142,7 @@
 !$omp parallel do private (num_neigh, imu, iatom, jatom, katom, ibeta, jbeta) &
 !$omp&   private (ineigh, jneigh, kbeta, in1, in2, rcutoff_i, rcutoff_j, vec) &
 !$omp&   private (vec1, vec2, distance2, range2, diff)
-        do ialp = iatomstart, iatomstart - 1 + natomsp
+      do ialp = iatomstart, iatomstart - 1 + natomsp
 
 ! The variable num_neigh counts neighbors.
          num_neigh = 0
@@ -167,10 +167,15 @@
            do jneigh = 1, neighn(ialp)
             jatom = neigh_j(jneigh,ialp)
             jbeta = neigh_b(jneigh,ialp)
-
+!############# BEGIN MODIFICATION: SYMMETRY: NEW (APRIL 2018)
 ! Keep only third party common neighbors.
             if (.not. (jatom .eq. ialp .and. jbeta .eq. 0)                   &
-     &          .and. (ineigh .ne. jneigh)) then
+!           &          .and. (ineigh .ne. jneigh)) then
+            &          .and. (iatom .lt. jatom)) then    
+!Modification; instead of demanding that iatom and jatom are not the
+!same atoms, we demandn that iatom's index is strictly less than jatom's. That way
+!we cut in half the number of pairs of common neighbors
+!############ END MODIFICATION: SYMMETRY: NEW (APRIL 2018)
              in2 = imass(jatom)
              rcutoff_j = 0.0d0
              do imu = 1, nssh(in2)

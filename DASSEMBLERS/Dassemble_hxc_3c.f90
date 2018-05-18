@@ -314,13 +314,13 @@
               do ix = 1, 3
 !$omp atomic
                f3xca(ix,ialp) = f3xca(ix,ialp)                          &
-     &          + rho(imu,inu,mneigh,iatom)*f3xcXa(ix,imu,inu)
+     &          + 2*rho(imu,inu,mneigh,iatom)*f3xcXa(ix,imu,inu)
 !$omp atomic
                f3xcb(ix,iatom) = f3xcb(ix,iatom)                        &
-     &          + rho(imu,inu,mneigh,iatom)*f3xcXb(ix,imu,inu)
+     &          + 2*rho(imu,inu,mneigh,iatom)*f3xcXb(ix,imu,inu)
 !$omp atomic
                f3xcc(ix,jatom) = f3xcc(ix,jatom)                        &
-     &          + rho(imu,inu,mneigh,iatom)*f3xcXc(ix,imu,inu)
+     &          + 2*rho(imu,inu,mneigh,iatom)*f3xcXc(ix,imu,inu)
               end do
              end do
             end do
@@ -335,13 +335,13 @@
               do ix = 1, 3
 !$omp atomic
                f3xca(ix,ialp)=f3xca(ix,ialp)+rho(imu,inu,mneigh,iatom)  &
-     &            *nuxc_total(imu,inu,mneigh,iatom)*f3xcXa(ix,imu,inu)
+     &            *2*nuxc_total(imu,inu,mneigh,iatom)*f3xcXa(ix,imu,inu)
 !$omp atomic
                f3xcb(ix,iatom)=f3xcb(ix,iatom)+rho(imu,inu,mneigh,iatom)&
-     &            *nuxc_total(imu,inu,mneigh,iatom)*f3xcXb(ix,imu,inu)
+     &            *2*nuxc_total(imu,inu,mneigh,iatom)*f3xcXb(ix,imu,inu)
 !$omp atomic
                f3xcc(ix,jatom)=f3xcc(ix,jatom)+rho(imu,inu,mneigh,iatom)&
-     &            *nuxc_total(imu,inu,mneigh,iatom)*f3xcXc(ix,imu,inu)
+     &            *2*nuxc_total(imu,inu,mneigh,iatom)*f3xcXc(ix,imu,inu)
               end do
              end do
             end do  
@@ -375,15 +375,15 @@
                do ix = 1, 3
 !$omp atomic
                 f3xca_ca(ix,ialp) = f3xca_ca(ix,ialp) +                 &
-     &                              rho(imu,inu,mneigh,iatom)*          &
+     &                              2*rho(imu,inu,mneigh,iatom)*          &
      &                              f3xcXa_ca(ix,imu,inu)*dqfact(isorp)
 !$omp atomic
                 f3xcb_ca(ix,iatom) = f3xcb_ca(ix,iatom) +               &
-     &                               rho(imu,inu,mneigh,iatom)*         &
+     &                               2*rho(imu,inu,mneigh,iatom)*         &
      &                               f3xcXb_ca(ix,imu,inu)*dqfact(isorp)
 !$omp atomic
                 f3xcc_ca(ix,jatom) = f3xcc_ca(ix,jatom) +               &
-     &                               rho(imu,inu,mneigh,iatom)*         &
+     &                               2*rho(imu,inu,mneigh,iatom)*         &
      &                               f3xcXc_ca(ix,imu,inu)*dqfact(isorp)
                end do
               end do 

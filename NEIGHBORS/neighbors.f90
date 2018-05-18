@@ -116,6 +116,8 @@ subroutine neighbors (nprocs, my_proc, iordern, icluster,    &
 ! Procedure
 ! ===========================================================================
 
+
+
 !    if (my_proc .eq. 0)                                                  &
 !     &   write (*,*) ' Welcome to neighbors - determine mapping of neighbors. Npoc=',nprocs,'iordern=',iordern
         

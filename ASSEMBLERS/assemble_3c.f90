@@ -113,6 +113,7 @@
         integer mneigh
         integer my_proc
         integer natomsp
+        integer jneigh       
 
         real cost
         real distance_13
@@ -193,6 +194,8 @@
            jbeta = neigh_comb(2,ineigh,ialp)
            r2(:) = ratom(:,jatom) + xl(:,jbeta)
            in2 = imass(jatom)
+           jneigh = neigh_back(iatom,mneigh)
+
  
 ! SET-UP STUFF
 ! ****************************************************************************
@@ -263,6 +266,9 @@
             do imu = 1, num_orb(in1)
              vna(imu,inu,mneigh,iatom) =                                &
      &        vna(imu,inu,mneigh,iatom) + bcnax(imu,inu)*eq2
+            !Symmetrize Hamiltonian (April 2018): jneigh is the
+            !back_neigh:
+              vna(inu,imu,jneigh,jatom) = vna(imu,inu,mneigh,iatom)
             end do
            end do
 !$omp end critical (vna3)

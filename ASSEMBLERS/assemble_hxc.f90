@@ -120,6 +120,9 @@
            end if
 
            call backnay ()
+             !SFIRE
+            call neighbors_pairs(icluster)
+            !SFIRE
            call common_neighbors (nprocs, my_proc, iordern, iwrtneigh_com)
            call common_neighborsPP (nprocs, my_proc, iordern,        &
      &                              iwrtneigh_com, icluster)

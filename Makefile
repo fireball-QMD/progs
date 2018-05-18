@@ -344,7 +344,7 @@ MODULES = barrier.o charges.o configuration.o constants_fireball.o density.o \
 MODULES_C =  $(MODULES) classicMD.o
 
 NEIGHBORS = backnay.o common_neighbors.o find_neigh_max.o find_neigh_max_class.o \
-	mpairnay.o neighbors.o find_neighPP_max.o neighborsPP.o \
+	mpairnay.o neighbors.o neighbors_pairs.o find_neighPP_max.o neighborsPP.o \
 	common_neighborsPP.o num_neigh_tot.o
 
 PRESSURE = hmetric.o initpressure.o invert3x3.o
@@ -1171,6 +1171,8 @@ mpairnay.o : NEIGHBORS/mpairnay.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NEIGHBORS/mpairnay.f90
 neighbors.o : NEIGHBORS/neighbors.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NEIGHBORS/neighbors.f90
+neighbors_pairs.o : NEIGHBORS/neighbors_pairs.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c NEIGHBORS/neighbors_pairs.f90
 neighborsPP.o : NEIGHBORS/neighborsPP.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NEIGHBORS/neighborsPP.f90
 find_neighPP_max.o : NEIGHBORS/find_neighPP_max.f90 $(MODULES)

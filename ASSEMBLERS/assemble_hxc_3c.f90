@@ -107,6 +107,7 @@
         integer isorp
         integer issh
         integer jatom
+        integer jneigh
         integer jbeta
         integer mneigh
         integer my_proc
@@ -229,6 +230,7 @@
            jbeta = neigh_comb(2,ineigh,ialp)
            r2(:) = ratom(:,jatom) + xl(:,jbeta)
            in2 = imass(jatom)
+           jneigh = neigh_back(iatom,mneigh)
 
 ! Find the net charge on iatom
            dq2 = 0.0d0
@@ -292,6 +294,7 @@
               do imu = 1, num_orb(in1)
                vxc(imu,inu,mneigh,iatom) =                              &
      &          vxc(imu,inu,mneigh,iatom) + bcxcx(imu,inu)
+             vxc(inu,imu,jneigh,jatom) = vxc(imu,inu,mneigh,iatom)
 
               end do
              end do
@@ -304,6 +307,7 @@
               do imu = 1, num_orb(in1)
                density_3c(imu,inu,mneigh,iatom) =                       &
      &          density_3c(imu,inu,mneigh,iatom) + bcxcx(imu,inu)
+         density_3c(inu,imu,jneigh,jatom) = density_3c(imu,inu,mneigh,iatom) 
               end do
              end do
 !$omp end critical (den3)
