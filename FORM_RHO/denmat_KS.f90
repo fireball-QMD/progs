@@ -239,7 +239,7 @@
 ! ****************************************************************************
 ! Get the Fermi energy.
         call fermie (norbitals, ztot, eigen_k, efermi, ioccupy_k, foccupy)
-        write (*,*) ' Fermi Level = ', efermi
+!        write (*,*) ' Fermi Level = ', efermi
  
         if (iwrtefermi .eq. 1) then
          write (*,*) '  '

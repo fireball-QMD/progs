@@ -323,10 +323,10 @@
          call pclaputter (yyyy, desc_y, xxxx, norbitals)
 
 ! Call the diagonalizer
-         write (*,*) ' Call diagonalizer for overlap. '
-         write (*,*) '                The overlap eigenvalues: '
-         write (*,*) ' ******************************************************* '
-
+!         write (*,*) ' Call diagonalizer for overlap. '
+!         write (*,*) '                The overlap eigenvalues: '
+!         write (*,*) ' ******************************************************* '
+!
 !        call pcheevx ('V', 'A', 'U', norbitals, yyyy, 1, 1, desc_y, 0, 0, 0,&
 !    &                 0, abstol, ijunk1, ijunk2, slam, -1.0, xxxx, 1, 1,    &
 !    &                 desc_x, cwork, wrk3, rwork, wrk2, iwork, wrk1, ijunk3,&

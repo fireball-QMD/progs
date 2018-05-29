@@ -503,7 +503,7 @@ subroutine Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step, &
 	700 format (2x, i2, 3(2x,f12.6))
 	701 format (2x, a2, 3(2x,f12.6))
 	907 format (2x, ' ETOT = ', f15.6,'      T_instantaneous =', f12.4 )
-	908 format (2x, ' ETOT = ', f15.6,' (eV)T =', f12.4,' (K) Time = ', f20.2,' (fs)')
+	908 format (2x, ' ETOT = ', f15.6,' eV; T =', f12.4,' K; Time = ', f12.1,' (fs)')
 end subroutine
 
 subroutine Move_ions_WriteOut_deltaEandF(writeOutput,itime_step, &

@@ -119,10 +119,10 @@
 ! ===========================================================================
         if(icluster .eq. 1) mbeta_max = 0
 
-        if (my_proc .eq. 0) then
-         write (*,*) ' Welcome to common_neighborsPP - determine mapping of '
-         write (*,*) ' common neighbors for Pseudopotential. '
-        end if
+!        if (my_proc .eq. 0) then
+!         write (*,*) ' Welcome to common_neighborsPP - determine mapping of '
+!         write (*,*) ' common neighbors for Pseudopotential. '
+!        end if
 
 ! Determine which atoms are assigned to this processor.
         if (iordern .eq. 1) then

@@ -140,20 +140,20 @@
         if(iwrtdos.ge.1 .or. iwrthop.ge.1 .or. iwrtatom.ge.1) hamk = a0
 !end CGP
 
-        write (*,*) '     Wellcome to kspace subroutine using LAPACK95'
-        write (*,*) ' ****************************************************** '
+!        write (*,*) '     Wellcome to kspace subroutine using LAPACK95'
+!        write (*,*) ' ****************************************************** '
 
         ishort = 1
         if (iwrteigen .eq. 1) ishort = 0
 
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-          write (*,*) '  '
-          write (*,*) '         Welcome to kspace -- ikpoint = ', ikpoint
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-        end if
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' ***************************************************** '
+!          write (*,*) '  '
+!          write (*,*) '         Welcome to kspace -- ikpoint = ', ikpoint
+!          write (*,*) '  '
+!          write (*,*) ' ***************************************************** '
+!        end if
 
         allocate (xxxx(norbitals,norbitals))
         allocate (yyyy(norbitals,norbitals))
@@ -261,12 +261,12 @@
         if (Kscf .eq. 1) then
 
 ! Call the diagonalizer
-         if (wrtout) then
-           write (*,*) ' Call diagonalizer for overlap. '
-           write (*,*) '                  The overlap eigenvalues: '
-           write (*,*) ' ******************************************************* '
-         end if
-
+!         if (wrtout) then
+!           write (*,*) ' Call diagonalizer for overlap. '
+!           write (*,*) '                  The overlap eigenvalues: '
+!           write (*,*) ' ******************************************************* '
+!         end if
+!
          if (divide) then
            call la_heevd( zzzz(1:norbitals, 1:norbitals), slam(1:norbitals), &
      &                   'V', 'U', info)

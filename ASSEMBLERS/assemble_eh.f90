@@ -80,10 +80,10 @@
 ! Procedure
 ! ===========================================================================
 
-        write (*,*) '  '
-        write (*,100)
-        write (*,*) ' Now we are assembling piecies of Ext-Hubbard Hamiltonian. '
-        write (*,*) '  '
+        !write (*,*) '  '
+        !write (*,100)
+        !write (*,*) ' Now we are assembling piecies of Ext-Hubbard Hamiltonian. '
+        !write (*,*) '  '
 
 ! ===========================================================================
 !                             neighbors mapping
@@ -112,7 +112,7 @@
             call num_neigh_tot (numorb_max)
 
            else
-            write (*,*) ' Using neighbor map from NEIGHBORS file. '
+            !write (*,*) ' Using neighbor map from NEIGHBORS file. '
             call initneighbors (natoms, ivdw, nstepi)
 
             call num_neigh_tot (numorb_max)
@@ -183,15 +183,15 @@
 !                               assemble_1c
 ! ===========================================================================
 ! Assemble the one-center exchange-correlation interactions.
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-          write (*,*) ' Assemble one-center interactions. '
+          !write (*,*) '  '
+          !write (*,*) ' ***************************************************** '
+          !write (*,*) ' Assemble one-center interactions. '
           if(itheory_xc .eq. 0 ) then
-           write (*,*) ' Assemble Horsfield exchange-correlation interactions.'
+           !write (*,*) ' Assemble Horsfield exchange-correlation interactions.'
            call assemble_hxc_1c (natoms, itheory, iforce)
           endif
           if(itheory_xc .eq. 2 ) then
-           write (*,*) ' Assemble OLS-xc exchange-correlation interactions. '
+           !write (*,*) ' Assemble OLS-xc exchange-correlation interactions. '
            call assemble_olsxc_1c (natoms, itheory, iforce)
           endif
 
@@ -202,9 +202,9 @@
 ! doscentros does the interpolating and "fundamental" calculations.
 ! assemble_2c ONLY does 2c terms. No 3c terms allowed. See assemble_3c
 ! and trescentros for 3c terms.
-          write(*,*) '  '
+          !write(*,*) '  '
           if (Kscf .eq. 1) then
-           write (*,*) ' Assemble two-center interactions. '
+           !write (*,*) ' Assemble two-center interactions. '
            call assemble_sVNL (iforce)
            call assemble_2c (nprocs, iforce, iordern, ioff2c)
            call assemble_2c_PP (nprocs, iforce, iordern)
@@ -214,44 +214,44 @@
 ! Call the exchange-correlation interactions based on method chosen
 ! (i.e. itheory_xc).
           if (itheory_xc .eq. 0 ) then
-           write (*,*) ' Assemble Horsfield exchange-correlation interactions.'
+           !write (*,*) ' Assemble Horsfield exchange-correlation interactions.'
            call assemble_hxc_2c (nprocs, Kscf, iordern, itheory,     &
      &                           igauss)
           end if
 
           if (itheory_xc .eq. 1 ) then
 
-           write (*,*) ' Assemble SN-xc exchange-correlation interactions. '
+           !write (*,*) ' Assemble SN-xc exchange-correlation interactions. '
            call average_rho (nprocs, Kscf, iforce, iordern, igauss)
 
-           write (*,*) ' Assembling on-site part.'
+           !write (*,*) ' Assembling on-site part.'
            call assemble_snxc_on (natoms, nprocs, my_proc, iordern, itheory, &
      &                            uxcdcc_sn)
-           write (*,*) ' Assembling off-site part.'
+           !write (*,*) ' Assembling off-site part.'
            call assemble_snxc_off (natoms, nprocs, my_proc, iordern,    &
      &                             itheory)
           end if ! if (itheory_xc = 1)
 
           if (itheory_xc .eq. 2 ) then
 
-           write (*,*) ' Assemble OLS-xc exchange-correlation interactions.'
+           !write (*,*) ' Assemble OLS-xc exchange-correlation interactions.'
            call average_rho (nprocs, Kscf, iforce, iordern, igauss)
 
-           write (*,*) ' Assembling on-site part.'
+           !write (*,*) ' Assembling on-site part.'
            call assemble_olsxc_on (natoms, nprocs, my_proc, iordern,    &
      &                             itheory, uxcdcc_ols)
-           write (*,*) ' Assembling off-site part.'
+           !write (*,*) ' Assembling off-site part.'
            call assemble_olsxc_off (nprocs, my_proc, iordern, itheory)
 
           end if ! if (itheory_xc = 2)
 
 
-          write (*,*) ' Assemble two-center extended-Hubbard interactions. '
+          !write (*,*) ' Assemble two-center extended-Hubbard interactions. '
           if (itheory_xc.ne.0) then
-            write(*,*)' NOTE for SNXC and OLSXC in Extended Hubbard theory'
-            write(*,*)' Even though you are doing SNXC or OLSXC,          '
-            write(*,*)' it uses Horsfield XC one center matrix elements. '
-            write(*,*)' It needs to be fixed later. '
+            !write(*,*)' NOTE for SNXC and OLSXC in Extended Hubbard theory'
+            !write(*,*)' Even though you are doing SNXC or OLSXC,          '
+            !write(*,*)' it uses Horsfield XC one center matrix elements. '
+            !write(*,*)' It needs to be fixed later. '
           end if
 
           call assemble_eh_2c (nprocs, iordern, ioff2c)
@@ -263,30 +263,30 @@
 ! trecentros does the interpolating and "fundamental" calculations.
 ! assemble_3c ONLY does 3c terms. No 2c terms allowed. See assemble_2c
 ! and doscentros for 2c terms.
-          write(*,*) '  '
+          !write(*,*) '  '
           if (Kscf .eq. 1) then
-           write (*,*) ' Assemble three-center interactions. '
+           !write (*,*) ' Assemble three-center interactions. '
            call assemble_3c (nprocs, iordern, igauss, itheory_xc)
-           write (*,*) ' Assemble three-center PP interactions. '
+           !write (*,*) ' Assemble three-center PP interactions. '
            call assemble_3c_PP (nprocs, iordern)
           end if
 
 
 ! Assemble Horsfield exchange-correlation interactions.
           if (itheory_xc .eq. 0) then
-           write (*,*) ' Assemble Horsfield exchange-correlation interactions. '
+           !write (*,*) ' Assemble Horsfield exchange-correlation interactions. '
            call assemble_hxc_3c (nprocs, Kscf, iordern, itheory, igauss)
           endif
-          write (*,*) ' ***************************************************** '
+          !write (*,*) ' ***************************************************** '
 
 ! ===========================================================================
 !                                 Build H
 ! ===========================================================================
-! Set up the full Hamiltonian and writeout HS.dat.
+! Set up the full Hamiltonian and !writeout HS.dat.
           call buildh (nprocs, itheory, iordern, itestrange,    &
      &                 testrange, ibias, iwrtHS)
 ! ===========================================================================
-! For iwrthampiece .eq. 1 (file - output.input), write out Hamiltonian pieces
+! For iwrthampiece .eq. 1 (file - output.input), !write out Hamiltonian pieces
           if (iwrthampiece .eq. 1) then
            call hampiece (itheory)
           end if

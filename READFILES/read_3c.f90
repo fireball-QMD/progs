@@ -274,12 +274,12 @@
              write(extension,'(''.dat'')')
              filename = append_string(filename,extension)
 
-             if (itheta .eq. 1 .and. isorp .eq. 0)                           &
-     &        write(*,'('' Opening data file: '',a100)')filename
-             if (itheta .eq. 1 .and. isorp .eq. 1 .and. interaction .eq. 3)  &
-     &        write(*,'('' Opening data file: '',a100)') filename
-             if (itheta .eq. 1 .and. isorp .eq. 1 .and. interaction .eq. 4)  &
-     &        write(*,'('' Opening data file: '',a100)') filename
+!             if (itheta .eq. 1 .and. isorp .eq. 0)                           &
+!     &        write(*,'('' Opening data file: '',a100)')filename
+!             if (itheta .eq. 1 .and. isorp .eq. 1 .and. interaction .eq. 3)  &
+!     &        write(*,'('' Opening data file: '',a100)') filename
+!             if (itheta .eq. 1 .and. isorp .eq. 1 .and. interaction .eq. 4)  &
+!     &        write(*,'('' Opening data file: '',a100)') filename
              open (unit = iounit, file = filename, status = 'old')
              
  

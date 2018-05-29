@@ -79,43 +79,43 @@
 ! ============================================================================
 !                              Dassemble_2c
 ! ============================================================================
-          write (*,*) '  '
-          write (*,*) ' In getforces_mdet '
+          !write (*,*) '  '
+          !write (*,*) ' In getforces_mdet '
           if (itheory_xc .ne. 2) then
-          write (*,*) ' must stop, only ready for itheory_xc = 2 '
+          !write (*,*) ' must stop, only ready for itheory_xc = 2 '
           stop
           end if
 !         if (itheory .ne. 0) then
-!         write (*,*) ' must stop, only ready for itheory = 0 (Harris) '
+!         !write (*,*) ' must stop, only ready for itheory = 0 (Harris) '
 !         stop
 !         end if
           if (icluster .ne. 1) then
-          write (*,*) ' must stop, only ready for icluster = 1 '
+          !write (*,*) ' must stop, only ready for icluster = 1 '
           stop
           end if
 ! JOM-add allocate nonadiabatic variables
-!         write(*,*) ' JOM : later allocate+reallocate if doing MD'
+!         !write(*,*) ' JOM : later allocate+reallocate if doing MD'
           call allocate_nac(natoms)
 ! JOM-warning : later allocate+reallocate if doing MD (changing number
 ! of neighbors)
 !         call reallocate_nac(natoms)
 ! JOM-end allocate nonadiabatic variables
 !--------------------------------------------------------------------
-          write (*,*) '  '
-          write (*,*) 'assemble gover = < Grad mu | nu > contributions.'
+          !write (*,*) '  '
+          !write (*,*) 'assemble gover = < Grad mu | nu > contributions.'
           call assemble_G_S (nprocs, iordern)
 !--------------------------------------------------------------------
-          write (*,*) ' ********************************************** '
-          write (*,*) ' Dassemble two-center force contributions. '
+          !write (*,*) ' ********************************************** '
+          !write (*,*) ' Dassemble two-center force contributions. '
           call Dassemble_2c_mdet (nprocs, iordern, igauss)
 
           if (itheory .eq. 1) then
-           write (*,*) ' Dassemble two-center DOGS force contributions.'
+           !write (*,*) ' Dassemble two-center DOGS force contributions.'
            call Dassemble_ca_2c_mdet (nprocs, iordern)
           endif
 !--------------------------------------------------------------------
 
-          write (*,*) ' Dassemble two-center PP force contributions. '
+          !write (*,*) ' Dassemble two-center PP force contributions. '
           call Dassemble_2c_PP_mdet (nprocs, iordern)
 !bias
            if (ibias .eq. 1) then
@@ -127,7 +127,7 @@
 ! Call the exchange-correlation interactions based on method chosen
 ! (i.e. itheory_xc).
           if (itheory_xc .eq. 1) then
-           write (*,*) ' Dassemble on-site SNXC force contributions. '
+           !write (*,*) ' Dassemble on-site SNXC force contributions. '
            if (itheory .eq. 1) then
              call Dassemble_ca_snxc_on (nprocs, iordern)
              call Dassemble_ca_snxc_2c (nprocs, iordern)
@@ -137,7 +137,7 @@
            endif
           end if
           if (itheory_xc .eq. 2) then
-           write (*,*) ' Dassemble on-site OSLXC force contributions. '
+           !write (*,*) ' Dassemble on-site OSLXC force contributions. '
            if (itheory .eq. 1) then
              call Dassemble_ca_olsxc_on_mdet (nprocs, iordern)
              call Dassemble_ca_olsxc_2c_mdet (nprocs, iordern)
@@ -150,20 +150,20 @@
 ! ===========================================================================
 !                               Dassemble_3c
 ! ===========================================================================
-          write (*,*) '  '
-          write (*,*) ' Dassemble three-center force contributions. '
+          !write (*,*) '  '
+          !write (*,*) ' Dassemble three-center force contributions. '
           call Dassemble_3c_mdet (nprocs, iordern, igauss)
 
-          write (*,*) ' Dassemble three-center PP force contributions. '
+          !write (*,*) ' Dassemble three-center PP force contributions. '
           call Dassemble_3c_PP_mdet (nprocs, iordern)
 
           if (itheory .eq. 1) then
-           write (*,*) ' Dassemble three-center DOGS force. '
+           !write (*,*) ' Dassemble three-center DOGS force. '
            call Dassemble_ca_3c_mdet (nprocs, iordern, igauss)
-           write (*,*) ' Dassemble three-center long-range '
+           !write (*,*) ' Dassemble three-center long-range '
            call Dassemble_lr_mdet (nprocs, iordern)
            if (iqmmm .eq. 1) then
-             write (*,*) ' Dassemble three-center qm/mm contributions. '
+             !write (*,*) ' Dassemble three-center qm/mm contributions. '
              call Dassemble_qmmm_mdet (nprocs, iordern)
            else
              flrew_qmmm = 0.0d0
@@ -172,7 +172,7 @@
 
 ! Call the exchange-correlation interactions based on method chosen
           if (itheory_xc .eq. 1) then
-           write (*,*) ' Dassemble off-site SN exchange-correlation forces. '
+           !write (*,*) ' Dassemble off-site SN exchange-correlation forces. '
            if (itheory .eq. 1) then
 ! Include gaussians
             call Dassemble_ca_snxc_3c (nprocs, iordern, igauss)
@@ -180,7 +180,7 @@
             call Dassemble_snxc_3c (nprocs, iordern, igauss)
            endif
           else if(itheory_xc .eq. 2) then
-           write (*,*) ' Dassemble off-site OLS exchange-correlation forces. '
+           !write (*,*) ' Dassemble off-site OLS exchange-correlation forces. '
            if (itheory .eq. 1) then
             call Dassemble_ca_olsxc_3c_mdet (nprocs, iordern, igauss)
            else
@@ -188,17 +188,17 @@
            endif
           end if
 
-          write (*,*) ' ***************************************************** '
+          !write (*,*) ' ***************************************************** '
 
 ! ============================================================================
 !                                assemble_F
 ! ============================================================================
 ! Call assemble_F: This program assembles all the forces we have calculated
 ! in Dassemble_2c and Dassemble_3c, and assemble_usr.
-          write (*,*) '  '
-          write (*,*) '  '
-          write (*,*) ' ********************************************* '
-          write (*,*) ' Assemble all force contributions. '
+          !write (*,*) '  '
+          !write (*,*) '  '
+          !write (*,*) ' ********************************************* '
+          !write (*,*) ' Assemble all force contributions. '
           call assemble_F (natoms, itheory, itheory_xc, igauss, ivdw,       &
      &     iharmonic, ibias, iwrtfpieces)
 

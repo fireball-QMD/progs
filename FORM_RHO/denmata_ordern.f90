@@ -165,16 +165,16 @@
         nbdiv = nbands/nactualprocs
         nbmod = mod(nbands,nactualprocs)
 
-        if (myrank .eq. 0) then
-         write (*,*) '  '
-         write (*,*) '  '
-         write (*,*) ' ****************************************************** '
-         write (*,*) '  '
-         write (*,*) '                   Welcome to denmat --              '
-         write (*,*) '        This is the parallel linear-scaling version. '
-         write (*,*) '  '
-         write (*,*) ' ****************************************************** '
-        end if
+!        if (myrank .eq. 0) then
+!         write (*,*) '  '
+!         write (*,*) '  '
+!         write (*,*) ' ****************************************************** '
+!         write (*,*) '  '
+!         write (*,*) '                   Welcome to denmat --              '
+!         write (*,*) '        This is the parallel linear-scaling version. '
+!         write (*,*) '  '
+!         write (*,*) ' ****************************************************** '
+!        end if
 
 ! Dummy bit matrix for holding sendrecv return value 
         allocate(dummy_bit_matrix(nactualprocs,nactualprocs))

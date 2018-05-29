@@ -69,11 +69,11 @@
 ! Procedure
 ! ===========================================================================
 
-        write (*,*) '  '
-        write (*,100)
-        write (*,*) ' Now we are performing post-scf analysis. '
-        write (*,*) '  '
-
+!        write (*,*) '  '
+!        write (*,100)
+!        write (*,*) ' Now we are performing post-scf analysis. '
+!        write (*,*) '  '
+!
 
 ! write out the dos if iwrtdos is greatter than 1 CGP
          if (iwrtdos .ge. 1) call writeout_dos ( )

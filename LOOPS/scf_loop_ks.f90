@@ -95,7 +95,7 @@
 ! ===========================================================================
 
 ! Do k-loop diagonalization
-           write (*,*)  ' Call diag_k'
+!           write (*,*)  ' Call diag_k'
            call diag_k_ks ()
 
 ! ===========================================================================
@@ -124,12 +124,12 @@
             write (*,401) ebs, itime_step, Kscf
             write (*,*) ' ----------------------------------------------- '
             exit
-          else if (.not. scf_achieved) then
-            write (*,*) '  '
-            write (*,*) ' ------- THE TOTAL BAND STRUCTURE ENERGY ------- '
-            write (*,*) '  '
-            write (*,402) ebs, itime_step, Kscf
-            write (*,*) ' ----------------------------------------------- '
+!          else if (.not. scf_achieved) then
+!            write (*,*) '  '
+!            write (*,*) ' ------- THE TOTAL BAND STRUCTURE ENERGY ------- '
+!            write (*,*) '  '
+!            write (*,402) ebs, itime_step, Kscf
+!            write (*,*) ' ----------------------------------------------- '
           end if
           
          end do  ! end do Kscf

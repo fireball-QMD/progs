@@ -124,8 +124,8 @@
 
 ! Procedure
 ! ===========================================================================
-        if (my_proc .eq. 0)                                                  &
-     &  write (*,*) ' Welcome to neighborsPP - determine mapping of PP neighbors. '
+!        if (my_proc .eq. 0)                                                  &
+!     &  write (*,*) ' Welcome to neighborsPP - determine mapping of PP neighbors. '
         if (icluster .eq. 1) mbeta_max = 0
 
 ! Determine which atoms are assigned to this processor.

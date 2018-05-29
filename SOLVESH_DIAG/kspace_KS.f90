@@ -127,14 +127,14 @@
         ishort = 1
         if (iwrteigen .eq. 1) ishort = 0
 
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' ****************************************************** '
-          write (*,*) '  '
-          write (*,*) '         Welcome to kspaceG -- ikpoint = ', ikpoint
-          write (*,*) '  '
-          write (*,*) ' ****************************************************** '
-        end if
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' ****************************************************** '
+!          write (*,*) '  '
+!          write (*,*) '         Welcome to kspaceG -- ikpoint = ', ikpoint
+!          write (*,*) '  '
+!          write (*,*) ' ****************************************************** '
+!        end if
 
         allocate (xxxx(norbitals,norbitals))
         allocate (yyyy(norbitals,norbitals))

@@ -132,15 +132,15 @@
         ishort = 1
         if (iwrteigen .eq. 1) ishort = 0
 
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' ****************************************************** '
-          write (*,*) '  '
-          write (*,*) '         Diagonalize H(k) -- ikpoint = ', ikpoint
-          write (*,*) '  '
-          write (*,*) ' ****************************************************** '
-        end if
-
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' ****************************************************** '
+!          write (*,*) '  '
+!          write (*,*) '         Diagonalize H(k) -- ikpoint = ', ikpoint
+!          write (*,*) '  '
+!          write (*,*) ' ****************************************************** '
+!        end if
+!
         allocate (xxxx(norbitals,norbitals))
         allocate (yyyy(norbitals,norbitals))
         allocate (zzzz(norbitals,norbitals))
@@ -329,13 +329,13 @@
 
 ! DIAGONALIZE THE HAMILTONIAN.
 ! ****************************************************************************
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' Call diagonalizer for Hamiltonian. '
-          write (*,*) '            The energy eigenvalues: '
-          write (*,*) ' *********************************************** '
-        end if
-
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' Call diagonalizer for Hamiltonian. '
+!          write (*,*) '            The energy eigenvalues: '
+!          write (*,*) ' *********************************************** '
+!!        end if
+!
 
 ! set default size of working space
         lwork = 1
@@ -346,7 +346,7 @@
      &                 -1, rwork, info)
 ! resize working space
         lwork = work(1)
-        write (*,*) 'lwork =',lwork
+!        write (*,*) 'lwork =',lwork
         deallocate (work)
         allocate (work(lwork))
 ! diagonalize the overlap matrix with the new working space
@@ -360,11 +360,11 @@
 ! eigenvalues will be very close to zero, but not exactly.  Also, we do not
 ! know if a real eigen value is near zero.
 
-        if (ishort .eq. 1 .and. wrtout) then
-         write (*,100) eigen(1), eigen(norbitals)
-        else if (wrtout) then
-         write (*,200) (eigen(imu), imu = 1, norbitals)
-        end if
+!        if (ishort .eq. 1 .and. wrtout) then
+!         write (*,100) eigen(1), eigen(norbitals)
+!        else if (wrtout) then
+!         write (*,200) (eigen(imu), imu = 1, norbitals)
+!        end if
 
 !
 ! INFORMATION FOR THE LOWDIN CHARGES

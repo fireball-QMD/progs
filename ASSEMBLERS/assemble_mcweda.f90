@@ -78,10 +78,10 @@
 ! Procedure
 ! ===========================================================================
 
-        write (*,*) '  '
-        write (*,100)
-        write (*,*) ' Now we are assembling McWeda Hamiltonian. '
-        write (*,*) '  '
+!        !write (*,*) '  '
+!        !write (*,100)
+!        !write (*,*) ' Now we are assembling McWeda Hamiltonian. '
+!        !write (*,*) '  '
 
 ! ===========================================================================
 !                             neighbors mapping
@@ -112,7 +112,7 @@
               call reallocate_bias (natoms)
              endif
            else
-            write (*,*) ' Using neighbor map from NEIGHBORS file. '
+            !write (*,*) ' Using neighbor map from NEIGHBORS file. '
             call initneighbors (natoms, ivdw, nstepi)
 
             call num_neigh_tot (numorb_max)
@@ -183,11 +183,11 @@
 !                               assemble_1c
 ! ===========================================================================
 ! Assemble the one-center exchange-correlation interactions.
-          write (*,*) '  '
+          !write (*,*) '  '
           if(itheory_xc .eq. 2 ) then
-           write (*,*) ' ***************************************************** '
-           write (*,*) ' Assemble one-center interactions. '
-           write (*,*) ' Assemble OLS-xc exchange-correlation interactions. '
+           !write (*,*) ' ***************************************************** '
+           !write (*,*) ' Assemble one-center interactions. '
+           !write (*,*) ' Assemble OLS-xc exchange-correlation interactions. '
            call assemble_olsxc_1c (natoms, itheory, iforce)
           endif
 
@@ -198,10 +198,10 @@
 ! doscentros does the interpolating and "fundamental" calculations.
 ! assemble_2c ONLY does 2c terms. No 3c terms allowed. See assemble_3c
 ! and trescentros for 3c terms.
-          write(*,*) '  '
+          !write(*,*) '  '
           if (Kscf .eq. 1) then
 
-           write (*,*) ' Assemble two-center interactions. '
+           !write (*,*) ' Assemble two-center interactions. '
            call assemble_sVNL (iforce)
            call assemble_2c (nprocs, iforce, iordern, ioff2c)
            call assemble_2c_PP (nprocs, iforce, iordern)
@@ -213,7 +213,7 @@
 ! Call the exchange-correlation interactions based on method chosen
 ! (i.e. itheory_xc).
           if (itheory_xc .eq. 1 ) then
-          write (*,*) ' Assemble SN-xc exchange-correlation interactions. '
+          !write (*,*) ' Assemble SN-xc exchange-correlation interactions. '
 
           if (itheory .eq. 1) then
            call average_ca_rho (nprocs, Kscf, iforce, iordern, igauss)
@@ -221,17 +221,17 @@
            call average_rho (nprocs, Kscf, iforce, iordern, igauss)
           endif
 
-           write (*,*) ' Assembling on-site part.'
+           !write (*,*) ' Assembling on-site part.'
            call assemble_snxc_on (natoms, nprocs, my_proc, iordern, itheory, &
      &                            uxcdcc_sn)
 
-           write (*,*) ' Assembling off-site part.'
+           !write (*,*) ' Assembling off-site part.'
            call assemble_snxc_off (natoms, nprocs, my_proc, iordern,    &
      &                             itheory)
           end if ! if (itheory_xc = 1)
 
           if (itheory_xc .eq. 2 ) then
-           write (*,*) ' Assemble OLS-xc exchange-correlation interactions.'
+           !write (*,*) ' Assemble OLS-xc exchange-correlation interactions.'
 
            if (itheory .eq. 1) then
             call average_ca_rho (nprocs, Kscf, iforce, iordern, igauss)
@@ -239,17 +239,17 @@
             call average_rho (nprocs, Kscf, iforce, iordern, igauss)
            endif
 
-           write (*,*) ' Assembling on-site part.'
+           !write (*,*) ' Assembling on-site part.'
            call assemble_olsxc_on (natoms, nprocs, my_proc, iordern,    &
      &                             itheory, uxcdcc_ols)
 
-           write (*,*) ' Assembling off-site part.'
+           !write (*,*) ' Assembling off-site part.'
            call assemble_olsxc_off (nprocs, my_proc, iordern, itheory)
           end if ! if (itheory_xc = 2)
 
 !JIMM
           if (itheory .eq. 1) then
-           write (*,*) ' Assemble two-center DOGS interactions. '
+           !write (*,*) ' Assemble two-center DOGS interactions. '
            if (idipole .eq. 0) call assemble_ca_2c (nprocs, iforce, iordern)
            if (idipole .eq. 1) call assemble_ca_2c_dip (nprocs, iforce, iordern)
           endif
@@ -260,15 +260,15 @@
 ! trecentros does the interpolating and "fundamental" calculations.
 ! assemble_3c ONLY does 3c terms. No 2c terms allowed. See assemble_2c
 ! and doscentros for 2c terms.
-          write(*,*) '  '
+          !write(*,*) '  '
           if (Kscf .eq. 1) then
-           write (*,*) ' Assemble three-center interactions. '
+           !write (*,*) ' Assemble three-center interactions. '
            call assemble_3c (nprocs, iordern, igauss, itheory_xc)
-           write (*,*) ' Assemble three-center PP interactions. '
+           !write (*,*) ' Assemble three-center PP interactions. '
            call assemble_3c_PP (nprocs, iordern)
 ! JIMM
            if (iqmmm .eq.1 ) then
-             write (*,*) ' Assemble qm/mm interactions. '
+             !write (*,*) ' Assemble qm/mm interactions. '
              if (idipole .eq. 0) call assemble_qmmm (nprocs, iordern)
              if (idipole .eq. 1) call assemble_qmmm_dip (nprocs, iordern)
            else
@@ -278,26 +278,26 @@
           end if
 !JIMM
           if (itheory .eq. 1) then
-           write (*,*) ' Assemble three-center DOGS interactions. '
+           !write (*,*) ' Assemble three-center DOGS interactions. '
            if (idipole .eq. 0) call assemble_ca_3c (nprocs, iordern, igauss)
            if (idipole .eq. 1) call assemble_ca_3c_dip (nprocs, iordern, igauss)
 
 ! Add assemble_lr here for the long long-range ewald contributions
-           write (*,*) ' Assemble long-range interactions. '
+           !write (*,*) ' Assemble long-range interactions. '
            if (idipole .eq. 0) call assemble_lr (nprocs, iordern)
            if (idipole .eq. 1) call assemble_lr_dip (nprocs, iordern)
           endif
 
-          write (*,*) ' ***************************************************** '
+          !write (*,*) ' ***************************************************** '
 
 ! ===========================================================================
 !                                 Build H
 ! ===========================================================================
-! Set up the full Hamiltonian and writeout HS.dat.
+! Set up the full Hamiltonian and !writeout HS.dat.
           call buildh (nprocs, itheory, iordern, itestrange,    &
      &                 testrange, ibias, iwrtHS)
 ! ===========================================================================
-! For iwrthampiece .eq. 1 (file - output.input), write out Hamiltonian pieces
+! For iwrthampiece .eq. 1 (file - output.input), !write out Hamiltonian pieces
           if (iwrthampiece .eq. 1) then
            call hampiece (itheory)
           end if

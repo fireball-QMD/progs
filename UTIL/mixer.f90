@@ -105,8 +105,8 @@
      end do
      dqrms = sqrt(dqrms)/(2*natoms)
 
-     write (*,300) dqrms
-     write (*,301) dqmax
+!     write (*,300) dqrms
+!     write (*,301) dqmax
 
 ! ===========================================================================
 !                                   mixing
@@ -143,19 +143,19 @@
 ! call mixing procedure
        select case (ialgmix)
        case (1)
-          write(*,501) 'mixing with anderson algorithm'
+!          write(*,501) 'mixing with anderson algorithm'
           call anderson (Qoutmixer, Qinmixer, bmix, sigma, Kscf, idmix,    &
                &               imix , max_scf_iterations)
        case (2)
-          write(*,501) 'mixing with broyden algorithm'
+!          write(*,501) 'mixing with broyden algorithm'
           call broyden (Qoutmixer, Qinmixer, bmix, sigma, Kscf, idmix,    &
                &               imix , max_scf_iterations)
        case (3)
-          write(*,501) 'mixing with louie algorithm'
+!          write(*,501) 'mixing with louie algorithm'
           call louie (Qoutmixer, Qinmixer, bmix, sigma, Kscf, idmix,    &
                &               imix , max_scf_iterations)
        case (4)
-          write(*,501) 'mixing with pulay algorithm'
+!          write(*,501) 'mixing with pulay algorithm'
           call pulay (Qoutmixer, Qinmixer, bmix, sigma, Kscf, idmix,    &
                &               imix , max_scf_iterations)
        end select !ialgmix
@@ -201,7 +201,7 @@
       end do
     end do
     renorm = (zouttot - ztot)/nssh_tot
-    write (*,302) renorm
+!    write (*,302) renorm
     zcheck = 0.0d0
     do iatom = 1, natoms
       in1 = imass(iatom)
@@ -212,10 +212,10 @@
     end do
 
 ! write out resume 
-    write (*,*) ' (Before renormalization) zouttot = ', zouttot
-    write (*,*) ' (After  renormalization)  zcheck = ', zcheck
-    write (*,*) ' (What it must be)           ztot = ', ztot
-    write (*,*) '  '
+!    write (*,*) ' (Before renormalization) zouttot = ', zouttot
+!    write (*,*) ' (After  renormalization)  zcheck = ', zcheck
+!    write (*,*) ' (What it must be)           ztot = ', ztot
+!    write (*,*) '  '
     write (*,303) sigma, sigmatol, Kscf
 
 

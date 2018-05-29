@@ -110,8 +110,8 @@
 ! Procedure
 ! ===========================================================================
 
-        if (my_proc .eq. 0)                                                  &
-     &   write (*,*) ' Determine maximum number of PP-neighbors. ' 
+!        if (my_proc .eq. 0)                                                  &
+!     &   write (*,*) ' Determine maximum number of PP-neighbors. ' 
 
         if (icluster .eq. 1) mbeta_max = 0
 

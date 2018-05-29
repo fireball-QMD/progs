@@ -72,10 +72,10 @@
 			call getforces_classic ()
 			return
 		else
-	        write (*,*) '  '
-    	    write (*,100)
-        	write (*,*) ' Now we are assembling forces. '
-	        write (*,*) '  '
+!	        write (*,*) '  '
+!    	    write (*,100)
+!        	write (*,*) ' Now we are assembling forces. '
+!	        write (*,*) '  '
 		endif
 !END CHROM
 

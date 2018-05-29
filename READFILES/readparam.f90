@@ -152,7 +152,7 @@
         itdse = 0
         ibias = 0
         rescal = 1.0d0
-        xyz2line = 1
+        xyz2line = 2
         verbosity = 0
 !JOm-add
         imdet = 0
@@ -276,7 +276,7 @@
         write (*,*) ' The name of the k-points file: '
         write (*,201) kptpreference
 
-        !if (verbosity .ge. 3) then
+      if (verbosity .ge. 3) then
 
         write (*,*) '  '
         write (*,100)
@@ -287,13 +287,19 @@
         write (*,*) ' forces. Thus no simulation, and no calls to forces.'
         write (*,*) '  '
         write (*,*) ' nstepi, nstepf = ', nstepi, nstepf
-
+     
+      endif
+     
         iforce = 1
         if (nstepi .le. 0) then
          write (*,*) '  '
          write (*,*) ' YOU HAVE CHOSEN NOT TO DO A SIMULATION. '
          iforce = 0
         end if
+
+
+      if (verbosity .ge. 3) then
+
 
         write (*,100)
         write (*,*) '  '
@@ -324,12 +330,16 @@
         write (*,*) '  2 => extended-Hubbard '
         write (*,*) '  3 => Kohn-Sham '
         write (*,*) ' itheory = ', itheory
+        
+      endif 
+
         if (itheory .lt. 0 .or. itheory .gt. 3) then
          write (*,*) ' This selection for itheory is not valid! Change to an '
          write (*,*) ' appropriate value in the options.input file.'
          write (*,*) ' I am afraid that we are going to have to stop. '
          stop
         end if
+      if (verbosity .ge. 3) then
 
 ! option 3: itheory_xc
         write (*,*)
@@ -339,19 +349,21 @@
         write (*,*) '  1 => generalized Sankey-Niklewski '
         write (*,*) '  2 => McWEDA '
         write (*,*) ' itheory_xc = ', itheory_xc
+      endif
         if (itheory_xc .lt. 0 .or. itheory_xc .gt. 3) then
          write (*,*) ' This selection for itheory_xc is not valid! Change to '
          write (*,*) ' an appropriate value in the options.input file. '
          write (*,*) ' I am afraid that we are going to have to stop. '
          stop
         end if
-
 ! option 5: iquot
+      if (verbosity .ge. 3) then
         write (*,*) '  '
         write (*,*) ' Would you prefer to use Lowdin charges or Mulliken '
         write (*,*) ' charges?  Enter 1 - Lowdin or 2 - Mulliken: '
         write (*,*) ' 3 - Natural population analysis: '
         write (*,*) ' iqout = ', iqout
+      end if
         if (itheory .eq. 2 .and. iqout .ne. 2) then
          write (*,*) ' You are using the extended-hubbard approximation. '
          write (*,*) ' As a result, you must use Mulliken charges! '
@@ -360,6 +372,7 @@
         end if
 
 ! option 6: qstate
+      if (verbosity .ge. 3) then
         write (*,*) '  '
         write (*,*) ' The option exists for changing the charge state of the '
         write (*,*) ' system so that it is non-neutral. Insert qstate, the '
@@ -388,6 +401,7 @@
         write (*,*) ' the quench.optional file. '
         write (*,*) ' iquench = ', iquench
 
+      end if
         if (iquench .lt. -6) then
          write (*,*) ' bad iquench input'
          stop
@@ -395,6 +409,7 @@
 
 ! option 8: iensemble
 ! See Denis J. Evans et al., Phys Rev. A28, 1016 (1983) for velocity rescale
+      if (verbosity .ge. 3) then
         write (*,*) '  '
         write (*,*) 'You can do various ensembles such as (0) NVE (also the'
         write (*,*) 'correct setting for doing quenching, conjugate '
@@ -403,6 +418,7 @@
         write (*,*) 'integrator, (3) NVE with velocity-verlet integrator'
         write (*,*) 'Insert 0/1/2/3.'
         write (*,*) ' iensemble= ', iensemble
+      end if
         if (iensemble .gt. 0 .and. iquench .ne. 0) then
          write (*,*) ' ******************** NOTE ********************* '
          write (*,*) ' You have chosen to do an NVT ensemble '
@@ -413,6 +429,7 @@
         end if
 
 ! option 9: iBarrier
+      if (verbosity .ge. 3) then
         write (*,*) '  '
         write (*,*) ' The option exists to calculate a crude energy barrier. '
         write (*,*) ' The additions described here are designed to "push" the '
@@ -512,6 +529,7 @@
         write (*,*) ' Note: you must first run gauss_create with the same '
         write (*,*) ' input files you used when you ran create!!! '
         write (*,*) ' igauss = ', igauss
+      end if
         if (igauss .eq. 1 .and. itheory_xc .ne. 1) then
          write (*,*) ' ********************* WARNING *********************** '
          write (*,*) ' You have chosen to use the gaussian approach for the  '
@@ -523,6 +541,7 @@
         end if
 
 ! option 19: iimage
+      if (verbosity .ge. 3) then
         write (*,*) '  '
         write (*,*) ' Do you want to reimage the atoms to the central cell at'
         write (*,*) ' every N time steps? (zero means never).  This is needed'
@@ -532,6 +551,7 @@
         write (*,*) ' might be incompatible with a barrier or umbrella '
         write (*,*) ' calculation.  This option is also automatically set '
         write (*,*) ' to zero if you are doing a cluster calculation. '
+      end if
         if (icluster .ne. 0) iimage=0
         write (*,*) ' iimage = ', iimage
         if (iimage .lt. 0) then
@@ -549,6 +569,7 @@
 
 
 ! option 21: idynmat
+      if (verbosity .ge. 3) then
         write (*,*) '  '
         write (*,*) ' You have the option of calculating the dynamical'
         write (*,*) ' matrix. You do this by performing ndim X natoms'
@@ -591,6 +612,7 @@
         write (*,*) 'course of an MD simulation? (0=no,1=yes)'
         write (*,*) ' iendtemp = ', iendtemp
 
+      end if
 
         if (iendtemp .eq. 1 .and. iensemble .eq. 0) then
             write(*,*) ''
@@ -600,6 +622,7 @@
             STOP
         end if
 
+      if (verbosity .ge. 3) then
         write (*,*) '  '
         write (*,*) 'Do you want to use Nugged Elastic Band method'
         write (*,*) 'to find out minimum energy path? (0=no,1=yes)'
@@ -650,6 +673,7 @@
         write (*,*) ' scissor operator (maybe using Koopman correction) will'
         write (*,*) ' be used.'
         write (*,*) ' igap = ', igap
+      end if
 ! end GAP ENRIQUE-FF
 
 ! SECTION SCF
@@ -669,6 +693,7 @@
           write (*,*) ' max_scf_iterations < 200. Try again with smaller value. '
           stop
          end if
+         if (verbosity .ge. 3) then
          write (*,*) '  '
          write (*,*) ' The mixing algorithm for electronic structure,'
          write (*,*) ' ialgmix = ', ialgmix
@@ -694,7 +719,9 @@
          write (*,*) ' tempfe = ', tempfe
          write (*,100)
         endif
+        endif
 
+      if (verbosity .ge. 3) then
 ! QM/MM
         if (iqmmm .eq. 1) then
          write (*,100)
@@ -710,7 +737,8 @@
          write (*,*) 'Long range interactions with XYZ dipole'
          write (*,100)
         end if
-	
+      endif
+
         if (idipole .eq. 1 .and. icluster .eq. 0) then
          write (*,*) ' ******************** NOTE ********************* '
          write (*,*) ' idipole = 1 theory is not compatible with periodic systems '
@@ -720,6 +748,7 @@
         end if
 !JIMM
 !DFTD3
+      if (verbosity .ge. 3) then
         if (idftd3 .eq. 1) then
          write (*,100)
          write (*,*) ' idftd3 = 1', 'dftd3_func = ', dftd3_func, 'dftd3_version = ', dftd3_version, 'tz =', dftd3_tz
@@ -764,7 +793,7 @@
         if (iwrtxsf .gt. 0) write (*,*) ' Writing out xsf-format file  '
         if (idensimport .gt. 0) write (*,*) ' Importing density file for projection  '
 
-        !endif ! verbosity = 3
+      endif ! verbosity = 3
 	
 	if (idftd3 .eq. 2) then
          dftd3_params(1)=dftd3_s6

@@ -73,10 +73,10 @@
 ! Procedure
 ! ===========================================================================
 
-        write (*,*) '  '
-        write (*,100)
-        write (*,*) ' Now we are assembling piecies of Hamiltonian. '
-        write (*,*) '  '
+!        write (*,*) '  '
+!        write (*,100)
+!        write (*,*) ' Now we are assembling piecies of Hamiltonian. '
+!        write (*,*) '  '
 
 ! read extended Hubbard
         if (itheory .eq. 2) then

@@ -67,10 +67,10 @@
 ! Procedure
 ! ===========================================================================
 
-        write (*,*) '  '
-        write (*,100)
-        write (*,*) ' Now we are calculating the total energy. '
-        write (*,*) '  '
+!        write (*,*) '  '
+!        write (*,100)
+!        write (*,*) ' Now we are calculating the total energy. '
+!        write (*,*) '  '
 
 ! doing McWeda         
         if (iks .eq. 1) then

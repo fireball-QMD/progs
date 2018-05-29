@@ -157,14 +157,14 @@
         ishort = 1
         if (iwrteigen .eq. 1) ishort = 0
 
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' ****************************************************** '
-          write (*,*) '  '
-          write (*,*) '         Welcome to kspace -- ikpoint = ', ikpoint
-          write (*,*) '  '
-          write (*,*) ' ****************************************************** '
-        end if
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' ****************************************************** '
+!          write (*,*) '  '
+!          write (*,*) '         Welcome to kspace -- ikpoint = ', ikpoint
+!          write (*,*) '  '
+!          write (*,*) ' ****************************************************** '
+!        end if
 
         allocate (xxxx(norbitals,norbitals))
         allocate (yyyy(norbitals,norbitals))
@@ -354,11 +354,11 @@
         if (Kscf .eq. 1 .or. iqout .eq. 3) then
 
 ! Call the diagonalizer
-         if (wrtout) then
-           write (*,*) ' Call diagonalizer for overlap. '
-           write (*,*) '                  The overlap eigenvalues: '
-           write (*,*) ' ******************************************************* '
-         end if
+!         if (wrtout) then
+!           write (*,*) ' Call diagonalizer for overlap. '
+!           write (*,*) '                  The overlap eigenvalues: '
+!           write (*,*) ' ******************************************************* '
+!!         end if
 
          if (divide) then
            call zheevd('V', 'U', norbitals, zzzz, norbitals, slam, work,      &
@@ -577,12 +577,12 @@
 
 ! DIAGONALIZE THE HAMILTONIAN.
 ! ****************************************************************************
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' Call diagonalizer for Hamiltonian. '
-          write (*,*) '            The energy eigenvalues: '
-          write (*,*) ' *********************************************** '
-        end if
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' Call diagonalizer for Hamiltonian. '
+!          write (*,*) '            The energy eigenvalues: '
+!          write (*,*) ' *********************************************** '
+!        end if
  
 ! Eigenvectors are needed to calculate the charges and for forces!
         if (divide) then
@@ -598,7 +598,7 @@
      &                 -1, rwork, info)
 ! resize working space
           lwork = work(1)
-          write (*,*) 'lwork =',lwork
+!          write (*,*) 'lwork =',lwork
           deallocate (work)
           allocate (work(lwork))
 ! diagonalize the overlap matrix with the new working space
@@ -612,11 +612,11 @@
 ! eigenvalues will be very close to zero, but not exactly.  Also, we do not
 ! know if a real eigen value is near zero.
 
-        if (ishort .eq. 1 .and. wrtout) then
-         write (*,100) eigen(1), eigen(norbitals)
-        else if (wrtout) then
-         write (*,200) (eigen(imu), imu = 1, norbitals)
-        end if
+!        if (ishort .eq. 1 .and. wrtout) then
+!         write (*,100) eigen(1), eigen(norbitals)
+!        else if (wrtout) then
+!         write (*,200) (eigen(imu), imu = 1, norbitals)
+!        end if
 
 !
 ! INFORMATION FOR THE LOWDIN CHARGES

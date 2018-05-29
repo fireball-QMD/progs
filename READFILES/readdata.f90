@@ -119,10 +119,10 @@
 !                ioff - 3c average density OLSXC (spheric)
 ! ****************************************************************************
 
-        write (*,*) '  '
-        write (*,100)
-        write (*,*) ' Now we are reading Fdata file. '
-        write (*,*) '  '
+!        write (*,*) '  '
+!        write (*,100)
+!        write (*,*) ' Now we are reading Fdata file. '
+!        write (*,*) '  '
 !============OLD=================
 ! read extended Hubbard data
 !        if (ihubbard .eq. 1) then

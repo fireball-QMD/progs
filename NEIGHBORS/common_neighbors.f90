@@ -118,10 +118,10 @@
  
 ! Procedure
 ! ===========================================================================
-     if (my_proc .eq. 0 .and. wrtout) then
-      write (*,*) ' Welcome to common_neighbors - determine mapping of '
-      write (*,*) ' common neighbors. '
-     end if
+!     if (my_proc .eq. 0 .and. wrtout) then
+!      write (*,*) ' Welcome to common_neighbors - determine mapping of '
+!      write (*,*) ' common neighbors. '
+!     end if
 
 ! Determine which atoms are assigned to this processor.
         if (iordern .eq. 1) then

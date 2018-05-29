@@ -141,14 +141,14 @@
         ishort = 1
         if (iwrteigen .eq. 1) ishort = 0
 
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' ****************************************************** '
-          write (*,*) '  '
-          write (*,*) '         Welcome to kspaceG -- ikpoint = ', ikpoint
-          write (*,*) '  '
-          write (*,*) ' ****************************************************** '
-        end if
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' ****************************************************** '
+!          write (*,*) '  '
+!          write (*,*) '         Welcome to kspaceG -- ikpoint = ', ikpoint
+!          write (*,*) '  '
+!          write (*,*) ' ****************************************************** '
+!        end if
 
         allocate (xxxx(norbitals,norbitals))
         allocate (yyyy(norbitals,norbitals))
@@ -289,12 +289,12 @@
 ! ZHEGV  -  compute all the eigenvalues, and optionally, the eigenvectors
 !   A*x=(lambda)*B*x
 
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' Call diagonalizer for Hamiltonian. '
-          write (*,*) '            The energy eigenvalues: '
-          write (*,*) ' *********************************************** '
-        end if
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' Call diagonalizer for Hamiltonian. '
+!          write (*,*) '            The energy eigenvalues: '
+!          write (*,*) ' *********************************************** '
+!        end if
 
 ! Eigenvectors are needed to calculate the charges and for forces!
 ! Compute the eigenvalues and the eigenvectors of a  complex  generalized  

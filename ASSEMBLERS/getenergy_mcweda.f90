@@ -54,6 +54,7 @@
         use scf
         use configuration
         use interactions
+        use charges, only : efermi
         
         implicit none
  
@@ -130,6 +131,7 @@
 !         print*,'etotPerfectLattice',etotPerfectLattice
  
          if (wrtout) then
+          write (*,*) ' Fermi Level = ', efermi
           write (*,*) ' ---------- T H E  T O T A L  E N E R G Y ----------- '
           if (itheory .ne. 0) write (*,500) itime_step, Kscf, etotper
           if (itheory .eq. 0) write (*,501) itime_step, etotper

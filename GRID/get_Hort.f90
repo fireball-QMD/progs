@@ -258,11 +258,11 @@
 
 
 ! Call the diagonalizer
-        if (wrtout) then
-           write (*,*) ' Call diagonalizer for overlap. '
-           write (*,*) '                  The overlap eigenvalues: '
-           write (*,*) ' ******************************************************* '
-        end if
+!        if (wrtout) then
+!           write (*,*) ' Call diagonalizer for overlap. '
+!           write (*,*) '                  The overlap eigenvalues: '
+!           write (*,*) ' ******************************************************* '
+!        end if
 
 ! first find optimal working space
         call zheev ('V', 'U', norbitals, zzzz, norbitals, slam, work,      &

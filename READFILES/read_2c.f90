@@ -275,7 +275,7 @@
            write (extension,'(''.dat'')')
            filename = append_string (filename, extension)
  
-           if (isorp .eq. initype) write (*,'('' Opening data file: '',a100)') filename
+!           if (isorp .eq. initype) write (*,'('' Opening data file: '',a100)') filename
            open (unit = iounit, file = filename, status = 'old')
  
            call readheader_2c (interaction, iounit, nsh_max, numz, rc1, rc2, &

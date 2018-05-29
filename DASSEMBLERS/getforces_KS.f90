@@ -74,36 +74,36 @@
 ! ============================================================================
 !                              Dassemble_2c
 ! ============================================================================
-          write (*,*) '  '
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-          write (*,*) ' Dassemble two-center force contributions. '
+          !write (*,*) '  '
+          !write (*,*) '  '
+          !write (*,*) ' ***************************************************** '
+          !write (*,*) ' Dassemble two-center force contributions. '
           call Dassemble_2c (nprocs, iordern, igauss)
 
-          write (*,*) ' Dassemble two-center PP force contributions. '
+          !write (*,*) ' Dassemble two-center PP force contributions. '
           call Dassemble_2c_PP (nprocs, iordern)
 
 ! ===========================================================================
 !                               Dassemble_3c
 ! ===========================================================================
-          write (*,*) '  '
-          write (*,*) ' Dassemble three-center force contributions. '
+          !write (*,*) '  '
+          !write (*,*) ' Dassemble three-center force contributions. '
           call Dassemble_3c (nprocs, iordern, igauss)
 
-          write (*,*) ' Dassemble three-center PP force contributions. '
+          !write (*,*) ' Dassemble three-center PP force contributions. '
           call Dassemble_3c_PP (nprocs, iordern)
 
-          write (*,*) ' ***************************************************** '
+          !write (*,*) ' ***************************************************** '
 
 ! ============================================================================
 !                                assemble_F
 ! ============================================================================
 ! Call assemble_F: This program assembles all the forces we have calculated
 ! in Dassemble_2c and Dassemble_3c, and assemble_usr.
-          write (*,*) '  '
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-          write (*,*) ' Assemble all force contributions. '
+          !write (*,*) '  '
+          !write (*,*) '  '
+          !write (*,*) ' ***************************************************** '
+          !write (*,*) ' Assemble all force contributions. '
           call assemble_F (natoms, itheory, itheory_xc, igauss, ivdw,       &
      &     iharmonic, ibias, iwrtfpieces)
 

@@ -94,8 +94,8 @@
 
 ! Procedure
 ! ===========================================================================
-        if (my_proc .eq. 0 .and. wrtout)                                                  &
-     &   write (*,*) ' Determine maximum number of neighbors. ' 
+!        if (my_proc .eq. 0 .and. wrtout)                                                  &
+!     &   write (*,*) ' Determine maximum number of neighbors. ' 
 
         if (icluster .eq. 1) mbeta_max = 0
 
@@ -166,6 +166,6 @@
 
 ! Format Statements
 ! ===========================================================================
-write(*,*)'find_neigh_max(): neigh_max=', neigh_max 
+!write(*,*)'find_neigh_max(): neigh_max=', neigh_max 
         return
       end subroutine find_neigh_max

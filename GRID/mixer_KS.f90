@@ -215,8 +215,8 @@
      end do
      dqrms = sqrt(dqrms/imix)
 
-     write (*,300) dqrms
-     write (*,301) dqmax
+!     write (*,300) dqrms
+!     write (*,301) dqmax
 
 
 ! ===========================================================================
@@ -230,19 +230,19 @@
 ! call mixing procedure
      select case (ialgmix)
      case (1)
-        write(*,501) 'anderson'
+!        write(*,501) 'anderson'
         call anderson (rho_in, rho_out, bmix, sigma, Kscf, idmix,    &
              &               imix , max_scf_iterations)
      case (2)
-        write(*,501) 'broyden'
+!        write(*,501) 'broyden'
         call broyden (rho_in, rho_out, bmix, sigma, Kscf, idmix,    &
              &               imix , max_scf_iterations)
      case (3)
-        write(*,501) 'louie'
+!        write(*,501) 'louie'
         call louie (rho_in, rho_out, bmix, sigma, Kscf, idmix,    &
              &               imix , max_scf_iterations)
      case (4)
-        write(*,501) 'pulay'
+!        write(*,501) 'pulay'
         call pulay (rho_in, rho_out, bmix, sigma, Kscf, idmix,    &
              &               imix , max_scf_iterations)
      end select !ialgmix
@@ -300,7 +300,7 @@
       end do ! do ineigh
     end do ! do iatom
     renorm = ztot / zouttot
-    write (*,303) renorm
+!    write (*,303) renorm
 
     zcheck = 0.0d0
     do iatom = 1, natoms
@@ -319,10 +319,10 @@
     end do ! iatom
 
 ! write out resume
-    write (*,*) ' (Before renormalization) zouttot = ', zouttot
-    write (*,*) ' (After  renormalization)  zcheck = ', zcheck
-    write (*,*) ' (What it must be)           ztot = ', ztot
-    write (*,*) '  '
+!    write (*,*) ' (Before renormalization) zouttot = ', zouttot
+!    write (*,*) ' (After  renormalization)  zcheck = ', zcheck
+!    write (*,*) ' (What it must be)           ztot = ', ztot
+!    write (*,*) '  '
     write (*,304) sigma, sigmatol, Kscf
 
 ! Check convergence of charge; sigmatol is in scf.optional

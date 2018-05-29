@@ -178,11 +178,11 @@
          end do
         end do
 
-        if (my_proc .eq. 0 .and. icluster .eq. 0) then
-         write (*,*) '  '
-         write (*,*) ' Computing the ewald energy and forces.'
-         write (*,*) '  '
-        end if
+!        if (my_proc .eq. 0 .and. icluster .eq. 0) then
+!         write (*,*) '  '
+!         write (*,*) ' Computing the ewald energy and forces.'
+!         write (*,*) '  '
+!        end if
  
 ! Determine the reciprical lattice vectors. Do this by Ashcroft and Mermin
 ! physics.

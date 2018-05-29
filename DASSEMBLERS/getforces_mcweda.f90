@@ -75,13 +75,13 @@
 ! ============================================================================
 !                              Dassemble_2c
 ! ============================================================================
-          write (*,*) '  '
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-          write (*,*) ' Dassemble two-center force contributions. '
+          !write (*,*) '  '
+          !write (*,*) '  '
+          !write (*,*) ' ***************************************************** '
+          !write (*,*) ' Dassemble two-center force contributions. '
           call Dassemble_2c (nprocs, iordern, igauss)
 
-          write (*,*) ' Dassemble two-center PP force contributions. '
+          !write (*,*) ' Dassemble two-center PP force contributions. '
           call Dassemble_2c_PP (nprocs, iordern)
 !bias
            if (ibias .eq. 1) then
@@ -93,7 +93,7 @@
 ! Call the exchange-correlation interactions based on method chosen
 ! (i.e. itheory_xc).
           if (itheory_xc .eq. 1) then
-           write (*,*) ' Dassemble on-site SNXC force contributions. '
+           !write (*,*) ' Dassemble on-site SNXC force contributions. '
            if (itheory .eq. 1) then
              call Dassemble_ca_snxc_on (nprocs, iordern)
              call Dassemble_ca_snxc_2c (nprocs, iordern)
@@ -103,7 +103,7 @@
            endif
           end if
           if (itheory_xc .eq. 2) then
-           write (*,*) ' Dassemble on-site OSLXC force contributions. '
+           !write (*,*) ' Dassemble on-site OSLXC force contributions. '
            if (itheory .eq. 1) then
              call Dassemble_ca_olsxc_on (nprocs, iordern)
              call Dassemble_ca_olsxc_2c (nprocs, iordern)
@@ -114,7 +114,7 @@
           end if
 
           if (itheory .eq. 1) then
-           write (*,*) ' Dassemble two-center DOGS force contributions. '
+           !write (*,*) ' Dassemble two-center DOGS force contributions. '
            if (idipole .eq. 0) call Dassemble_ca_2c (nprocs, iordern)
            if (idipole .eq. 1) call Dassemble_ca_2c_dip (nprocs, iordern)
           endif
@@ -122,22 +122,22 @@
 ! ===========================================================================
 !                               Dassemble_3c
 ! ===========================================================================
-          write (*,*) '  '
-          write (*,*) ' Dassemble three-center force contributions. '
+          !write (*,*) '  '
+          !write (*,*) ' Dassemble three-center force contributions. '
           call Dassemble_3c (nprocs, iordern, igauss)
 
-          write (*,*) ' Dassemble three-center PP force contributions. '
+          !write (*,*) ' Dassemble three-center PP force contributions. '
           call Dassemble_3c_PP (nprocs, iordern)
 
           if (itheory .eq. 1) then
-           write (*,*) ' Dassemble three-center DOGS force contributions. '
+           !write (*,*) ' Dassemble three-center DOGS force contributions. '
            if (idipole .eq. 0) call Dassemble_ca_3c (nprocs, iordern, igauss)
            if (idipole .eq. 1) call Dassemble_ca_3c_dip (nprocs, iordern, igauss)
-           write (*,*) ' Dassemble three-center long-range contributions. '
+           !write (*,*) ' Dassemble three-center long-range contributions. '
            if (idipole .eq. 0) call Dassemble_lr (nprocs, iordern)
            if (idipole .eq. 1) call Dassemble_lr_dip (nprocs, iordern)
            if (iqmmm .eq. 1) then
-             write (*,*) ' Dassemble three-center qm/mm contributions. '
+             !write (*,*) ' Dassemble three-center qm/mm contributions. '
              if (idipole .eq. 0) call Dassemble_qmmm (nprocs, iordern)
              if (idipole .eq. 1) call Dassemble_qmmm_dip (nprocs, iordern)
            else
@@ -148,7 +148,7 @@
 
 ! Call the exchange-correlation interactions based on method chosen
           if (itheory_xc .eq. 1) then
-           write (*,*) ' Dassemble off-site SN exchange-correlation forces. '
+           !write (*,*) ' Dassemble off-site SN exchange-correlation forces. '
            if (itheory .eq. 1) then
 ! Include gaussians
             call Dassemble_ca_snxc_3c (nprocs, iordern, igauss)
@@ -156,7 +156,7 @@
             call Dassemble_snxc_3c (nprocs, iordern, igauss)
            endif
           else if(itheory_xc .eq. 2) then
-           write (*,*) ' Dassemble off-site OLS exchange-correlation forces. '
+           !write (*,*) ' Dassemble off-site OLS exchange-correlation forces. '
            if (itheory .eq. 1) then
             call Dassemble_ca_olsxc_3c (nprocs, iordern, igauss)
            else
@@ -164,17 +164,17 @@
            endif
           end if
 
-          write (*,*) ' ***************************************************** '
+          !write (*,*) ' ***************************************************** '
 
 ! ============================================================================
 !                                assemble_F
 ! ============================================================================
 ! Call assemble_F: This program assembles all the forces we have calculated
 ! in Dassemble_2c and Dassemble_3c, and assemble_usr.
-          write (*,*) '  '
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-          write (*,*) ' Assemble all force contributions. '
+          !write (*,*) '  '
+          !write (*,*) '  '
+          !write (*,*) ' ***************************************************** '
+          !write (*,*) ' Assemble all force contributions. '
           call assemble_F (natoms, itheory, itheory_xc, igauss, ivdw,       &
      &     iharmonic, ibias, iwrtfpieces)
 

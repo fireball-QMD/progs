@@ -172,7 +172,7 @@
      in2 = sample2%spec(j)
      write (wx2,'(i2.2)') nzx(in2)
 
-     write (*,*) ' Opening data file: ','interaction_'//wx1//'_'//wx2//'.dat'
+!    write (*,*) ' Opening data file: ','interaction_'//wx1//'_'//wx2//'.dat'
 ! open data file
      open(3,file='interaction_'//wx1//'_'//wx2//'.dat')
 

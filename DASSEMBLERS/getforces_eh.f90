@@ -74,63 +74,63 @@
 ! ============================================================================
 !                              Dassemble_2c
 ! ============================================================================
-          write (*,*) '  '
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-          write (*,*) ' Dassemble two-center force contributions. '
+          !write (*,*) '  '
+          !write (*,*) '  '
+          !write (*,*) ' ***************************************************** '
+          !write (*,*) ' Dassemble two-center force contributions. '
           call Dassemble_2c (nprocs, iordern, igauss)
 
-          write (*,*) ' Dassemble two-center PP force contributions. '
+          !write (*,*) ' Dassemble two-center PP force contributions. '
           call Dassemble_2c_PP (nprocs, iordern)
 
 
 ! Call the exchange-correlation interactions based on method chosen
 ! (i.e. itheory_xc).
           if (itheory_xc .eq. 1) then
-           write (*,*) ' Dassemble on-site SNXC force contributions. '
+           !write (*,*) ' Dassemble on-site SNXC force contributions. '
            call Dassemble_snxc_on (nprocs, iordern)
            call Dassemble_snxc_2c (nprocs, iordern)
           end if
           if (itheory_xc .eq. 2) then
-           write (*,*) ' Dassemble on-site OSLXC force contributions. '
+           !write (*,*) ' Dassemble on-site OSLXC force contributions. '
            call Dassemble_olsxc_on (nprocs, iordern)
            call Dassemble_olsxc_2c (nprocs, iordern)
           end if
           
-          write (*,*) ' Dassemble two-center extended-hubbard contributions. '
+          !write (*,*) ' Dassemble two-center extended-hubbard contributions. '
           call Dassemble_eh_2c (nprocs, my_proc, iordern)        
 
 ! ===========================================================================
 !                               Dassemble_3c
 ! ===========================================================================
-          write (*,*) '  '
-          write (*,*) ' Dassemble three-center force contributions. '
+          !write (*,*) '  '
+          !write (*,*) ' Dassemble three-center force contributions. '
           call Dassemble_3c (nprocs, iordern, igauss)
 
-          write (*,*) ' Dassemble three-center PP force contributions. '
+          !write (*,*) ' Dassemble three-center PP force contributions. '
           call Dassemble_3c_PP (nprocs, iordern)
 
 
 ! Call the exchange-correlation interactions based on method chosen
           if (itheory_xc .eq. 1) then
-           write (*,*) ' Dassemble off-site SN exchange-correlation forces. '
+           !write (*,*) ' Dassemble off-site SN exchange-correlation forces. '
            call Dassemble_snxc_3c (nprocs, iordern, igauss)
           else if(itheory_xc .eq. 2) then
-           write (*,*) ' Dassemble off-site OLS exchange-correlation forces. '
+           !write (*,*) ' Dassemble off-site OLS exchange-correlation forces. '
            call Dassemble_olsxc_3c (nprocs, iordern, igauss)
           end if
           
-          write (*,*) ' ***************************************************** '
+          !write (*,*) ' ***************************************************** '
  
 ! ============================================================================
 !                                assemble_F
 ! ============================================================================
 ! Call assemble_F: This program assembles all the forces we have calculated
 ! in Dassemble_2c and Dassemble_3c, and assemble_usr.
-          write (*,*) '  '
-          write (*,*) '  '
-          write (*,*) ' ***************************************************** '
-          write (*,*) ' Assemble all force contributions. '
+          !write (*,*) '  '
+          !write (*,*) '  '
+          !write (*,*) ' ***************************************************** '
+          !write (*,*) ' Assemble all force contributions. '
           call assemble_F (natoms, itheory, itheory_xc, igauss, ivdw,       &
      &     iharmonic, iwrtfpieces)
 
