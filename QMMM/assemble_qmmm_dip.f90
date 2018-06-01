@@ -83,8 +83,6 @@
         integer mbeta
         integer my_proc
         integer natomsp
-        integer ipair
-        integer jneigh
  
         real dij
         real dterm
@@ -127,140 +125,47 @@
          iatomstart = 1
          natomsp = natoms
         end if
-!######## SFIRE ###########################
-!!! CAREFUL!!!  FOR THE TIME BEING THIS ONLY WORKS WITH ICLUSTER = 1
-!!!!!!!
-     !#######  CASE IATOM .NEQ. JATOM
-         do ipair = 1,tot_pairs
 
-            iatom = neigh_pair_a1(ipair)
-            jatom = neigh_pair_a2(ipair)
-            ineigh = neigh_pair_n1(ipair)
-            jneigh = neigh_pair_n2(ipair)
+        do iatom = iatomstart, iatomstart - 1 + natomsp
+         r1(:) = ratom(:,iatom)
+         in1 = imass(iatom)
 
-            r1(:) = ratom(:,iatom)
-            in1 = imass(iatom)
-            r2(:) = ratom(:,jatom)
-            in2 = imass(jatom)
-     
-            do katom = 1, qmmm_struct%qm_mm_pairs
-               rna(1) = qmmm_struct%qm_xcrd(1,katom)
-               rna(2) = qmmm_struct%qm_xcrd(2,katom)
-               rna(3) = qmmm_struct%qm_xcrd(3,katom)
-               dq3 = - qmmm_struct%qm_xcrd(4,katom) ! charge in amber have opposite sign
-               r21(:) = r2(:) - r1(:)
-               rnabc(:) = rna(:) - (r1(:) + r21(:)/2.0d0)
-               x = sqrt(rnabc(1)**2 + rnabc(2)**2 + rnabc(3)**2)
-               do inu = 1, num_orb(in2)
-                do imu = 1, num_orb(in1)
+         do ineigh = 1, neighn(iatom)
+          mbeta = neigh_b(ineigh,iatom)
+          jatom = neigh_j(ineigh,iatom)
+          r2(:) = ratom(:,jatom) !+ xl(:,mbeta)
+          in2 = imass(jatom)
 
-                  sterm = s_mat(imu,inu,ineigh,iatom)
+          do katom = 1, qmmm_struct%qm_mm_pairs
+           rna(1) = qmmm_struct%qm_xcrd(1,katom)
+           rna(2) = qmmm_struct%qm_xcrd(2,katom)
+           rna(3) = qmmm_struct%qm_xcrd(3,katom)
+           dq3 = - qmmm_struct%qm_xcrd(4,katom) ! charge in amber have opposite sign
+           r21(:) = r2(:) - r1(:)
+           rnabc(:) = rna(:) - (r1(:) + r21(:)/2.0d0)
+           x = sqrt(rnabc(1)**2 + rnabc(2)**2 + rnabc(3)**2)
+           do inu = 1, num_orb(in2)
+            do imu = 1, num_orb(in1)
 
-                  dterm = (dipc(1,imu,inu,ineigh,iatom)*rnabc(1)    &
-                  &     + dipc(2,imu,inu,ineigh,iatom)*rnabc(2)    &
-                  &     + dipc(3,imu,inu,ineigh,iatom)*rnabc(3))
+             sterm = s_mat(imu,inu,ineigh,iatom)
+            
+             dterm = (dipc(1,imu,inu,ineigh,iatom)*rnabc(1)    &
+              &     + dipc(2,imu,inu,ineigh,iatom)*rnabc(2)    &
+              &     + dipc(3,imu,inu,ineigh,iatom)*rnabc(3))
 
-                  emnpl = dq3*sterm/x + dq3*dterm/(x*x*x)
+             emnpl = dq3*sterm/x + dq3*dterm/(x*x*x)
 
-                  ewaldqmmm(imu,inu,ineigh,iatom) = ewaldqmmm(imu,inu,ineigh,iatom)  &
-                  &                               + emnpl*eq2
-                  !Next we symmetrize:
-                  ewaldqmmm(inu,imu,jneigh,jatom) = ewaldqmmm(imu,inu,ineigh,iatom)
-                end do !end do imu = 1, num_orb(in1)
-               end do  ! end do inu = 1, num_orb(in2)
+             ewaldqmmm(imu,inu,ineigh,iatom) = ewaldqmmm(imu,inu,ineigh,iatom)  &
+             &                               + emnpl*eq2
 
-            end do !end do katom = 1, qmmm_struc%qm_mm_pairs
+            end do !end do imu = 1, num_orb(in1)
+           end do  ! end do inu = 1, num_orb(in2)
 
-         end do !end do ipair =1,tot_pairs
+          end do    ! end do katom: mm atom
 
-        !########## END OF CASE IATOM .NEQ. JATOM
+         end do  ! end do ineigh = 1, neighn(iatom)
+        end do   ! end do iatom = 1, natoms
 
-        !#######   CASE IATOM = JATOM
-      do iatom = 1,natoms
-            r1(:) = ratom(:,iatom)
-            in1 = imass(iatom)
-            jatom = iatom
-            r2(:) = ratom(:,jatom)
-            in2 = imass(jatom)
-            ineigh = neigh_self(iatom)
-
-                       do katom = 1, qmmm_struct%qm_mm_pairs
-               rna(1) = qmmm_struct%qm_xcrd(1,katom)
-               rna(2) = qmmm_struct%qm_xcrd(2,katom)
-               rna(3) = qmmm_struct%qm_xcrd(3,katom)
-               dq3 = - qmmm_struct%qm_xcrd(4,katom) ! charge in amber have opposite sign
-               r21(:) = r2(:) - r1(:)
-               rnabc(:) = rna(:) - (r1(:) + r21(:)/2.0d0)
-               x = sqrt(rnabc(1)**2 + rnabc(2)**2 + rnabc(3)**2)
-               do inu = 1, num_orb(in2)
-                do imu = 1, num_orb(in1)
-
-                  sterm = s_mat(imu,inu,ineigh,iatom)
-
-                  dterm = (dipc(1,imu,inu,ineigh,iatom)*rnabc(1)    &
-                  &     + dipc(2,imu,inu,ineigh,iatom)*rnabc(2)    &
-                  &     + dipc(3,imu,inu,ineigh,iatom)*rnabc(3))
-
-                  emnpl = dq3*sterm/x + dq3*dterm/(x*x*x)
-
-                  ewaldqmmm(imu,inu,ineigh,iatom) = ewaldqmmm(imu,inu,ineigh,iatom)  &
-                  &                               + emnpl*eq2
-                end do !end do imu = 1, num_orb(in1)
-               end do  ! end do inu = 1, num_orb(in2)
-
-            end do !end do katom = 1, qmmm_struc%qm_mm_pairs
-
-         end do !end do iatom = 1,natoms
-
-           !#######  END OF CASE IATOM = JATOM
- 
-
-!####### END OF SFIRE #########################
-
-
-!#################
-!          OLD STUFF :
-!#########:
-!        do iatom = iatomstart, iatomstart - 1 + natomsp
-!         r1(:) = ratom(:,iatom)
-!         in1 = imass(iatom)
-!
-!         do ineigh = 1, neighn(iatom)
-!          mbeta = neigh_b(ineigh,iatom)
-!          jatom = neigh_j(ineigh,iatom)
-!          r2(:) = ratom(:,jatom) !+ xl(:,mbeta)
-!          in2 = imass(jatom)
-!
-!          do katom = 1, qmmm_struct%qm_mm_pairs
-!           rna(1) = qmmm_struct%qm_xcrd(1,katom)
-!           rna(2) = qmmm_struct%qm_xcrd(2,katom)
-!           rna(3) = qmmm_struct%qm_xcrd(3,katom)
-!           dq3 = - qmmm_struct%qm_xcrd(4,katom) ! charge in amber have opposite sign
-!           r21(:) = r2(:) - r1(:)
-!           rnabc(:) = rna(:) - (r1(:) + r21(:)/2.0d0)
-!           x = sqrt(rnabc(1)**2 + rnabc(2)**2 + rnabc(3)**2)
-!           do inu = 1, num_orb(in2)
-!            do imu = 1, num_orb(in1)
-!
-!             sterm = s_mat(imu,inu,ineigh,iatom)
-!            
-!             dterm = (dipc(1,imu,inu,ineigh,iatom)*rnabc(1)    &
-!              &     + dipc(2,imu,inu,ineigh,iatom)*rnabc(2)    &
-!              &     + dipc(3,imu,inu,ineigh,iatom)*rnabc(3))
-!
-!             emnpl = dq3*sterm/x + dq3*dterm/(x*x*x)
-!
-!             ewaldqmmm(imu,inu,ineigh,iatom) = ewaldqmmm(imu,inu,ineigh,iatom)  &
-!             &                               + emnpl*eq2
-!
-!            end do !end do imu = 1, num_orb(in1)
-!           end do  ! end do inu = 1, num_orb(in2)
-!
-!          end do    ! end do katom: mm atom
-!
-!         end do  ! end do ineigh = 1, neighn(iatom)
-!        end do   ! end do iatom = 1, natoms
-!
         eqmmm = 0.0d0
         do iatom = iatomstart, iatomstart - 1 + natomsp
          in3 = imass(iatom)
