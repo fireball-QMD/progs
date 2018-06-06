@@ -137,15 +137,15 @@
 ! Open the file NEIGHBORS_VDW which contain the van der Waals neighbor map 
 ! information for restart purposes.
         if (ivdw .eq. 1 .and. wrtout) then
-         open (unit = 21, file = 'NEIGHBORS_VDW', status = 'unknown')
-         write (21,200) natoms, neigh_max_vdw, basisfile
+         !open (unit = 21, file = 'NEIGHBORS_VDW', status = 'unknown')
+         !write (21,200) natoms, neigh_max_vdw, basisfile
          do iatom = 1, natoms
           num_neigh_vdw = neighn_vdw(iatom)
-          write (21,*) num_neigh_vdw
+          !write (21,*) num_neigh_vdw
           do ineigh = 1, num_neigh_vdw 
            mbeta = neigh_b_vdw(ineigh,iatom) 
            jatom = neigh_j_vdw(ineigh,iatom) 
-           write (21,*) iatom, ineigh, mbeta, jatom
+           !write (21,*) iatom, ineigh, mbeta, jatom
           end do 
          end do 
          close (unit = 21)

@@ -153,41 +153,41 @@
 ! Open the file NEIGHBORS which contain the neighbor map information for 
 ! restart purposes.
 
-        open (unit = 20, file = 'NEIGHBORS_PP', status = 'unknown')
-        write (20,200) natoms, neighPP_max, basisfile
+        !open (unit = 20, file = 'NEIGHBORS_PP', status = 'unknown')
+        !write (20,200) natoms, neighPP_max, basisfile
 ! neighPP list
         do iatom = 1, natoms
          num_neigh = neighPPn(iatom)
-         write (20,*) num_neigh
+         !write (20,*) num_neigh
          do ineigh = 1, num_neigh 
           mbeta = neighPP_b(ineigh,iatom) 
           jatom = neighPP_j(ineigh,iatom) 
-          write (20,*) iatom, ineigh, mbeta, jatom
+          !write (20,*) iatom, ineigh, mbeta, jatom
          end do 
         end do
         write(*,*) '  '
 ! nPP list
         do iatom = 1, natoms
          num_neigh = nPPn(iatom)
-         write (20,*) num_neigh
+         !write (20,*) num_neigh
          do ineigh = 1, num_neigh 
           mbeta = nPP_b(ineigh,iatom) 
           jatom = nPP_j(ineigh,iatom) 
           jneigh = nPP_map(ineigh,iatom)
-          write (20,*) iatom, ineigh, mbeta, jatom, jneigh
+          !write (20,*) iatom, ineigh, mbeta, jatom, jneigh
          end do 
         end do
         write(*,*) '  ' 
 ! nPPx list
         do iatom = 1, natoms
          num_neigh = nPPxn(iatom)
-         write (20,*) num_neigh
+         !write (20,*) num_neigh
          do ineigh = 1, num_neigh 
           mbeta = nPPx_b(ineigh,iatom) 
           jatom = nPPx_j(ineigh,iatom) 
           jneigh = nPPx_map(ineigh,iatom)
           jjneigh = nPPx_point(ineigh,iatom)
-          write (20,*) iatom, ineigh, mbeta, jatom, jneigh, jjneigh
+          !write (20,*) iatom, ineigh, mbeta, jatom, jneigh, jjneigh
          end do 
         end do
 !

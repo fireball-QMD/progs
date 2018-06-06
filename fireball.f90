@@ -85,7 +85,7 @@
 ! Call the initializer to see if we are doing MPI or not.  If we did not
 ! compile with the MPI flag, then this routine calls a dummy subroutine.
         call init_MPI (iammaster, iammpi, my_proc, nprocs)
-        wrtout = .true.
+        wrtout = .false.
         if (.not. iammaster) then
           write (*,*) '------ SLAVE:  CALL KSPACE_SLAVE ------'
           call kspace_slave (nprocs, my_proc)
