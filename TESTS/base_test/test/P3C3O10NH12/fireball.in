@@ -1,0 +1,12 @@
+&option
+basisfile = uno.bas
+lvsfile = uno.lvs
+kptpreference = uno.kpts
+iqout = 1
+icluster = 1
+sigmatol = 0.000001
+nstepf = 200
+&end
+&output
+iwrtxyz = 1
+&end
