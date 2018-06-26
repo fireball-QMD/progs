@@ -276,7 +276,7 @@
                write(*,*) '+++    LOCAL MINIMUM REACHED      +++  '
                write(*,*) '+++++++++++++++++++++++++++++++++++++  '
 ! reconstruct the last fixed position and the charges
-               write(*,*)etot0*natoms
+               write(*,*)'ETOT= ', etot0*natoms
                val = etot0
                do i = 1,natoms
                   ratom(:,i) = x0(:,i)
@@ -421,7 +421,7 @@
       endif
 
 ! writeout CHARGES
-      open (unit= 87, file='CHARGES.min', status='unknown')
+      open (unit= 87, file='CHARGES', status='unknown')
       write (87,600) natoms,basisfile,iqout
       do i = 1,natoms
          write(87,601) (Qin(ix,i),ix=1,nssh(imass(i)))
