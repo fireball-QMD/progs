@@ -107,7 +107,7 @@
 	    open (unit= 86, file='answer.bas', status='unknown')
    		write (86,*) natoms
 		write(*,*)'++ ==== ENERGY ===='
-		write(*,*)'++ etot=',etot
+		write(*,*)'    ETOT =',etot
 
 		write(*,*)'++ ==== COORDINATES: ===='
 		do iatom=1,natoms

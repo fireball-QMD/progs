@@ -276,7 +276,7 @@
                write(*,*) '+++    LOCAL MINIMUM REACHED      +++  '
                write(*,*) '+++++++++++++++++++++++++++++++++++++  '
 ! reconstruct the last fixed position and the charges
-               write(*,*)'ETOT= ', etot0*natoms
+               write(*,*)'ETOT = ', etot0*natoms
                val = etot0
                do i = 1,natoms
                   ratom(:,i) = x0(:,i)
