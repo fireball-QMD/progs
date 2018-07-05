@@ -51,7 +51,7 @@
         use options 
         use scf
         use energy
-        
+        use options, only : verbosity 
         implicit none
  
 ! Argument Declaration and Description
@@ -76,8 +76,9 @@
 ! max_scf_iterations is the maximum number of times it will try to iterate.
 
          if (itheory .ne. 0) scf_achieved = .false.
-
+     
          do Kscf = 1, max_scf_iterations
+           if (verbosity .ge. 1) then
            write (*,*) '  '
            write (*,*) '  '
            write (*,*) ' ****************************************************** '
@@ -88,6 +89,7 @@
            end if
            write (*,*) ' ****************************************************** '
            write (*,*) '  '
+           end if
 
 ! ASSEMBLE HAMILTONIAN
           call assemble_h ()
@@ -114,25 +116,31 @@
 ! Notify other processors if scf is achieved
           if (iordern .eq. 1) call scf_bcast(scf_achieved)
           if (scf_achieved) then
+            if (verbosity .ge. 1) then
             write (*,*) '  '
             write (*,*) ' ------- THE TOTAL BAND STRUCTURE ENERGY ------- '
             write (*,*) '  '
             write (*,400) ebs, itime_step, Kscf
             write (*,*) ' ----------------------------------------------- '
+            end if !verbosity
             exit
-          else if (.not. scf_achieved .and. Kscf .eq. max_scf_iterations) then
+          else if (.not. scf_achieved .and. Kscf .eq. max_scf_iterations)  then
+            if (verbosity .ge. 1) then
             write (*,*) '  '
             write (*,*) ' ------- THE TOTAL BAND STRUCTURE ENERGY ------- '
             write (*,*) '  '
             write (*,401) ebs, itime_step, Kscf
             write (*,*) ' ----------------------------------------------- '
+            end if !verbosity
             exit
-!          else if (.not. scf_achieved) then
-!            write (*,*) '  '
-!            write (*,*) ' ------- THE TOTAL BAND STRUCTURE ENERGY ------- '
-!            write (*,*) '  '
-!            write (*,402) ebs, itime_step, Kscf
-!            write (*,*) ' ----------------------------------------------- '
+          else if (.not. scf_achieved ) then
+            if (verbosity .ge. 1) then
+            write (*,*) '  '
+            write (*,*) ' ------- THE TOTAL BAND STRUCTURE ENERGY ------- '
+            write (*,*) '  '
+            write (*,402) ebs, itime_step, Kscf
+            write (*,*) ' ----------------------------------------------- '
+            end if !verbosity
           end if
           
          end do  ! end do Kscf

@@ -154,9 +154,9 @@
  
 ! Procedure
 ! ===========================================================================
-        write (*,*) '  '
-        write (*,*) ' Welcome to assemble_usr.f! '
-        write (*,*) '  '
+!        write (*,*) '  '
+!        write (*,*) ' Welcome to assemble_usr.f! '
+!        write (*,*) '  '
  
 ! Initialize arrays
         dxcv = 0.0d0

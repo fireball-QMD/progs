@@ -191,7 +191,7 @@
           write (*,*) ' to self consistancy!!! (Normally ifixcharge = 0) '
           scf_achieved = .true.
         end if
-        if (.not. scf_achieved .and. itheory .ne. 0)                       &
+        if (.not. scf_achieved .and. itheory .ne. 0 .and. verbosity .ge. 1)                       &
      &     write (*,*) '            BAD NEWS; results are not self-consistent '
 
 ! ===========================================================================

@@ -51,7 +51,7 @@
         use dimensions
         use fragments
         use constants_fireball
-        use options, only: iclassicMD
+        use options, only: iclassicMD, verbosity
 		use classicMD, only: freq_of_outputs
         implicit none
  
@@ -118,7 +118,7 @@
      &                        (ratom(2,iatom)+ximage(2,iatom))*xmass(iatom)*vatom(1,iatom))
         end do
 !CHROM  - classic interaction
-	if(classOutput)then
+	if(verbosity .ge. 4)then
 !END CHROM            
          write (*, 102) xlcm
          write (*, *) '  '

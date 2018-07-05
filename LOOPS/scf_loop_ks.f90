@@ -76,6 +76,7 @@
 ! max_scf_iterations is the maximum number of times it will try to iterate.
          if (itheory .ne. 0) scf_achieved = .false.
          do Kscf = 1, max_scf_iterations
+         if (verbosity .ge. 1) then 
            write (*,*) '  '
            write (*,*) '  '
            write (*,*) ' ****************************************************** '
@@ -86,6 +87,7 @@
            end if
            write (*,*) ' ****************************************************** '
            write (*,*) '  '
+         end if
 
 ! ASSEMBLE HAMILTONIAN
           call assemble_h_ks ()

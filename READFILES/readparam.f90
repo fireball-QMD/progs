@@ -99,7 +99,7 @@
 					 igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
-                                         cut_embedding, fdataLocation, verbosity
+                                         cut_embedding, fdataLocation, verbosity, ntpr
 
 ! Procedure
 ! ===========================================================================
@@ -153,7 +153,8 @@
         ibias = 0
         rescal = 1.0d0
         xyz2line = 2
-        verbosity = 0
+        verbosity = 1
+        ntpr = 1
 !JOm-add
         imdet = 0
         iProjWF = 0 

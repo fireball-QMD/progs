@@ -123,8 +123,8 @@
          call getenergy (itime_step)
 
 
-         write (*,*) '  '
-         write (*,*) ' ================= Move on to Forces ================= '
+!         write (*,*) '  '
+!         write (*,*) ' ================= Move on to Forces ================= '
  
 ! Assemble forces 
          call getforces ()

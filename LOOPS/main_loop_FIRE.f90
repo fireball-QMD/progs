@@ -107,8 +107,8 @@ subroutine main_loop_FIRE ()
         call scf_loop (itime_step)
         call postscf ()                 ! optionally perform post-processing (DOS etc.)
         call getenergy (itime_step)    ! calculate the total energy
-        write (*,*) '  '
-        write (*,*) ' ================= Move on to Forces ================= '
+!        write (*,*) '  '
+!        write (*,*) ' ================= Move on to Forces ================= '
        end if
 !  FIRE step
        call getforces ()   ! Assemble forces

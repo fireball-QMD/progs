@@ -133,11 +133,11 @@
           end do
          end do
         else
-         write (*,*) '  '
-         write (*,*) ' ************ WARNING ******** WARNING ************* '
-         write (*,*) '          skipping the degeneracy checking  '
-         write (*,*) '               in subroutine fermie'
-         write (*,*) ' *************************************************** '
+!         write (*,*) '  '
+!         write (*,*) ' ************ WARNING ******** WARNING ************* '
+!         write (*,*) '          skipping the degeneracy checking  '
+!         write (*,*) '               in subroutine fermie'
+!         write (*,*) ' *************************************************** '
          emin = eigen_k(1,1)
          emax = eigen_k(norbitals,1)
          do ikpoint = 1, nkpoints

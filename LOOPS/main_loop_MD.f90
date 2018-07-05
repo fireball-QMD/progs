@@ -136,8 +136,8 @@
 !CHROM zdenka chromcova - classic 
           if( iclassicMD == 0 )then
 !END CHROM 
-          write (*,*) '  '
-          write (*,*) ' ================= Move on to Forces ================= '
+!          write (*,*) '  '
+!          write (*,*) ' ================= Move on to Forces ================= '
 !CHROM
 	 endif
 !END CHROM 
@@ -147,7 +147,7 @@
 
 
 ! Move ions now
-          write (*,*) 'move_ions'
+!          write (*,*) 'move_ions'
           call move_ions (itime_step)
 
 ! ===========================================================================

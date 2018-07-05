@@ -84,7 +84,7 @@
  
 ! Procedure
 ! ===========================================================================
-        write (*,*) ' Writing accelerations to the acfile. '
+!        write (*,*) ' Writing accelerations to the acfile. '
         open (unit = 64, file = acfile, status = 'unknown')
         write (64,100) natoms
         do iorder = 2, 5

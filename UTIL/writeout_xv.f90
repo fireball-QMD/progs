@@ -83,8 +83,8 @@
  
 ! Procedure
 ! ===========================================================================
-        write (*,*) '  '
-        write (*,*) ' Writing positions and velocities to the xvfile: '
+!        write (*,*) '  '
+!        write (*,*) ' Writing positions and velocities to the xvfile: '
 ! xv-file
         open (unit = 63, file = xvfile, status = 'unknown')
         write (63,100) natoms

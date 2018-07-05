@@ -125,7 +125,7 @@
 ! out the forces, otherwise we wait until later (after T is calculated) to
 ! do the projections.
            if (numfrags .ne. 0 .and. fragtemp .eq. 1)then
-            write(*,*) ' Projecting out inner-fragment forces. '
+            !write(*,*) ' Projecting out inner-fragment forces. '
             call fixfrags2 (ftot)
            end if
 
@@ -174,15 +174,15 @@
 ! correcting twice would double the computational work.  It is fairly
 ! generally accepted to be a better idea to reduce the time step instead.
 ! Also, coding up multiple correction steps would be a pain.
-            write (*,*) '  '
-            write (*,*) ' Predictor-Corrector: correct positions. '
+            !write (*,*) '  '
+            !write (*,*) ' Predictor-Corrector: correct positions. '
             call corrector (itime_step, dt, ftot)
             ratom(:,1:natoms) = xdot(0,:,1:natoms)
             vatom(:,1:natoms) = xdot(1,:,1:natoms)
            end if
 
            if (numfrags .ne. 0 .and. fragtemp .eq. 1)then
-            write(*,*) ' Projecting out inner-fragment velocities. '
+            !write(*,*) ' Projecting out inner-fragment velocities. '
             call fixfrags ()
             ratom(:,1:natoms) = xdot(0,:,1:natoms)
             vatom(:,1:natoms) = xdot(1,:,1:natoms)
@@ -207,8 +207,8 @@
 
            if (iensemble .eq. 1 .and. .not. T_instantaneous .le. 0) then
             vscale = sqrt(T_want/T_instantaneous)
-            write (*,*) ' Constant temp. (iensemble=1): scaling velocities. '
-            write (*,*) ' Scaling =', vscale, ' It should be near 1.0!'
+!            write (*,*) ' Constant temp. (iensemble=1): scaling velocities. '
+!            write (*,*) ' Scaling =', vscale, ' It should be near 1.0!'
             vatom(:,1:natoms) = vatom(:,1:natoms)*vscale
             xdot(1,:,1:natoms) = xdot(1,:,1:natoms)*vscale
            end if

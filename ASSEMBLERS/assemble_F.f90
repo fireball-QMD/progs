@@ -58,7 +58,7 @@
         use dimensions
         use forces
         use neighbor_map
-        use options, only : idftd3
+        use options, only : idftd3, verbosity
         implicit none
 
 ! Argument Declaration and Description
@@ -111,7 +111,7 @@
 
 ! Procedure
 ! ===========================================================================
-        write (*,*) ' Welcome to assemble_F - ftot assembled here. '
+!        write (*,*) ' Welcome to assemble_F - ftot assembled here. '
 
 ! ****************************************************************************
 ! Assemble three-center forces from Dassemble_3c:
@@ -516,9 +516,6 @@
 ! ****************************************************************************
 ! Now the total force: ftot
 ! ****************************************************************************
-        write (*,*) '  '
-        write (*,*) ' The grand total force (eV/A): '
-
         do iatom = 1, natoms
          ftot(:,iatom) = fbs(:,iatom) + dusr(:,iatom) + dxcv(:,iatom)        &
      &                                + fro(:,iatom)
@@ -528,8 +525,15 @@
      &                                        + fharmonic(:,iatom)
          if (ibias .eq. 1) ftot(:,iatom) = ftot(:,iatom)                     &
      &                                        + fbias(:,iatom)
-         write (*,100) iatom, ftot(:,iatom)
         end do
+
+        if (verbosity .ge. 1 )  then
+          write (*,*) '  '
+          write (*,*) ' The grand total force (eV/A): '
+          do iatom = 1, natoms
+            write (*,100) iatom, ftot(:,iatom)
+          end do
+        end if !verbosisty
 
         rms = 0.0d0
         do iatom = 1, natoms
@@ -542,10 +546,10 @@
         maximum = maxval(ftot)
         minimum = abs(minval(ftot))
         if (minimum .gt. maximum) maximum = minimum
-
-        write (*,*) '  '
-        write (*,400) maximum, rms
-        write (*,*) '  '
+       
+!        write (*,*) '  '
+!        write (*,400) maximum, rms
+!        write (*,*) '  '
 
 ! Format Statements
 ! ===========================================================================

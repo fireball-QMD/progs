@@ -56,6 +56,7 @@
         subroutine gaussT (natoms, vatom, xmass, T_want, ftot) 
         use constants_fireball
         use dimensions
+        use options, only : verbosity 
         implicit none
  
 ! Argument Declaration and Description
@@ -87,8 +88,8 @@
 ! Procedure
 ! ===========================================================================
 ! We are doing gaussian constant T dynamics.
-        write (*,*) '  '
-        write (*,*) ' We are doing constant temperature dynamics! '
+!        write (*,*) '  '
+!        write (*,*) ' We are doing constant temperature dynamics! '
 
 ! Calculate xksi (See Evans et al. P.R.A 28, 1016 (1983).
 ! xksi = SUM(1:3,1:natoms) ftot(ix,iatom)*v(ix,iatom)/(3/2*n*kB*T)
@@ -105,17 +106,19 @@
          stop
         end if
         xksi = xksi/denominator
-        write (*,*) ' xksi = ', xksi, ' RENORMALIZE ftot! '
 
 ! fovermp is a conversion factor; velocity in A/fs.
         do iatom = 1, natoms
          ftot(:,iatom) =                                                     &
      &    ftot(:,iatom) - xksi*xmass(iatom)*vatom(:,iatom)/fovermp
         end do
-        do iatom = 1, natoms
-         write (*,100) iatom, ftot(:,iatom)
-        end do
-        write (*,*) '  '
+        if (verbosity .ge. 2) then
+          write (*,*) ' xksi = ', xksi, ' RENORMALIZE ftot! '
+          do iatom = 1, natoms
+           write (*,100) iatom, ftot(:,iatom)
+          end do
+          write (*,*) '  '
+        end if ! verbosity
 
 ! Deallocate Arrays
 ! ===========================================================================

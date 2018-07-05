@@ -119,7 +119,7 @@ subroutine move_ions (itime_step)
 	endif
 
 	if (numfrags .ne. 0 .and. fragtemp .eq. 1)then
-	 write(*,*) ' Projecting out inner-fragment forces. '
+!	 write(*,*) ' Projecting out inner-fragment forces. '
 	 call fixfrags2 (ftot)
 	endif
 
@@ -169,10 +169,10 @@ subroutine move_ions (itime_step)
 ! Also, coding up multiple correction steps would be a pain.
 
 
-	 if(writeOutput)then
-	  write (*,*) ''
-	  write (*,*) ' Predictor-Corrector: correct positions.'
-         endif
+!	 if(writeOutput)then
+!	  write (*,*) ''
+!	  write (*,*) ' Predictor-Corrector: correct positions.'
+!         endif
 
 	 call corrector (itime_step, dt, ftot)
 	 vmax=0
@@ -186,7 +186,7 @@ subroutine move_ions (itime_step)
 	endif
 
 	if (numfrags .ne. 0 .and. fragtemp .eq. 1)then
-	 write(*,*) ' Projecting out inner-fragment velocities. '
+	 !write(*,*) ' Projecting out inner-fragment velocities. '
 	 call fixfrags ()
 	 vmax=0
 	 do iatom = 1, natoms
@@ -218,7 +218,7 @@ subroutine move_ions (itime_step)
 	 vscale = sqrt(T_want/T_instantaneous)
 	 call Move_ions_testTimeStep_cMD(vmax,dt,iclassicMD)
 
-	 if(writeOutput)then
+	 if( verbosity .ge. 4) then
 	  write (*,*) ' Constant temp. (iensemble=1): scaling velocities. '
 	  write (*,*) ' Scaling =', vscale, ' It should be near 1.0!'
 	 endif
@@ -395,9 +395,9 @@ subroutine move_ions (itime_step)
 ! is obtained.
 	if (ibarrier .eq. 1 .and. barrier_achieved) stop
 
- 	if(writeOutput)then
-	 write(*,'(a,i7,a)') '=============================',itime_step,' ==================================='
-	endif
+! 	if(writeOutput)then
+!	 write(*,'(a,i7,a)') '=============================',itime_step,' ==================================='
+!	endif
 
 
 ! Deallocate Arrays
@@ -427,17 +427,18 @@ end subroutine
 
 subroutine Move_ions_writeOut_TempEtot(writeOutput,T_instantaneous,T_average, &
 					tkinetic,getot,etotper,getotper,deltaE)
+        use options, only : verbosity
 	implicit none
 	logical :: writeOutput
 	real :: T_instantaneous,T_average,tkinetic,getot,etotper,getotper,deltaE
 
-	if(writeOutput)then
+	write (*,602) getot
+	if( verbosity .ge. 1)then
 	 write (*,*)'T_instantaneous',T_instantaneous
  	 write (*,*) ''
 	 write(*,*) ' average temperature = ',T_average
 	 write (*,*) ''
  	 write (*,601) tkinetic
-	 write (*,602) getot
 	 write (*,603) etotper
  	 write (*,604) getotper
 !		write (*,605) deltaE

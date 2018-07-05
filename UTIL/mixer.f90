@@ -50,6 +50,7 @@
    use charges
    use scf
    use interactions
+   use options, only : verbosity
    implicit none
 
 ! Argument Declaration and Description
@@ -172,7 +173,7 @@
        end if
 
 ! Check convergence of charge; sigmatol is in scf.optional
-       write (*,*) '  '
+!       write (*,*) '  '
        if (sigma .lt. sigmatol) scf_achieved = .true.
 
        if (.not. scf_achieved) then
@@ -216,7 +217,7 @@
 !    write (*,*) ' (After  renormalization)  zcheck = ', zcheck
 !    write (*,*) ' (What it must be)           ztot = ', ztot
 !    write (*,*) '  '
-    write (*,303) sigma, sigmatol, Kscf
+    if (verbosity .ge. 1) write (*,303) sigma, sigmatol, Kscf
 
 
 ! Format Statements

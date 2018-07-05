@@ -118,7 +118,7 @@
           etot = etot + enHarmonic
          end if
          etot = etot + eqmmm
-         write(*,*) 'eqmmm =', eqmmm
+!         write(*,*) 'eqmmm =', eqmmm
          etotper = etot/natoms
 !         please leave this until I finish--Brandon
 !         etotPerfectLattice = -322.813965
@@ -131,10 +131,9 @@
 !         print*,'etotPerfectLattice',etotPerfectLattice
  
          if (wrtout) then
-          write (*,*) ' Fermi Level = ', efermi
           write (*,*) ' ---------- T H E  T O T A L  E N E R G Y ----------- '
-          if (itheory .ne. 0) write (*,500) itime_step, Kscf, etotper
-          if (itheory .eq. 0) write (*,501) itime_step, etotper
+          if (itheory .ne. 0) write (*,500) itime_step, Kscf 
+          if (itheory .eq. 0) write (*,501) itime_step
 
           write (*,*) '  '
           write (*,502) ebs
@@ -146,6 +145,7 @@
           write (*,508) etotper
           write (*,509) atomic_energy
           write (*,510) etot - atomic_energy
+          write (*,512) efermi
           write (*,*) '  '
           write (*,511) (etot - atomic_energy)/natoms
           write (*,*) ' ----------------------------------------------------- '
@@ -168,9 +168,8 @@
 ! Format Statements
 ! ===========================================================================
 100     format (2x, 70('='))
-500     format (2x, ' Time step = ', i6, ' SCF step = ', i3,                 &
-     &          ' etot/atom = ', f14.6)
-501     format (2x, ' Time step = ', i6, ' etot/atom = ', f14.6)
+500     format (2x, ' Time step = ', i6, ' SCF step = ', i3)
+501     format (2x, ' Time step = ', i6)
 502     format (2x, '           ebs = ', f15.6)
 503     format (2x, '     uii - uee = ', f15.6)
 504     format (2x, '     etotxc_1c = ', f15.6)
@@ -181,6 +180,7 @@
 509     format (2x, ' Atomic Energy = ', f15.6)
 510     format (2x, '     CohesiveE = ', f15.6)
 511     format (2x, ' Cohesive Energy per atom  = ', f15.6)
+512     format (2x, '   Fermi Level = ', f15.6)
 
         return
         end subroutine getenergy_mcweda
