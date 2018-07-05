@@ -65,7 +65,7 @@
         use charges
         use barrier
         use nonadiabatic
-	use integrals, only : fdataLocation
+        use integrals, only : fdataLocation
         implicit none
 
 ! Argument Declaration and Description
@@ -84,19 +84,19 @@
 
 ! Namelist for options control
   Namelist /output/ iwrtcdcoefs, iwrtcharges, iwrtdensity, iwrteigen,       &
-  					 iwrtefermi, iwrtfpieces, iwrthampiece, iwrtcomponents, &
-  					 iwrtneigh, iwrtneigh_com, iwrtxyz, iwrtdos, iwrthop,   &
-  					 iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf,  &
-  					 iwrtxsf, idensimport, iwrtpsit, iwrtqt, iwrtkvaziband, iwrtexcit
+                                         iwrtefermi, iwrtfpieces, iwrthampiece, iwrtcomponents, &
+                                         iwrtneigh, iwrtneigh_com, iwrtxyz, iwrtdos, iwrthop,   &
+                                         iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf,  &
+                                         iwrtxsf, idensimport, iwrtpsit, iwrtqt, iwrtkvaziband, iwrtexcit
 
   Namelist /option/ iharris, idogs, ihubbard, ihorsfield, imcweda, igsn, iquench, &
-  					 iqout, qstate, icluster, iensemble, ifixcharge, ifixneigh,   &
-  					 iumbrella, ivdw, ibarrier, iimage, idynmat, iharmonic, iks,  &
-  					 iconstraints, iendtemp, ineb, itrans, basisfile, lvsfile,    &
-  					 kptpreference, acfile, xvfile, nstepi, nstepf, dt,           &
-  					 T_initial, T_final, max_scf_iterations, bmix, sigmatol,      &
-  					 tempfe, itdse, ibias, rescal, xyz2line, imdet, iProjWF, nddt,&
-					 igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
+                                         iqout, qstate, icluster, iensemble, ifixcharge, ifixneigh,   &
+                                         iumbrella, ivdw, ibarrier, iimage, idynmat, iharmonic, iks,  &
+                                         iconstraints, iendtemp, ineb, itrans, basisfile, lvsfile,    &
+                                         kptpreference, acfile, xvfile, nstepi, nstepf, dt,           &
+                                         T_initial, T_final, max_scf_iterations, bmix, sigmatol,      &
+                                         tempfe, itdse, ibias, rescal, xyz2line, imdet, iProjWF, nddt,&
+                                         igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
                                          cut_embedding, fdataLocation, verbosity, ntpr
@@ -120,30 +120,30 @@
         iensemble = 0
         ifixcharge = 0
         ifixneigh = 0
-  		iumbrella = 0
-  		ibarrier = 0
-  		ivdw = 0
-  		iimage = 0
-  		idynmat = 0
-  		iharmonic = 0
-  		iconstraints(1) = 0
+        iumbrella = 0
+        ibarrier = 0
+        ivdw = 0
+        iimage = 0
+        idynmat = 0
+        iharmonic = 0
+        iconstraints(1) = 0
         iconstraints(2) = 1
         iconstraints(3) = 1
         iconstraints(4) = 1
-  		iendtemp = 0
-  		ineb = 0
-  		itrans = 0
-		basisfile = 'input.bas'
-		lvsfile = 'input.lvs'
-		kptpreference = 'input.kpts'
-		fdataLocation = 'Fdata'
-		acfile = 'ac.dat'
-		xvfile = 'xv.dat'
-		nstepi = 1
-  		nstepf = 100
-  		dt = 0.5d0
-  		T_initial = 0.0d0
-  		T_final = 10.0d0
+        iendtemp = 0
+        ineb = 0
+        itrans = 0
+        basisfile = 'input.bas'
+        lvsfile = 'input.lvs'
+        kptpreference = 'input.kpts'
+        fdataLocation = 'Fdata'
+        acfile = 'ac.dat'
+        xvfile = 'xv.dat'
+        nstepi = 1
+        nstepf = 100
+        dt = 0.5d0
+        T_initial = 0.0d0
+        T_final = 10.0d0
         max_scf_iterations = 200
         bmix = 0.04d0
         ialgmix = 1
@@ -159,12 +159,12 @@
         imdet = 0
         iProjWF = 0 
         nddt = 1000
-!CHROM	classic potential in interactions in MD or GO
-		iclassicMD = 0
+!CHROM        classic potential in interactions in MD or GO
+        iclassicMD = 0
 !END CHROM
 
 ! GAP ENRIQUE-FF
-	igap = 0
+        igap = 0
 ! cDFT
         icDFT = 0
 
@@ -172,10 +172,10 @@
 ! to switch them on, you have to list them in the param_option Namelist
         ispin = 0
         ipathintegral = 0
-  		ireducekpts = 0
-  		iordern = 0
-  		ithermoint = 0
-  		igauss = 0
+        ireducekpts = 0
+        iordern = 0
+        ithermoint = 0
+        igauss = 0
 
 ! QM/MM 
         iqmmm = 0
@@ -759,7 +759,7 @@
 
         if (idftd3 .eq. 2) then
          write (*,100)
-	 write (*,*) ' choose your own parameters for dftd3 (van der Waals) '
+         write (*,*) ' choose your own parameters for dftd3 (van der Waals) '
          write (*,*) ' idftd3 = 2 ', 'dftd3_s6 =', dftd3_s6,'dftd3_rs6 =', dftd3_rs6,'dftd3_s18 =', dftd3_s18, &
                      'dftd3_rs18 =', dftd3_rs18,'dftd3_alp =',dftd3_alp
          write (*,*) ' DFTD3 corrections, J. Chem. Phys. 132, 154104 (2010)'
@@ -795,14 +795,16 @@
         if (idensimport .gt. 0) write (*,*) ' Importing density file for projection  '
 
       endif ! verbosity = 3
-	
-	if (idftd3 .eq. 2) then
-         dftd3_params(1)=dftd3_s6
-         dftd3_params(2)=dftd3_rs6
-         dftd3_params(3)=dftd3_s18
-         dftd3_params(4)=dftd3_rs18
-         dftd3_params(5)=dftd3_alp
-        end if
+      
+      if (ntpr .eq. 0) ntpr = nstepf 
+        
+      if (idftd3 .eq. 2) then
+       dftd3_params(1)=dftd3_s6
+       dftd3_params(2)=dftd3_rs6
+       dftd3_params(3)=dftd3_s18
+       dftd3_params(4)=dftd3_rs18
+       dftd3_params(5)=dftd3_alp
+      end if
  
 
 ! writeout resume of the input variables into param.dat file
@@ -860,6 +862,7 @@
         write (50, *) '  dftd3_version     : ',dftd3_version
         write (50, *) '  dftd3_tz          : ',dftd3_tz
         write (50, *) '  verbosity         : ',verbosity
+        write (50, *) '  ntpr              : ',ntpr
         write (50, *) '  fdatalocation     : ',fdatalocation
         write (50,100)
         write (50, *) ''
