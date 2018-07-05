@@ -61,6 +61,7 @@
         use nonadiabatic
         use dynamo ! e-ph coupling
         use charges ! vlada cdft 
+        use md, only : nstepf, nstepi
 
 
         implicit none
@@ -164,9 +165,10 @@
 			end if
          end if
 
-
-         call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
-     &                           iwrtdensity, basisfile, symbol)
+         if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
+           call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
+     &                             iwrtdensity, basisfile, symbol)
+         end if
 
 ! ===========================================================================
 !                  check input and output charges for scf

@@ -116,18 +116,18 @@
 ! Open the file NEIGHBORS which contain the neighbor map information for 
 ! restart purposes.
         if (wrtout) then
-          open (unit = 20, file = 'NEIGHBORS', status = 'unknown')
-          write (20,200) natoms, neigh_max, basisfile
+!          open (unit = 20, file = 'NEIGHBORS', status = 'unknown')
+!          write (20,200) natoms, neigh_max, basisfile
           do iatom = 1, natoms
            num_neigh = neighn(iatom)
-           write (20,*) num_neigh
+!           write (20,*) num_neigh
            do ineigh = 1, num_neigh 
             mbeta = neigh_b(ineigh,iatom) 
             jatom = neigh_j(ineigh,iatom) 
-            write (20,*) iatom, ineigh, mbeta, jatom
+!            write (20,*) iatom, ineigh, mbeta, jatom
            end do 
           end do 
-          close (unit = 20)
+!          close (unit = 20)
         end if
  
 ! ****************************************************************************
