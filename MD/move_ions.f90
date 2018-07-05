@@ -299,7 +299,7 @@ subroutine move_ions (itime_step)
         endif
 ! write acceleration, coordinates, answer.bas, answer.xyz + outout on the screen
 
-        if ( MOD(itime_step,ntpr) .eq. 0 .or. itime_step .eq. 1 ) then
+        if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
            call Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step,etot,T_instantaneous,dt)
         end if
 
