@@ -47,6 +47,7 @@ module configuration
         real, dimension (:), allocatable :: rc_PP
 !        real, dimension (:), allocatable :: xmass
         real, dimension (:), allocatable :: smass
+        real :: init_time
 
 ! ---------------------------------------------------------------------------
 ! Input files 

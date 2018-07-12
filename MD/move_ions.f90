@@ -299,7 +299,7 @@ subroutine move_ions (itime_step)
         endif
 ! write acceleration, coordinates, answer.bas, answer.xyz + outout on the screen
 
-        if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
+        if ( (MOD(itime_step,ntpr) .eq. 0 .and. itime_step .gt. 1 ) .or. (itime_step .eq. 1 ) .or. (itime_step .eq. nstepf)) then
            call Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step,etot,T_instantaneous,dt)
         end if
 
@@ -359,6 +359,7 @@ subroutine move_ions (itime_step)
         endif
 !---------------------------------------------------------------------------
 
+ 
 ! Scale velocities again after predictor step
         if(iensemble .eq. 1) then
          tkinetic = 0.0d0
@@ -394,6 +395,14 @@ subroutine move_ions (itime_step)
          enddo
         endif
 
+         open (unit = 19, file = 'restart.xyz', status = 'unknown')
+          write (19,*) natoms
+          write (19,908) etot,T_instantaneous, itime_step*dt+init_time
+          do iatom = 1, natoms
+           in1 = imass(iatom)
+            write (19,702) symbol(iatom), ratom(:,iatom) + ximage(:,iatom), vatom(:,iatom)
+          enddo
+         close (unit = 19)
 ! For the crude energy barrier calculation - exit if the final configuration
 ! is obtained.
         if (ibarrier .eq. 1 .and. barrier_achieved) stop
@@ -409,6 +418,8 @@ subroutine move_ions (itime_step)
 ! Format Statements
 ! ===========================================================================
         100 format (2x, 70('='))
+        702 format (2x, a2, 3(2x,f12.6), 3(2x,f16.9))
+        908 format (2x, ' ETOT = ', f15.6,' eV; T =', f12.4,' K; Time = ', f12.1,' fs')
 
         return
 end subroutine move_ions
@@ -458,10 +469,11 @@ end subroutine
 subroutine Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step, &
                                             etot,T_instantaneous,dt)
         use outputs, only: iwrtvel,iwrtxyz
-        use configuration, only: natoms,ratom,ximage,symbol,xyz2line
+        use configuration, only: natoms,ratom,ximage,symbol,xyz2line,vatom,init_time
         use interactions, only: imass
         use charges, only: nzx
         use md, only: acfile,xvfile
+        use options, only : restartxyz
         implicit none
         logical :: writeOutput
         integer :: itime_step,iatom,in1
@@ -470,13 +482,14 @@ subroutine Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step, &
         external :: writeout_xv,writeout_ac
 
         if(writeOutput)then
-         call writeout_xv (xvfile, itime_step, time, imass, nzx, iwrtvel)
-         call writeout_ac (acfile, itime_step, time, imass, nzx)
+         
+!         call writeout_xv (xvfile, itime_step, time, imass, nzx, iwrtvel)
+!         call writeout_ac (acfile, itime_step, time, imass, nzx)
 ! Open the answer file. This file has the input format and is overwritten
 ! every step. For empirical (potential) is written in freq_of_outputs cycle.
          open (unit = 17, file = 'answer.bas', status = 'unknown')
          if (iwrtxyz .eq. 1) then
-          if (itime_step .eq. 1) then
+          if (itime_step .eq. 1 .and. restartxyz .eq. 0) then
            open (unit = 18, file = 'answer.xyz', status = 'unknown')
           else
            open (unit = 18, file = 'answer.xyz', status = 'unknown',&
@@ -491,13 +504,13 @@ subroutine Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step, &
          enddo
           close (unit = 17)
 
-
          if (iwrtxyz .eq. 1) then
           write (18,*) natoms
 !d@ni
           if(xyz2line.eq.0) write (18,*) ''
           if(xyz2line.eq.1) write (18,907) etot,T_instantaneous
-          if(xyz2line.eq.2) write (18,908) etot,T_instantaneous, itime_step*dt
+          if(xyz2line.eq.2) write (18,908) etot,T_instantaneous,itime_step*dt+init_time
+!          if(xyz2line.eq.2 .and. restartxyz .eq. 1) write (18,908) etot,T_instantaneous,(itime_step-1)*dt+init_time
           if(xyz2line.eq.3) write (18,*) etot
           do iatom = 1, natoms
            in1 = imass(iatom)
@@ -509,8 +522,9 @@ subroutine Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step, &
 
         700 format (2x, i2, 3(2x,f12.6))
         701 format (2x, a2, 3(2x,f12.6))
+        702 format (2x, a2, 3(2x,f12.6), 3(2x,f16.9))
         907 format (2x, ' ETOT = ', f15.6,'      T_instantaneous =', f12.4 )
-        908 format (2x, ' ETOT = ', f15.6,' eV; T =', f12.4,' K; Time = ', f12.1,' (fs)')
+        908 format (2x, ' ETOT = ', f15.6,' eV; T =', f12.4,' K; Time = ', f12.1,' fs')
 end subroutine
 
 subroutine Move_ions_WriteOut_deltaEandF(writeOutput,itime_step, &

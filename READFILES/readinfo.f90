@@ -61,7 +61,7 @@
         use interactions
         use configuration 
         use integrals
-        use options, only : verbosity
+        use options, only : verbosity, inputxyz
 
         implicit none
  
@@ -85,6 +85,7 @@
         integer nzx_temp
  
         integer, dimension (50) :: temp_nsu
+        character (len=2), dimension (50) :: temp_symbol
  
         real, dimension (:,:), allocatable :: cutoff  ! cutoff radius in bohr
         real :: nucz
@@ -125,7 +126,7 @@
         if (verbosity .ge. 3) write (*,*) '  '
         if (verbosity .ge. 3) write (*,*) ' Number of species in database = ', nspecies
 
-! Allocate nzx 
+! Allocate nzx /
         allocate (nzx (nspecies))
         allocate (symbolA (nspecies)) 
         allocate (etotatom (nspecies)) 
@@ -134,27 +135,51 @@
         allocate (rcutoff (nspecies, nsh_max)) 
         rcutoff = 0.0d0
 
+
+
+        if (inputxyz .eq. 1) then
+
+          open  (unit = 69, file = basisfile, status = 'old')
+          read (69, *) natoms
+          read(69,*)
+! Loop over the number of atoms
+          temp_nsup = 0
+          do iatom = 1, natoms
+           read (69,*) symbolA_temp
+           new_one = .true.
+           do imu = 1, temp_nsup
+            if (trim(symbolA_temp) .eq. temp_symbol(imu)) new_one = .false.
+           end do
+           if (new_one) then
+            temp_nsup = temp_nsup + 1
+            temp_symbol(temp_nsup) = trim(symbolA_temp)
+           end if
+          end do
+          close (unit = 69)
+
+        else
 ! It's handy to not read all the files if you only want some of them
 !        open (unit = 41, file = 'script.input', status = 'old')
 !        read (41,*) basisfile
 !        close (unit = 41)
-        open  (unit = 69, file = basisfile, status = 'old')
-        read (69, *) natoms
+          open  (unit = 69, file = basisfile, status = 'old')
+          read (69, *) natoms
 
 ! Loop over the number of atoms
-        temp_nsup = 0
-        do iatom = 1, natoms
-         read (69,*) nucz
-         new_one = .true.
-         do imu = 1, temp_nsup
-          if (nucz .eq. temp_nsu(imu)) new_one = .false.
-         end do
-         if (new_one) then
-          temp_nsup = temp_nsup + 1
-          temp_nsu(temp_nsup) = nucz
-         end if
-        end do
-        close (unit = 69)
+          temp_nsup = 0
+          do iatom = 1, natoms
+           read (69,*) nucz
+           new_one = .true.
+           do imu = 1, temp_nsup
+            if (nucz .eq. temp_nsu(imu)) new_one = .false.
+           end do
+           if (new_one) then
+            temp_nsup = temp_nsup + 1
+            temp_nsu(temp_nsup) = nucz
+           end if
+          end do
+          close (unit = 69)
+        end if
         if (verbosity .ge. 3) write (*,*) ' We will only read these atomic indexes: '
         if (verbosity .ge. 3) write (*,*) temp_nsu(1:temp_nsup)
         if (verbosity .ge. 3) write (*,*)
@@ -195,7 +220,8 @@
          if (verbosity .ge. 3) write (*,*) nzx_temp
          skip_it = .true.
          do ins = 1, temp_nsup
-          if (temp_nsu(ins) .eq. nzx_temp) skip_it = .false.
+          if (inputxyz .eq. 0 .and. temp_nsu(ins) .eq. nzx_temp) skip_it = .false.
+          if (inputxyz .eq. 1 .and. temp_symbol(ins) .eq. trim(symbolA_temp)) skip_it = .false.
          end do
 
 ! Just skip this atom

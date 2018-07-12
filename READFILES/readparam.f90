@@ -99,7 +99,7 @@
                                          igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
-                                         cut_embedding, fdataLocation, verbosity, ntpr
+                                         cut_embedding, fdataLocation, verbosity, ntpr, restartxyz, inputxyz
 
 ! Procedure
 ! ===========================================================================
@@ -155,6 +155,8 @@
         xyz2line = 2
         verbosity = 1
         ntpr = 1
+        restartxyz = 0
+        inputxyz = 0
 !JOm-add
         imdet = 0
         iProjWF = 0 
@@ -796,7 +798,10 @@
 
       endif ! verbosity = 3
       
-      if (ntpr .eq. 0) ntpr = nstepf 
+      if (ntpr .eq. 0) ntpr = nstepf
+
+      if (restartxyz .eq. 1) inputxyz = 1
+      if (restartxyz .eq. 1) basisfile = 'restart.xyz' 
         
       if (idftd3 .eq. 2) then
        dftd3_params(1)=dftd3_s6
@@ -863,6 +868,8 @@
         write (50, *) '  dftd3_tz          : ',dftd3_tz
         write (50, *) '  verbosity         : ',verbosity
         write (50, *) '  ntpr              : ',ntpr
+        write (50, *) '  restartxyz        : ',restartxyz
+        write (50, *) '  inputxyz          : ',inputxyz
         write (50, *) '  fdatalocation     : ',fdatalocation
         write (50,100)
         write (50, *) ''

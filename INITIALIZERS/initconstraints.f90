@@ -61,6 +61,7 @@
         use configuration
         use constants_fireball
         use fragments
+        use options ,only : restartxyz
         implicit none
  
 ! Argument Declaration and Description
@@ -106,6 +107,10 @@
  
 ! Procedure
 ! ===========================================================================
+        
+
+        if (restartxyz .eq. 0) then
+
 ! Initialize the velocities to zero
         vatom = 0.0d0
 
@@ -178,6 +183,7 @@
          close (unit = 12)
         end if
          
+       end if ! restartxyz
 ! Calculate the center-of-mass position.
         rcm = 0.0d0
         xmasstot2 = sum(xmass)

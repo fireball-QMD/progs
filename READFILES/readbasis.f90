@@ -64,7 +64,7 @@
         subroutine readbasis ( nzx, imass)
         use configuration
         use dimensions
-        use options, only : verbosity
+        use options, only : verbosity,inputxyz, restartxyz
         implicit none
  
 ! Argument Declaration and Description
@@ -87,6 +87,8 @@
         integer ispec
         integer nucz
         integer natoms_again
+        
+        real etot_tmp,T_instantaneus_temp     
  
         logical zindata
 
@@ -94,6 +96,7 @@
 ! ===========================================================================
 ! Initialize all the positions to zero.
         ratom = 0.0d0
+        init_time = 0.0d0
 
 ! Open the basis file.
         open (unit = 69, file = basisfile, status = 'old')
@@ -102,7 +105,35 @@
           write(*,*) ' Strange error in readbasis'
           stop
         end if
- 
+
+      if (inputxyz .eq. 1) then 
+
+        if (restartxyz .eq. 0) read (69,*)
+        if (restartxyz .eq. 1) then
+          read (69,908)  etot_tmp,T_instantaneus_temp, init_time
+        end if   
+      
+        do iatom = 1, natoms
+         if (restartxyz .eq. 0) read (69,*) symbol(iatom),ratom(:,iatom)
+         if (restartxyz .eq. 1) read (69,*) symbol(iatom),ratom(:,iatom),vatom(:,iatom)
+
+         zindata = .false.
+         do ispec = 1, nspecies
+          if (trim(symbol(iatom)) .eq. symbolA(ispec)) then
+           zindata = .true.
+           imass(iatom) = ispec
+          end if
+         end do
+         if (.not. zindata) then
+          write (*,*) ' The atomic symbol = ',symbol(iatom) 
+          write (*,*) ' that is contained in your basis file is '
+          write (*,*) ' not contained in your data files - info.dat '
+          write (*,*) ' Remake your create data files or fix your basis file'
+          stop
+         end if
+        end do
+
+      else
 ! Loop over the number of atoms
         do iatom = 1, natoms
          read (69,*) nucz, ratom(:,iatom)
@@ -122,6 +153,7 @@
          end if
         end do
 
+      endif
 
         do iatom = 1, natoms
           ratom(:,iatom)=ratom(:,iatom)*rescal
@@ -145,7 +177,7 @@
 201     format (2x, ' Atom # ', 2x, ' Type ', 5x,   &
      &              ' x ', 8x, ' y ', 8x, ' z ', 6x, ' Species # ')
 202     format (3x, i5, 7x, a2, 3(2x,f9.3), 7x, i2)
- 
+908 format (2x, ' ETOT = ', f15.6,' eV; T =', f12.4,' K; Time = ', f12.1,' fs') 
         close (unit = 69)
         return
         end

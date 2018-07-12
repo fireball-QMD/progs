@@ -74,6 +74,8 @@
         logical dftd3_tz 
         real dftd3_params (5)
         integer verbosity ! 0 minimal, 10 max         
-        integer ntpr ! Every ntpr steps, information will be printed , if = 0 nothing will be write until the end         
+        integer ntpr ! Every ntpr steps, information will be printed , if = 0 nothing will be write until the end        
+        integer restartxyz ! if = 1, start the simulation from restart.xyz
+        integer inputxyz ! if = 1, the coordinate input file is a .xyz
 
  end module options
