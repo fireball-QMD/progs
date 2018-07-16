@@ -64,6 +64,7 @@
         subroutine readbasis ( nzx, imass)
         use configuration
         use dimensions
+        use md, only : T_instantaneous
         use options, only : verbosity,inputxyz, restartxyz
         implicit none
  
@@ -88,7 +89,7 @@
         integer nucz
         integer natoms_again
         
-        real etot_tmp,T_instantaneus_temp     
+        real etot_tmp 
  
         logical zindata
 
@@ -110,7 +111,7 @@
 
         if (restartxyz .eq. 0) read (69,*)
         if (restartxyz .eq. 1) then
-          read (69,908)  etot_tmp,T_instantaneus_temp, init_time
+          read (69,908)  etot_tmp,T_instantaneous, init_time
         end if   
       
         do iatom = 1, natoms

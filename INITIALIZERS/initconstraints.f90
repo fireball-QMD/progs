@@ -183,7 +183,6 @@
          close (unit = 12)
         end if
          
-       end if ! restartxyz
 ! Calculate the center-of-mass position.
         rcm = 0.0d0
         xmasstot2 = sum(xmass)
@@ -298,6 +297,7 @@
          if (fixCenOfMass) rcmOld = rcmOld + shifter 
         end if
  
+       end if ! restartxyz
 ! Deallocate Arrays
 ! ===========================================================================
  
