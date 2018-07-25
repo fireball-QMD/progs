@@ -16,6 +16,7 @@
         integer iwrtneigh_com       ! write out common neighbor map
         integer iwrtxyz             ! write out xyz file
         integer iwrtdos             ! write out dos files CGP
+        integer iwrtdosng           ! write out dosng (not green) file
         integer iwrthop             ! write out hoppings for STM CGP
         integer iwrtatom            ! write out hoppings for STM CGP
         integer iwrtpop             ! write out population

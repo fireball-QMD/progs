@@ -85,7 +85,7 @@
 ! Namelist for options control
   Namelist /output/ iwrtcdcoefs, iwrtcharges, iwrtdensity, iwrteigen,       &
                                          iwrtefermi, iwrtfpieces, iwrthampiece, iwrtcomponents, &
-                                         iwrtneigh, iwrtneigh_com, iwrtxyz, iwrtdos, iwrthop,   &
+                                         iwrtneigh, iwrtneigh_com, iwrtxyz, iwrtdos, iwrtdosng, iwrthop,   &
                                          iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf,  &
                                          iwrtxsf, idensimport, iwrtpsit, iwrtqt, iwrtkvaziband, iwrtexcit
 
@@ -210,6 +210,7 @@
         iwrtneigh_com = 0
         iwrtxyz = 0
         iwrtdos = 0
+        iwrtdosng = 0
         iwrthop = 0
         iwrtatom = 0
         iwrtpop = 0
@@ -786,6 +787,7 @@
      &   write (*,*) ' Writing out common neighbor map. '
         if (iwrtxyz .gt. 0) write (*,*) ' Writing out xyz file - answer.xyz '
         if (iwrtdos .gt. 0) write (*,*) ' Writing out dos files '
+        if (iwrtdosng .gt. 0) write (*,*) ' Writing out dosng files '
         if (iwrthop .gt. 0) write (*,*) ' Writing out hopping values for STM '
         if (iwrtatom.gt. 0) write (*,*) ' Writing out the Atomo_i files '
         if (iwrtpop .gt. 0) write (*,*) ' Writing out population file '

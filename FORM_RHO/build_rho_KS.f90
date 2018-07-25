@@ -202,7 +202,35 @@
 
 ! Deallocate arrays
         if (iqout .ne. 2 .and. icluster .ne. 1) deallocate (blowim)
+
+        !DOSNG
+         if (iwrtdosng .ge. 1) then
+
+           if (Kscf .eq. 1) then
+             allocate(dngcof(norbitals,norbitals,nkpoints))
+           end if
+
+         dngcof(1:norbitals,1:norbitals,1:nkpoints) = blowre(1:norbitals,1:norbitals,1:nkpoints)
+
+         end if
+!END OF DOSNG
+
+
         if (iqout .ne. 2) deallocate (blowre)
+
+   !DOSNG
+         if (iwrtdosng .ge. 1) then
+
+           if (Kscf .eq. 1) then
+             allocate(E_KS(norbitals,nkpoints))
+           end if
+
+         E_KS(1:norbitals,1:nkpoints) = eigen_k(1:norbitals,1:nkpoints)
+
+         end if
+!END OF DOSNG
+
+
         deallocate (eigen_k)
 
 
