@@ -4475,7 +4475,7 @@ qm2_extern_fb_module.o: \
 
 
 qm2_extern_fb_module.o:   qm2_extern_fb_module.F90
-        $(FC) $(FWARNFLAGS) $(FPPFLAGS) -c $(FNOOPTFLAGS) $(FFLAGS) $(AMBERFFLAGS) $(RISMSANDER) -o $@ qm2_extern_fb_module.F90
+	$(FC) $(FWARNFLAGS) $(FPPFLAGS) -c $(FNOOPTFLAGS) $(FFLAGS) $(AMBERFFLAGS) $(RISMSANDER) -o $@ qm2_extern_fb_module.F90
 
 
 
