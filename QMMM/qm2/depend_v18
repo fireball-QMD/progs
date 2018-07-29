@@ -4463,6 +4463,22 @@ qm2_extern_tc_module.o: \
 qm2_extern_tc_module.o:   qm2_extern_tc_module.F90
 	$(FC) $(FWARNFLAGS) $(FPPFLAGS) -c $(FNOOPTFLAGS) $(FFLAGS) $(AMBERFFLAGS) $(RISMSANDER) -o $@ qm2_extern_tc_module.F90
 
+
+
+qm2_extern_fb_module.o: \
+                    ../include/dprec.fh\
+                    qm2_extern_util_module.o\
+                    constants.o\
+                    file_io_dat.o\
+                    elementOrbitalIndex.o\
+                    utilitiesmodule.o
+
+
+qm2_extern_fb_module.o:   qm2_extern_fb_module.F90
+        $(FC) $(FWARNFLAGS) $(FPPFLAGS) -c $(FNOOPTFLAGS) $(FFLAGS) $(AMBERFFLAGS) $(RISMSANDER) -o $@ qm2_extern_fb_module.F90
+
+
+
 qm2_extern_util_module.o: \
                     ../include/dprec.fh\
                     constants.o
