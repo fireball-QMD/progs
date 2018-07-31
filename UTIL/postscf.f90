@@ -79,7 +79,7 @@
          if (iwrtdos .ge. 1) call writeout_dos ( )
 
 ! write out the dosng if iwrtdosng is greater than 0 and icluster is 1
-         if (iwrtdosng .ge. 1 .and. icluster .eq. 1) call writeout_dosng ( )
+!         if (iwrtdosng .ge. 1 .and. icluster .eq. 1) call writeout_dosng ( )
 
 
 ! write out the hoppings if iwrthop is greatter than 1
