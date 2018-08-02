@@ -336,7 +336,7 @@ contains
 
       itime_step = itime_step +1
       write(*,*) 'itime_step_amber =', itime_step 
-       call fireball_qmmm_loop(itime_step,qmcoords,nclatoms,clcoords,escf,dxyzqm,dxyzcl)
+       call fireball_qmmm_loop(itime_step,qmcoords,nclatoms,clcoords,escf,dxyzqm,dxyzcl,charge)
 print*,'escf=',escf
 
     do i=1,nqmatoms
