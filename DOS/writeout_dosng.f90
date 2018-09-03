@@ -45,7 +45,7 @@
 ! dosat(k) !list of atoms over which we project the DOS
 !#########
 !If dosng = 2, this program outputs files giving the Lowdin coefficients of 
-!of user-requested eigenstates. The dosng.optional file in this case has the
+!of user-requested eigenstates. The states.optional file in this case has the
 !following structure
 !-----------------------------------------
 !Ns !Number of eigenstates to be printed. There will be a file for each eigenstate
@@ -54,6 +54,8 @@
 !...
 !number of eigenstate Ns
 !#########
+!If iwrtdos = 3 then we calculate both the DOS and the projection of the
+!electronic states.
 !#############################################################################
 ! Program Description
 ! ===========================================================================
@@ -125,7 +127,7 @@
 write(*,*)  'HI FROM DOSNG!'
 write(*,*)  'This subroutine computes the Atom-projected Density of States without computing the Green function'
 
-if (iwrtdosng .eq. 1) then
+if ((iwrtdosng .eq. 1) .or. (iwrtdosng .eq. 3)) then
 open(unit = 172, file = 'dosng.optional', status = 'old')
 read(172,*) etaL   !eta factor for the Lorentzian
 read(172,*) E_ini,S,step !Initial energy, number of energies and step
@@ -193,9 +195,9 @@ deallocate(E_KS)
 !###########END OF DOSNG = 1
 !######################################3
 !########### NOW DOSNG = 2: 
-else if (iwrtdosng .eq. 2) then   
+else if ((iwrtdosng .eq. 2) .or. (iwrtdosng .eq. 3)) then   
 
-open(unit = 172, file = 'dosng.optional', status = 'old')
+open(unit = 172, file = 'states.optional', status = 'old')
 read(172,*) Nstates   !number of molecular states to print out
 allocate(states(Nstates))
 do k = 1,Nstates
