@@ -167,7 +167,7 @@ open(unit = 173, file = 'dosng.out', status = 'unknown')
 ! OJO!!! ONLY FOR ICLUSTER = 1 FOR THE TIME BEING
 !Eks: array with all the eingenvalues. Call B to the number of eigenvalues, which is the dimension of Eks.
 
-write(173,*) '--------NEW STEP--------, ',itime_step
+write(173,*) '--------NEW STEP--------, '
 
 do ii = 1,S !loop over grid points
 tot=0.0d0
@@ -217,7 +217,7 @@ do k = 1,Nstates
 iorb = states(k)
 write(windex,'(i0)')iorb
 open(unit = 174 , file = 'state_'//trim(windex)//'.out', status = 'unknown')
-write(174,*) '--------NEW STEP--------, ',itime_step 
+write(174,*) '--------NEW STEP--------, '
 do iatom = 1,natoms
 in1=imass(iatom)
 tot = 0
