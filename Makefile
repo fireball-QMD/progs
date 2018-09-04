@@ -34,7 +34,7 @@ USEBLAS = YES
 # What machine? (AIX/AIX_LLNL/BLUEHORIZON/LINUX/LAPTOP/MARYLOU/MARYLOU10/
 # SGI_LANL/SIMPLE/ICEBOX/ALPHA/TRU64/ILINUX/GFORTRAN)
 #MACHINE = ILINUX_MAC
-MACHINE = ILINUX_fast05.static
+MACHINE = ILINUX_fast05
 #MACHINE = ILINUX_gnu
 #MACHINE = SGI-krejci
 #MACHINE = SGI
@@ -57,8 +57,8 @@ MACHINE = ILINUX_fast05.static
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-#METHOD = DOUBLE 
-METHOD = GAMMA 
+METHOD = DOUBLE 
+#METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
@@ -344,7 +344,7 @@ MODULES = barrier.o charges.o configuration.o constants_fireball.o density.o \
 MODULES_C =  $(MODULES) classicMD.o
 
 NEIGHBORS = backnay.o common_neighbors.o find_neigh_max.o find_neigh_max_class.o \
-	mpairnay.o neighbors.o neighbors_pairs.o find_neighPP_max.o neighborsPP.o \
+	mpairnay.o neighbors.o find_neighPP_max.o neighborsPP.o \
 	common_neighborsPP.o num_neigh_tot.o
 
 PRESSURE = hmetric.o initpressure.o invert3x3.o
@@ -461,6 +461,7 @@ all:
 libfireball: $(OBJECTS_QMMM)
 	ar rv libfireball.a $(OBJECTS_QMMM)
 	ranlib libfireball.a
+	cp libfireball.a ../../../lib/
 
 server: $(OBJECTS_SERVER)
 	$(F90)  -o  fireball_server.x $(FFLAGS) $(OBJECTS_SERVER) $(VISFLAGS) $(PARLFLAGS) \
@@ -1170,8 +1171,6 @@ mpairnay.o : NEIGHBORS/mpairnay.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NEIGHBORS/mpairnay.f90
 neighbors.o : NEIGHBORS/neighbors.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NEIGHBORS/neighbors.f90
-neighbors_pairs.o : NEIGHBORS/neighbors_pairs.f90 $(MODULES)
-	$(F90) $(FFLAGS) -c NEIGHBORS/neighbors_pairs.f90
 neighborsPP.o : NEIGHBORS/neighborsPP.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NEIGHBORS/neighborsPP.f90
 find_neighPP_max.o : NEIGHBORS/find_neighPP_max.f90 $(MODULES)
