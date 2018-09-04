@@ -59,6 +59,9 @@
         use density
         use charges 
         use scf
+        use outputs, only : iwrtdosng
+        use interactions, only : norbitals
+        use kpoints, only : nkpoints
         implicit none
  
 ! Argument Declaration and Description
@@ -122,6 +125,12 @@
          allocate (arhoi_on (nsh_max, nsh_max, natoms))
          allocate (rho_on (numorb_max, numorb_max, natoms))
          allocate (rhoi_on (numorb_max, numorb_max, natoms))
+        end if
+
+!dosng
+        if (iwrtdosng .ge. 1) then
+           allocate(dngcof(norbitals, norbitals,nkpoints))
+           allocate(E_KS(norbitals,nkpoints))
         end if
 
 ! Deallocate Arrays

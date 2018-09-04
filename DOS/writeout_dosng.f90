@@ -197,8 +197,6 @@ write(173,*) E,tot
 end do !end do ii = 1,S
 close(173)
 
-deallocate(dngcof)
-deallocate(E_KS)
 
 !###########END OF DOSNG = 1
 !######################################3
