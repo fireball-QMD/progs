@@ -380,7 +380,7 @@ XC = ceperley_alder.o cepal.o
 
 CG = cgo.o bfgs.o l-bfgs-b.o FIRE.o
 
-DOS = dos.o invierte.o writeout_dos.o hoppings.o writeout_atom.o \
+DOS = dos.o invierte.o writeout_dos.o writeout_dosng.o hoppings.o writeout_atom.o \
 	hamilt_atom.o 
 
 NEB = initneb.o neb.o
@@ -833,6 +833,8 @@ invierte.o : DOS/invierte.f $(MODULES)
 	$(F90) $(FFLAGS) -c DOS/invierte.f
 writeout_dos.o : DOS/writeout_dos.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DOS/writeout_dos.f90
+writeout_dosng.o : DOS/writeout_dosng.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DOS/writeout_dosng.f90
 writeout_atom.o : DOS/writeout_atom.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DOS/writeout_atom.f90
 hoppings.o : DOS/hoppings.f90
