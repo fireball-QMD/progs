@@ -43,6 +43,9 @@
 !E_ini,S,step !Initial energy, number of energies and step
 !dosats !number of atoms over which to project the DOS
 ! dosat(k) !list of atoms over which we project the DOS
+!The output file consists of S rows and each row is of the form:
+!E, D,
+!with E an energy value and D the DOS at that energy.
 !#########
 !If dosng = 2, this program outputs files giving the Lowdin coefficients of 
 !of user-requested eigenstates. The states.optional file in this case has the
@@ -53,6 +56,11 @@
 !number of eigenstate2
 !...
 !number of eigenstate Ns
+!Each output file consist of Natoms rows, where Natoms is the total number of orbitals. 
+!In the file state_x.out, each row is of the form:
+!n c
+!where n is the atom number and c is the coefficient (squared)
+!of the x-th state over the n-th atom (using Löwdin orbitals).
 !#########
 !If iwrtdos = 3 then we calculate both the DOS and the projection of the
 !electronic states.
@@ -159,7 +167,7 @@ open(unit = 173, file = 'dosng.out', status = 'unknown')
 ! OJO!!! ONLY FOR ICLUSTER = 1 FOR THE TIME BEING
 !Eks: array with all the eingenvalues. Call B to the number of eigenvalues, which is the dimension of Eks.
 
-
+write(173,*) '--------NEW STEP--------, ',itime_step
 
 do ii = 1,S !loop over grid points
 tot=0.0d0
@@ -209,7 +217,7 @@ do k = 1,Nstates
 iorb = states(k)
 write(windex,'(i0)')iorb
 open(unit = 174 , file = 'state_'//trim(windex)//'.out', status = 'unknown')
-
+write(174,*) '--------NEW STEP--------, ',itime_step 
 do iatom = 1,natoms
 in1=imass(iatom)
 tot = 0
