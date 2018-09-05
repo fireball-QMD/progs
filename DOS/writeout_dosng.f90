@@ -163,7 +163,8 @@ write(*,*) 'DONE READING INPUT FILE'
 !##### END OF TEST
 
 ! Open file dosng
-open(unit = 173, file = 'dosng.out', status = 'unknown')
+open(unit = 173, file = 'dosng.out', status = 'unknown', &
+                                      & position = 'append')
 ! OJO!!! ONLY FOR ICLUSTER = 1 FOR THE TIME BEING
 !Eks: array with all the eingenvalues. Call B to the number of eigenvalues, which is the dimension of Eks.
 
@@ -197,11 +198,12 @@ write(173,*) E,tot
 end do !end do ii = 1,S
 close(173)
 
+end if !end if iwrtdos = 1 or 2
 
 !###########END OF DOSNG = 1
 !######################################3
 !########### NOW DOSNG = 2: 
-else if ((iwrtdosng .eq. 2) .or. (iwrtdosng .eq. 3)) then   
+if ((iwrtdosng .eq. 2) .or. (iwrtdosng .eq. 3)) then   
 
 open(unit = 172, file = 'states.optional', status = 'old')
 read(172,*) Nstates   !number of molecular states to print out
@@ -214,7 +216,8 @@ close(172)
 do k = 1,Nstates
 iorb = states(k)
 write(windex,'(i0)')iorb
-open(unit = 174 , file = 'state_'//trim(windex)//'.out', status = 'unknown')
+open(unit = 174 , file = 'state_'//trim(windex)//'.out', status = 'unknown', &
+                                                        & position = 'append')
 write(174,*) '--------NEW STEP--------, '
 do iatom = 1,natoms
 in1=imass(iatom)
@@ -228,7 +231,7 @@ end do !end do iatom = 1,natoms
 
 close(174)
 end do !end do k = 1,Nstates
-end if 
+end if !end if iwrtdos = 2 or 3
 
 !OLD############3
 ! Format Statements
