@@ -62,7 +62,7 @@
         use dynamo ! e-ph coupling
         use charges ! vlada cdft 
         use md, only : nstepf, nstepi
-
+        use module_dos, only : dngcof,E_KS
 
         implicit none
 

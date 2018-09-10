@@ -9,10 +9,6 @@
          real, dimension (:, :, :), allocatable :: blowim
          real, dimension (:, :, :), allocatable :: blowre
          real, dimension (:, :), allocatable :: eigen_k
-        !dosng
-         real, dimension (: ,:, :), allocatable :: dngcof
-         real, dimension (:, :), allocatable :: E_KS
-        !end of dosng
 
 ! These arrays store the densities.
          real, dimension (:, :, :, :), allocatable :: cape

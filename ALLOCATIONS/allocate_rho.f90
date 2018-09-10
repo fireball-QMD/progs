@@ -62,6 +62,8 @@
         use outputs, only : iwrtdosng
         use interactions, only : norbitals
         use kpoints, only : nkpoints
+        use module_dos, only : dngcof,E_KS,DOS_total,States_total,dstep
+
         implicit none
  
 ! Argument Declaration and Description
@@ -74,7 +76,9 @@
         integer, intent (in) :: numorb_max
         integer, intent (in) :: nsh_max
         integer, intent (in) :: igrid 
- 
+        real                 :: a,b !auxiliar variables for the dosng
+        integer              :: S   !auxiliar variable for the dosng
+        integer              :: Nstates !auxiliar variable for the dosng
 ! Local Parameters and Data Declaration
 ! ===========================================================================
  
@@ -131,7 +135,23 @@
         if (iwrtdosng .ge. 1) then
            allocate(dngcof(norbitals, norbitals,nkpoints))
            allocate(E_KS(norbitals,nkpoints))
-        end if
+           if ((iwrtdosng .eq. 1) .or. (iwrtdosng .eq. 3)) then
+             open(unit = 172, file = 'dosng.optional', status = 'old')
+             read(172,*) 
+             read(172,*) a,S,b  !a and b are inmaterial and S is the
+              !the number of energies to be considered in the DOS
+             close(172)
+           allocate(DOS_total(S))
+           end if ! end if ((iwrtdosng .eq. 1) .or. (iwrtdosng .eq. 3))
+
+           if ((iwrtdosng .eq. 2) .or. (iwrtdosng .eq. 3)) then
+             open(unit = 172, file = 'states.optional', status = 'old')
+             read(172,*) Nstates   !number of molecular states to print out
+             close(172)
+             allocate(States_total(Nstates,natoms))
+           end if ! end if ((iwrtdosng .eq. 2) .or. (iwrtdosng .eq. 3))
+           dstep = 0
+        end if  ! end if (iwrtdosng .ge. 1)
 
 ! Deallocate Arrays
 ! ===========================================================================

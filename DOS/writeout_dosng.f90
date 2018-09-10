@@ -82,6 +82,7 @@
         use charges
         use density
         use outputs
+        use MD, only : nstepf
 
         implicit none
 
@@ -135,6 +136,8 @@
 write(*,*)  'HI FROM DOSNG!'
 write(*,*)  'This subroutine computes the Atom-projected Density of States without computing the Green function'
 
+dstep = dstep+1 !dstep counts the time
+
 if ((iwrtdosng .eq. 1) .or. (iwrtdosng .eq. 3)) then
 open(unit = 172, file = 'dosng.optional', status = 'old')
 read(172,*) etaL   !eta factor for the Lorentzian
@@ -163,12 +166,14 @@ write(*,*) 'DONE READING INPUT FILE'
 !##### END OF TEST
 
 ! Open file dosng
-open(unit = 173, file = 'dosng.out', status = 'unknown', &
-                                      & position = 'append')
+!open(unit = 173, file = 'dosng.out', status = 'unknown', &
+!                                      & position = 'append')
 ! OJO!!! ONLY FOR ICLUSTER = 1 FOR THE TIME BEING
 !Eks: array with all the eingenvalues. Call B to the number of eigenvalues, which is the dimension of Eks.
 
-write(173,*) '--------NEW STEP--------, '
+open(unit = 200, file = 'dosng_avg.out', status = 'unknown') !the averaged dos
+
+!write(173,*) '--------NEW STEP--------, '
 
 do ii = 1,S !loop over grid points
 tot=0.0d0
@@ -194,9 +199,15 @@ tot = tot+subtot*etaL*(1/(etaL**2+(E-E_KS(iorb,1))**2))*(1/pi)
 !only for icluster = 1
 
 end do !end do iorb = 1,norbitals
-write(173,*) E,tot
+!write(173,*) E,tot
+
+DOS_total(ii) = DOS_total(ii)+tot  !here we store the sum of all DOS at each
+ !energy. Later, we divide by the total number fo structures to finally get the
+ !average and print the averaged result to a file
+write(200,*) E,DOS_total(ii)/dstep
 end do !end do ii = 1,S
-close(173)
+close(200)
+!close(173)
 
 end if !end if iwrtdos = 1 or 2
 
@@ -216,9 +227,10 @@ close(172)
 do k = 1,Nstates
 iorb = states(k)
 write(windex,'(i0)')iorb
-open(unit = 174 , file = 'state_'//trim(windex)//'.out', status = 'unknown', &
-                                                        & position = 'append')
-write(174,*) '--------NEW STEP--------, '
+!open(unit = 174 , file = 'state_'//trim(windex)//'.out', status = 'unknown', &
+!                                                        & position = 'append')
+!write(174,*) '--------NEW STEP--------, '
+open(unit = 201 , file = 'state_avg_'//trim(windex)//'.out', status = 'unknown')
 do iatom = 1,natoms
 in1=imass(iatom)
 tot = 0
@@ -226,10 +238,15 @@ do jorb = 1,num_orb(in1)
 alpha = degelec(iatom)+jorb
 tot = tot+dngcof(alpha,iorb,1)**2
 end do !end do jorb = 1,num_orb(in1)
-write(174,*) iatom, tot
+!write(174,*) iatom, tot
+States_total(k,iatom) = States_total(k,iatom)+tot !We accumulate here the
+!weights for all the states. At the end, we'll take the average and print that
+!result to a file.
+write(201,*) iatom, States_total(k,iatom)/dstep
 end do !end do iatom = 1,natoms
 
-close(174)
+!close(174)
+close(201)
 end do !end do k = 1,Nstates
 end if !end if iwrtdos = 2 or 3
 

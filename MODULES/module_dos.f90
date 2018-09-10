@@ -23,6 +23,13 @@
      real ener_max               ! energy maximum for tip_e_str.inp
      real eta                    ! imaginary part in the DOS calculation
      real lattice                ! lattice parameter in atomic units
+!dosng (option for computing DOS and electronci states without computing the GF)
+     real, dimension (: ,:, :), allocatable :: dngcof
+     real, dimension (:, :), allocatable    :: E_KS
+     real, dimension (:), allocatable       :: DOS_total
+     real, dimension (:,:), allocatable     :: States_total
+     integer                                :: dstep !to count time inside dosng
+!End of dosng
    
     end module
 
