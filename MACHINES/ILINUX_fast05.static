@@ -20,7 +20,7 @@ ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
 		ifneq (,$(findstring YES, ${CCOMPILE}))
 			FFLAGS = -O3 -r8  -fno-alias -unroll -static -pg -fPIC 
 		else
-			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -no-ipo -static -pg -fPIC
+			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp --fPIC no-ipo -static -pg -fPIC
 		endif
 	endif
 	ifneq (,$(findstring DEBUG, ${MODE}))
