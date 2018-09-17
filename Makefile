@@ -461,7 +461,6 @@ all:
 libfireball: $(OBJECTS_QMMM)
 	ar rv libfireball.a $(OBJECTS_QMMM)
 	ranlib libfireball.a
-	cp libfireball.a ../../../lib/
 
 server: $(OBJECTS_SERVER)
 	$(F90)  -o  fireball_server.x $(FFLAGS) $(OBJECTS_SERVER) $(VISFLAGS) $(PARLFLAGS) \
