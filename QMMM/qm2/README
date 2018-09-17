@@ -1,6 +1,6 @@
 mkdir fireball
 cd fireball
-export FIREBALLHOME=$(pwd)
+export FIREBALLHOME=$(pwd)/progs
 git clone https://github.com/fireball-QMD/progs
 cd progs
 make libfireball
