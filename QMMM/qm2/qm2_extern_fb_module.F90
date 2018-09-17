@@ -52,6 +52,7 @@ module qm2_extern_fb_module
      integer :: npbands
      integer :: mix_embedding
      integer :: iwrtcharges
+     integer :: verbosity
      real :: cut_embedding
      real :: tempfe
      real :: sigmatol
