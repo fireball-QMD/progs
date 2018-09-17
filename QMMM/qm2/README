@@ -16,7 +16,7 @@ cp $FIREBALLHOME/QMMM/qm2/qm2_extern_module.F90 $AMBERHOME/AmberTools/src/sander
 cp $FIREBALLHOME/QMMM/qm2/qm2_extern_fb_module.F90 $AMBERHOME/AmberTools/src/sander
 cp $FIREBALLHOME/QMMM/qm2/Makefile $AMBERHOME/AmberTools/src/sander
 cd $AMBERHOME/AmberTools/src/sander
-make depend
-cd $AMBERHOME
+./makedepend > depend
+cd $AMBERHOME 
 ./configure -fireball intel
 make install
