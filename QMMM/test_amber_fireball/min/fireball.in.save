@@ -1,0 +1,32 @@
+&option
+qstate =  0
+icluster = 1
+iqout = 1
+max_scf_iterations =  70
+iensemble = 0
+imdet = 0
+nddt = 1000
+iqmmm = 1
+ifixcharge =0
+iquench = 0
+idftd3 = 0
+ dftd3_func = fb_bio              
+tempfe = 100.000
+sigmatol = 0.100000E-07
+fdataLocation = '../Fdata_HCNOS                                                                                      '
+idipole = 1
+verbosity = 0
+mix_embedding = 0
+cut_embedding =   99.000
+&end
+&output
+iwrtcharges = 0
+iwrtpop = 0
+iwrtvel = 0
+iwrteigen = 0
+iwrtefermi = 0
+iwrtdos = 0
+iwrtdosng = 0
+iwrtewf = 0
+iwrtatom = 0
+&end

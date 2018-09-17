@@ -1,0 +1,432 @@
+               Welcome to FIREBALL QMD !        
+           A fast local orbital QMD Package     
+      brought to you by the Fireball Committee: 
+   
+                  James P. Lewis 
+         Department of Physics and Astronomy 
+              Brigham Young University 
+   
+                  Otto F. Sankey 
+        Department of Physics and Astronomy 
+            Arizona State University 
+   
+                   Jose Ortega 
+              Departmento de Fisica 
+        Teorica de la Materia Condensada 
+         Universidad Autonoma de Madrid 
+   
+                 Pavel Jelinek 
+              Institute of Physics 
+             Prague, Czech Republic 
+   
+   
+              with contributions from: 
+   
+  Alex A. Demkov (Motorola Physical Sciences Research Labs)
+  Gary B. Adams (Arizona State University) 
+  Jian Jun Dong (Arizona State University) 
+  David A. Drabold (Ohio University) 
+  Peter A. Fedders (Washington University) 
+  Kurt R. Glaesemann (University of Utah) 
+  Kevin Schmidt (Arizona State University) 
+  Spencer Shellman (University of Utah) 
+  John Tomfohr (Arizona State University) 
+  Hao Wang (Brigham Young University) 
+  Daniel G. Trabada (Universidad Autonoma de Madrid) 
+  Jesus I. Mendieta-Moreno (Universidad Autonoma de Madrid) 
+   
+   
+   fireball-qmd is a free (GPLv3) open project  
+   
+   
+   
+  ======================================================================
+  Now reading file fireball.in 
+   
+   
+  ======================================================================
+  The name of the basisfile: 
+   file = input.bas                     
+   
+  ======================================================================
+  The name of the lattice vector file: 
+   file = input.lvs                     
+   
+  ======================================================================
+  The name of the k-points file: 
+   file = input.kpts                    
+  iimage =            0
+   
+  The maximum number of iterations to self- 
+  consistency.
+  max_scf_iterations =           70
+  ======================================================================
+   
+  Now we are reading from the info.dat file. 
+   
+  Reading atom Coordinates from Basis File 
+   
+  You are doing a cluster calculation 
+  Lattice vectors are not needed or read in 
+   
+   
+  You are doing a cluster calculation 
+  k-points are not read in 
+   
+   
+  ======================================================================
+  You have chosen iquench =            0
+  Optionally read information from the fireball.in file. 
+   
+   
+  ======================================================================
+  Now reading file fireball.in 
+   
+  In the event that you are searching for an energy 
+  minimum, you can also choose energy and force 
+  tolerances - energy_tol and force_tol. These tolerances 
+  will stop execution after they are achieved. Input a 
+  number for all of the following, even if option is not 
+  being used! 
+  Input energy_tol, force_tol, T_want, taurelax: 
+   
+  energy tolerance =   1.000000000000000E-004  [eV]
+  force tolerance  =   5.000000000000000E-002  [eV/A]
+  T_want =   0.000000000000000E+000  [K]
+  taurelax =    50.0000000000000     
+  ======================================================================
+   
+   
+  The Input Charges Are: 
+  ======================================================================
+   Atom #    Type    Shells   Charges 
+  ======================================================================
+       1       C       2      2.00  2.00
+       2       H       1      1.00
+       3       O       2      2.00  4.00
+       4       C       2      2.00  2.00
+       5       H       1      1.00
+       6       N       2      2.00  3.00
+       7       C       2      2.00  2.00
+       8       H       1      1.00
+       9       C       2      2.00  2.00
+      10       C       2      2.00  2.00
+      11       H       1      1.00
+      12       H       1      1.00
+      13       H       1      1.00
+      14       C       2      2.00  2.00
+      15       O       2      2.00  4.00
+      16       N       2      2.00  3.00
+      17       H       1      1.00
+      18       C       2      2.00  2.00
+      19       O       2      2.00  4.00
+      20       C       2      2.00  2.00
+      21       H       1      1.00
+      22       C       2      2.00  2.00
+      23       H       1      1.00
+      24       H       1      1.00
+      25       H       1      1.00
+      26       H       1      1.00
+  ======================================================================
+   
+   Calculated position of the Center-of-Mass:     7.826   27.520   21.244
+   
+  Constraining angular momentum!!!! 
+   
+   initial lcm =    0.0000000D+00   0.0000000D+00   0.0000000D+00
+     final lcm =    0.0000000D+00   0.0000000D+00   0.0000000D+00
+  Constraining the velocities about the center-of-mass 
+  Rescaling the velocities based on desired temperature. 
+ T_instantaneous  0.000000000000000E+000
+ T_initial  0.000000000000000E+000
+   
+  Atom Velocities: 
+  ======================================================================
+   Atom #    Type        x           y           z        Species # 
+  ======================================================================
+       1       C      0.00000     0.00000     0.00000        2
+       2       H      0.00000     0.00000     0.00000        1
+       3       O      0.00000     0.00000     0.00000        4
+       4       C      0.00000     0.00000     0.00000        2
+       5       H      0.00000     0.00000     0.00000        1
+       6       N      0.00000     0.00000     0.00000        3
+       7       C      0.00000     0.00000     0.00000        2
+       8       H      0.00000     0.00000     0.00000        1
+       9       C      0.00000     0.00000     0.00000        2
+      10       C      0.00000     0.00000     0.00000        2
+      11       H      0.00000     0.00000     0.00000        1
+      12       H      0.00000     0.00000     0.00000        1
+      13       H      0.00000     0.00000     0.00000        1
+      14       C      0.00000     0.00000     0.00000        2
+      15       O      0.00000     0.00000     0.00000        4
+      16       N      0.00000     0.00000     0.00000        3
+      17       H      0.00000     0.00000     0.00000        1
+      18       C      0.00000     0.00000     0.00000        2
+      19       O      0.00000     0.00000     0.00000        4
+      20       C      0.00000     0.00000     0.00000        2
+      21       H      0.00000     0.00000     0.00000        1
+      22       C      0.00000     0.00000     0.00000        2
+      23       H      0.00000     0.00000     0.00000        1
+      24       H      0.00000     0.00000     0.00000        1
+      25       H      0.00000     0.00000     0.00000        1
+      26       H      0.00000     0.00000     0.00000        1
+ 
+  In setgear, using gear order of            2
+ 
+  Initiallizing arrays 
+  ======================================================================
+  READING DATA FROM DATA FILES IN FDATA DIRECTORY: 
+  ======================================================================
+  Running setterp_2d. Set up two-dimensional interpolator. 
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      1 SCF step =  30
+   
+             ebs =    -1155.432664
+       uii - uee =    -2770.267430
+       etotxc_1c =        0.000000
+          uxcdcc =      275.554213
+            ETOT =    -3415.598168
+       Etot/atom =     -131.369160
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.598168
+     Fermi Level =       -4.788682
+   
+   Cohesive Energy per atom  =     -131.369160
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      2 SCF step =   3
+   
+             ebs =    -1155.349128
+       uii - uee =    -2770.351094
+       etotxc_1c =        0.000000
+          uxcdcc =      275.550975
+            ETOT =    -3415.607789
+       Etot/atom =     -131.369530
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.607789
+     Fermi Level =       -4.796849
+   
+   Cohesive Energy per atom  =     -131.369530
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      3 SCF step =   4
+   
+             ebs =    -1155.243242
+       uii - uee =    -2770.456556
+       etotxc_1c =        0.000000
+          uxcdcc =      275.547116
+            ETOT =    -3415.618834
+       Etot/atom =     -131.369955
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.618834
+     Fermi Level =       -4.806103
+   
+   Cohesive Energy per atom  =     -131.369955
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      4 SCF step =   4
+   
+             ebs =    -1155.154517
+       uii - uee =    -2770.543104
+       etotxc_1c =        0.000000
+          uxcdcc =      275.542044
+            ETOT =    -3415.630979
+       Etot/atom =     -131.370422
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.630979
+     Fermi Level =       -4.817430
+   
+   Cohesive Energy per atom  =     -131.370422
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      5 SCF step =   4
+   
+             ebs =    -1155.048268
+       uii - uee =    -2770.646287
+       etotxc_1c =        0.000000
+          uxcdcc =      275.536023
+            ETOT =    -3415.645160
+       Etot/atom =     -131.370968
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.645160
+     Fermi Level =       -4.830594
+   
+   Cohesive Energy per atom  =     -131.370968
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      6 SCF step =   4
+   
+             ebs =    -1154.922125
+       uii - uee =    -2770.768145
+       etotxc_1c =        0.000000
+          uxcdcc =      275.528907
+            ETOT =    -3415.661600
+       Etot/atom =     -131.371600
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.661600
+     Fermi Level =       -4.845782
+   
+   Cohesive Energy per atom  =     -131.371600
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      7 SCF step =   4
+   
+             ebs =    -1154.773037
+       uii - uee =    -2770.911265
+       etotxc_1c =        0.000000
+          uxcdcc =      275.520519
+            ETOT =    -3415.680545
+       Etot/atom =     -131.372329
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.680545
+     Fermi Level =       -4.863183
+   
+   Cohesive Energy per atom  =     -131.372329
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      8 SCF step =   4
+   
+             ebs =    -1154.596553
+       uii - uee =    -2771.081044
+       etotxc_1c =        0.000000
+          uxcdcc =      275.510507
+            ETOT =    -3415.704079
+       Etot/atom =     -131.373234
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.704079
+     Fermi Level =       -4.883125
+   
+   Cohesive Energy per atom  =     -131.373234
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =      9 SCF step =   4
+   
+             ebs =    -1154.387335
+       uii - uee =    -2771.280192
+       etotxc_1c =        0.000000
+          uxcdcc =      275.498741
+            ETOT =    -3415.730235
+       Etot/atom =     -131.374240
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.730235
+     Fermi Level =       -4.904967
+   
+   Cohesive Energy per atom  =     -131.374240
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =     10 SCF step =   4
+   
+             ebs =    -1154.145242
+       uii - uee =    -2771.506693
+       etotxc_1c =        0.000000
+          uxcdcc =      275.485231
+            ETOT =    -3415.757862
+       Etot/atom =     -131.375302
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.757862
+     Fermi Level =       -4.929543
+   
+   Cohesive Energy per atom  =     -131.375302
+  ----------------------------------------------------- 
+ else allocate
+   
+  ======================================================= 
+              Begin molecular dynamics simulation. 
+  ======================================================= 
+   
+   
+   
+  ---------- T H E  T O T A L  E N E R G Y ----------- 
+   Time step =     11 SCF step =   1
+   
+             ebs =    -1154.145242
+       uii - uee =    -2771.506693
+       etotxc_1c =        0.000000
+          uxcdcc =      275.485231
+            ETOT =    -3415.757862
+       Etot/atom =     -131.375302
+   Atomic Energy =        0.000000
+       CohesiveE =    -3415.757862
+     Fermi Level =       -4.929543
+   
+   Cohesive Energy per atom  =     -131.375302
+  ----------------------------------------------------- 

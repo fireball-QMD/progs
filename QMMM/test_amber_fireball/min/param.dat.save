@@ -1,0 +1,77 @@
+  FILES:
+   basisfile         : input.bas                               
+   lvsfile           : input.lvs                               
+   kptsfile          : input.kpts                              
+   acfile            : ac.dat                        
+   xvfile            : xv.dat                        
+  ======================================================================
+ 
+  TIME STEP:
+   nstepi            :            1
+   nstepf            :          100
+   dtime             :   0.500000000000000     
+  ======================================================================
+ 
+  OPTIONS:
+   iharris           :            0
+   idogs             :            1
+   ihubbard          :            0
+   ihorsfield        :            0
+   imcweda           :            1
+   igsn              :            0
+   iks               :            0
+   iqout             :            1
+   qstate            :   0.000000000000000E+000
+   icluster          :            1
+   iensemble         :            0
+   ifixcharge        :            0
+   ifixneigh         :            0
+   iumbrella         :            0
+   ibarrier          :            0
+   iconstraints      :    0   1   1   1
+   iharmonic         :            0
+   iimage            :            0
+   idynmat           :            0
+   iephc             :            0
+   ivdw              :            0
+   ineb              :            0
+   itrans            :            0
+   itdse             :            0
+   imdet             :            0
+   nddt              :         1000
+   ibias             :            0
+   rescalar          :    1.00000000000000     
+   icDFT             :            0
+   iqmmm             :            1
+   mix_embedding     :            0
+   cut_embedding     :    99.0000000000000     
+   idipole           ;            1
+   idftd3            :            0
+   dftd3_func        : fb_bio                                  
+   dftd3_version     :            4
+   dftd3_tz          :  F
+   verbosity         :            0
+   ntpr              :            1
+   restartxyz        :            0
+   inputxyz          :            0
+   fdatalocation     : 
+ ../Fdata_HCNOS                                                                 
+                                                                                
+                                           
+  ======================================================================
+ 
+  SCF
+   max_scf_iterations  :           70
+   ialgmix             :            1
+   bmix                :   4.000000000000000E-002
+   tempfe              :    100.000000000000     
+   sigmatol            :   1.000000000000000E-008
+ 
+  TEMPERATURE
+   T_initial           :   0.000000000000000E+000
+   T_final             :    10.0000000000000     
+  QUENCH:
+   energytol         :   1.000000000000000E-004
+   forcetol          :   5.000000000000000E-002
+   T_want            :   0.000000000000000E+000
+   taurelax          :    50.0000000000000     

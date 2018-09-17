@@ -1,0 +1,393 @@
+
+          -------------------------------------------------------
+          Amber 18 SANDER                              2018
+          -------------------------------------------------------
+
+| Run on 09/17/2018 at 11:40:59
+
+|   Executable path: /home/jesus/amber18//bin/sander
+| Working directory: /home/jesus/test_amber_fireball/min
+|          Hostname: nas-0-1.local
+
+  [-O]verwriting output
+
+File Assignments:
+|  MDIN: amber.in                                                              
+| MDOUT: outmd                                                                 
+|INPCRD: thym_qmmm.inpcrd                                                      
+|  PARM: thym_qmmm.prmtop                                                      
+|RESTRT: answer.rst                                                            
+|  REFC: refc                                                                  
+| MDVEL: mdvel                                                                 
+| MDFRC: mdfrc                                                                 
+|  MDEN: mden                                                                  
+| MDCRD: answer.mdcrd                                                          
+|MDINFO: mdinfo                                                                
+|  MTMD: mtmd                                                                  
+|INPDIP: inpdip                                                                
+|RSTDIP: rstdip                                                                
+|INPTRA: inptraj                                                               
+
+ 
+ Here is the input file:
+ 
+QM/MM                                                                          
+ &cntrl                                                                        
+ ntx = 7, irest = 1, ntrx = 1,                                                 
+ ntxo = 1, nmropt = 0, ntr = 0,                                                
+ ntpr = 1, ntwx = 1,                                                           
+ ntf = 1,  ntc = 1, ntb = 0, ivcap = 0,                                        
+ imin = 1, maxcyc = 10, ncyc = 10,                                             
+ cut = 10, nstlim = 10, dt = 0.0005,                                           
+ ntc = 2, temp0 = 300.0, tempi = 300.0,                                        
+ ntt = 2,                                                                      
+ ifqnt = 1                                                                     
+ &end                                                                          
+/                                                                              
+ &qmmm                                                                         
+ qmmask= '@546-569'                                                            
+ qm_theory='extern'                                                            
+ qm_ewald= 0,                                                                  
+ qmshake= 0,                                                                   
+ qmcharge= 0,                                                                  
+/                                                                              
+ &fb                                                                           
+ basis= '../Fdata_HCNOS'                                                       
+/                                                                              
+
+--------------------------------------------------------------------------------
+   1.  RESOURCE   USE: 
+--------------------------------------------------------------------------------
+
+| Flags:                                                                        
+|    NONPERIODIC   ntb=0 and igb=0: Setting up nonperiodic simulation
+|Largest sphere to fit in unit cell has radius =    60.360
+| New format PARM file being parsed.
+| Version =    1.000 Date = 10/17/14 Time = 10:35:47
+ NATOM  =   10917 NTYPES =      18 NBONH =   10409 MBONA  =     544
+ NTHETH =     649 MTHETA =     836 NPHIH =    1377 MPHIA  =    1480
+ NHPARM =       0 NPARM  =       0 NNB   =   17762 NRES   =    3424
+ NBONA  =     544 NTHETA =     836 NPHIA =    1480 NUMBND =      39
+ NUMANG =      76 NPTRA  =      42 NATYP =      28 NPHB   =       1
+ IFBOX  =       0 NMXRS  =      34 IFCAP =       1 NEXTRA =       0
+ NCOPY  =       0
+
+
+|     Memory Use     Allocated
+|     Real              857115
+|     Hollerith          36177
+|     Integer           409844
+|     Max Pairs        3639000
+|     nblistReal        131004
+|     nblist Int       4686920
+|       Total            41985 kbytes
+
+| Note: 1-4 EEL scale factors are being read from the topology file.
+
+| Note: 1-4 VDW scale factors are being read from the topology file.
+| Duplicated    0 dihedrals
+| Duplicated    0 dihedrals
+LOADING THE QUANTUM ATOMS AS GROUPS
+     Mask @546-569; matches    24 atoms
+
+--------------------------------------------------------------------------------
+   2.  CONTROL  DATA  FOR  THE  RUN
+--------------------------------------------------------------------------------
+
+default_name                                                                    
+
+General flags:
+     imin    =       1, nmropt  =       0
+
+Nature and format of input:
+     ntx     =       7, irest   =       1, ntrx    =       1
+
+Nature and format of output:
+     ntxo    =       1, ntpr    =       1, ntrx    =       1, ntwr    =      10
+     iwrap   =       0, ntwx    =       1, ntwv    =       0, ntwe    =       0
+     ioutfm  =       1, ntwprt  =       0, idecomp =       0, rbornstat=      0
+
+Potential function:
+     ntf     =       1, ntb     =       0, igb     =       0, nsnb    =      25
+     ipol    =       0, gbsa    =       0, iesp    =       0
+     dielc   =   1.00000, cut     =  10.00000, intdiel =   1.00000
+
+Frozen or restrained atoms:
+     ibelly  =       0, ntr     =       0
+
+Energy minimization:
+     maxcyc  =      10, ncyc    =      10, ntmin   =       1
+     dx0     =   0.01000, drms    =   0.00010
+
+SHAKE:
+     ntc     =       2, jfastw  =       0
+     tol     =   0.00001
+
+Water cap:
+     ivcap   =       0, natcap  =     783
+     fcap    =   1.50000, cutcap  =  31.00000
+     xcap    =   6.18900, ycap    =  18.82500, zcap    =  27.13000
+
+QMMM options:
+             ifqnt = True       nquant =       24
+              qmgb =        0  qmcharge =        0   adjust_q =        2
+              spin =        1     qmcut =  10.0000    qmshake =        0
+          qmmm_int =        1
+     lnk_atomic_no =        1   lnk_dis =   1.0900 lnk_method =        1
+          qm_theory =     EXTERN verbosity =        0
+            qmqmdx = Analytical
+          qm_ewald =        0 qm_pme = False 
+|  INFO: Old style inpcrd file read
+
+
+--------------------------------------------------------------------------------
+   3.  ATOMIC COORDINATES AND VELOCITIES
+--------------------------------------------------------------------------------
+
+default_name                                                                    
+ begin time read from input coords =  6079.000 ps
+
+ Number of triangulated 3-point waters found:     3378
+
+     Sum of charges from parm topology file =   0.00000013
+     Forcing neutrality...
+QMMM: ADJUSTING CHARGES
+QMMM: ----------------------------------------------------------------------
+QMMM: adjust_q = 2
+QMMM: Uniformly adjusting the charge of MM atoms to conserve total charge.
+QMMM:                             qm_charge =    0
+QMMM: QM atom RESP charge sum (inc MM link) =   -0.269
+QMMM: Adjusting each MM atom resp charge by =    0.000
+QMMM:          Sum of MM + QM region is now =    0.000
+QMMM: ----------------------------------------------------------------------
+ ---------------------------------------------------
+
+     eedmeth=4: Setting switch to one everywhere
+
+ ---------------------------------------------------
+| Local SIZE OF NONBOND LIST =    1862806
+| TOTAL SIZE OF NONBOND LIST =    1862806
+
+QMMM: Link Atom Information
+QMMM: ------------------------------------------------------------------------
+QMMM:  nlink =     2                   Link Coords              Resp Charges
+QMMM:    MM(typ)  -  QM(typ)      X         Y         Z         MM        QM
+QMMM:   543 CT      546 CT       5.911    29.232    18.036    -0.007     0.163
+QMMM:   570 OS      565 CT       8.532    29.566    17.474    -0.523     0.071
+QMMM: ------------------------------------------------------------------------
+
+  QMMM: QM Region Cartesian Coordinates (*=link atom) 
+  QMMM: QM_NO.   MM_NO.  ATOM         X         Y         Z
+  QMMM:     1      546      C        6.6705   29.6855   18.6726
+  QMMM:     2      547      H        6.6509   30.7411   18.5770
+  QMMM:     3      548      O        6.4329   29.4324   20.1442
+  QMMM:     4      549      C        7.8542   29.3335   20.7981
+  QMMM:     5      550      H        7.9635   30.0917   21.4708
+  QMMM:     6      551      N        7.9513   27.9917   21.4791
+  QMMM:     7      552      C        7.5626   26.8229   20.7981
+  QMMM:     8      553      H        7.1540   27.0657   19.8681
+  QMMM:     9      554      C        7.5354   25.5488   21.2791
+  QMMM:    10      555      C        7.0450   24.3772   20.4485
+  QMMM:    11      556      H        7.6304   23.5141   20.6457
+  QMMM:    12      557      H        6.0935   24.1404   20.8026
+  QMMM:    13      558      H        6.9483   24.5755   19.4180
+  QMMM:    14      559      C        8.0526   25.3769   22.6582
+  QMMM:    15      560      O        8.0881   24.2630   23.3186
+  QMMM:    16      561      N        8.7087   26.5840   23.2054
+  QMMM:    17      562      H        9.0471   26.4552   24.1948
+  QMMM:    18      563      C        8.3711   27.9625   22.8584
+  QMMM:    19      564      O        8.4881   28.9782   23.6529
+  QMMM:    20      565      C        8.0765   29.1543   18.3742
+  QMMM:    21      566      H        8.0641   28.1577   18.3192
+  QMMM:    22      567      C        8.8265   29.5671   19.6478
+  QMMM:    23      568      H        9.6311   28.9104   19.7624
+  QMMM:    24      569      H        8.9951   30.6225   19.6527
+  QMMM:    25              *H        5.9106   29.2317   18.0364
+  QMMM:    26              *H        8.5323   29.5657   17.4736
+
+--------------------------------------------------------------------------------
+  3.1 QM CALCULATION INFO
+--------------------------------------------------------------------------------
+
+| Please also cite the following work for the use of the QM/MM interface:
+
+| A. W. G"otz, M. A. Clark, R. C. Walker
+| "An extensible interface for ab initio QM/MM molecular dynamics simulations
+|  with AMBER"
+| J. Comput. Chem. 35 (2014) 95-108.
+| DOI: 10.1002/jcc.23444
+
+| Jesus I. Mendieta-Moreno, Ross C. Walker, James P. Lewis,
+| Paulino Gomez-Puertas, Jesus Mendieta, and Jose Ortega
+| "FIREBALL / AMBER :An Efficient Local-Orbital DFT
+| QM/MM Method for Biomolecular Systems"
+| J. Chem. Theory Comput., 2014, 10 (5), pp 2185–2193
+| DOI: 10.1021/ct500033w
+
+ Constants for unit conversion taken from
+ Mohr, Taylor, Newell, Rev. Mod. Phys. 80 (2008) 633-730
+ and using the thermochemical calorie (1 cal = 4.184 J):
+
+ A_TO_BOHRS  =  1.889726132873E+00
+ AU_TO_KCAL  =  6.2750946943E+02
+ AU_TO_DEBYE =  2.54174623E+00
+ >>> Running QM calculation with Fireball  <<<
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      1      -1.1769E+05     1.7749E+01     1.1952E+02     O3'       760
+
+ BOND    =      253.9733  ANGLE   =      405.6551  DIHED      =      497.7621
+ VDWAALS =     4611.0772  EEL     =   -42781.2127  HBOND      =        0.0000
+ 1-4 VDW =      199.1824  1-4 EEL =    -2113.0578  RESTRAINT  =        3.8851
+ EXTERNESCF =   -78767.1094
+ EAMBER  =  -117693.7297
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      2      -1.1770E+05     1.7729E+01     1.1932E+02     O3'       760
+
+ BOND    =      251.6874  ANGLE   =      404.4485  DIHED      =      497.5993
+ VDWAALS =     4609.3749  EEL     =   -42782.6684  HBOND      =        0.0000
+ 1-4 VDW =      199.0871  1-4 EEL =    -2113.0335  RESTRAINT  =        3.8852
+ EXTERNESCF =   -78767.3312
+ EAMBER  =  -117700.8359
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      3      -1.1771E+05     1.7704E+01     1.1910E+02     O3'       760
+
+ BOND    =      248.9989  ANGLE   =      403.0183  DIHED      =      497.4047
+ VDWAALS =     4607.3345  EEL     =   -42784.4158  HBOND      =        0.0000
+ 1-4 VDW =      198.9738  1-4 EEL =    -2113.0045  RESTRAINT  =        3.8853
+ EXTERNESCF =   -78767.5859
+ EAMBER  =  -117709.2760
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      4      -1.1772E+05     1.7676E+01     1.1883E+02     O3'       760
+
+ BOND    =      245.8485  ANGLE   =      401.3270  DIHED      =      497.1722
+ VDWAALS =     4604.8897  EEL     =   -42786.5127  HBOND      =        0.0000
+ 1-4 VDW =      198.8391  1-4 EEL =    -2112.9699  RESTRAINT  =        3.8855
+ EXTERNESCF =   -78767.8660
+ EAMBER  =  -117719.2721
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      5      -1.1773E+05     1.7644E+01     1.1851E+02     O3'       760
+
+ BOND    =      242.1743  ANGLE   =      399.3329  DIHED      =      496.8945
+ VDWAALS =     4601.9611  EEL     =   -42789.0287  HBOND      =        0.0000
+ 1-4 VDW =      198.6793  1-4 EEL =    -2112.9289  RESTRAINT  =        3.8856
+ EXTERNESCF =   -78768.1930
+ EAMBER  =  -117731.1084
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      6      -1.1774E+05     1.7606E+01     1.1813E+02     O3'       760
+
+ BOND    =      237.9143  ANGLE   =      396.9898  DIHED      =      496.5635
+ VDWAALS =     4598.4545  EEL     =   -42792.0479  HBOND      =        0.0000
+ 1-4 VDW =      198.4903  1-4 EEL =    -2112.8800  RESTRAINT  =        3.8858
+ EXTERNESCF =   -78768.5721
+ EAMBER  =  -117745.0875
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      7      -1.1776E+05     1.7562E+01     1.1767E+02     O3'       760
+
+ BOND    =      233.0085  ANGLE   =      394.2477  DIHED      =      496.1692
+ VDWAALS =     4594.2580  EEL     =   -42795.6702  HBOND      =        0.0000
+ 1-4 VDW =      198.2672  1-4 EEL =    -2112.8221  RESTRAINT  =        3.8861
+ EXTERNESCF =   -78769.0091
+ EAMBER  =  -117761.5508
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      8      -1.1778E+05     1.7512E+01     1.1712E+02     O3'       760
+
+ BOND    =      227.4051  ANGLE   =      391.0538  DIHED      =      495.7004
+ VDWAALS =     4589.2388  EEL     =   -42800.0159  HBOND      =        0.0000
+ 1-4 VDW =      198.0047  1-4 EEL =    -2112.7536  RESTRAINT  =        3.8864
+ EXTERNESCF =   -78769.5518
+ EAMBER  =  -117780.9185
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+      9      -1.1780E+05     1.7455E+01     1.1646E+02     O3'       760
+
+ BOND    =      221.0663  ANGLE   =      387.3544  DIHED      =      495.1440
+ VDWAALS =     4583.2403  EEL     =   -42805.2281  HBOND      =        0.0000
+ 1-4 VDW =      197.6972  1-4 EEL =    -2112.6728  RESTRAINT  =        3.8868
+ EXTERNESCF =   -78770.1550
+ EAMBER  =  -117803.5537
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+     10      -1.1783E+05     1.7391E+01     1.1569E+02     O3'       760
+
+ BOND    =      213.9811  ANGLE   =      383.0976  DIHED      =      494.4852
+ VDWAALS =     4576.0785  EEL     =   -42811.4787  HBOND      =        0.0000
+ 1-4 VDW =      197.3384  1-4 EEL =    -2112.5777  RESTRAINT  =        3.8872
+ EXTERNESCF =   -78770.7921
+ EAMBER  =  -117829.8678
+
+
+  Maximum number of minimization cycles reached.
+
+
+                    FINAL RESULTS
+
+
+
+   NSTEP       ENERGY          RMS            GMAX         NAME    NUMBER
+     10      -1.1783E+05     1.7391E+01     1.1569E+02     O3'       760
+
+ BOND    =      213.9811  ANGLE   =      383.0976  DIHED      =      494.4852
+ VDWAALS =     4576.0785  EEL     =   -42811.4787  HBOND      =        0.0000
+ 1-4 VDW =      197.3384  1-4 EEL =    -2112.5777  RESTRAINT  =        3.8872
+ EXTERNESCF =   -78770.7921
+ EAMBER  =  -117829.8678
+
+--------------------------------------------------------------------------------
+   5.  TIMINGS
+--------------------------------------------------------------------------------
+
+|    Read coords time           0.02 ( 0.09% of Total)
+|                Build the list             0.08 (99.38% of List )
+|                Other                      0.00 ( 0.62% of List )
+|             List time                  0.08 ( 7.79% of Nonbo)
+|                   Short_ene time             0.89 (99.85% of Direc)
+|                   Other                      0.00 ( 0.15% of Direc)
+|                Direct Ewald time          0.90 (99.88% of Ewald)
+|                Other                      0.00 ( 0.12% of Ewald)
+|             Ewald time                 0.90 (92.21% of Nonbo)
+|          Nonbond force              0.97 ( 5.01% of Force)
+|             QMMM list build            0.02 ( 0.09% of QMMM )
+|             Other                     18.42 (100.0% of QMMM )
+|          QMMM                      18.44 (94.94% of Force)
+|          Bond/Angle/Dihedral        0.01 ( 0.04% of Force)
+|          Other                      0.00 ( 0.01% of Force)
+|       Force time                19.42 (100.0% of Runmd)
+|    Runmd Time                19.42 (99.16% of Total)
+|    Other                      0.15 ( 0.75% of Total)
+| Total time                19.58 (100.0% of ALL  )
+
+| Number of list builds   :          1
+
+| Highest rstack allocated:       1425
+| Highest istack allocated:        285
+|           Job began  at 11:40:59.344  on 09/17/2018
+|           Setup done at 11:40:59.447  on 09/17/2018
+|           Run   done at 11:41:18.929  on 09/17/2018
+|     wallclock() was called     386 times
+
+|3D-RISM memory allocation summary
+|Type          Maximum        Current   
+|Integer       0.00000 GB     0.00000 GB
+|Real          0.00000 GB     0.00000 GB
+|Logical       0.00000 GB     0.00000 GB
+|Character     0.00000 GB     0.00000 GB
+|---------------------------------------
+|Total         0.00000 GB     0.00000 GB

@@ -1,0 +1,8 @@
+wget http://fireball.ftmc.uam.es/Fdata_HCNOS.tar.gz
+tar -xvf Fdata_HCNOS.tar.gz
+cd min/
+./run.sh
+cd ../
+cd md/
+./run.sh
+cd ../
