@@ -160,7 +160,7 @@ contains
     integer ::  max_scf_iterations, qmmm_int, idftd3, debug, iqout, iensemble,        &
                imcweda, ihorsfield, imdet, nddt, icluster, iwrtpop, iwrtvel, iwrteigen,   &
                iwrtefermi, iwrtdos, iwrtdosng, ifixcharge, iwrtewf, iwrtatom, iewform, idipole,      &
-               npbands, mix_embedding, iwrtcharges
+               npbands, mix_embedding, iwrtcharges, verbosity
     real :: cut_embedding, tempfe, sigmatol
     character (len = 100) :: basis
     character (len = 20) :: dftd3_func
@@ -169,7 +169,7 @@ contains
                imcweda, ihorsfield, iensemble, imdet, nddt, icluster, iwrtpop, iwrtvel,  &
                iwrteigen, iwrtefermi, iwrtdos, iwrtdosng, ifixcharge, iwrtewf, iwrtatom,            &
                iewform, npbands, idipole, pbands, mix_embedding, cut_embedding,          &
-               iwrtcharges, tempfe, sigmatol, basis, dftd3_func
+               iwrtcharges, tempfe, sigmatol, basis, dftd3_func, verbosity
     integer :: i, ierr
 
     ! Default values
@@ -207,6 +207,7 @@ contains
     sigmatol = 1.0E-8
     basis = 'Fdata'
     dftd3_func = 'fb_bio'
+    verbosity = 0   
 
     ! Read namelist, 
     rewind 5
@@ -246,6 +247,7 @@ contains
     fb_nml%sigmatol             = sigmatol
     fb_nml%basis                = basis
     fb_nml%dftd3_func           = dftd3_func
+    fb_nml%verbosity            = verbosity
 
     ! Need this variable so we don't call MPI_Send in the finalize subroutine
 
@@ -289,6 +291,7 @@ contains
     write (226,607) "sigmatol =", fb_nml%sigmatol
     write (226,609) "fdataLocation = '", fb_nml%basis,"'"
     write (226,602) "idipole = ",fb_nml%idipole
+    write (226,602) "verbosity = ",fb_nml%verbosity    
     write (226,602) "mix_embedding = ", fb_nml%mix_embedding
     write (226,606) "cut_embedding = ", fb_nml%cut_embedding
     write (226,600) "&end"
