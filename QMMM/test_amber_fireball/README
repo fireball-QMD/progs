@@ -1,3 +1,4 @@
+#  $AMBERHOME need to be defined
 wget http://fireball.ftmc.uam.es/Fdata_HCNOS.tar.gz
 tar -xvf Fdata_HCNOS.tar.gz
 cd min/
