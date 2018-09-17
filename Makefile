@@ -1747,10 +1747,6 @@ MCsolar.o : NAC/MCsolar.f90 $(MODULES)
 # *****************************************************************************
 # qmmm
 # *****************************************************************************
-coords_to_fireball.o : QMMM/coords_to_fireball.f90
-	$(F90) $(FFLAGS) -c QMMM/coords_to_fireball.f90
-coords_forces_charges_to_amber.o : QMMM/coords_forces_charges_to_amber.f90
-	$(F90) $(FFLAGS) -c QMMM/coords_forces_charges_to_amber.f90
 # qmm_module_null do nothing, only if you want libfireball.a use qmmm_module
 qmmm_module_null.o : QMMM/qmmm_module_null.f90
 	$(F90) $(FFLAGS) -c QMMM/qmmm_module_null.f90
@@ -1760,14 +1756,6 @@ qmmm_module.o: ../sqm/qmmm_module.F90
 	cp ../sqm/qmmm_module.o .
 fireball_qmmm_loop.o : QMMM/fireball_qmmm_loop.f90
 	$(F90) $(FFLAGS) -c QMMM/fireball_qmmm_loop.f90
-cambio_coordenadas.o : QMMM/cambio_coordenadas.f90
-	$(F90) $(FFLAGS) -c QMMM/cambio_coordenadas.f90
-fireball_first_call.o : QMMM/fireball_first_call.f90
-	$(F90) $(FFLAGS) -c QMMM/fireball_first_call.f90
-amber_fireball.o : QMMM/amber_fireball.f90
-	$(F90) $(FFLAGS) -c QMMM/amber_fireball.f90
-fireball_qmmm.o : QMMM/fireball_qmmm.f90
-	$(F90) $(FFLAGS) -c QMMM/fireball_qmmm.f90
 assemble_qmmm.o : QMMM/assemble_qmmm.f90
 	$(F90) $(FFLAGS) -c QMMM/assemble_qmmm.f90
 assemble_qmmm_dip.o : QMMM/assemble_qmmm_dip.f90
