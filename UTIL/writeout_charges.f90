@@ -58,6 +58,7 @@
         use density
         use interactions
         use neighbor_map
+        use scf, only : scf_achieved
         implicit none
  
 ! Argument Declaration and Description
@@ -111,7 +112,7 @@
            write (*,*) ' iatom, ineigh = ', iatom, ineigh
            write (*,*) ' Number of orbitals on jatom, num_orb(in2) = ',      &
      &      num_orb(in2)
-           write (*,*) ' ----------------------------------------------------- '
+           write (*,*) ' ----------------------------------------------'
            do imu = 1, num_orb(in1)
             write (*,400) (rho(imu,inu,ineigh,iatom), inu = 1, num_orb(in2))
            end do
@@ -150,7 +151,7 @@
           write (*,500)
           write (*,*) '  '
           write (*,*) '  '
-         end if
+         end if ! end if (iqout .ne. 2)
 
 
 ! ****************************************************************************
@@ -181,12 +182,40 @@
           write (*,500)
           write (*,*) '  '
           write (*,*) '  '
-         end if
+         end if !end if (iqout .eq. 2)
 
          write (*,500)
          write (*,*) '  '
-        end if
+        end if  !end if (iwrtcharges .eq. 1)
 
+! ****************************************************************************
+!
+! W R I T E    O U T    T E M P O R A L    S E R I E S   O F    C H A R G E S
+! ****************************************************************************
+      if ( scf_achieved ) then
+      if (iwrtcharges .eq. 2) then
+
+      open(unit = 333, file = 'CHARGES_series', status = 'unknown', &
+                                      & position = 'append')
+
+      if (iqout .eq. 1 .or. iqout .eq. 3) then
+       do iatom = 1, natoms
+       write(333,400, advance="no") QLowdin_TOT(iatom)
+       end do
+       write(333,*) 
+      end if
+     
+      if (iqout .eq. 2) then
+       do iatom = 1, natoms
+       write(333,400, advance="no") QMulliken_TOT(iatom)
+       end do
+       write(333,*)
+      end if
+
+
+
+      end if !end if (iwrtcharges .eq. 2)
+      end if !end if ( scf_achieved )
 
 ! ****************************************************************************
 !

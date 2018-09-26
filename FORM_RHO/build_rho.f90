@@ -165,10 +165,10 @@
 			end if
          end if
 
-         if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
-           call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
-     &                             iwrtdensity, basisfile, symbol)
-         end if
+       !  if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
+       !    call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
+       !&                             iwrtdensity, basisfile, symbol)
+       !  end if
 
 ! ===========================================================================
 !                  check input and output charges for scf
@@ -180,7 +180,27 @@
          if (sigma .lt. sigmatol) then
            scf_achieved = .true.
            flag_es = 1
-         endif ! (sigma)
+
+           if (iwrteigen .eq. 2) then
+           open (unit = 20, file = 'ek_series.dat', status = 'unknown', &
+                                    & position = 'append')
+           do ikpoint = 1,nkpoints
+           write (20,101, advance="no") ikpoint
+           do imu = 1, norbitals
+            write (20,102, advance="no") eigen_k(imu,ikpoint)
+           enddo
+           write (20,*)
+           end do !end do ikpoint = 1,nkpoints
+
+           end if !end if (iwrteigen .eq. 2)
+
+         endif ! (sigma .lt. sigmatol)
+
+         if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
+           call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
+     &                             iwrtdensity, basisfile, symbol)
+         end if
+
 
 ! call projection
          if ((scf_achieved .eqv. .true. .or. Kscf .eq. max_scf_iterations) .and. (icDFT .eq. 1 .or. iProjWF .eq. 1 )) then    
@@ -271,7 +291,7 @@
           endif
 
 !DOSNG
-         if (iwrtdosng .ge. 1) then
+         if (iwrtdosng .ge. 1 ) then
 
          E_KS(1:norbitals,1:nkpoints) = eigen_k(1:norbitals,1:nkpoints)
 
@@ -297,6 +317,8 @@
 ! Format Statements
 ! ===========================================================================
 100     format (2x, 70('='))
+101     format (i4)
+102     format (f11.5)
 
         return
 

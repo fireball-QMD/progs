@@ -163,11 +163,14 @@
          if (iwrteigen .eq. 1) then
            write (19,*) ' ------ the energy eigenvalues ----'
            write (19,100) (eigen_k(imu,ikpoint), imu = 1, norbitals_new)
+            
            write (20,101, advance="no") ikpoint
            do imu = 1, norbitals_new
             write (20,102, advance="no") eigen_k(imu,ikpoint)
            enddo
            write (20,*)
+
+
 !          write (20,101) ikpoint,(eigen_k(imu,ikpoint), imu=1,norbitals_new)
          end if
 
