@@ -171,7 +171,7 @@
 ! Keep only third party common neighbors.
             if (.not. (jatom .eq. ialp .and. jbeta .eq. 0)                   &
 !           &          .and. (ineigh .ne. jneigh)) then
-            &          .and. (iatom .lt. jatom)) then    
+            &          .and. (ineigh .lt. jneigh)) then    
 !Modification; instead of demanding that iatom and jatom are not the
 !same atoms, we demandn that iatom's index is strictly less than jatom's. That way
 !we cut in half the number of pairs of common neighbors
