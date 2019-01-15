@@ -1,3 +1,5 @@
+0) reparar F
+
 1) Cambiar delta_t_ks de sitio y cambiarla de nombre
 2) Lista de vecinos: calcularse si dos atomos son vecinos o no (mirar en neighbours como se hace) y si no son vecinos, el solape es cero (poner un if)
 3) Mirar si los solapes son delta_j,k o -delta_j,k. Si te sale -1 hay que cambiar el signo (chequear todos pero en la practica mirar solo la diagonal)
