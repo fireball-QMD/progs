@@ -337,6 +337,7 @@
 
            do inu = 1, num_orb(in2)
             do imu = 1, num_orb(in1)
+             dip(imu,inu,ineigh,iatom) = dipx(imu,inu)
              dipcm(3,imu,inu) = dipx(imu,inu)
              if (iforce .eq. 1) dippcm(:,3,imu,inu) = dippx(:,imu,inu)
             end do
