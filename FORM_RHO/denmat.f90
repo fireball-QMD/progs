@@ -95,7 +95,7 @@
         integer ineigh
         integer in1, in2
         integer iorbital
-        integer issh
+        integer issh, jssh
         integer jatom
         integer jneigh
         integer mqn
@@ -115,9 +115,10 @@
         real ztest
         real checksum
         real Wmu
+        real y
         real, dimension (norbitals, nkpoints) :: foccupy
         real, dimension (numorb_max, natoms) :: QMulliken
-        real, dimension (3) :: vec
+        real, dimension (3) :: vec, r1, r2, r21
         real, dimension (natoms) :: pqmu
 
         complex ai
@@ -415,7 +416,7 @@
 !  C O M P U T E    L O W D I N    C H A R G E S
 ! ****************************************************************************
 ! Initialize
-        if (iqout .ne. 2) then
+        if (iqout .eq. 1 .or. iqout .eq. 3) then
          Qout = 0.0d0
          QLowdin_TOT = 0.0d0
 
@@ -501,6 +502,8 @@
            do ineigh = 1, neighn(iatom)
             jatom = neigh_j(ineigh,iatom)
             in2 = imass(jatom)
+
+     
             jneigh = neigh_back(iatom,ineigh)
             do imu = 1, num_orb(in1)
              do inu = 1, num_orb(in2)
@@ -538,6 +541,126 @@
        end if
 ! end GAP ENRIQUE-FF
 
+
+
+
+
+! ****************************************************************************
+!
+!  C O M P U T E    M U L L I K E N - D I P O L E    C H A R G E S
+! ****************************************************************************
+! Compute Mulliken-dipole charges.
+        if (iqout .eq. 4) then
+         Qout = 0.0d0
+         QMulliken = 0.0d0
+         QMulliken_TOT = 0.0d0
+
+         if (ifixcharge .eq. 1) then
+
+          do iatom = 1, natoms
+           in1 = imass(iatom)
+           QMulliken_TOT(iatom) = 0.0d0
+           do issh = 1, nssh(in1)
+            Qout(issh,iatom) = Qin(issh,iatom)
+            QMulliken_TOT(iatom) = QMulliken_TOT(iatom) +Qin(issh,iatom)
+           end do
+          end do
+
+         else
+
+          do iatom = 1, natoms
+           in1 = imass(iatom)
+           r1(:) = ratom(:,iatom)
+! Loop over neighbors
+           do ineigh = 1, neighn(iatom)
+            jatom = neigh_j(ineigh,iatom)
+            in2 = imass(jatom)
+            r2(:) = ratom(:,jatom)
+
+
+! ****************************************************************************
+! Find r21 = vector pointing from r1 to r2, the two ends of the
+! bondcharge, and the bc distance, y
+           r21(:) = r2(:) - r1(:)
+           y = sqrt(r21(1)*r21(1) + r21(2)*r21(2) + r21(3)*r21(3))
+
+            jneigh = neigh_back(iatom,ineigh)
+            do imu = 1, num_orb(in1)
+             do inu = 1, num_orb(in2)
+              QMulliken(imu,iatom) = QMulliken(imu,iatom)                   &
+     &        +0.5d0*(rho(imu,inu,ineigh,iatom)*s_mat(imu,inu,ineigh,iatom) &
+     &        + rho(inu,imu,jneigh,jatom)*s_mat(inu,imu,jneigh,jatom))
+             end do
+            end do
+             
+! dipole correction. Only if the two atoms are different
+          if (y .gt. 1.0d-05) then
+           
+
+            do imu = 1, num_orb(in1)
+             do inu = 1, num_orb(in2)
+
+              write(*,*) 'Qb(',imu,',',iatom,')= ',QMulliken(imu,iatom)
+
+              QMulliken(imu,iatom) = QMulliken(imu,iatom)+                  &
+     &        (-rho(imu,inu,ineigh,iatom)*dip(imu,inu,ineigh,iatom)         &
+     &        + rho(inu,imu,jneigh,jatom)*dip(inu,imu,jneigh,jatom))/y
+             
+ 
+           !         write(*,*) 'DIPOLE when iatom,jatom,imu,inu = ',  &
+     ! &        iatom,jatom,imu,inu,' is',dip(imu,inu,ineigh,iatom),    &
+     ! &        dip(inu,imu,jneigh,jatom) 
+
+               write(*,*) 'Qa(',imu,',',iatom,')= ',QMulliken(imu,iatom)
+
+             end do
+            end do
+          end if !end if y .gt. 1.0d-05)
+
+         
+
+! End loop over neighbors
+           end do
+
+! Finally the imu loop.
+           imu = 0
+           do issh = 1, nssh(in1)
+            do mqn = 1, 2*lssh(issh,in1) + 1
+               imu = imu + 1
+               Qout(issh,iatom) = Qout(issh,iatom) + QMulliken(imu,iatom)
+            end do
+               QMulliken_TOT(iatom) = QMulliken_TOT(iatom) +Qout(issh,iatom)
+           end do
+
+!Check whether there are negative charges and correct
+!If there's more than one shell whose charge is negative, more work is
+!needed, but that'd be quite pathological a situation...
+            do issh = 1, nssh(in1)
+
+               if( Qout(issh,iatom) .lt. 0 ) then
+           
+                  do jssh = 1,nssh(in1)
+
+                     if ( jssh .ne. issh ) then
+
+                        Qout(jssh,iatom) = Qout(jssh,iatom)+            &
+                 &                         Qout(issh,iatom)/(nssh(in1)-1)
+
+                     end if !end if jssh .ne. issh 
+
+                  end do !end if jssh = 1,nssh(in1)
+
+                  Qout(issh,iatom) = 0.0d0               
+
+               end if !end if  Qout(issh,iatom) .lt. 0
+
+            end do !end do issh = 1, nssh(in1)
+
+
+! End loop over atoms
+          end do
+         end if     ! endif of ifixcharges
+        end if      ! endif of iqout .eq. 4
 
 
 ! ****************************************************************************

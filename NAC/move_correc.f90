@@ -150,6 +150,16 @@
      &      call get_umbrella (nstepi, nstepf, itime_step, time, natoms,      &
      &                        iwrtfpieces, ratom, etot, ftot)
 
+
+! Call steered routine if iumbrella = 2
+           if (iumbrella .eq. 2)                                              &
+
+     &      call get_steered (nstepi, nstepf, itime_step, time, natoms,       &
+     &                        iwrtfpieces, ratom, etot, ftot)
+
+
+
+
 ! Calculate crude energy barrier option.
 ! Push atoms along a direction "towards" the final configuation.
            if (ibarrier .eq. 1) then

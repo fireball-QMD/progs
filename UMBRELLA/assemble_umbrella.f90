@@ -18,21 +18,11 @@
 ! University of Regensburg - Juergen Fritsch
 
 !
-! fireball-qmd is a free (GPLv3) open project.
-
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation, either version 3 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+! RESTRICTED RIGHTS LEGEND
+! Use, duplication, or disclosure of this software and its documentation
+! by the Government is subject to restrictions as set forth in subdivision
+! { (b) (3) (ii) } of the Rights in Technical Data and Computer Software
+! clause at 52.227-7013.
  
 ! umbrella_energy.f90 
 ! Program Description
@@ -66,8 +56,8 @@
         real, intent (in), dimension (3, natoms) :: ratom
 
 ! Ouput
-        real, intent (out) :: umb_e          ! Energy for reaction coordinate
-        real, intent (out) :: coord_reac_inter  ! Reaction coordinate MD 
+        real, intent (out) :: umb_e                                  ! Energy for reaction coordinate
+        real, intent (out), dimension(umb_pair) :: coord_reac_inter  ! Reaction coordinate MD 
  
 ! Local Parameters and Data Declaration
 ! ===========================================================================
@@ -89,12 +79,9 @@
      &                   + (ratom(2,umb_p2(ip)) - ratom(2,umb_p1(ip)))**2    &
      &                   + (ratom(3,umb_p2(ip)) - ratom(3,umb_p1(ip)))**2)
          umb_e = umb_e + (umb_CFd(ip)*(distance - umb_d0(ip))**2)/2.0d0
+         coord_reac_inter(ip) = distance
         end do
 
-! Reaction coordinate value, at this moment only a distance, corresponding 
-! to only one pair...
-        coord_reac_inter = distance
- 
 ! Format Statements
 ! ===========================================================================
         return

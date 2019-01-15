@@ -57,8 +57,8 @@ MACHINE = ILINUX_fast05
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-METHOD = DOUBLE 
-#METHOD = GAMMA 
+#METHOD = DOUBLE 
+METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
@@ -284,7 +284,7 @@ include MACHINES/${MACHINE}
 #include MACHINES/ILINUX_PARALLEL_CLS1
 
 ALLOCATIONS = allocate_f.o allocate_h.o allocate_neigh.o allocate_rho.o \
-	allocate_umb.o reallocate_f.o reallocate_h.o reallocate_neigh.o \
+	allocate_umb.o allocate_steered.o reallocate_f.o reallocate_h.o reallocate_neigh.o \
 	reallocate_rho.o allocate_dos.o allocate_grid.o allocate_trans.o 
 
 ASSEMBLERS = assemble_olsxc_1c.o assemble_hxc_1c.o assemble_2c.o assemble_3c.o \
@@ -336,7 +336,7 @@ MD = cross.o factorial.o predictor.o gaussT.o corrector.o imaged.o setgear.o \
 
 MODULES = barrier.o charges.o configuration.o constants_fireball.o density.o \
 	dimensions.o forces.o fragments.o gaussG.o integrals.o interactions.o \
-	kpoints.o neighbor_map.o umbrella.o optimization.o module_dos.o \
+	kpoints.o neighbor_map.o umbrella.o steered.o optimization.o module_dos.o \
 	dynamo.o cproc.o noseHoover.o scf.o grid.o wavefunction.o neb_module.o \
 	vnneutral.o transport.o matmultmod.o outputs.o options.o energy.o \
 	MD.o  mpi_main.o tdse.o bias.o nonadiabatic.o hartree.o 
@@ -374,7 +374,8 @@ SOCKETS = get_geometry.o create_socket.o send_geometry.o sendrecv.o soc_init.o
 SOLVESH_DIAG = $(KSPACE) $(BLAS)
 
 UMBRELLA = assemble_umbrella.o Dassemble_umbrella.o get_umbrella.o \
-	readumbrella.o
+	readumbrella.o assemble_steered.o Dassemble_steered.o \
+        get_steered.o readsteered.o
 
 XC = ceperley_alder.o cepal.o
 
@@ -505,6 +506,8 @@ ordern.o : MODULES/ordern.f90 dimensions.o
 	$(F90) $(FFLAGS) -c MODULES/ordern.f90
 umbrella.o : MODULES/umbrella.f90
 	$(F90) $(FFLAGS) -c MODULES/umbrella.f90
+steered.o : MODULES/steered.f90
+	$(F90) $(FFLAGS) -c MODULES/steered.f90
 optimization.o : MODULES/optimization.f90
 	$(F90) $(FFLAGS) -c MODULES/optimization.f90
 module_dos.o : MODULES/module_dos.f90
@@ -587,6 +590,8 @@ allocate_rho.o : ALLOCATIONS/allocate_rho.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ALLOCATIONS/allocate_rho.f90
 allocate_umb.o : ALLOCATIONS/allocate_umb.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ALLOCATIONS/allocate_umb.f90
+allocate_steered.o : ALLOCATIONS/allocate_steered.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ALLOCATIONS/allocate_steered.f90
 reallocate_f.o : ALLOCATIONS/reallocate_f.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ALLOCATIONS/reallocate_f.f90
 reallocate_h.o : ALLOCATIONS/reallocate_h.f90 $(MODULES)
@@ -1475,6 +1480,16 @@ get_umbrella.o : UMBRELLA/get_umbrella.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UMBRELLA/get_umbrella.f90
 readumbrella.o : UMBRELLA/readumbrella.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UMBRELLA/readumbrella.f90
+
+
+assemble_steered.o : UMBRELLA/assemble_steered.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c UMBRELLA/assemble_steered.f90
+Dassemble_steered.o : UMBRELLA/Dassemble_steered.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c UMBRELLA/Dassemble_steered.f90
+get_steered.o : UMBRELLA/get_steered.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c UMBRELLA/get_steered.f90
+readsteered.o : UMBRELLA/readsteered.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c UMBRELLA/readsteered.f90
 
 
 # *****************************************************************************

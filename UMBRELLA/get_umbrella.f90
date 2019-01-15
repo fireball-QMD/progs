@@ -18,21 +18,11 @@
 ! University of Regensburg - Juergen Fritsch
 
 !
-! fireball-qmd is a free (GPLv3) open project.
-
-! This program is free software: you can redistribute it and/or modify
-! it under the terms of the GNU General Public License as published by
-! the Free Software Foundation, either version 3 of the License, or
-! (at your option) any later version.
-!
-! This program is distributed in the hope that it will be useful,
-! but WITHOUT ANY WARRANTY; without even the implied warranty of
-! MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-! GNU General Public License for more details.
-!
-! You should have received a copy of the GNU General Public License
-! along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+! RESTRICTED RIGHTS LEGEND
+! Use, duplication, or disclosure of this software and its documentation
+! by the Government is subject to restrictions as set forth in subdivision
+! { (b) (3) (ii) } of the Rights in Technical Data and Computer Software
+! clause at 52.227-7013.
  
 ! get_umbrella.f90 
 ! Program Description
@@ -84,9 +74,10 @@
  
 ! Local Variable Declaration and Description
 ! ===========================================================================
-        real coord_reac_inter                ! Reaction coordinate (MD step i)  
-        real etot_initial                    ! total energy before umbrella
-        real umb_e                           ! umbrella energy
+        real, allocatable ::  coord_reac_inter(:)                ! Reaction coordinate (MD step i)  
+        real etot_initial                                             ! total energy before umbrella
+        real umb_e                                                    ! umbrella energy
+        integer ip
  
 ! Procedure
 ! ===========================================================================
@@ -98,8 +89,10 @@
          write (*,*) ' Umbrella Sampling Option '
          write (*,*) '   '
  
-         call readumbrella (natoms, ratom, nstepf)
-        endif                                               
+         call readumbrella (natoms, ratom, nstepf)  
+        endif                                     
+       allocate(coord_reac_inter(umb_pair))  
+       coord_reac_inter=0.0d0        
 
 ! Now, calculation of the umbrella sampling energy due to the umbrella sampling
 ! constraint between pair of atoms.  The constraint is only on the distance at 
@@ -115,16 +108,20 @@
         write (*,*) '   ' 
         call Dassemble_umbrella (natoms, iwrtfpieces, ratom, ftot)
 
-        if (time .ge. umb_time_start) then
+        if (itime_step .ge. umb_time_start) then
          open (unit = 10, file = umb_output_file, status = 'unknown',        &
      &         position = 'append')
-         write (10,*) coord_reac_inter, umb_e, etot_initial 
+         write (10,101) coord_reac_inter(1:umb_pair), umb_e, etot_initial  
          close (unit = 10)
-        end if
+         end if
+    
+         deallocate(coord_reac_inter)
 
 ! Format Statements
 ! ===========================================================================
-100     format (2x, 70('='))  
+100     format (2x, 70('=')) 
+
+101     format (10f10.4)
  
 ! ===========================================================================
         return
