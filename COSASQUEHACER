@@ -1,5 +1,5 @@
 git clone -b v19.01  https://github.com/fireball-QMD/progs test
-cd brach
+cd branch
 git checkout master
 git merge v19.01
 
