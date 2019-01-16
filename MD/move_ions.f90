@@ -361,6 +361,8 @@ subroutine move_ions (itime_step)
           enddo
 ! update particle positions
           ratom = ratom + dt*vatom
+          xdot(0,:,:) = ratom(:,:)
+          xdot(1,:,:) = vatom(:,:) 
         endif
 !---------------------------------------------------------------------------
 
