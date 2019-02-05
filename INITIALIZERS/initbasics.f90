@@ -152,6 +152,10 @@
 
 ! Allocate more arrays.
         allocate (degelec (natoms))
+        if (iqout .eq. 5) then
+        allocate (degelec_sp(natoms))
+        allocate (nsp(nspecies))
+        end if !end if iqout .eq. 5
         allocate (imass (natoms))
         allocate (ratom (3, natoms))
         allocate (nowMinusInitialPos (3, natoms))
@@ -334,6 +338,23 @@
          end do
         end do
 
+! Create nsp(:) array, which stores the number of s,p shells of each atom
+    nsp(1)=1
+    do in1 = 2,nspecies
+      nsp(in1) = 2
+    end do
+
+! Count the total number of s-p shells in the system.
+        nsp_tot = 0
+        do iatom = 1, natoms
+         in1 = imass(iatom)
+         do issh = 1, nsp(in1)
+          nsp_tot = nsp_tot + 1
+         end do
+        end do
+
+
+
 ! Count the maximum number of orbital interactions between any given two atoms.
         numorb_max = 0
         do in1 = 1, nspecies
@@ -474,6 +495,16 @@
          in1 = imass(iatom - 1)
          degelec(iatom) = degelec(iatom - 1) + num_orb(in1)
         end do
+
+
+! Calculate degelec_sp.  We only need this once at the beginning of the simulation.
+        degelec_sp(1) = 0
+        do iatom = 2, natoms
+         degelec_sp(iatom) = 0
+         in1 = imass(iatom - 1)
+         degelec_sp(iatom) = degelec_sp(iatom - 1) + nsp(in1)
+        end do
+
 
 
 ! NPA initialize auxillary arrays (dani goes to hollywood)
