@@ -204,7 +204,7 @@ end do !end do iorb = 1,norbitals
 DOS_total(ii) = DOS_total(ii)+tot  !here we store the sum of all DOS at each
  !energy. Later, we divide by the total number fo structures to finally get the
  !average and print the averaged result to a file
-write(200,*) E,DOS_total(ii)/dstep
+if (DOS_total(ii) .lt. 100) write(200,*)  E,DOS_total(ii)/dstep
 end do !end do ii = 1,S
 close(200)
 !close(173)

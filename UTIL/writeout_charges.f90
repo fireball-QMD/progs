@@ -53,12 +53,14 @@
 ! Program Declaration
 ! ===========================================================================
         subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, &
-     &                               iwrtdensity, basisfile, symbol)
+     &                               iwrtdensity, basisfile, symbol,ab)
         use charges
         use density
         use interactions
         use neighbor_map
-        use scf, only : scf_achieved
+        use scf, only : scf_achieved, Kscf
+        use MD, only : itime_step_g
+        !use configuration, only : ratom
         implicit none
  
 ! Argument Declaration and Description
@@ -69,6 +71,7 @@
         integer, intent (in) :: iqout
         integer, intent (in) :: iwrtcharges
         integer, intent (in) :: iwrtdensity
+        integer, intent (in) :: ab !ab = 0: before mixing. ab=1: after mixing
 
         character (len=40) basisfile
         character (len=2), dimension (natoms) :: symbol
@@ -86,6 +89,7 @@
         integer inu
         integer issh
         integer jatom
+        real    Qtot
  
 ! Allocate Arrays
 ! ===========================================================================
@@ -127,7 +131,7 @@
 !
 ! W R I T E    O U T    L O W D I N    C H A R G E S
 ! ****************************************************************************
-         if (iqout .ne. 2) then
+         if (iqout .eq. 1 .or. iqout .eq. 3) then
           write (*,*) '  '
           write (*,*) '  '
           write (*,*) ' LOWDIN CHARGES (by shell): '
@@ -158,7 +162,7 @@
 !
 ! W R I T E    O U T    M U L L I K E N    C H A R G E S
 ! ****************************************************************************
-         if (iqout .eq. 2) then
+         if (iqout .eq. 2 .or. 4) then
           write (*,*) '  '
           write (*,*) '  '
           write (*,*) ' MULLIKEN CHARGES (by shell): '
@@ -192,30 +196,90 @@
 !
 ! W R I T E    O U T    T E M P O R A L    S E R I E S   O F    C H A R G E S
 ! ****************************************************************************
-      if ( scf_achieved ) then
       if (iwrtcharges .eq. 2) then
+      if ( scf_achieved ) then
 
-      open(unit = 333, file = 'CHARGES_series', status = 'unknown', &
+      open(unit = 333, file = 'CHARGES.xyz', status = 'unknown', &
                                       & position = 'append')
 
-      if (iqout .eq. 1 .or. iqout .eq. 3) then
-       do iatom = 1, natoms
-       write(333,400, advance="no") QLowdin_TOT(iatom)
+       
+      open(unit = 334, file = 'CHARGES_series', status = 'unknown', &
+                                      & position = 'append')
+
+       !  write (333,*) '  '
+       !  write (333,*) '  '
+       !  write (334,*) '  '
+       !  write (334,*) '  '
+
+
+      write(333,*) natoms
+      write(333,*) 'Time step = ', itime_step_g
+      do iatom = 1, natoms
+       Qtot=0
+       in1 = imass(iatom)
+       do issh = 1,nssh(in1)
+          Qtot = Qtot+Qin(issh,iatom)
        end do
-       write(333,*) 
-      end if
-     
-      if (iqout .eq. 2) then
-       do iatom = 1, natoms
-       write(333,400, advance="no") QMulliken_TOT(iatom)
-       end do
-       write(333,*)
-      end if
+     !      write (333,*) symbol(iatom),                                 &
+     ! &                   ratom(1,iatom), ratom(2,iatom), ratom(3,iatom), &
+          write(333,601)              (Qin(issh,iatom), issh = 1, nssh(in1)),         &
+     &                   Qtot
+           write(334,400,advance="no") Qtot
+          
+      
+      end do !end do iatom = 1,natoms
 
+        close(334)
+         close(333)
 
-
+       end if !end if ( scf_achieved )
       end if !end if (iwrtcharges .eq. 2)
-      end if !end if ( scf_achieved )
+
+
+!***************
+                !IWRTCHARGES = 3
+!***************
+         if (iwrtcharges .eq. 3) then
+    
+      if (ab .eq. 1) then
+
+      open(unit = 333, file = 'CHARGES.xyz', status = 'unknown', &
+                                      & position = 'append')
+ 
+      else ! ab .eq. 0
+ 
+      open(unit = 333, file = 'CHARGES_no_mix.xyz', status = 'unknown', &
+                                      & position = 'append')
+
+      end if ! if ab .eq. 1
+
+      !open(unit = 334, file = 'CHARGES_series', status = 'unknown', &
+      !                                & position = 'append')
+
+
+      write(333,*) natoms
+      write(333,*) 'Time step = ', itime_step_g, 'Kscf = ', Kscf
+      do iatom = 1, natoms
+       Qtot=0
+       in1 = imass(iatom)
+       do issh = 1,nssh(in1)
+          Qtot = Qtot+Qin(issh,iatom)
+       end do
+      !     write (333,*) symbol(iatom),&
+     ! &                   ratom(1,iatom), ratom(2,iatom), ratom(3,iatom), &
+      write(333,601)                  (Qin(issh,iatom), issh = 1, nssh(in1)),  &
+     &                   Qtot
+          ! write(334,400,advance="no") Qtot
+
+
+      end do !end do iatom = 1,natoms
+
+      !close(334)
+      close(333)     
+      
+      end if !end if (iwrtcharges .eq. 3)
+
+    
 
 ! ****************************************************************************
 !

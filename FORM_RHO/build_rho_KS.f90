@@ -104,7 +104,7 @@
 
 ! save density matrix
         call writeout_charges_KS (natoms, ifixcharge, iqout, iwrtcharges,     &
-     &                           iwrtdensity, basisfile, symbol)
+     &                           iwrtdensity, basisfile, symbol,1)
 
 
 

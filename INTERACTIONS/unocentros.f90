@@ -241,7 +241,7 @@
 !
 ! +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ! Note:
-! In teh case of a~full charge-transfer OLSXC method we have 
+! In the case of a~full charge-transfer OLSXC method we have 
 ! 'exc' and '<imu|Vxc|inu>' and their 1. and 2. derivatives with respect to dq
 ! of each shell. 
 !  

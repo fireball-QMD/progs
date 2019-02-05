@@ -103,8 +103,8 @@
 
 
          call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
-     &                           iwrtdensity, basisfile, symbol)
-
+     &                           iwrtdensity, basisfile, symbol,0)
+!Ojo!! this happens before the Mixing!!  DMSP 02-19
 ! ===========================================================================
 !                  check input and output charges for scf
 ! ===========================================================================

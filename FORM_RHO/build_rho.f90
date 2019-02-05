@@ -165,10 +165,12 @@
 			end if
          end if
 
-       !  if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
-       !    call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
-       !&                             iwrtdensity, basisfile, symbol)
-       !  end if
+         if (iwrtcharges .eq. 3) then
+         if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
+           call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
+       &                             iwrtdensity, basisfile, symbol,0)
+         end if
+         end if !end if iwrtcharges .eq. 3
 
 ! ===========================================================================
 !                  check input and output charges for scf
@@ -198,7 +200,7 @@
 
          if ( (MOD(itime_step,ntpr) .eq. 0) .or. (itime_step .eq. 1) .or. (itime_step .eq. nstepf)) then
            call writeout_charges (natoms, ifixcharge, iqout, iwrtcharges,     &
-     &                             iwrtdensity, basisfile, symbol)
+     &                             iwrtdensity, basisfile, symbol,1)
          end if
 
 
