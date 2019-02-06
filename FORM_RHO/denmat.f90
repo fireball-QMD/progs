@@ -672,7 +672,7 @@
 
       if (iqout .eq. 5) then
 
-         call charges_L2(Kscf,0)
+   !      call charges_L2(Kscf,0)
 
       endif
 
