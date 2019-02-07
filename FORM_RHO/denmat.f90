@@ -611,7 +611,7 @@
      ! &        iatom,jatom,imu,inu,' is',dip(imu,inu,ineigh,iatom),    &
      ! &        dip(inu,imu,jneigh,jatom) 
 
-       !        write(*,*) 'Qa(',imu,',',iatom,')= ',QMulliken(imu,iatom)
+     !          write(*,*) 'Qa(',imu,',',iatom,')= ',QMulliken(imu,iatom)
 
              end do
             end do
@@ -661,25 +661,6 @@
           end do
          end if     ! endif of ifixcharges
         end if      ! endif of iqout .eq. 4
-
-
-
-! ***************************************************************************
-!
-! C O M P U T E   L2   DIAGONAL   CHARGES
-!
-!****************************************************************************
-
-      if (iqout .eq. 5) then
-
-         call charges_L2(Kscf,0)
-
-      endif
-
-!****************************************************************************
-
-
-
 
 
 ! ****************************************************************************

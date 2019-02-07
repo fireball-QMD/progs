@@ -49,7 +49,5 @@
 ! Populations analysis (iwrtpop = 1). energy range
         real  Epop_L
         real  Epop_U
-! Charge projection by minimization of quadratic average (iqout=4)
-        real, dimension (:,:), allocatable :: Aglob
 
         end module

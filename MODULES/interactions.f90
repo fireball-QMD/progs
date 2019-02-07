@@ -64,9 +64,7 @@
          integer, dimension (:, :, :), allocatable :: mu
          integer, dimension (:, :, :), allocatable :: mvalue
          integer, dimension (:), allocatable :: nssh
-         integer, dimension(:), allocatable :: nsp
          integer  nssh_tot
-         integer nsp_tot
          integer, dimension (:, :, :), allocatable :: nu
          integer, dimension (:), allocatable :: num_orb
          integer, dimension (:, :, :), allocatable :: muDipY
@@ -84,7 +82,6 @@
 ! The placement is based on which atom number is accessed and the number
 ! of orbitals of the atom.
          integer, dimension (:), allocatable :: degelec
-         integer, dimension (:), allocatable :: degelec_sp
 
 ! Needed for extended hubbard interactions.
          integer, dimension (:, :), allocatable :: mu2shell
