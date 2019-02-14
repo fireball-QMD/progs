@@ -507,6 +507,7 @@
        if (iwrtden .eq. 1) igrid = 1
        if (iwrtewf .eq. 1) igrid = 1
        if (iks .eq. 1) igrid = 1
+       if (iwrtdipole .eq. 1) igrid = 1
        if (igrid .eq. 1) then
 ! call readgrid before initconstraints subroutine to avoid atom shift
 ! when we fix the mesh position

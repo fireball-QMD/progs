@@ -125,6 +125,10 @@
          end if
 
 
+! iwrtdipole (new 02/19)
+          if (iwrtdipole .eq. 1) then
+             call writeout_dipole (icluster)   
+          end if
 ! jel-grid
           if (iwrtewf .eq. 1) then
             write (*,*) ' Call ewf2mesh subroutine. '

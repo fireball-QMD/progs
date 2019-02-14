@@ -27,6 +27,7 @@
         integer iwrtewf             ! write projected eigenfunctions on the grid
         integer iwrtxsf             ! write xsf-format file (xcrysden)
         integer idensimport         ! importing density file 'rhoin' for projection
+        integer iwrtdipole          ! write out dipolar moment
 ! TDSE output options
         integer iwrtpsit            ! write w.f. coeff of each electron in time
         integer iwrtqt              ! write charge occupancy in time

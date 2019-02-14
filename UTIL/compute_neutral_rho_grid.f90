@@ -53,7 +53,7 @@
 !
 ! Program Declaration
 ! ===========================================================================
- subroutine assemble_KS_den0 ()
+ subroutine compute_neutral_rho_grid ()
 
    use configuration
    use dimensions
@@ -184,7 +184,7 @@ write(*,*)  'HELLO FROM HELL (IN assmeble_ks_den0)'
 ! copy and invert original elvec to get form written above
    lmat = transpose(elvec)
 ! inverse A: solving A*n=x -> n=A-1*x
-   call inv3x3 (lmat,invl)
+   call inv3x3b (lmat,invl)
 
     write (*,*) 'elvec'
     write (*,400) elvec(1,:)
@@ -207,7 +207,7 @@ write(*,*)  'HELLO FROM HELL (IN assmeble_ks_den0)'
     enddo ! i
 
 ! get n-vector
-    call mult3x1 (invl,u)
+    call mult3x1b (invl,u)
 ! check it
     u1X = u
 !    write (*,*) ' check in'
@@ -219,7 +219,7 @@ write(*,*)  'HELLO FROM HELL (IN assmeble_ks_den0)'
 !    write (*,*) ratom(:,iatom) - g0(:)
 !    write (*,*) 'ni'
 !    write (*,400) u1X(:)
-    call mult3x1 (lmat,u1X)
+    call mult3x1b (lmat,u1X)
     do i = 1,3
       if (abs(u1X(i)-(ratom(i,iatom) - g0(i))) .gt. 0.000001d0 ) then
          write (*,*) ' check out'
@@ -405,11 +405,11 @@ write(*,*)  'HELLO FROM HELL (IN assmeble_ks_den0)'
 410 format (3i5)
 
    return
- end subroutine assemble_KS_den0
+ end subroutine compute_neutral_rho_grid
 
 
 
- subroutine inv3x3 (amatrix, ainverse)
+ subroutine inv3x3b (amatrix, ainverse)
         implicit none
 
 ! Argument Declaration and Description
@@ -477,7 +477,7 @@ write(*,*)  'HELLO FROM HELL (IN assmeble_ks_den0)'
         return
  end subroutine
 
- subroutine mult3x1 (amat, bvec)
+ subroutine mult3x1b (amat, bvec)
         implicit none
 
 ! Argument Declaration and Description
@@ -522,7 +522,7 @@ write(*,*)  'HELLO FROM HELL (IN assmeble_ks_den0)'
         return
  end subroutine
 
- subroutine mult3x3 (amat, bmat)
+ subroutine mult3x3b (amat, bmat)
         implicit none
 
 ! Argument Declaration and Description

@@ -93,6 +93,7 @@
         if (iharris .eq. 1) itheory = 0
         if (idogs .eq. 1) itheory = 1
         if (ihubbard .eq. 1) itheory = 2
+        if (iwrtdipole .eq. 1) igrid = 1
         if (iks .eq. 1) itheory = 3
         if (iks .eq. 1) igrid = 1
 ! switch of iwrtden if iks (it does not make sense to do thinks twice;

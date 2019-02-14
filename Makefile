@@ -82,10 +82,10 @@ KSPACE = kspace.o kspace_KS.o kspace_ordern_fk.o diag_error.o diag_k.o \
 INITMPI = init_noMPI.o
 UTIL_SPARSE = 
 UTIL = anderson.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o \
+	broyden.o louie.o pulay.o compute_neutral_rho_grid.o  \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -135,10 +135,10 @@ ifneq (,$(findstring SCALAPACK, ${METHOD}))
 	INITMPI = mpi_declarations.o init_MPI.o
 
 	UTIL = anderson2.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o \
+	broyden.o louie.o pulay.o compute_neutral_rho_grid.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -207,10 +207,10 @@ ifneq (,$(findstring LAPACK95, ${METHOD}))
 	KSPACE = kspace_l95.o kspace_ordern_fk.o diag_error.o diag_k.o \
 	diag_k_KS.o
 	UTIL = anderson_l95.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o \
+	broyden.o louie.o pulay.o compute_neutral_rho_grid.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -222,10 +222,10 @@ ifneq (,$(findstring DOUBLE, ${METHOD}))
 	KSPACE = kspace2.o kspace_KS.o kspace_ordern_fk.o diag_error.o diag_k.o \
 	diag_k_KS.o
 	UTIL = anderson2.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o \
+	broyden.o louie.o pulay.o compute_neutral_rho_grid.o  \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -237,10 +237,10 @@ ifneq (,$(findstring GAMMA, ${METHOD}))
 	KSPACE = kspace_withnok.o kspace_KS.o kspace_ordern_fk.o diag_error.o diag_k.o \
 	diag_k_KS.o
 	UTIL = anderson2.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o \
+	broyden.o louie.o pulay.o compute_neutral_rho_grid.o  \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -251,11 +251,11 @@ endif
 ifneq (,$(findstring MPI-k, ${PARALLEL}))
 	KSPACE = kspace_MPI-k.o kspace_ordern_fk.o diag_error.o diag_k-MPI.o
 	UTIL = anderson2.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o diag_k-MPI_slave.o bcast_k-MPI.o bcast_k-MPI_slave.o \
 	den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o \
+	broyden.o louie.o pulay.o compute_neutral_rho_grid.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -1512,6 +1512,10 @@ writeout_cd.o : UTIL/writeout_cd.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UTIL/writeout_cd.f90
 writeout_charges.o : UTIL/writeout_charges.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UTIL/writeout_charges.f90
+writeout_dipole.o : UTIL/writeout_dipole.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c UTIL/writeout_dipole.f90
+compute_neutral_rho_grid.o : UTIL/compute_neutral_rho_grid.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c UTIL/compute_neutral_rho_grid.f90
 writeout_comph.o : UTIL/writeout_comph.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UTIL/writeout_comph.f90
 writeout_neighbors.o : UTIL/writeout_neighbors.f90 $(MODULES)

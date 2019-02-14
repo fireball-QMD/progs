@@ -99,7 +99,7 @@
         allocate (Qout(nsh_max, natoms))
         allocate (Qoutmixer(nsh_max*natoms))
         allocate (dq(nspecies))
-
+        allocate (Q0_TOT(natoms))
         allocate (Qin_es(nsh_max, natoms))
         allocate (QLowdin_TOT_es (natoms))
         allocate (Qout_es(nsh_max, natoms))
@@ -109,6 +109,16 @@
  
 ! Procedure
 ! ===========================================================================
+! Qneutral_total
+      do iatom = 1, natoms
+         Q0_TOT(iatom) = 0
+         in1 = imass(iatom)
+         do issh = 1, nssh(in1)
+         Q0_TOT(iatom) = Q0_TOT(iatom) + Qneutral(issh,in1)
+         end do
+        end do
+
+
 ! By default the input charges are initialized to the neutral atom charges
         Qin = 0.0d0
  

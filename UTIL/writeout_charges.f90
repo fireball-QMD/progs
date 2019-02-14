@@ -55,12 +55,13 @@
         subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, &
      &                               iwrtdensity, basisfile, symbol,ab)
         use charges
+        use outputs, only : iwrtdipole
         use density
         use interactions
         use neighbor_map
         use scf, only : scf_achieved, Kscf
         use MD, only : itime_step_g
-        !use configuration, only : ratom
+        use configuration, only : ratom
         implicit none
  
 ! Argument Declaration and Description
@@ -79,7 +80,7 @@
  
 ! Local Parameters and Data Declaration
 ! ===========================================================================
- 
+        real, parameter ::  Debye = 0.208194
 ! Local Variable Declaration and Description
 ! ===========================================================================
         integer iatom
@@ -90,7 +91,13 @@
         integer issh
         integer jatom
         real    Qtot
+        real    dip_x
+        real    dip_y
+        real    dip_z
+        real    dip_tot
  
+
+
 ! Allocate Arrays
 ! ===========================================================================
  
@@ -263,11 +270,11 @@
        Qtot=0
        in1 = imass(iatom)
        do issh = 1,nssh(in1)
-          Qtot = Qtot+Qin(issh,iatom)
+          Qtot = Qtot+Qout(issh,iatom)
        end do
       !     write (333,*) symbol(iatom),&
      ! &                   ratom(1,iatom), ratom(2,iatom), ratom(3,iatom), &
-      write(333,601)                  (Qin(issh,iatom), issh = 1, nssh(in1)),  &
+      write(333,601)                  (Qout(issh,iatom), issh = 1, nssh(in1)),  &
      &                   Qtot
           ! write(334,400,advance="no") Qtot
 
@@ -298,6 +305,39 @@
          close (unit = 21)
         end if
 
+
+! ****************************************************************************
+! W R I T E   T H E   D I P O L E   (For testing purposes)
+! ****************************************************************************
+     if (iwrtdipole .gt. 0) then
+      dip_x=0.0d0
+      dip_y=0.0d0
+      dip_z=0.0d0
+      do iatom = 1, natoms
+         Qtot=-Q0_TOT(iatom)
+         in1 = imass(iatom)
+         do issh = 1,nssh(in1)
+             Qtot = Qtot+Qin(issh,iatom)
+         end do
+            
+            write(*,*) 'ratom is ',ratom(1,iatom),ratom(2,iatom),ratom(3,iatom)
+            dip_x = dip_x+Qtot*ratom(1,iatom)
+            dip_y = dip_y+Qtot*ratom(2,iatom)
+            dip_z = dip_z+Qtot*ratom(3,iatom)
+
+       enddo !end do iatom = 1,natoms
+ 
+        dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )   
+
+     open( unit = 1729, file = 'dipole_Qin', status = 'unknown',  &
+                                   &     position = 'append')
+       
+       write(1729,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
+
+     close(1729)
+     end if !end if (iwrtdipole .gt. 0)
+
+!******************************************************************************
  
 ! Deallocate Arrays
 ! ===========================================================================
@@ -311,6 +351,7 @@
 503     format (3x, i5, 7x, a2, 4x, f10.4)
 600     format (2x, i5, 2x, a40, 2x, i2)
 601     format (2x, 10f14.8)
+444     format (4f10.4)
 
         return
         end

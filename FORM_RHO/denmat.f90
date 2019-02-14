@@ -600,7 +600,7 @@
             do imu = 1, num_orb(in1)
              do inu = 1, num_orb(in2)
 
-              write(*,*) 'Qb(',imu,',',iatom,')= ',QMulliken(imu,iatom)
+          !    write(*,*) 'Qb(',imu,',',iatom,')= ',QMulliken(imu,iatom)
 
               QMulliken(imu,iatom) = QMulliken(imu,iatom)+                  &
      &        (-rho(imu,inu,ineigh,iatom)*dip(imu,inu,ineigh,iatom)         &

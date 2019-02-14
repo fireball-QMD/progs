@@ -25,6 +25,7 @@
          real, dimension (:, :), allocatable :: Qin_es
          real, dimension (:, :), allocatable :: Qout_es      !vlada cdft
          real, dimension (:), allocatable :: QLowdin_TOT_es  !vlada cdft
+         real, dimension(:), allocatable  :: Q0_TOT
 
 
 ! anderson iteration procedure

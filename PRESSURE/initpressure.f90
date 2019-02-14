@@ -260,7 +260,7 @@
 ! kspecial.
          hmet = hdot(0,:,:)
          call invert3x3 (hmet, hinv)
- 
+
          do ikpoint = 1, nkpoints
           special_k(1,ikpoint) = 0.0d0
           do ix = 1, 3
@@ -311,7 +311,7 @@
  
 ! Wentzkovitch
          call invert3x3 (temp, Wentz)
- 
+
          write (*,*) ' The New Wentz is:'
          do ix = 1, 3
           write (*,*) ' Wentz = ', (Wentz(ix,jx), jx = 1, 3)
