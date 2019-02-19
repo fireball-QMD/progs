@@ -61,7 +61,7 @@
         use neighbor_map
         use scf, only : scf_achieved, Kscf
         use MD, only : itime_step_g
-        use configuration, only : ratom
+        use configuration, only : ratom, xl
         implicit none
  
 ! Argument Declaration and Description
@@ -90,11 +90,13 @@
         integer inu
         integer issh
         integer jatom
+        integer mbeta
         real    Qtot
         real    dip_x
         real    dip_y
         real    dip_z
         real    dip_tot
+        real, dimension(3) :: r1,r2,Rbc 
  
 
 
@@ -120,7 +122,7 @@
            jatom = neigh_j(ineigh,iatom)
            in2 = imass(jatom)
            write (*,*) '  '
-           write (*,*) ' iatom, ineigh = ', iatom, ineigh
+           write (*,*) ' iatom, jatom = ', iatom, jatom
            write (*,*) ' Number of orbitals on jatom, num_orb(in2) = ',      &
      &      num_orb(in2)
            write (*,*) ' ----------------------------------------------'
@@ -335,8 +337,62 @@
        write(1729,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
 
      close(1729)
-     end if !end if (iwrtdipole .gt. 0)
 
+      dip_x=0.0d0
+      dip_y=0.0d0
+      dip_z=0.0d0
+      
+      do iatom = 1, natoms
+         in1 = imass(iatom)
+         r1(:) = ratom(:,iatom)
+         do issh = 1,nssh(in1)
+             Qtot = Qtot+Qin(issh,iatom)
+         end do !end do issh = 1,nssh(in1)
+         dip_x = dip_x-Q0_TOT(iatom)*r1(1)
+         dip_y = dip_y-Q0_TOT(iatom)*r1(2)         
+         dip_z = dip_z-Q0_TOT(iatom)*r1(3)
+      end do !end do iatom = 1,natoms
+
+       !dip_x = 0.0d0
+       !dip_y = 0.0d0
+       !dip_z = 0.0d0
+
+
+      do iatom = 1, natoms
+         in1 = imass(iatom)
+         r1(:) = ratom(:,iatom)         
+         do ineigh = 1,neighn(iatom)
+            mbeta = neigh_b(ineigh,iatom)
+            jatom = neigh_j(ineigh,iatom)
+            r2(:) = ratom(:,jatom) + xl(:,mbeta)
+            in2 = imass(jatom)
+
+            Rbc(:)=(r1(:)+r2(:))/2.0d0
+ 
+            do imu = 1,num_orb(in1)
+               do inu = 1,num_orb(in2)
+                 
+                !if (iatom .ne. jatom .or. imu .eq. inu) then
+                !else 
+                  dip_x = dip_x+rho(imu,inu,ineigh,iatom)*(dipc(1,imu,inu,ineigh,iatom)+ &
+                         & Rbc(1)*s_mat(imu,inu,ineigh,iatom))
+                  dip_y = dip_y+rho(imu,inu,ineigh,iatom)*(dipc(2,imu,inu,ineigh,iatom)+ &
+                         & Rbc(2)*s_mat(imu,inu,ineigh,iatom))
+                  dip_z = dip_z+rho(imu,inu,ineigh,iatom)*(dipc(3,imu,inu,ineigh,iatom)+ &
+                         & Rbc(3)*s_mat(imu,inu,ineigh,iatom))
+                !end if !end if
+               end do !end do inu
+            end do !end do imu
+         end do !end ineigh = 1,natoms
+      end do ! end do iatom = 1,natoms
+     dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
+     open( unit = 666, file = 'dipole_Tot', status = 'unknown',  &
+                                   &     position = 'append')
+
+     write(666,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
+     close(666)
+     end if !end if (iwrtdipole .gt. 0)
+! END OF WRITING THE DIPOLE
 !******************************************************************************
  
 ! Deallocate Arrays

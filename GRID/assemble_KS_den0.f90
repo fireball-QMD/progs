@@ -156,7 +156,6 @@
 ! ===========================================================================
 
 !debug
-write(*,*)  'HELLO FROM HELL (IN assmeble_ks_den0)'
 
 ! reset variables
    rhoG0 = 0.0d0
