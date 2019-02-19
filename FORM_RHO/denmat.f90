@@ -600,11 +600,7 @@
             do imu = 1, num_orb(in1)
              do inu = 1, num_orb(in2)
 
-<<<<<<< HEAD
           !    write(*,*) 'Qb(',imu,',',iatom,')= ',QMulliken(imu,iatom)
-=======
-   !        write(*,*) 'Qb(',imu,',',iatom,')= ',QMulliken(imu,iatom)
->>>>>>> a1e84575224279d9a38a7342e8ee61a4f7ed6630
 
               QMulliken(imu,iatom) = QMulliken(imu,iatom)+                  &
      &        (-rho(imu,inu,ineigh,iatom)*dip(imu,inu,ineigh,iatom)         &
@@ -667,20 +663,17 @@
         end if      ! endif of iqout .eq. 4
 
 
-<<<<<<< HEAD
-=======
-
 ! ***************************************************************************
 !
 ! C O M P U T E   L2   DIAGONAL   CHARGES
 !
 !****************************************************************************
 
-      if (iqout .eq. 5) then
-
-   !      call charges_L2(Kscf,0)
-
-      endif
+!      if (iqout .eq. 5) then
+!
+!         call charges_L2(Kscf,0)
+!
+!      endif
 
 !****************************************************************************
 
@@ -688,7 +681,6 @@
 
 
 
->>>>>>> a1e84575224279d9a38a7342e8ee61a4f7ed6630
 ! ****************************************************************************
 !
 ! C O M P U T E    M U L L I K E N    P O P U L A T I O N    F O R   MOs
