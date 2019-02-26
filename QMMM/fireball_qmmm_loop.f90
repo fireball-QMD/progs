@@ -82,7 +82,7 @@
 
         if (iqout .eq. 1) then
          qmmm_struct%scf_mchg = -(QLowdin_TOT - qmmm_struct%Qneutral_TOT) 
-        else if (iqout .eq. 2) then
+        else if (iqout .eq. 2 .or. iqout .eq. 4) then
          qmmm_struct%scf_mchg = -(QMulliken_TOT - qmmm_struct%Qneutral_TOT) 
         else if (iqout .eq. 3) then
          qmmm_struct%scf_mchg = -(QLowdin_TOT - qmmm_struct%Qneutral_TOT)

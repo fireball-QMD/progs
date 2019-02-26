@@ -39,6 +39,7 @@ module qm2_extern_fb_module
      integer :: imdet
      integer :: nddt
      integer :: icluster
+     integer :: qstate
      integer :: iwrtpop
      integer :: iwrtvel
      integer :: iwrteigen
@@ -159,7 +160,7 @@ contains
     !integer, intent(in) :: ntpr_default
     type(fb_nml_type), intent(out) :: fb_nml
     integer ::  max_scf_iterations, qmmm_int, idftd3, debug, iqout, iensemble,        &
-               imcweda, ihorsfield, imdet, nddt, icluster, iwrtpop, iwrtvel, iwrteigen,   &
+               imcweda, ihorsfield, imdet, nddt, icluster,qstate, iwrtpop, iwrtvel, iwrteigen,   &
                iwrtefermi, iwrtdos, iwrtdosng, ifixcharge, iwrtewf, iwrtatom, iewform, idipole,      &
                npbands, mix_embedding, iwrtcharges, verbosity
     real :: cut_embedding, tempfe, sigmatol
@@ -167,7 +168,7 @@ contains
     character (len = 20) :: dftd3_func
     integer, dimension(200) :: pbands
     namelist /fb/ executable, max_scf_iterations, qmmm_int, idftd3, debug, iqout,   &
-               imcweda, ihorsfield, iensemble, imdet, nddt, icluster, iwrtpop, iwrtvel,  &
+               imcweda, ihorsfield, iensemble, imdet, nddt, icluster, qstate, iwrtpop, iwrtvel,  &
                iwrteigen, iwrtefermi, iwrtdos, iwrtdosng, ifixcharge, iwrtewf, iwrtatom,            &
                iewform, npbands, idipole, pbands, mix_embedding, cut_embedding,          &
                iwrtcharges, tempfe, sigmatol, basis, dftd3_func, verbosity
@@ -189,6 +190,7 @@ contains
     imdet = 0
     nddt = 1000
     icluster = 1
+    qstate = 0
     iwrtpop = 0
     iwrtvel = 0
     iwrteigen = 0
@@ -229,6 +231,7 @@ contains
     fb_nml%imdet                = imdet
     fb_nml%nddt                 = nddt
     fb_nml%icluster             = icluster  
+    fb_nml%qstate               = qstate
     fb_nml%iwrtpop              = iwrtpop
     fb_nml%iwrtvel              = iwrtvel
     fb_nml%iwrteigen            = iwrteigen
@@ -276,7 +279,7 @@ contains
     write (226,600) "imcweda = 0"
     write (226,600) "ihorsfield = 1"
     end if
-    write (226,601) "qstate = ", -1*charge
+    write (226,601) "qstate = ", fb_nml%qstate !-1*charge
     write (226,602) "icluster = ", fb_nml%icluster
     write (226,602) "iqout = ", fb_nml%iqout
     write (226,603) "max_scf_iterations = ", fb_nml%max_scf_iterations
