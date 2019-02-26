@@ -91,12 +91,12 @@
         integer issh
         integer jatom
         integer mbeta
-        real    Qtot
-        real    dip_x
-        real    dip_y
-        real    dip_z
-        real    dip_tot
-        real, dimension(3) :: r1,r2,Rbc 
+        real    Qtot, Qtot1, Qtot2
+        real    dip_x, dipQin_x, dipTot_x, dipIntra_x
+        real    dip_y, dipQin_y, dipTot_y, dipIntra_y
+        real    dip_z, dipQin_z, dipTot_z, dipIntra_z
+        real    dip_tot, dip_proy, dipQin_tot, dipTot_tot, dipIntra_tot
+        real, dimension(3) :: r1,r2,Rbc,u21 
  
 
 
@@ -322,7 +322,7 @@
              Qtot = Qtot+Qin(issh,iatom)
          end do
             
-            write(*,*) 'ratom is ',ratom(1,iatom),ratom(2,iatom),ratom(3,iatom)
+            !write(*,*) 'ratom is ',ratom(1,iatom),ratom(2,iatom),ratom(3,iatom)
             dip_x = dip_x+Qtot*ratom(1,iatom)
             dip_y = dip_y+Qtot*ratom(2,iatom)
             dip_z = dip_z+Qtot*ratom(3,iatom)
@@ -330,6 +330,11 @@
        enddo !end do iatom = 1,natoms
  
         dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )   
+
+         dipQin_x=dip_x
+         dipQin_y=dip_y
+         dipQin_z=dip_z
+         dipQin_tot=dip_tot
 
      open( unit = 1729, file = 'dipole_Qin', status = 'unknown',  &
                                    &     position = 'append')
@@ -368,11 +373,11 @@
             in2 = imass(jatom)
 
             Rbc(:)=(r1(:)+r2(:))/2.0d0
- 
+            u21(:)=(r2(:)-r1(:))/(sqrt((r2(1)-r1(1))**2+(r2(2)-r1(2))**2+(r2(3)-r1(3))**2))
             do imu = 1,num_orb(in1)
                do inu = 1,num_orb(in2)
                  
-                !if (iatom .ne. jatom .or. imu .eq. inu) then
+                !if (iatom .ne. jatom) then !.or. imu .eq. inu) then
                 !else 
                   dip_x = dip_x+rho(imu,inu,ineigh,iatom)*(dipc(1,imu,inu,ineigh,iatom)+ &
                          & Rbc(1)*s_mat(imu,inu,ineigh,iatom))
@@ -380,18 +385,174 @@
                          & Rbc(2)*s_mat(imu,inu,ineigh,iatom))
                   dip_z = dip_z+rho(imu,inu,ineigh,iatom)*(dipc(3,imu,inu,ineigh,iatom)+ &
                          & Rbc(3)*s_mat(imu,inu,ineigh,iatom))
+
+
+                 !dip_proy = dipc(1,imu,inu,ineigh,iatom)*u21(1)+ &
+                 !           & dipc(2,imu,inu,ineigh,iatom)*u21(2)+ &
+                 !           & dipc(3,imu,inu,ineigh,iatom)*u21(3)
+
+                  !dip_x =  dip_x+rho(imu,inu,ineigh,iatom)*(dip_proy*u21(1)+ &
+                  !       & Rbc(1)*s_mat(imu,inu,ineigh,iatom))
+                  !dip_y =  dip_y+rho(imu,inu,ineigh,iatom)*(dip_proy*u21(2)+ &
+                  !       & Rbc(2)*s_mat(imu,inu,ineigh,iatom))
+                  !dip_z =  dip_z+rho(imu,inu,ineigh,iatom)*(dip_proy*u21(3)+ &
+                  !       & Rbc(3)*s_mat(imu,inu,ineigh,iatom))
+
                 !end if !end if
                end do !end do inu
             end do !end do imu
          end do !end ineigh = 1,natoms
       end do ! end do iatom = 1,natoms
      dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
+
+         dipTot_x=dip_x
+         dipTot_y=dip_y
+         dipTot_z=dip_z
+         dipTot_tot=dip_tot
+
      open( unit = 666, file = 'dipole_Tot', status = 'unknown',  &
                                    &     position = 'append')
 
      write(666,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
      close(666)
+
+     !W R I T E     T H E     B I G     F I L E
+
+               !write the intraatomic dipole
+
+      dip_x=0.0d0
+      dip_y=0.0d0
+      dip_z=0.0d0
+
+      do iatom = 1, natoms
+         in1 = imass(iatom)
+         r1(:) = ratom(:,iatom)
+         do issh = 1,nssh(in1)
+             Qtot = Qtot+Qin(issh,iatom)
+         end do !end do issh = 1,nssh(in1)
+         dip_x = dip_x-Q0_TOT(iatom)*r1(1)
+         dip_y = dip_y-Q0_TOT(iatom)*r1(2)
+         dip_z = dip_z-Q0_TOT(iatom)*r1(3)
+      end do !end do iatom = 1,natoms
+
+       dip_x = 0.0d0
+       dip_y = 0.0d0
+       dip_z = 0.0d0
+
+
+      do iatom = 1, natoms
+         in1 = imass(iatom)
+         r1(:) = ratom(:,iatom)
+         do ineigh = 1,neighn(iatom)
+            mbeta = neigh_b(ineigh,iatom)
+            jatom = neigh_j(ineigh,iatom)
+            r2(:) = ratom(:,jatom) + xl(:,mbeta)
+            in2 = imass(jatom)
+
+            Rbc(:)=(r1(:)+r2(:))/2.0d0
+            u21(:)=(r2(:)-r1(:))/(sqrt((r2(1)-r1(1))**2+(r2(2)-r1(2))**2+(r2(3)-r1(3))**2))
+            do imu = 1,num_orb(in1)
+               do inu = 1,num_orb(in2)
+
+                if ((iatom .eq. jatom) .and. (imu .ne. inu)) then
+                !else 
+                  dip_x = dip_x+rho(imu,inu,ineigh,iatom)*(dipc(1,imu,inu,ineigh,iatom)+ &
+                         & Rbc(1)*s_mat(imu,inu,ineigh,iatom))
+                  dip_y = dip_y+rho(imu,inu,ineigh,iatom)*(dipc(2,imu,inu,ineigh,iatom)+ &
+                         & Rbc(2)*s_mat(imu,inu,ineigh,iatom))
+                  dip_z = dip_z+rho(imu,inu,ineigh,iatom)*(dipc(3,imu,inu,ineigh,iatom)+ &
+                         & Rbc(3)*s_mat(imu,inu,ineigh,iatom))
+
+                                       !dip_proy =
+                                       !dipc(1,imu,inu,ineigh,iatom)*u21(1)+
+                                       !&
+                 !           & dipc(2,imu,inu,ineigh,iatom)*u21(2)+ &
+                 !           & dipc(3,imu,inu,ineigh,iatom)*u21(3)
+
+                  !dip_x =
+                  !dip_x+rho(imu,inu,ineigh,iatom)*(dip_proy*u21(1)+ &
+                  !       & Rbc(1)*s_mat(imu,inu,ineigh,iatom))
+                  !dip_y =
+                  !dip_y+rho(imu,inu,ineigh,iatom)*(dip_proy*u21(2)+ &
+                  !       & Rbc(2)*s_mat(imu,inu,ineigh,iatom))
+                  !dip_z =
+                  !dip_z+rho(imu,inu,ineigh,iatom)*(dip_proy*u21(3)+ &
+                  !       & Rbc(3)*s_mat(imu,inu,ineigh,iatom))
+
+                end if !end if
+               end do !end do inu
+            end do !end do imu
+         end do !end ineigh = 1,natoms
+      end do ! end do iatom = 1,natoms
+           dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
+
+         dipIntra_x=dip_x
+         dipIntra_y=dip_y
+         dipIntra_z=dip_z
+         dipIntra_tot=dip_tot
+     
+
+           if ( iwrtdipole .eq.2 .and. ab .eq. 0 ) then
+
+
+               open( unit = 667, file = 'Charges_and_Dipoles', status = 'unknown',  &
+                                   &     position = 'append')
+             write(667,*)   '+++++++++++++++++++ N E W   S T E P +++++&
+                               &+++++++++++++' 
+             write(667,444) dipTot_x/Debye, dipTot_y/Debye, dipTot_z/Debye, dipTot_tot/Debye
+             write(667,444) dipQin_x/Debye, dipQin_y/Debye, dipQin_z/Debye, dipQin_tot/Debye
+             write(667,444) dipIntra_x/Debye, dipIntra_y/Debye, dipIntra_z/Debye, dipIntra_tot/Debye
+
+          
+         do iatom = 1, natoms
+         dip_x = 0.0d0
+         dip_y = 0.0d0
+         dip_z = 0.0d0
+         in1 = imass(iatom)
+         r1(:) = ratom(:,iatom)
+         Qtot=0.0d0
+         Qtot1=0.0d0
+         do issh = 1,nssh(in1)
+             Qtot1 = Qtot1+Qin(issh,iatom)
+         end do !end do issh = 1,nssh(in1)
+         Qtot=0.0d0
+         Qtot2=0.0d0
+         do issh = 1,nssh(in1)
+             Qtot2 = Qtot2+Qout(issh,iatom)
+         end do !end do issh = 1,nssh(in1)
+         jatom=iatom
+         ineigh=neigh_self(iatom)
+         in2=in1
+         r2(:)=r1(:)
+         Rbc(:)=(r1(:)+r2(:))/2.0d0
+             do imu = 1,num_orb(in1)
+               do inu = 1,num_orb(in2)
+
+                if ( (imu .ne. inu)) then
+                !else 
+                  dip_x = dip_x+rho(imu,inu,ineigh,iatom)*(dipc(1,imu,inu,ineigh,iatom)+ &
+                         & Rbc(1)*s_mat(imu,inu,ineigh,iatom))
+                  dip_y = dip_y+rho(imu,inu,ineigh,iatom)*(dipc(2,imu,inu,ineigh,iatom)+ &
+                         & Rbc(2)*s_mat(imu,inu,ineigh,iatom))
+                  dip_z = dip_z+rho(imu,inu,ineigh,iatom)*(dipc(3,imu,inu,ineigh,iatom)+ &
+                         & Rbc(3)*s_mat(imu,inu,ineigh,iatom))
+
+                end if !end if
+               end do !end do inu
+            end do !end do imu
+            dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
+           write(667,445) symbol(iatom), Qtot1, Qtot2, dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
+          
+
+      end do !end do iatom = 1,natoms
+
+
+
+
+           end if !end iwrtdipole .eq. 2
+      
      end if !end if (iwrtdipole .gt. 0)
+
 ! END OF WRITING THE DIPOLE
 !******************************************************************************
  
@@ -408,6 +569,7 @@
 600     format (2x, i5, 2x, a40, 2x, i2)
 601     format (2x, 10f14.8)
 444     format (4f10.4)
+445     format (a2,6f10.4)
 
         return
         end
