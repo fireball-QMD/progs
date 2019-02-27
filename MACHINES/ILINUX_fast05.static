@@ -18,10 +18,10 @@ ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
 
 	ifneq (,$(findstring OPT, ${MODE}))
 		ifneq (,$(findstring YES, ${CCOMPILE}))
-			FFLAGS = -O3 -r8  -fno-alias -unroll -static -pg -fPIC 
+			FFLAGS = -O3 -r8  -fno-alias -unroll -static  -fPIC 
 		else
-			#FFLAGS = -r8 -O3 -fno-alias -unroll -fpp --fPIC no-ipo -static -pg -fPIC
-			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -static -pg
+			#FFLAGS = -r8 -O3 -fno-alias -unroll -fpp --fPIC no-ipo -static  -fPIC
+			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -static 
 		endif
 	endif
 	ifneq (,$(findstring DEBUG, ${MODE}))
