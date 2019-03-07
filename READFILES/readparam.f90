@@ -66,6 +66,7 @@
         use barrier
         use nonadiabatic
         use integrals, only : fdataLocation
+        use fb_sockets, only : socket, inet, port, host
         implicit none
 
 ! Argument Declaration and Description
@@ -81,12 +82,15 @@
         character (len = 30) str
         logical isfile
         logical isstr
+        ! COMMAND LINE PARSING
+        character (len=1024) :: cmdbuffer
+        integer ccmd, i
 
 ! Namelist for options control
   Namelist /output/ iwrtcdcoefs, iwrtcharges, iwrtdensity, iwrteigen,       &
                                          iwrtefermi, iwrtfpieces, iwrthampiece, iwrtcomponents, &
                                          iwrtneigh, iwrtneigh_com, iwrtxyz, iwrtdos, iwrtdosng, iwrthop,   &
-                                         iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf, iwrtdipole, &
+                                         iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf,  &
                                          iwrtxsf, idensimport, iwrtpsit, iwrtqt, iwrtkvaziband, iwrtexcit
 
   Namelist /option/ iharris, idogs, ihubbard, ihorsfield, imcweda, igsn, iquench, &
@@ -99,7 +103,8 @@
                                          igap, ialgmix, iclassicMD, icDFT, iqmmm, idipole, iephc,     &
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
-                                         cut_embedding, fdataLocation, verbosity, ntpr, restartxyz, inputxyz
+                                         cut_embedding, fdataLocation, verbosity, ntpr, restartxyz,   &
+                                         inputxyz, isocket, socket, inet, port, host
 
 ! Procedure
 ! ===========================================================================
@@ -197,6 +202,7 @@
         dftd3_alp = 14.0d0 
 ! Long range dipole
         idipole = 0
+
 ! ------  DEFAULT OUTPUTS  ------
         iwrtcdcoefs = 0
         iwrtcharges = 0
@@ -222,7 +228,12 @@
         idensimport = 0
         iwrtpsit = 0
         iwrtqt = 0
-        iwrtdipole = 0
+! socket for i/pi
+        isocket = 0
+        ccmd = 0
+        inet = 1
+        host = "localhost"//achar(0)
+        port = 31415
 
 
         inquire (file = initfile, exist = isfile)
@@ -795,8 +806,6 @@
         if (iwrtHS .gt. 0) write (*,*) ' Writing out H & S file '
         if (iwrtvel .gt. 0) write (*,*) ' Writing out VELOCITY.dat file '
         if (iwrtden .gt. 0) write (*,*) ' Writing out density projected on the grid '
-        if (iwrtdipole .gt. 0) write (*,*) ' Writing out dipole '
-
         if (iwrtewf .gt. 0) write (*,*) ' Writing out eigenfunctions projected on the grid '
         if (iwrtxsf .gt. 0) write (*,*) ' Writing out xsf-format file  '
         if (idensimport .gt. 0) write (*,*) ' Importing density file for projection  '
@@ -815,7 +824,41 @@
        dftd3_params(4)=dftd3_rs18
        dftd3_params(5)=dftd3_alp
       end if
- 
+
+      if (isocket .eq. 1) then 
+
+         DO i = 1, COMMAND_ARGUMENT_COUNT()
+           CALL GET_COMMAND_ARGUMENT(i, cmdbuffer)
+           IF (cmdbuffer == "-u") THEN ! flag for unix socket
+             inet = 0
+             ccmd = 0
+           ELSEIF (cmdbuffer == "-h") THEN ! read the hostname
+             ccmd = 1
+           ELSEIF (cmdbuffer == "-p") THEN ! reads the port number
+             ccmd = 2
+           ELSE
+             IF (ccmd == 0) THEN
+               WRITE(*,*) " Unrecognized command line argument", ccmd
+               STOP "ENDED"
+             ENDIF
+             IF (ccmd == 1) THEN
+               host = trim(cmdbuffer)//achar(0)
+             ELSEIF (ccmd == 2) THEN
+               READ(cmdbuffer,*) port
+             ELSE
+               WRITE(*,*) " Unrecognized type "
+               STOP "ENDED"
+             ENDIF
+           ENDIF
+         ENDDO
+
+         write (*,*) 'Socket with i-pi software'
+         !write (*,*) 'inet:', inet
+         !write (*,*) 'Host name:', trim(host
+         !write (*,*) 'Port:', port
+         !write (*,*) ''
+
+      endif
 
 ! writeout resume of the input variables into param.dat file
         open (unit = 50, file = 'param.dat', status = 'unknown')
@@ -876,6 +919,7 @@
         write (50, *) '  restartxyz        : ',restartxyz
         write (50, *) '  inputxyz          : ',inputxyz
         write (50, *) '  fdatalocation     : ',fdatalocation
+        write (50, *) '  isocket           : ',isocket
         write (50,100)
         write (50, *) ''
         write (50, *) ' SCF'

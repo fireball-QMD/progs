@@ -34,9 +34,8 @@ USEBLAS = YES
 # What machine? (AIX/AIX_LLNL/BLUEHORIZON/LINUX/LAPTOP/MARYLOU/MARYLOU10/
 # SGI_LANL/SIMPLE/ICEBOX/ALPHA/TRU64/ILINUX/GFORTRAN)
 #MACHINE = ILINUX_MAC
-#MACHINE = ILINUX_fast05
-MACHINE = ILINUX_fast05.static
-#MACHINE = ILINUX_gnu
+MACHINE = ILINUX_fast05
+#MACHINE = ILINUX_gnu2
 #MACHINE = SGI-krejci
 #MACHINE = SGI
 #MACHINE = GFORTRAN
@@ -45,7 +44,7 @@ MACHINE = ILINUX_fast05.static
 # or OPENMP 
 #PARALLEL = MPI
 #PARALLEL = OPENMP
-PARALLEL = 
+#PARALLEL = 
 # Note: the linear-scaling option is in the testing stages only right now, so
 # setting to ORDERN here may mess things up.
 # Pick the method that you are using: <blank for nothing special>, SCALAPACK
@@ -82,10 +81,10 @@ KSPACE = kspace.o kspace_KS.o kspace_ordern_fk.o diag_error.o diag_k.o \
 INITMPI = init_noMPI.o
 UTIL_SPARSE = 
 UTIL = anderson.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o compute_neutral_rho_grid.o  \
+	broyden.o louie.o pulay.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -135,10 +134,10 @@ ifneq (,$(findstring SCALAPACK, ${METHOD}))
 	INITMPI = mpi_declarations.o init_MPI.o
 
 	UTIL = anderson2.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o compute_neutral_rho_grid.o \
+	broyden.o louie.o pulay.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -207,10 +206,10 @@ ifneq (,$(findstring LAPACK95, ${METHOD}))
 	KSPACE = kspace_l95.o kspace_ordern_fk.o diag_error.o diag_k.o \
 	diag_k_KS.o
 	UTIL = anderson_l95.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o compute_neutral_rho_grid.o \
+	broyden.o louie.o pulay.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -222,10 +221,10 @@ ifneq (,$(findstring DOUBLE, ${METHOD}))
 	KSPACE = kspace2.o kspace_KS.o kspace_ordern_fk.o diag_error.o diag_k.o \
 	diag_k_KS.o
 	UTIL = anderson2.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o compute_neutral_rho_grid.o  \
+	broyden.o louie.o pulay.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -237,10 +236,10 @@ ifneq (,$(findstring GAMMA, ${METHOD}))
 	KSPACE = kspace_withnok.o kspace_KS.o kspace_ordern_fk.o diag_error.o diag_k.o \
 	diag_k_KS.o
 	UTIL = anderson2.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o compute_neutral_rho_grid.o  \
+	broyden.o louie.o pulay.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -251,11 +250,11 @@ endif
 ifneq (,$(findstring MPI-k, ${PARALLEL}))
 	KSPACE = kspace_MPI-k.o kspace_ordern_fk.o diag_error.o diag_k-MPI.o
 	UTIL = anderson2.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
-	writeout_ac.o writeout_cd.o writeout_charges.o writeout_dipole.o writeout_comph.o \
+	writeout_ac.o writeout_cd.o writeout_charges.o writeout_comph.o \
 	writeout_neighbors.o writeout_xv.o writeout_neighborsPP.o \
 	hamtrans.o mixer.o diag_k-MPI_slave.o bcast_k-MPI.o bcast_k-MPI_slave.o \
 	den2mesh.o ew2mesh.o ew2mesh_gamma.o postscf.o den2mesh_import.o \
-	broyden.o louie.o pulay.o compute_neutral_rho_grid.o \
+	broyden.o louie.o pulay.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
@@ -285,7 +284,7 @@ include MACHINES/${MACHINE}
 #include MACHINES/ILINUX_PARALLEL_CLS1
 
 ALLOCATIONS = allocate_f.o allocate_h.o allocate_neigh.o allocate_rho.o \
-	allocate_umb.o allocate_steered.o reallocate_f.o reallocate_h.o reallocate_neigh.o \
+	allocate_umb.o reallocate_f.o reallocate_h.o reallocate_neigh.o \
 	reallocate_rho.o allocate_dos.o allocate_grid.o allocate_trans.o 
 
 ASSEMBLERS = assemble_olsxc_1c.o assemble_hxc_1c.o assemble_2c.o assemble_3c.o \
@@ -323,7 +322,7 @@ INTERPOLATERS = buildspline_1d.o interpolate_1d.o interpolate_2d.o \
 LOOPS = main_loop.o main_loop_MD.o main_loop_CG.o scf_loop.o scf_loop_harris.o \
 	main_loop_NEB.o main_loop_DM.o scf_loop_ks.o main_loop_importrho.o \
 	main_loop_TDSE.o main_loop_MDET.o main_loop_MIN.o main_loop_NAC.o \
-	main_loop_FIRE.o
+	main_loop_FIRE.o main_loop_socket.o
 
 MAIN = fireball.o 
 
@@ -337,10 +336,10 @@ MD = cross.o factorial.o predictor.o gaussT.o corrector.o imaged.o setgear.o \
 
 MODULES = barrier.o charges.o configuration.o constants_fireball.o density.o \
 	dimensions.o forces.o fragments.o gaussG.o integrals.o interactions.o \
-	kpoints.o neighbor_map.o umbrella.o steered.o optimization.o module_dos.o \
+	kpoints.o neighbor_map.o umbrella.o optimization.o module_dos.o \
 	dynamo.o cproc.o noseHoover.o scf.o grid.o wavefunction.o neb_module.o \
 	vnneutral.o transport.o matmultmod.o outputs.o options.o energy.o \
-	MD.o  mpi_main.o tdse.o bias.o nonadiabatic.o hartree.o 
+	MD.o  mpi_main.o tdse.o bias.o nonadiabatic.o hartree.o sockets.o fsockets.o fb_socket.o
 
 MODULES_C =  $(MODULES) classicMD.o
 
@@ -375,8 +374,7 @@ SOCKETS = get_geometry.o create_socket.o send_geometry.o sendrecv.o soc_init.o
 SOLVESH_DIAG = $(KSPACE) $(BLAS)
 
 UMBRELLA = assemble_umbrella.o Dassemble_umbrella.o get_umbrella.o \
-	readumbrella.o assemble_steered.o Dassemble_steered.o \
-        get_steered.o readsteered.o
+	readumbrella.o
 
 XC = ceperley_alder.o cepal.o
 
@@ -507,8 +505,6 @@ ordern.o : MODULES/ordern.f90 dimensions.o
 	$(F90) $(FFLAGS) -c MODULES/ordern.f90
 umbrella.o : MODULES/umbrella.f90
 	$(F90) $(FFLAGS) -c MODULES/umbrella.f90
-steered.o : MODULES/steered.f90
-	$(F90) $(FFLAGS) -c MODULES/steered.f90
 optimization.o : MODULES/optimization.f90
 	$(F90) $(FFLAGS) -c MODULES/optimization.f90
 module_dos.o : MODULES/module_dos.f90
@@ -551,6 +547,12 @@ nonadiabatic.o : MODULES/nonadiabatic.f90
 	$(F90) $(FFLAGS) -c MODULES/nonadiabatic.f90
 hartree.o : MODULES/hartree.f90
 	$(F90) $(FFLAGS) -c MODULES/hartree.f90
+fsockets.o : MODULES/fsockets.f90
+	$(F90) $(FFLAGS) -c MODULES/fsockets.f90
+fb_socket.o : MODULES/fb_socket.f90
+	$(F90) $(FFLAGS) -c MODULES/fb_socket.f90
+sockets.o : MODULES/sockets.c
+	$(CC) $(CFLAGS) -c MODULES/sockets.c
 # *****************************************************************************
 # modules_c
 # *****************************************************************************
@@ -563,7 +565,6 @@ classicMD.o : MODULES/classicMD.f90
 # *****************************************************************************
 fireball.o : fireball.f90 $(MODULES)
 	$(F90) $(FFLAGS) -I/usr/local/include -c fireball.f90
-
 ifneq (,$(findstring SCALAPACK, ${METHOD}))
 fireball_server_amber.o : server/fireball_server_amber.f90 $(MODULES) 
 	$(F90) -c server/fireball_server_amber.f90
@@ -591,8 +592,6 @@ allocate_rho.o : ALLOCATIONS/allocate_rho.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ALLOCATIONS/allocate_rho.f90
 allocate_umb.o : ALLOCATIONS/allocate_umb.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ALLOCATIONS/allocate_umb.f90
-allocate_steered.o : ALLOCATIONS/allocate_steered.f90 $(MODULES)
-	$(F90) $(FFLAGS) -c ALLOCATIONS/allocate_steered.f90
 reallocate_f.o : ALLOCATIONS/reallocate_f.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ALLOCATIONS/reallocate_f.f90
 reallocate_h.o : ALLOCATIONS/reallocate_h.f90 $(MODULES)
@@ -1128,6 +1127,8 @@ main_loop_NAC.o : LOOPS/main_loop_NAC.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c LOOPS/main_loop_NAC.f90
 main_loop_FIRE.o : LOOPS/main_loop_FIRE.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c LOOPS/main_loop_FIRE.f90
+main_loop_socket.o : LOOPS/main_loop_socket.f90
+	$(F90) $(FFLAGS) -c LOOPS/main_loop_socket.f90
 
 # *****************************************************************************
 # molecular dynamics objects
@@ -1483,16 +1484,6 @@ readumbrella.o : UMBRELLA/readumbrella.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UMBRELLA/readumbrella.f90
 
 
-assemble_steered.o : UMBRELLA/assemble_steered.f90 $(MODULES)
-	$(F90) $(FFLAGS) -c UMBRELLA/assemble_steered.f90
-Dassemble_steered.o : UMBRELLA/Dassemble_steered.f90 $(MODULES)
-	$(F90) $(FFLAGS) -c UMBRELLA/Dassemble_steered.f90
-get_steered.o : UMBRELLA/get_steered.f90 $(MODULES)
-	$(F90) $(FFLAGS) -c UMBRELLA/get_steered.f90
-readsteered.o : UMBRELLA/readsteered.f90 $(MODULES)
-	$(F90) $(FFLAGS) -c UMBRELLA/readsteered.f90
-
-
 # *****************************************************************************
 # utilities objects
 # *****************************************************************************
@@ -1512,10 +1503,6 @@ writeout_cd.o : UTIL/writeout_cd.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UTIL/writeout_cd.f90
 writeout_charges.o : UTIL/writeout_charges.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UTIL/writeout_charges.f90
-writeout_dipole.o : UTIL/writeout_dipole.f90 $(MODULES)
-	$(F90) $(FFLAGS) -c UTIL/writeout_dipole.f90
-compute_neutral_rho_grid.o : UTIL/compute_neutral_rho_grid.f90 $(MODULES)
-	$(F90) $(FFLAGS) -c UTIL/compute_neutral_rho_grid.f90
 writeout_comph.o : UTIL/writeout_comph.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UTIL/writeout_comph.f90
 writeout_neighbors.o : UTIL/writeout_neighbors.f90 $(MODULES)

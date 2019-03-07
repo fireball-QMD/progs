@@ -64,6 +64,12 @@
 ! ===========================================================================
 
 
+! Sockect loop for i-Py
+     if (isocket .eq. 1 ) then
+      call main_loop_socket ()
+      return
+     endif
+
 ! Procedure
 ! ===========================================================================
 ! Imported rho for grid projection
@@ -126,6 +132,7 @@
       call main_loop_FIRE ()
       return
      endif
+
 
 
 
