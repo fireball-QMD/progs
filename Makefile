@@ -336,7 +336,7 @@ MD = cross.o factorial.o predictor.o gaussT.o corrector.o imaged.o setgear.o \
 
 MODULES = barrier.o charges.o configuration.o constants_fireball.o density.o \
 	dimensions.o forces.o fragments.o gaussG.o integrals.o interactions.o \
-	kpoints.o neighbor_map.o umbrella.o optimization.o module_dos.o \
+	kpoints.o neighbor_map.o umbrella.o  steered.o optimization.o module_dos.o \
 	dynamo.o cproc.o noseHoover.o scf.o grid.o wavefunction.o neb_module.o \
 	vnneutral.o transport.o matmultmod.o outputs.o options.o energy.o \
 	MD.o  mpi_main.o tdse.o bias.o nonadiabatic.o hartree.o sockets.o fsockets.o fb_socket.o
@@ -507,7 +507,7 @@ ordern.o : MODULES/ordern.f90 dimensions.o
 umbrella.o : MODULES/umbrella.f90
 	$(F90) $(FFLAGS) -c MODULES/umbrella.f90
 steered.o : MODULES/steered.f90
-	$(F90) $(FFLAGS) -c MODULES/steered.f9
+	$(F90) $(FFLAGS) -c MODULES/steered.f90
 optimization.o : MODULES/optimization.f90
 	$(F90) $(FFLAGS) -c MODULES/optimization.f90
 module_dos.o : MODULES/module_dos.f90

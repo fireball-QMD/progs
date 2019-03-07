@@ -90,7 +90,7 @@
   Namelist /output/ iwrtcdcoefs, iwrtcharges, iwrtdensity, iwrteigen,       &
                                          iwrtefermi, iwrtfpieces, iwrthampiece, iwrtcomponents, &
                                          iwrtneigh, iwrtneigh_com, iwrtxyz, iwrtdos, iwrtdosng, iwrthop,   &
-                                         iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf,  &
+                                         iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf, iwrtdipole, &
                                          iwrtxsf, idensimport, iwrtpsit, iwrtqt, iwrtkvaziband, iwrtexcit
 
   Namelist /option/ iharris, idogs, ihubbard, ihorsfield, imcweda, igsn, iquench, &
@@ -228,6 +228,7 @@
         idensimport = 0
         iwrtpsit = 0
         iwrtqt = 0
+        iwrtdipole = 0
 ! socket for i/pi
         isocket = 0
         ccmd = 0
@@ -806,6 +807,7 @@
         if (iwrtHS .gt. 0) write (*,*) ' Writing out H & S file '
         if (iwrtvel .gt. 0) write (*,*) ' Writing out VELOCITY.dat file '
         if (iwrtden .gt. 0) write (*,*) ' Writing out density projected on the grid '
+        if (iwrtdipole .gt. 0) write (*,*) ' Writing out dipole '
         if (iwrtewf .gt. 0) write (*,*) ' Writing out eigenfunctions projected on the grid '
         if (iwrtxsf .gt. 0) write (*,*) ' Writing out xsf-format file  '
         if (idensimport .gt. 0) write (*,*) ' Importing density file for projection  '
