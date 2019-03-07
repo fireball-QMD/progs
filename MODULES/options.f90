@@ -54,6 +54,7 @@
 	integer iephc                  ! do e-ph coupling
         integer idftd3                 ! DFTD3 corrections
         integer idipole                ! Long range term with XYZ dipole
+        integer isocket                ! socket for i-pi
 ! ---------------------------------------------------------------------------
 ! Other controls
 ! ---------------------------------------------------------------------------
