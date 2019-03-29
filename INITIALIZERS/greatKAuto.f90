@@ -249,9 +249,9 @@
         n2=mpmesh(2)
         n3=mpmesh(3)
         write(*,*)n1,n2,n3
-	if(n1.le.0)stop' bad n1 (Must be positive integers, 1,2,3,...)'
-	if(n2.le.0)stop' bad n2 (Must be positive integers, 1,2,3,...)'
-	if(n3.le.0)stop' bad n3 (Must be positive integers, 1,2,3,...)'
+	if(n1.le.0) stop ' bad n1 (Must be positive integers, 1,2,3,...)'
+	if(n2.le.0) stop ' bad n2 (Must be positive integers, 1,2,3,...)'
+	if(n3.le.0) stop ' bad n3 (Must be positive integers, 1,2,3,...)'
 
 ! ====================================================================
 ! Fractions = m/n + shifts.
@@ -424,7 +424,7 @@
         if(ikn.ne.numbnew)then
 	write(*,*)' ikn=',ikn
 	write(*,*)' numbnew=',numbnew
-	stop' ikn.ne.numbnew'
+	stop ' ikn.ne.numbnew'
 	end if
         numb=numbnew
 !	write(*,*)' '
