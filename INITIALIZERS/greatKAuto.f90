@@ -1528,21 +1528,22 @@
 
 !*****************************************************************************
 
-      subroutine reduc2(ivec)
-      implicit none
-! remove any common factors from ivec
-      integer ivec(4),i,factor
-! common denominator cannot be zero
-      if(ivec(4).eq.0)call bomb
-! transfer minus sign from common denominator to components
-      if(ivec(4).lt.0)then
-        do i=1,4
-          ivec(i)=-ivec(i)
-        enddo
-      endif
-! remove common factors
-      i=factor(4,ivec) ! FIXME : this does not make sense (?) should be i=factor*ivec(4) ?
-      end
+!      subroutine reduc2(ivec)
+!      implicit none
+!! remove any common factors from ivec
+!      integer ivec(4),i,factor
+!! common denominator cannot be zero
+!      if(ivec(4).eq.0)call bomb
+!! transfer minus sign from common denominator to components
+!      if(ivec(4).lt.0)then
+!        do i=1,4
+!          ivec(i)=-ivec(i)
+!        enddo
+!      endif
+!! remove common factors
+!      ! the following line does not compile, at least with gfortran
+!      i=factor(4,ivec) ! FIXME : this does not make sense (?) should be i=factor*ivec(4) ?
+!      end
 
 !****************************************************************************
 
