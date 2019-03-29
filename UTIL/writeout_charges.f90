@@ -171,7 +171,7 @@
 !
 ! W R I T E    O U T    M U L L I K E N    C H A R G E S
 ! ****************************************************************************
-         if (iqout .eq. 2 .or. 4) then
+         if ((iqout .eq. 2) .or. (iqout .eq. 4)) then
           write (*,*) '  '
           write (*,*) '  '
           write (*,*) ' MULLIKEN CHARGES (by shell): '
