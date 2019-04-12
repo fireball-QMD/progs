@@ -416,27 +416,6 @@
         end do
 
 
-!****************** DELETE: FOR TESTING PURPOSES ONLY
-
-      !do iatom = 1,natoms
-            iatom = 1
-            in1=imass(iatom)
-            matom = neigh_self(iatom)
-            
-            write(*,*) 'The intra-atomic dipoles are coming'
-            write(*,*) dipc(1,1,2,matom,iatom), dipc(1,1,3,matom,iatom),&
-                                 &         dipc(1,1,4,matom,iatom)
-            write(*,*) dipc(2,1,2,matom,iatom), dipc(2,1,3,matom,iatom),&
-                                 &         dipc(2,1,4,matom,iatom)
-            write(*,*) dipc(3,1,2,matom,iatom),dipc(3,1,3,matom,iatom),&
-                                 &         dipc(3,1,4,matom,iatom)
-
-            write(*,*) 'End of writing intra-atomic dipoles'
-
-
-      ! end do ! end do iatom = 1,natoms
-!****************** DELETE
-
 
 ! Format Statements
 ! ===========================================================================
