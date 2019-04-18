@@ -68,10 +68,10 @@ subroutine kgroup(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
 !$$$	open(unit=30,file=filename,status='old')
 !$$$	read(30,*)ngroup
 !$$$	write(*,*)' There are',ngroup,' group operators.'
-!$$$	if(ngroup.gt.igrpsz)stop 'too many group operators'
+!$$$	if(ngroup.gt.igrpsz) stop 'too many group operators'
 !$$$	do 540 igrp=1,ngroup
 !$$$	read(30,*)jgrp
-!$$$	if(jgrp.ne.igrp)stop ' something wrong in group file'
+!$$$	if(jgrp.ne.igrp) stop ' something wrong in group file'
 !$$$c pcgrp are the group operators in cartesian coordinates.
 !$$$c (x',y',z') = pcgrp * (x,y,z) where x,y,z is x*xhat+y*yhat+z*zhat.
 !$$$	do 541 i=1,3
@@ -111,7 +111,7 @@ subroutine kgroup(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
     end do
 	ngroup=ngroup+ngroup
 	write(*,*)' There are',ngroup,' group operators.'
-	 if(ngroup.gt.igrpsz)stop 'too many group operators'
+	 if(ngroup.gt.igrpsz) stop 'too many group operators'
 	end if
 ! ============================================================
 ! We must have the first group operator being the identity.
@@ -120,14 +120,14 @@ subroutine kgroup(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
  	 if(abs(pcgrp(i,i,1)-1.0d0).gt.0.0000001)then
 	 write(*,*)' the first group operator is not the identity'
 	 write(*,*)' We assume that group op. # 1=identity and it is not'
-	 stop' sorry!!!'
+	 stop ' sorry!!!'
 	 end if
 	 do j=1,3
 	  if(j.eq.i) cycle
 	  if(abs(pcgrp(i,j,1)).gt.0.0000001)then
 	   write(*,*)' the first group operator is not the identity'
 	   write(*,*)' We assume that group op. # 1=identity and it is not'
-	   stop' sorry!!!'
+	   stop ' sorry!!!'
 	  end if
      end do
     end do
@@ -178,7 +178,7 @@ subroutine kgroup(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
 	 numb=numb*ngroup
 	 write(*,*)' After the rotation we have a '
 	 write(*,*)' new number of k vectors =',numb
-	 if(numb.gt.nkmax)stop ' too many points'
+	 if(numb.gt.nkmax) stop ' too many points'
 	 itest=0
 	 if(itest.eq.1)then
          call shells(a1,a2,a3,sk,numb,weight,i1max,i2max,i3max)
@@ -303,7 +303,7 @@ subroutine kgroup(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
 501	continue
 ! ----
 ! jitis is the k(j) in which k(i) is rotated into.
-	if(jitis.eq.0)stop' bad jitis'
+	if(jitis.eq.0) stop ' bad jitis'
 	if(j.lt.i)write(*,*)' Whoa.... j<i j=',j,' i=',i
 	if(j.ne.i)irred(j)=0
 ! Now we determine how many unique k vectors vector i has been rotated into.
@@ -505,14 +505,14 @@ subroutine kgroupagain(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
 	if(abs(pcgrp(i,i,1)-1.0d0).gt.0.0000001)then
 	write(*,*)' the first group operator is not the identity'
 	write(*,*)' We assume that group op. # 1=identity and it is not'
-	stop' sorry!!!'
+	stop ' sorry!!!'
 	end if
 	do 834 j=1,3
 	if(j.eq.i)go to 834
 	if(abs(pcgrp(i,j,1)).gt.0.0000001)then
 	write(*,*)' the first group operator is not the identity'
 	write(*,*)' We assume that group op. # 1=identity and it is not'
-	stop' sorry!!!'
+	stop ' sorry!!!'
 	end if
 834	continue
 833	continue
@@ -551,7 +551,7 @@ subroutine kgroupagain(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
 	end do
 !	write(*,*)' C:'
 	write(*,*)' Initial sum of weights=',sum1
-	if(abs(sum1-1.0d0).gt.0.0001)stop' bad sum of weights'
+	if(abs(sum1-1.0d0).gt.0.0001) stop ' bad sum of weights'
 ! ===========================================================c
 ! New test. We first get rid of any k vectors which are related by
 ! reciprocal lattice vectors.
@@ -675,7 +675,7 @@ subroutine kgroupagain(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
         sum1=sum1+weight(i)
         end do
 !        write(*,*)'  Intermediate sum of weights=',sum1
-        if(abs(sum1-1.0d0).gt.0.0001)stop' bad sum of weights'
+        if(abs(sum1-1.0d0).gt.0.0001) stop ' bad sum of weights'
 
         do 554 i=1,numb
         irred(i)=1
@@ -759,7 +759,7 @@ subroutine kgroupagain(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
 ! jitis is the k(j) in which k(i) is rotated into.
 	if(jitis.eq.0)then
 	write(*,*)' Your symmetry is probably wrong.'
-	stop' bad jitis'
+	stop ' bad jitis'
 	end if
 	if(jitis.lt.i)write(*,*)' Whoa.... j<i j=',j,' i=',i
 	if(jitis.ne.i)irred(j)=0
@@ -802,7 +802,7 @@ subroutine kgroupagain(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
         sum1=sum1+weight(i)
         end do
         write(*,*)' Final sum of weights=',sum1
-        if(abs(sum1-1.0d0).gt.0.0001)stop' bad sum of weights'
+        if(abs(sum1-1.0d0).gt.0.0001) stop ' bad sum of weights'
         do 2808 i=1,numb
 2808    wait(i)=weight(i)
 ! ================================================================
@@ -867,7 +867,7 @@ subroutine kgroupagain(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
 !        write(*,*)' The number of k vectors is ',numb
 !	write(*,*)' successfully finished kgroupagain.f -------- bye.'
 !	itest=1
-!	if(itest.eq.1)stop
+!	if(itest.eq.1) stop
 !
 ! sum weights
         sum1=0.0d0
@@ -875,7 +875,7 @@ subroutine kgroupagain(sk,weight,numb,skirred,wt,numirr,pcgrp,  &
         sum1=sum1+weight(i)
         end do
 !        write(*,*)' Leaving with a sum of weights=',sum1
-        if(abs(sum1-1.0d0).gt.0.0001)stop' bad sum of weights'
+        if(abs(sum1-1.0d0).gt.0.0001) stop ' bad sum of weights'
 
 	return
 	end
@@ -1008,7 +1008,7 @@ subroutine shells(a1,a2,a3,sk,numbk,weight,i1max,i2max,i3max)
 	end if
 101	continue
 	numbshell(ishell)=nshell
-	if(nshell.gt.Lrot)stop' nshell too large, Lrot too small'
+	if(nshell.gt.Lrot) stop ' nshell too large, Lrot too small'
 100	continue
 !
 ! ===================================================================
