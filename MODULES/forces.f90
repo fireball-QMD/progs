@@ -67,6 +67,10 @@
          real, dimension (:, :), allocatable :: f3caa, f3cab, f3cac
          real, dimension (:, :), allocatable :: f3xca_ca, f3xcb_ca, f3xcc_ca
 
+! Forces - XCZW
+         real, dimension (:, :, :), allocatable :: dxcdcc_zw
+
+
 ! Forces - extended-Hubbard
          real, dimension (:, :), allocatable :: fcoulomb
          real, dimension (:, :), allocatable :: fxcnu

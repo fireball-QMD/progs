@@ -15,7 +15,7 @@ cp -r $FB_HOME/begin/begin_rcatms/ .
 cp pp/* begin_rcatms/
 mkdir info-NAP info-Lowdin BASES
 
-ele='1 6 7 8' # 12 15 16'
+ele='8' #'1 6 7 8' # 12 15 16'
 #exchange-correlation model
 #LDA = 3   : GGA = 9
 EX=9
@@ -61,7 +61,7 @@ ns[${e}]=2.00 ; np[${e}]=2.50 ; nd[${e}]=0.00
 rs[${e}]=5.42 ; rp[${e}]=5.42 ; rd[${e}]=5.42
 
 e=8
-X[${e}]=O; Z[${e}]=008; M[${e}]=15.9994 ; orb[${e}]=sp ; excited[${e}]=N
+X[${e}]=O; Z[${e}]=008; M[${e}]=15.9994 ; orb[${e}]=sp ; excited[${e}]=Y; opEx[${e}]=5
 n0s[${e}]=2.00 ; n0p[${e}]=4.00 ; n0d[${e}]=0.00
 ns[${e}]=2.00  ; np[${e}]=4.00  ; nd[${e}]=0.00
 rs[${e}]=5.32  ; rp[${e}]=5.32  ; rd[${e}]=5.32

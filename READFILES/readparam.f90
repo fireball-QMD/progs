@@ -93,7 +93,7 @@
                                          iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf, iwrtdipole, &
                                          iwrtxsf, idensimport, iwrtpsit, iwrtqt, iwrtkvaziband, iwrtexcit
 
-  Namelist /option/ iharris, idogs, ihubbard, ihorsfield, imcweda, igsn, iquench, &
+  Namelist /option/ iharris, idogs, ihubbard, ihorsfield, imcweda, ixczw, igsn, iquench, &
                                          iqout, qstate, icluster, iensemble, ifixcharge, ifixneigh,   &
                                          iumbrella, ivdw, ibarrier, iimage, idynmat, iharmonic, iks,  &
                                          iconstraints, iendtemp, ineb, itrans, basisfile, lvsfile,    &
@@ -116,6 +116,7 @@
         ihubbard = 0
         ihorsfield = 0
         imcweda = 1
+        ixczw = 0
         iks = 0
         igsn = 0
         iqout = 1
@@ -365,9 +366,10 @@
         write (*,*) '  0 => Horsfield '
         write (*,*) '  1 => generalized Sankey-Niklewski '
         write (*,*) '  2 => McWEDA '
+        write (*,*) '  4 => XCZW theory '
         write (*,*) ' itheory_xc = ', itheory_xc
       endif
-        if (itheory_xc .lt. 0 .or. itheory_xc .gt. 3) then
+        if (itheory_xc .lt. 0 .or. itheory_xc .gt. 4) then
          write (*,*) ' This selection for itheory_xc is not valid! Change to '
          write (*,*) ' an appropriate value in the options.input file. '
          write (*,*) ' I am afraid that we are going to have to stop. '
@@ -855,12 +857,12 @@
          ENDDO
 
          write (*,*) 'Socket with i-pi software'
-         !write (*,*) 'inet:', inet
-         !write (*,*) 'Host name:', trim(host
-         !write (*,*) 'Port:', port
-         !write (*,*) ''
+!         write (*,*) 'inet:', inet
+!         write (*,*) 'Host name:', trim(host
+!         write (*,*) 'Port:', port
+!         write (*,*) ''
 
-      endif
+      endif !end if isocket .eq. 1  (PIMD)
 
 ! writeout resume of the input variables into param.dat file
         open (unit = 50, file = 'param.dat', status = 'unknown')
@@ -884,6 +886,7 @@
         write (50, *) '  ihubbard          : ',ihubbard
         write (50, *) '  ihorsfield        : ',ihorsfield
         write (50, *) '  imcweda           : ',imcweda
+        write (50, *) '  ixczw             : ',ixczw
         write (50, *) '  igsn              : ',igsn
         write (50, *) '  iks               : ',iks
         write (50, *) '  iqout             : ',iqout

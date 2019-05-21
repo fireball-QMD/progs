@@ -169,11 +169,11 @@
 ! JOM check for degeneracy
              diff = abs(eigen_k(map_ks(iband),ikpoint) - eigen_k(map_ks(jband),ikpoint) )
              if (diff .lt. tolnac) then
-               write(*,*)'TWO EIGENVALUES VERY CLOSE'
-               write(*,*)'band', iband, eigen_k(map_ks(iband),ikpoint)
-               write(*,*)'band', jband, eigen_k(map_ks(jband),ikpoint)
-               write(*,*)'The nonadiabatic coupling is'   
-               write(*,*)'NOT CALCULATED'   
+             !  write(*,*)'TWO EIGENVALUES VERY CLOSE'
+             !  write(*,*)'band', iband, eigen_k(map_ks(iband),ikpoint)
+             !  write(*,*)'band', jband, eigen_k(map_ks(jband),ikpoint)
+             !  write(*,*)'The nonadiabatic coupling is'   
+             !  write(*,*)'NOT CALCULATED'   
              else
 ! LOOP-2C
 ! ****************************************************************************

@@ -186,10 +186,10 @@
 ! JOM-info : ioccupy_na can be 0, 1 or 2, but ioccupy_k is only 0 or 1
 
      ! write (91244,*)  itime_step
- !     write (91244,'(<norbitals>i6.1)') (ioccupy_na(inu,1), inu = 1, norbitals)
+     ! write (91244,'(<norbitals>i6.1)') (ioccupy_na(inu,1), inu = 1, norbitals)
 
      ! write (912444,*)  
-   !   write (912444,'(<norbitals>i6.1)') (ioccupy_na_TS(inu,1), inu = 1, norbitals)
+     ! write (912444,'(<norbitals>i6.1)') (ioccupy_na_TS(inu,1), inu = 1, norbitals)
 
 
         ioccupy_k = 1

@@ -45,7 +45,8 @@
 
 ! Common neighbor mapping and storage.
          integer, dimension (:, :, :), allocatable :: neigh_comb 
-         integer, dimension (:, :, :), allocatable :: neigh_comj 
+         integer, dimension (:, :, :), allocatable :: neigh_comj
+         integer, dimension (:, :, :), allocatable :: neigh_com_ng
          integer, dimension (:, :), allocatable :: neigh_comm 
          integer, dimension (:), allocatable :: neigh_comn 
 

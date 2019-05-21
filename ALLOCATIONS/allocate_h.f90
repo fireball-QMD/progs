@@ -58,6 +58,7 @@
      &                         itheory_xc, igauss, iwrtdos, iwrthop, iwrtatom)
 
         use interactions
+        use options, only : idipole
         implicit none
  
 ! Argument Declaration and Description
@@ -122,8 +123,15 @@
          allocate (ewaldqmmm (numorb_max, numorb_max, neigh_max,natoms))
         end if
 
+! zw mcweda second order
+        if (itheory_xc .eq. 4) then
+         allocate (g2nu(nsh_max,nsh_max,neigh_max,natoms))
+                              
+         allocate (g2nup(3,nsh_max,nsh_max,neigh_max,natoms))
+        end if !end if itheory_xc .eq. 4
+
 ! Interactions needed only for DOGS
-        if (itheory .eq. 1) then
+        if (itheory .eq. 1 .or. idipole .eq. 1) then
          allocate (dip (numorb_max, numorb_max, neigh_max, natoms))
 ! JIMM
          allocate (dipcm (3, numorb_max, numorb_max))
@@ -137,7 +145,7 @@
         end if
  
 ! Interactions needed for Sankey-Niklewski type average densities.
-        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2) then
+        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2 .or. itheory_xc .eq. 4) then
          allocate (sm_mat (nsh_max, nsh_max, neigh_max, natoms))
         end if
 

@@ -1,0 +1,103 @@
+-------INTR. -------
+ENLACE			l(exp)	l(fire)	Ang(exp)	Ang(fire)
+H-H     H-H		0.74	
+C-C	HC-CH		1.20		180º		0 
+	CH2-CH2         1.33		116º 122º 	0	0
+	CH3-CH3		1.54	
+	Benceno		1.39    
+C-H	CH3CH2-H	1.07	
+C-O	CH2-OH		1.43	
+	CH2-O		1.22	 
+C-N	CH3-NH2		1.47	 
+	CH3CH-NOH	1.28	 
+	CH3C-N		1.16	
+O-H	CH3O-H		0.96	
+	H2O		0.96		
+O-O	O2		1.21  	 
+N-N	N2		1.112	
+
+-------TEST-BIO--------
+HCO			exp.			fireball
+	acetate		d(O,C) = 1.36		d(O,C)= 		a(C,O,C)=0 
+	acetic 		d(O,C) = 1.43, 1.23	d(O,C)= 		a(C,O,C)=0	
+	acetone 	d(O,C) = 1.23		d(C,O)=			a(C,C,C)=0;
+	ethanol 	d(O,C) = 1.43 		d(C,O)= d(O,H)= ~H2O
+	diethyl_ester				d(C,O)= d(C,O)=; d(C,O)=;
+	diethyl_ether 	d(O,C) = ~1.43		d(C,O)= d(C,O)=;  
+	diethyl_peroxi. d(O,O) = ~1.49 		d(O,O)= 
+	furan		d(O,C) = 1.43		d(O,C)= d(C,O)= 
+	peroxide 	d(O,O) = 1.49		d(O,O)= d(O,H)=
+	water		H-O 0.98 Ang		
+			a(H,N,H) 108º		0
+NC
+        RET  					                                     
+        benceno                                 d(C,C)=
+HCN
+        amoniaco        H-N 1.017 Ang           	 
+                        a(H,N,H) 107.8º         0
+        guanidina       360º			0 
+                        d(N,C)=1.47, 1.35       d(N,C)=, ; d(N,C)=; a(N,C,N)=
+        guanidinio	d(N,C) =  1.35; 120º	d(N,C)=; d(N,C)=; d(N,C)=; a(N,C,N)=0
+        imidazol				d(C,N)=; d(N,C)=; d(C,N)=;  d(N,C)=;  d(C,C)=;  
+        imidazol+                             d(C,N)=; d(N,C)=; d(C,N)=;  d(N,C)=;  d(C,C)=;
+
+
+---------------- TEST S66 -------------------
+ref. http://www.begdb.com/index.php?action=oneDataset&id=41&state=show&order=ASC&by=name_m&method= 
+test              Ea+Eb      Etot	Etot-Ea-Eb	ref.E	Dc	 Dl	 ref.Dc	 ref.Dl
+S66-4113_01Wate 	-0.2149					2.924	1.963
+S66-4115_03Wate 	-0.3072					2.929	1.961
+S66-4116_04Wate 	-0.3500					2.814	1.861
+S66-4117_05MeOH 	-0.2532					2.863	1.905
+S66-4118_06MeOH 	-0.3351					2.909	1.938
+S66-4119_07MeOH 	-0.3548					2.814	1.855
+S66-4120_08MeOH 	-0.2182					2.917	1.952
+S66-4121_09MeNH 	-0.1327					3.178	2.199
+S66-4122_10MeNH 	-0.1860					3.179	2.244
+S66-4123_11MeNH 	-0.2398					3.070	2.203
+S66-4124_12MeNH 	-0.3261					2.888	1.941
+S66-4125_13Pept 	-0.2742					2.974	1.989
+S66-4126_14Pept 	-0.3331					3.052	2.048
+S66-4127_15Pept 	-0.3761					2.947	1.947
+S66-4128_16Pept 	-0.2232					3.058	2.052
+S66-4129_17Urac 	-0.7445					2.850	1.824
+S66-4130_18Wate 	-0.3065					2.923	1.953
+S66-4131_19MeOH 	-0.3328					2.900	1.931
+S66-4132_20AcOH 	-0.8239					2.675	1.681
+S66-4133_21AcNH 	-0.6991					2.864	1.844
+S66-4134_22AcOH 	-0.8413					2.788	1.767
+S66-4135_23AcNH 	-0.8283					2.763	1.730
+
+ref : http://www.begdb.com/index.php?action=oneDataset&id=29&state=show&order=ASC&by=name_m&method=    (1.00)
+------------------ TEST IOHB  ----------------
+test              Ea+Eb      Etot	Etot-Ea-Eb	ref.E	Dc	 Dl	 ef. Dc Dl
+3361_01acetatem 	-0.8564					1.692	3.149
+3369_02acetatew 	-0.9132					2.042	1.999
+3377_03acetatem 	-0.4970					1.995	3.164
+3385_04methylam 	-0.8283					1.729	
+3393_05methylam 	-1.2385					1.106	
+3401_06methylam 	-0.9206					1.642	
+3409_07methylam 	-0.8027					1.705	
+3417_08guanidin 	-0.7845					2.012	2.012
+3425_09guanidin 	-0.8760					1.787	
+3433_10guanidin 	-0.8582					1.977	1.979
+3441_11guanidin 	-0.7576					2.034	2.033
+3449_12imidazol 	-0.7116					1.745	
+3457_13imidazol 	-1.1266					1.596	
+3465_14imidazol 	-0.8200					1.639	
+3473_15imidazol 	-0.7151					1.700	
+
+
+
+http://comp.chem.umn.edu/db/dbs/pa8.html
+Proton Affinities
+		REF1		REF2 (B.E.)
+NH3	 9.188673518061	 9.188673518061	
+H2O	 7.449807033520	 7.449807033520	
+C2H2	 6.790685573045	 6.790685573045	
+SiH4	 6.786349247648	 6.786349247648	
+PH3	 8.373444343264	 8.373444343264	 
+H2S	 7.532197216079	 7.532197216079	 
+HCl	 5.945102120463	 5.945102120463	
+H2	 4.592168596331	 4.592168596331	
+

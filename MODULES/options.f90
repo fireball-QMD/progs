@@ -55,6 +55,7 @@
         integer idftd3                 ! DFTD3 corrections
         integer idipole                ! Long range term with XYZ dipole
         integer isocket                ! socket for i-pi
+        integer ixczw                  ! Second order XC theory
 ! ---------------------------------------------------------------------------
 ! Other controls
 ! ---------------------------------------------------------------------------

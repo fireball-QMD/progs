@@ -76,6 +76,7 @@
         integer kforce
 
 ! Procedure
+
 ! ===========================================================================
 
 !        !write (*,*) '  '
@@ -117,7 +118,6 @@
 
             call num_neigh_tot (numorb_max)
            end if
-
            call backnay ()
             !SFIRE
             call neighbors_pairs(icluster)
@@ -150,6 +150,7 @@
 ! (neigh_self) in order to put the result of VNA_atom (doscentros) into
 ! VNA(mu,nu,iatom,neigh_self).
 ! Initialize to something ridiculous.
+
           neigh_self = -999
           do iatom = 1, natoms
            do ineigh = 1, neighn(iatom)
@@ -304,7 +305,6 @@
 
 ! Deallocate Arrays
 ! ===========================================================================
-
 
 ! Format Statements
 ! ===========================================================================

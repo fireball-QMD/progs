@@ -111,7 +111,11 @@
 
           if (itheory .eq. 1) then
            !write (*,*) ' Dassemble two-center DOGS force contributions.'
-           call Dassemble_ca_2c_mdet (nprocs, iordern)
+           if (idipole .eq. 1) then
+            call Dassemble_ca_2c_mdet_dip (nprocs, iordern)
+           else
+            call Dassemble_ca_2c_mdet (nprocs, iordern)
+           end if !end if idipole .eq. 1
           endif
 !--------------------------------------------------------------------
 
@@ -159,16 +163,26 @@
 
           if (itheory .eq. 1) then
            !write (*,*) ' Dassemble three-center DOGS force. '
-           call Dassemble_ca_3c_mdet (nprocs, iordern, igauss)
+           if (idipole .eq. 1) then
+            call Dassemble_ca_3c_mdet_dip (nprocs, iordern,igauss)
+            call Dassemble_lr_mdet_dip (nprocs, iordern)
+           else !else idipole .eq. 1
+            call Dassemble_ca_3c_mdet (nprocs, iordern, igauss)
+            call Dassemble_lr_mdet (nprocs, iordern)
            !write (*,*) ' Dassemble three-center long-range '
-           call Dassemble_lr_mdet (nprocs, iordern)
+           end if !end if idipole .eq. 1 
            if (iqmmm .eq. 1) then
              !write (*,*) ' Dassemble three-center qm/mm contributions. '
+           if (idipole .eq. 1) then
+                   !Dassemble_qmmm_mdet_dip
+             call Dassemble_qmmm_mdet_dip (nprocs, iordern)
+           else ! else idipole .eq. 1
              call Dassemble_qmmm_mdet (nprocs, iordern)
-           else
+           end if ! end if idipole .eq. 1
+           else !else if iqmmm .eq. 1
              flrew_qmmm = 0.0d0
-           end if
-          end if
+           end if ! end if iqmmm .eq. 1
+          end if !itheory
 
 ! Call the exchange-correlation interactions based on method chosen
           if (itheory_xc .eq. 1) then

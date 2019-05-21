@@ -58,6 +58,7 @@
         subroutine reallocate_h (natoms, neigh_max, neighPP_max, itheory, &
      &                           itheory_xc, igauss)
         use interactions
+        use options, only : idipole
         implicit none
  
 ! Argument Declaration and Description
@@ -135,7 +136,7 @@
          allocate (ewaldqmmm (numorb_max, numorb_max, neigh_max,natoms))
         end if
 
-        if (itheory .eq. 1) then
+        if (itheory .eq. 1 .or. idipole .eq. 1) then
          deallocate (dip)
 !JIMM
          deallocate (dipcm)
@@ -147,10 +148,17 @@
         end if
  
 ! Interactions needed for Sankey-Niklewski type average densities.
-        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2) then
+        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2 .or. itheory_xc .eq. 4) then
          deallocate(sm_mat)
          allocate (sm_mat (nsh_max, nsh_max, neigh_max, natoms))
         end if
+
+       if (itheory_xc .eq. 4) then
+          deallocate(g2nu)
+          allocate (g2nu(nsh_max,nsh_max,neigh_max,natoms))
+          deallocate(g2nup)
+          allocate (g2nup(3,nsh_max,nsh_max,neigh_max,natoms))
+       end if ! end if itheory = 4
 
 ! Deallocate Arrays
 ! ===========================================================================

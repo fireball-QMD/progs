@@ -108,8 +108,17 @@
          write (*,*) ' Mulliken charges switched on'
          iqout = 2
         endif
+         
+        if (ixczw .eq. 1) then
+            ihorsfield = 0
+            imcweda = 0
+            igsn = 0
+            iks = 0
+            iqout = 4
+            itheory_xc = 4
+        end if
 
-        checksum = ihorsfield + imcweda + igsn + iks
+        checksum = ihorsfield + imcweda + igsn + iks+ixczw
         if (checksum .ne. 1) then
          write (*,*) '  '
          write (*,*) ' Input Options are non-consistent !!'

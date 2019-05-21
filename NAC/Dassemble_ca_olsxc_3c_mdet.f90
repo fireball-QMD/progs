@@ -439,11 +439,11 @@
             do imu = 1, num_orb(in1)
              do ix = 1, 3
               f3xca_ca(ix,ialp) = f3xca_ca(ix,ialp)                          &
-     &         - rho(imu,inu,mneigh,iatom)*mxca(ix,imu,inu)
+     &         - 2.0d0*rho(imu,inu,mneigh,iatom)*mxca(ix,imu,inu)
               f3xcb_ca(ix,iatom) = f3xcb_ca(ix,iatom)                        &
-     &        - rho(imu,inu,mneigh,iatom)*mxcb(ix,imu,inu)
+     &        - 2.0d0*rho(imu,inu,mneigh,iatom)*mxcb(ix,imu,inu)
               f3xcc_ca(ix,jatom) = f3xcc_ca(ix,jatom)                        &
-     &         - rho(imu,inu,mneigh,iatom)*mxcc(ix,imu,inu)
+     &         - 2.0d0*rho(imu,inu,mneigh,iatom)*mxcc(ix,imu,inu)
              end do
             end do
            end do   
@@ -466,11 +466,11 @@
            do inu = 1, num_orb(in2)
             do imu = 1, num_orb(in1)
             gh_3c(:,ialp,imu,inu,mneigh,iatom) =                     &
-     &      gh_3c(:,ialp,imu,inu,mneigh,iatom) + mxca(:,imu,inu)     
+     &      gh_3c(:,ialp,imu,inu,mneigh,iatom) + 2.0d0*mxca(:,imu,inu)     
             gh_3c(:,iatom,imu,inu,mneigh,iatom) =                     &
-     &      gh_3c(:,iatom,imu,inu,mneigh,iatom) + mxcb(:,imu,inu)    
+     &      gh_3c(:,iatom,imu,inu,mneigh,iatom) + 2.0d0*mxcb(:,imu,inu)    
             gh_3c(:,jatom,imu,inu,mneigh,iatom) =                     &
-     &      gh_3c(:,jatom,imu,inu,mneigh,iatom) + mxcc(:,imu,inu)    
+     &      gh_3c(:,jatom,imu,inu,mneigh,iatom) + 2.0d0*mxcc(:,imu,inu)    
             end do
            end do   
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

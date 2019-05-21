@@ -60,6 +60,7 @@
         use forces
         use density
         use interactions
+        use options, only : idipole
         implicit none
  
 ! Argument Declaration and Description
@@ -107,7 +108,7 @@
         if (igauss .eq. 1) allocate (fxcro (3, neigh_max, natoms))
 
 ! Reallocate components of the forces needed for DOGS
-        if (itheory .eq. 1) then
+        if (itheory .eq. 1 .or. idipole .eq. 1) then
 !JIMM
          deallocate (dipp)
          deallocate (dippcm)
@@ -128,7 +129,7 @@
         end if
 
 ! Allocate snxc forces
-        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2) then
+        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2 .or. itheory_xc .eq. 4) then
          deallocate (spm_mat)
          deallocate (arhop_off)
          deallocate (arhopij_off)
@@ -147,6 +148,12 @@
          allocate (dxcdcc (3, neigh_max, natoms))
         end if
 
+! Allocate xczw forces (double countig correction)
+         if (itheory_xc .eq. 4) then 
+             deallocate (dxcdcc_zw)
+             allocate (dxcdcc_zw (3, neigh_max,natoms))
+         end if
+ 
 ! PP part
 ! Deallocate
         deallocate (spVNL)

@@ -144,7 +144,6 @@
 ! For the atom case, in3 = in1, but for everything else in3 = in2.
 ! For the ontop case, in2 = in1 (left) or in3 (right).
 ! Initialize sm, scam and sx to zero.
-
         sx = 0.0d0
         if (iforce .eq. 1) spm = 0.0d0
         if (iforce .eq. 1) spx = 0.0d0
@@ -156,7 +155,7 @@
         do index = 1, index_maxS(in1,in3)
 
          if (interaction .ne. 20) then
-
+          
           call interpolate_1d (interaction, isub, in1, in2, index, iforce,   &
      &                         distance, slist(index), dslist(index))
          else
@@ -164,13 +163,10 @@
      &                         distance, slist(index), dslist(index))
          end if
         end do
- 
 ! Now recover ss ans spm which are two-dimensional arrays from
 ! slist and dslist which are one-dimensional arrays.
         call recover_S (in1, in3, slist, sx)
         call recover_S (in1, in3, dslist, spm)
- 
-
 ! ****************************************************************************
 !
 ! FORCES
@@ -182,7 +178,6 @@
 !
 ! Only compute derivative if and only if iforce = 1.
         if (iforce .eq. 1) then
- 
 ! As long as epsilon1 is called with sighat in the second "spot" as
 ! call epsilon1(R1,sighat,spe), then eps(ix,3) = eta(ix).
          eta(:) = eps(:,3)
@@ -205,8 +200,10 @@
  
         end if
 
+
+         if (interaction .eq. 14) then
+         end if 
 ! Format Statements
 ! ===========================================================================
- 
         return
       end subroutine doscentrosS

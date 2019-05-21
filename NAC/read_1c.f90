@@ -249,7 +249,7 @@
 ! Read data from the 1-center spin exchange-correlation extended hubbard
 ! file.
           if (ispin .eq. 1) then
-           open (unit = 38, file = trim(fdataLocation)//'/nuxcs_onecenter.dat',              &
+     open (unit = 38, file = trim(fdataLocation)//'/nuxcs_onecenter.dat',              &
      &           status = 'unknown')
            do iline = 1, 4
             read (38,100) message
@@ -290,7 +290,7 @@
 !            M c W E D A   E X C H A N G E - C O R R E L A T I O N
 !
 ! *************************************************************************** 
-        if (itheory_xc .eq. 2) then 
+        if (itheory_xc .eq. 2 .or. itheory_xc .eq. 4) then 
         
          allocate(exc1c0 (nspecies,nsh_max,nsh_max))
          allocate(nuxc1c (nspecies,nsh_max,nsh_max))
@@ -298,7 +298,7 @@
          allocate(d2exc1c (nspecies,nsh_max,nsh_max))
          allocate(dnuxc1c (nspecies,nsh_max,nsh_max,nsh_max))
          allocate(d2nuxc1c (nspecies,nsh_max,nsh_max,nsh_max,nsh_max))
-        
+           
 ! jel-nac
 !         if (imdet .eq. 1) then 
          if (imdet .ne. 0) then 
@@ -605,8 +605,48 @@
           end if ! if (skip_it)
          end do ! in1
          end if
+
+         if (itheory_xc .eq. 4) then
+            allocate(xcnu1c (nsh_max, nsh_max, nspecies))
+            xcnu1c = 0.0d0
+             
+         ! Read data from the 1-center exchange-correlation extended hubbard file.
+     open (unit = 37, file = trim(fdataLocation)//'/nuxc_onecenter.dat',         &
+                 &         status = 'unknown')
+         do iline = 1, 4
+          read (37,100) message
+         end do
+         
+         do in1 = 1, nspecies + nsup
+          read (37,100) message
+         end do
+         read (37,100) message
+         
+         in2 = 1
+         do in1 = 1, nspecies + nsup
+          skip_it = .false.
+          do ins = 1, nsup
+           if (nsu(ins) .eq. in1) skip_it = .true.
+          end do
+          if (skip_it) then
+           read (37,*) itype, numsh
+           do issh = 1, numsh
+            read (37,100) message
+           end do
+          else 
+           read (37,*) itype, numsh
+           if (itype .ne. in1 .or. numsh .ne. nssh(in2)) stop           &
+     &      ' Problem reading nuxc_onecenter.dat file '
+           do issh = 1, numsh
+            read (37,*) (xcnu1c(issh,jssh,in2), jssh = 1, numsh)
+           end do
+           in2 = in2 + 1
+          end if
+         end do
+         close (unit = 37)
+         end if !end if itheory_xc .eq. 4
 ! ==================================================================
- end if ! if(itheory_xc.eq.2) 
+         end if ! if(itheory_xc.eq.2 .or. 4) 
         
 ! Deallocate Arrays
 ! ===========================================================================

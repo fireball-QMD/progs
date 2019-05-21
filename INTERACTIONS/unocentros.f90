@@ -261,7 +261,7 @@
        mu1xc = 0.0d0
 
 ! Evaluate charge transfer in regard of the neutral charge
-! for Harris and EH dqi = 0; this makes terms correpsonding 
+! for Harris and EH dqi = 0; this makes terms corresponding 
 ! charge transfer zero, that's what we want 
        dqi = 0.0d0
        if (itheory .eq. 1) then
@@ -319,9 +319,69 @@
        enddo
       !dani.jel }
 !--->double counting correction <mu|exc|mu>=<mu|exc0|mu>+<mu|exc0'*dqi|mu>     
-
       endif ! if( itheory_xc .eq. 2)
       
+
+     !######## NEW XCZW STUFF: NEUTRAL PART OF ONECENTROS
+
+                
+      if(itheory_xc .eq. 4) then 
+
+! Initialize.
+       exc_1c = 0.0d0
+       dccexc_1c = 0.0d0
+       muexc_1c = 0.0d0
+       mu1xc = 0.0d0
+
+! Evaluate charge transfer in regard of the neutral charge
+! for Harris and EH dqi = 0; this makes terms corresponding 
+! charge transfer zero, that's what we want 
+       dqi = 0.0d0
+       if (itheory .eq. 1) then
+         do issh = 1, nssh(in1)
+            !dqi(issh) = (Qin(issh,iatom) - Qneutral(issh,in1))
+            dqi(issh) = 0.0d0
+         end do
+       end if
+
+!dani.JOM [
+! we want to do:  if(m2 .eq. m1 .and. l1 .eq. l2) mu1xc(imu,inu) = nuxc1c(in1,issh,jssh)
+!but using get?ssh variables
+
+       do imu = 1,num_orb(in1)
+        m1   = getmssh(degelec(iatom)+imu)
+        l1   = getlssh(degelec(iatom)+imu)
+        issh = getissh(degelec(iatom)+imu)
+        do inu = 1,num_orb(in1)
+         m2   = getmssh(degelec(iatom)+inu) 
+         l2   = getlssh(degelec(iatom)+inu)
+         jssh = getissh(degelec(iatom)+inu)
+         if( m1 .eq. m2 .and. l1 .eq. l2 ) then
+          mu1xc(inu,imu) = nuxc1c(in1,jssh,issh)
+         endif
+        end do
+       end do
+
+
+! Double counting correction (dccexc_1c) int <mu|exc - vxc|mu>*q
+! Note: now we take vxc without charge transfer correction,
+! so we don't include derivatives of vxc and we multiply it 
+! by the neutral charge !!!   
+      ! 'neutral' term
+
+!dani.jel {
+       do issh = 1,nssh(in1)
+! energy term
+        exc_1c = exc_1c + exc1c0(in1,issh,issh)*Qneutral(issh,in1) 
+! potential term
+        muexc_1c = muexc_1c + nuxc1c(in1,issh,issh)*Qneutral(issh,in1)
+! DCC term
+        dccexc_1c = dccexc_1c +                                               &
+        & (exc1c0(in1,issh,issh) - nuxc1c(in1,issh,issh))*Qneutral(issh,in1)
+       enddo
+      !dani.jel }
+!--->double counting correction <mu|exc|mu>=<mu|exc0|mu>+<mu|exc0'*dqi|mu>     
+      endif ! if( itheory_xc .eq. 4)
 
 ! Format Statements
 ! ===========================================================================

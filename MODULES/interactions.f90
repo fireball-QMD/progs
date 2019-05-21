@@ -67,6 +67,7 @@
          integer  nssh_tot
          integer, dimension (:, :, :), allocatable :: nu
          integer, dimension (:), allocatable :: num_orb
+         integer , dimension(3) :: num_orb_sh  !only up to d orbitals
          integer, dimension (:, :, :), allocatable :: muDipY
          integer, dimension (:, :, :), allocatable :: nuDipY
          integer, dimension (:, :, :), allocatable :: muDipX
@@ -175,6 +176,11 @@
         character (len=25), dimension (:,:), allocatable :: napot
 ! end jel-grid
 
+
+! new zw mcweda
+       real, dimension(:,:,:,:),   allocatable ::   g2nu
+       real, dimension(:,:,:,:,:), allocatable ::   g2nup
+       integer, dimension(:,:),       allocatable ::   orb2shell
 
 ! =============================================================================
 

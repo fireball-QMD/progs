@@ -208,7 +208,7 @@
 ! (nfragments)
            T_instantaneous = (2.0d0/3.0d0)*tkinetic*kconvert/(natoms - nfragments)                   
 !          T_instantaneous = (2.0d0/3.0d0)*tkinetic*kconvert/natoms
-           write(*,*)'T_instantaneous',T_instantaneous
+          ! write(*,*)'T_instantaneous',T_instantaneous
 
 ! For constant temperature: rescale the velocities, so that the desired
 ! temperature is obtained.   This makes sure that the work done to the forces
@@ -223,19 +223,19 @@
             xdot(1,:,1:natoms) = xdot(1,:,1:natoms)*vscale
            end if
            T_average = ((itime_step - 1)*T_average + T_instantaneous)/itime_step
-           write (*,*) '  '
-           write (*,600) T_average
-           write (*,*) '  '
-           write (*,601) tkinetic
+          ! write (*,*) '  '
+          ! write (*,600) T_average
+          ! write (*,*) '  '
+          ! write (*,601) tkinetic
            getot = etot + tkinetic
-           write (*,602) getot
+          ! write (*,602) getot
            getotper = getot/natoms
-           write (*,603) etotper
-           write (*,604) getotper
+          ! write (*,603) etotper
+          ! write (*,604) getotper
            if (itime_step .eq. nstepi) getot_initial = getotper
 ! Check energy conservation
            deltaE = 1000.d0*(getotper - getot_initial)
-           write (*,605) deltaE
+          ! write (*,605) deltaE
 !---------------------------------------------------------------------------
 ! JOM : we should update vatom and ratom after writing out
 ! position/velocities (at least for velocity verlet, iensemble=3)

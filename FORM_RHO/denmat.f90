@@ -637,7 +637,7 @@
 !needed, but that'd be quite pathological a situation...
             do issh = 1, nssh(in1)
 
-               if( Qout(issh,iatom) .lt. 0 ) then
+               if( Qout(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
            
                   do jssh = 1,nssh(in1)
 

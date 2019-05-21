@@ -138,6 +138,7 @@
          call read_2c (interaction, nspecies, itheory,                  &
      &                 ioff2c(interaction), nzx)
         end do
+
 ! horsfield-like interaction (not needed for SNXC) 
         if (itheory_xc .ne. 1) then
          !  xc_ontop
@@ -154,6 +155,7 @@
          if (verbosity .ge. 3) write (*,100)
          call read_2c (interaction, nspecies, itheory,                  &
      &                 ioff2c(interaction), nzx)
+
          ! xc_correction
          interaction = 8
          if (verbosity .ge. 3) write (*,*) '  '
@@ -161,6 +163,7 @@
          if (verbosity .ge. 3) write (*,100)
          call read_2c (interaction, nspecies, itheory,                  &
      &                 ioff2c(interaction), nzx)
+
         end if
         
         if (itheory .eq. 1) then
@@ -170,6 +173,7 @@
          if (verbosity .ge. 3) write (*,100)
          call read_2c (interaction, nspecies, itheory,                  &
      &                 ioff2c(interaction), nzx)
+
         end if
 
         if (idipole .eq. 1) then
@@ -181,6 +185,7 @@
           if (verbosity .ge. 3) write (*,100)
           call read_2c (interaction, nspecies, itheory,                  &
      &                  ioff2c(interaction), nzx)
+
          end if
 
          if (itheory .eq. 1) then
@@ -190,6 +195,7 @@
           if (verbosity .ge. 3) write (*,100)
           call read_2c (interaction, nspecies, itheory,                  &
      &                  ioff2c(interaction), nzx)
+
          end if
 
         end if ! idipole .eq. 1
@@ -201,20 +207,24 @@
         if (verbosity .ge. 3) write (*,100)
         call read_2c (interaction, nspecies, itheory,            &
      &                ioff2c(interaction), nzx)
+
         interaction = 13
         if (verbosity .ge. 3) write (*,*) '  '
         if (verbosity .ge. 3) write (*,*) ' Calling read_2c for 2-Center Interaction # ', interaction
         if (verbosity .ge. 3) write (*,100)
         call read_2c (interaction, nspecies, itheory,            &
      &                ioff2c(interaction), nzx)
+
  
 ! Spherical OLSXC exchange-correlation
         do interaction = 15, 23
          if (verbosity .ge. 3) write (*,*) '  '
          if (verbosity .ge. 3) write (*,*) ' Calling read2c for 2-Center Interaction # ', interaction
          if (verbosity .ge. 3) write (*,100)
+
          call read_2c (interaction, nspecies, itheory, ioff2c(interaction), &
      &                  nzx)
+
         end do
 
 ! Do not need xintegral_2c if doing superspline (use splineint_2c)
@@ -288,6 +298,8 @@
          call ME_max_bcast
          call readdata_ordern_init (nspecies, ioff2c)
         end if
+
+
 
 
 ! Deallocate Arrays

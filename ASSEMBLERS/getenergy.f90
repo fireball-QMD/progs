@@ -91,10 +91,17 @@
         endif
 
 ! doing McWeda         
-        if (itheory_xc .ne. 0) then
+        if (itheory_xc .ne. 0 .and. itheory_xc .lt. 4) then
           call getenergy_mcweda (itime_step)
           return 
         endif 
+
+! doing zw mcweda second order with Mulliken-Dipole
+        if (itheory_xc .eq. 4) then
+          call getenergy_zw (itime_step)
+          return
+        endif
+
         
 
 

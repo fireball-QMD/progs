@@ -284,7 +284,7 @@
 !            M c W E D A   E X C H A N G E - C O R R E L A T I O N
 !
 ! *************************************************************************** 
-        if (itheory_xc .eq. 2) then 
+        if (itheory_xc .eq. 2 .or. itheory_xc .eq. 4) then 
         
          allocate(exc1c0 (nspecies,nsh_max,nsh_max))
          allocate(nuxc1c (nspecies,nsh_max,nsh_max))
@@ -469,7 +469,9 @@
            in2 = in2 + 1
           end if ! if (skip_it)
          end do ! in1
- end if ! if(itheory_xc.eq.2) 
+         if (itheory_xc .eq. 4) then
+         end if !end if itheory_xc .eq. 4
+         end if ! if(itheory_xc.eq.2 .or. itheory_xc .eq. 4) 
         
 ! Deallocate Arrays
 ! ===========================================================================

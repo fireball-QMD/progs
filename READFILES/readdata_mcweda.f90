@@ -121,13 +121,12 @@
 
         write (*,*) '  '
         write (*,100)
-        write (*,*) ' READING DATA FROM DATA FILES IN FDATA DIRECTORY: '
+        write (*,*) ' REEEEEADING DATA FROM DATA FILES IN FDATA DIRECTORY: '
         write (*,100)
 ! one-center
         write (*,*) '  '
         write (*,*) ' Calling   for 1-center exchange-correlation '
         call read_1c (nspecies, itheory, itheory_xc, ispin, ioff2c(7))
-
 ! two-center
         interaction_start = 1
         do interaction = interaction_start, 5
@@ -288,6 +287,7 @@
          call ME_max_bcast
          call readdata_ordern_init (nspecies, ioff2c)
         end if
+
 
 
 ! Deallocate Arrays

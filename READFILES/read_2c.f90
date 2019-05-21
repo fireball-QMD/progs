@@ -229,6 +229,9 @@
 ! Now generate the file name of the file to be opened.  Loop over all cases of
 ! the interaction (e.g. different charges of the xc-stuff)
 
+
+
+
 ! Loop over atoms in1
         do in1 = 1, nspecies
  
@@ -239,7 +242,6 @@
           initype = 0
           if(interaction .ge. 15 ) initype = 1
           if(interaction .eq. 23 ) initype = 0
-
           maxtype = 0
           if (interaction .eq. 2) isub2c = nssh(in1)
           if (interaction .eq. 3) isub2c = nssh(in2)
@@ -254,15 +256,14 @@
           if (interaction .eq. 22) isub2c = nssh(in2)
 
           if (itheory .eq. 1) maxtype = isub2c
-! Harris case for average density
-          if (interaction .ge. 15 .and. interaction .le. 22) maxtype = isub2c 
-
+        ! Harris case for average density
+      if (interaction .ge. 15 .and. interaction .le. 22) maxtype = isub2c 
           do isorp = initype, maxtype
 
 ! Append the number of subtypes on root if there is more than one file for a
 ! given pair of atoms and a given interaction.  The result will be root_isorp
            root_isorp = root
-           if (isub2c .ge. 1) then
+           if (isub2c .ge. 1) then    
             write (extension,'(''_'',i2.2)') isorp
             root_isorp = append_string (root,extension)
            end if
@@ -274,10 +275,8 @@
            filename = append_string (root_isorp, extension)
            write (extension,'(''.dat'')')
            filename = append_string (filename, extension)
- 
 !           if (isorp .eq. initype) write (*,'('' Opening data file: '',a100)') filename
            open (unit = iounit, file = filename, status = 'old')
- 
            call readheader_2c (interaction, iounit, nsh_max, numz, rc1, rc2, &
      &                         zmin, zmax, npseudo, cl_pseudo)
            if (numz .gt. nfofx) then
@@ -330,7 +329,7 @@
            if (interaction .eq. 20 .or. interaction .eq. 21)                 &
      &       num_nonzero = index_maxS(in1,in2)
            if (interaction .eq. 23) num_nonzero = index_maxS(in1,in2)
-
+          
            call readdata_2c (interaction, iounit, num_nonzero, numz, zmax,   &
      &                       itype, in1, in2, ioff2c)
 
@@ -343,7 +342,8 @@
 ! ===========================================================================
  
 ! Format Statements
-! ===========================================================================
- 
+! ========================================================================
+
+
         return
         end subroutine read_2c

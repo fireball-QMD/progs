@@ -19,7 +19,9 @@
         real uxcdcc
         real uxcdcc_sn
         real uxcdcc_hf
-        real uxcdcc_ols 
+        real uxcdcc_ols
+        real uxcdcc_zw
+        real, dimension (3) :: duxcdcc_zw ! ?? 
 ! Kohn-Sham
         real uxcdcc_ks 
         real uhdcc_ks

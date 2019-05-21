@@ -90,10 +90,18 @@
 !          return
 !        endif
 
+! +++++++++
+!              New theory Mcweda second-order
+!++++++++++
+
+
 ! read McWeda data
-        elseif (itheory_xc .ne. 0) then
+        elseif (itheory_xc .gt. 0 .and. itheory_xc .lt. 4 .and. itheory .lt. 4 ) then
           call assemble_mcweda ()
 !          return
+
+        elseif (itheory_xc .eq. 4) then
+          call assemble_xczw ()
         endif
 
 ! GAP ENRIQUE-FF

@@ -72,7 +72,8 @@
         use configuration
         use dimensions
         use interactions
-        use neighbor_map 
+        use neighbor_map
+        use options, only : itheory_xc 
         implicit none
  
 ! Argument Declaration and Description
@@ -210,6 +211,10 @@
               neigh_comb(1,num_neigh,ialp) = ibeta
               neigh_comj(2,num_neigh,ialp) = jatom
               neigh_comb(2,num_neigh,ialp) = jbeta
+              if (itheory_xc .eq. 4) then
+              neigh_com_ng(1,num_neigh,ialp) = ineigh
+              neigh_com_ng(2,num_neigh,ialp) = jneigh 
+              end if
 
 ! We also need to know for a given ialp and (iatom,ibeta), what is the m value
 ! for (jatom,jbeta) with respect to iatom. That is, jatom is the m'th neighbor

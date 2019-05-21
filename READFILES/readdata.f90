@@ -157,14 +157,17 @@
 ! read extended Hubbard data
 			call readdata_eh ()
 		elseif (iks .eq. 1) then
-! read Kohn_Sham data
+! read Kohn_Sham data   
 		 	call readdata_KS ()
 		elseif (itheory_xc .eq. 0) then
-! read Horsfield data
+! read Horsfield data  
 			call readdata_hxc ()
-		elseif (itheory_xc .ne. 0) then
-! read McWeda data        
+		elseif (itheory_xc .ne. 0 .and. itheory_xc .lt. 4) then
+! read McWeda data         
 			call readdata_mcweda ()
+                 elseif (itheory_xc .eq. 4) then
+! read McWeda data         
+                        call readdata_xczw ()
 		endif
 
 ! assign the right pointer on subroutine force

@@ -292,6 +292,7 @@
                 faxc(ix,ineigh,iatom) = faxc(ix,ineigh,iatom)              &
     &            -  bcxcpx(ix,imu,inu)*rho(imu,inu,matom,iatom)
                end do ! do ix =1,3
+
               end do !do jndex = -l2, l2
              end do !do index = -l1, l1
              n2 = n2 + l2

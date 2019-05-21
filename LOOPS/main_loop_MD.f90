@@ -57,7 +57,6 @@
         use energy
         use optimization
         use scf
-
         implicit none
 
 ! Argument Declaration and Description

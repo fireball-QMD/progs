@@ -498,6 +498,7 @@
 !$omp atomic
               rho_off(imu,inu,mneigh,iatom) =                                 &
      &         rho_off(imu,inu,mneigh,iatom) + rhomx(imu,inu)*Qin(isorp,ialp)
+              !Symmetrize:
              rho_off(inu,imu,jneigh,jatom) = rho_off(imu,inu,mneigh,iatom)
              end do
             end do
@@ -507,6 +508,7 @@
 !$omp atomic
               rhom_3c(imu,inu,mneigh,iatom) =                                 &
      &         rhom_3c(imu,inu,mneigh,iatom) + rhomm(imu,inu)*Qin(isorp,ialp)
+               !Symmetrize:
       rhom_3c(inu,imu,jneigh,jatom) = rhom_3c(imu,inu,mneigh,iatom) 
              end do
             end do

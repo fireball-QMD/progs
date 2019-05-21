@@ -98,6 +98,8 @@
 ! Procedure
 ! ===========================================================================
 ! This set to zero unset elements (see 'diagnostics.input')
+        
+
         xoff = real(ioff2c)
         if (interaction .ne. 8) then
          do ipoint = 1, numz
@@ -105,8 +107,9 @@
          end do
          do ipoint = 1, numz
           do integral = 1, num_nonzero
-           xintegral_2c(integral,ipoint,itype,in1,in2) =                     &
+        xintegral_2c(integral,ipoint,itype,in1,in2) =                     &
      &      gstore(integral,ipoint)*xoff
+
           end do
          end do
          if (superspline) then
@@ -124,7 +127,6 @@
           call buildspline_1d (1, numz, itype, in1, in2, zmax, interaction)
          end if
         end if
-
 ! Deallocate Arrays
 ! ===========================================================================
  

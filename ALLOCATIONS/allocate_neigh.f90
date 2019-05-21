@@ -60,6 +60,7 @@ subroutine allocate_neigh (nprocs, my_proc, iordern, &
 	use interactions
 	use neighbor_map
 	use module_dos
+        use options, only : itheory_xc
 !CHROM
 	use options, only: iclassicMD
 	use classicMD, only: find_neigh_max_class
@@ -157,6 +158,7 @@ subroutine allocate_neigh (nprocs, my_proc, iordern, &
 	allocate (neighn (natoms))
 	allocate (neigh_comb (2, neigh_max**2, natoms))
 	allocate (neigh_comj (2, neigh_max**2, natoms))
+        if (itheory_xc .eq. 4) allocate (neigh_com_ng (2, neigh_max**2, natoms))
 	allocate (neigh_comm (neigh_max**2, natoms))
 	allocate (neigh_comn (natoms))
 	allocate (neigh_back (natoms, neigh_max))

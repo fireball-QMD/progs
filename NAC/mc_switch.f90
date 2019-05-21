@@ -96,12 +96,12 @@
          end if
         end do
         if (aux .gt. 1.0d0) then
-         write(*,*)'sum of probabilities greater than 1'
-         write(*,*)'in mc_switches.f90'
-         write(*,*)'total probabilty', aux
-         write(*,*)'for state', ij
+!         write(*,*)'sum of probabilities greater than 1'
+!         write(*,*)'in mc_switches.f90'
+!         write(*,*)'total probabilty', aux
+!         write(*,*)'for state', ij
          do k = 1, n
-         write(*,*)'prob',k,pr(k)
+!         write(*,*)'prob',k,pr(k)
          end do
 !        write(*,*)'must stop'
 !        stop
@@ -119,7 +119,7 @@
            if (aux .gt. xr) then
             is = k
          do j = 1, n
-         write(*,*)'prob',j,pr(j)
+!         write(*,*)'prob',j,pr(j)
          end do
             exit
            end if

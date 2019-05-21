@@ -120,7 +120,7 @@
           allocate (drwe (ndim))
         endif
 
-        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2) then
+        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2 .or. itheory_xc .eq. 4) then
          allocate (arho_off (nsh_max, nsh_max, neigh_max, natoms))
          allocate (arhoij_off (nsh_max, nsh_max, neigh_max, natoms))
          allocate (rho_off (numorb_max, numorb_max, neigh_max, natoms))

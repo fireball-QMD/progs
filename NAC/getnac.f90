@@ -112,8 +112,13 @@
           call Dassemble_2c_mdet (nprocs, iordern, igauss)
 
           if (itheory .eq. 1) then
-           !write (*,*) ' Dassemble two-center DOGS force contributions.'
-           call Dassemble_ca_2c_mdet (nprocs, iordern)
+              !write (*,*) ' Dassemble two-center DOGS force
+              !contributions.'
+           if (idipole .eq. 1) then
+            !call Dassemble_ca_2c_mdet_dip (nprocs, iordern)
+           else
+            call Dassemble_ca_2c_mdet (nprocs, iordern)
+           end if !end if idipole .eq. 1
           endif
 !--------------------------------------------------------------------
 
@@ -160,11 +165,16 @@
           call Dassemble_3c_PP_mdet (nprocs, iordern)
 
           if (itheory .eq. 1) then
-           !write (*,*) ' Dassemble three-center DOGS force. '
-           call Dassemble_ca_3c_mdet (nprocs, iordern, igauss)
+             !write (*,*) ' Dassemble three-center DOGS force. '
+           if (idipole .eq. 1) then
+            !call Dassemble_ca_3c_mdet_dip (nprocs, iordern,igauss)
+            !call Dassemble_lr_mdet_dip (nprocs, iordern)
+           else !else idipole .eq. 1
+            call Dassemble_ca_3c_mdet (nprocs, iordern, igauss)
+            call Dassemble_lr_mdet (nprocs, iordern)
            !write (*,*) ' Dassemble three-center long-range '
-           call Dassemble_lr_mdet (nprocs, iordern)
-          end if
+           end if !end if idipole .eq. 1 
+          end if !if itheory .eq 1 
 
 ! Call the exchange-correlation interactions based on method chosen
           if (itheory_xc .eq. 1) then

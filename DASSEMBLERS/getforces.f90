@@ -49,7 +49,6 @@
         subroutine getforces ()
 
         use options
-
         implicit none
 
 ! Argument Declaration and Description
@@ -98,10 +97,17 @@
         endif
 
 ! doing McWeda data
-        if (itheory_xc .ne. 0) then
+        if (itheory_xc .ne. 0 .and. itheory_xc .lt. 4) then
           call getforces_mcweda ()
           return
         endif
+
+! doing xczw data
+        if (itheory_xc .eq. 4) then
+          call getforces_zw ()
+          return
+        endif
+
 
 
 

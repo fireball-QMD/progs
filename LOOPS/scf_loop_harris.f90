@@ -51,7 +51,8 @@
         use options 
         use scf
         use energy
-        use options, only : verbosity 
+        use options, only : verbosity
+        use interactions, only : g2nu 
         implicit none
  
 ! Argument Declaration and Description
@@ -92,8 +93,7 @@
            end if
 
 ! ASSEMBLE HAMILTONIAN
-          call assemble_h ()
-
+          call assemble_h () 
 ! ===========================================================================
 ! Exact Diagonalization: solve for the band-structure energy - call diag_k
 ! ===========================================================================
@@ -107,6 +107,7 @@
 ! ===========================================================================
 ! Compute the density matrices. The results rho and cape are computed.
           call build_rho (itime_step) 
+ 
           
 ! ===========================================================================
 ! At this point we are only calculating the total band-structure energy

@@ -225,16 +225,29 @@
 
 ! charged exchange-correlation - ontop case
           if (itheory .eq. 1) then
-           fxcot_ca(:,iatom) = fxcot_ca(:,iatom) + fotxc_ca(:,ineigh,iatom)
-           fxcot_ca(:,jatom) = fxcot_ca(:,jatom) - fotxc_ca(:,ineigh,iatom)
+           if (itheory_xc .eq. 4) then
+            fxcot_ca(:,iatom) = fxcot_ca(:,iatom) +2.0d0*fotxc_ca(:,ineigh,iatom)
+            fxcot_ca(:,jatom) = fxcot_ca(:,jatom) -2.0d0*fotxc_ca(:,ineigh,iatom)
+           else !else if (itheory_xc .eq. 4) 
+            fxcot_ca(:,iatom) = fxcot_ca(:,iatom) + fotxc_ca(:,ineigh,iatom)
+            fxcot_ca(:,jatom) = fxcot_ca(:,jatom) - fotxc_ca(:,ineigh,iatom)
+           end if ! end if (itheory_xc .eq. 4) 
           end if
 
           if((itheory_xc.eq.1) .or. (itheory_xc.eq.2)) then
-! double counting correction (only OLSXC && SNXC)
+! double counting correction (OLSXC && SNXC)
            dxcv(:,iatom) = dxcv(:,iatom) + dxcdcc(:,ineigh,iatom)
            dxcv(:,jatom) = dxcv(:,jatom) - dxcdcc(:,ineigh,iatom)
 
           endif
+   
+         if((itheory_xc .eq. 4)) then
+         ! double counting correction (XCZW)
+           dxcv(:,iatom) = dxcv(:,iatom) + dxcdcc_zw(:,ineigh,iatom)
+           dxcv(:,jatom) = dxcv(:,jatom) - dxcdcc_zw(:,ineigh,iatom)
+
+         endif
+
 
          end do     ! end loop over neighbors
         end do      ! end loop over atoms

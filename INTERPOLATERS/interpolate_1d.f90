@@ -59,7 +59,7 @@
 ! ===========================================================================
 !
 ! Program Declaration
-! ===========================================================================
+! =========================================================================
         subroutine interpolate_1d (interaction, isub, in1, in2, non2c,       &
      &                             ioption, xin, yout, dfdx)
         use dimensions
@@ -145,6 +145,7 @@
 ! ===========================================================================
         jxx = ind2c(interaction,isub)
         nnum = numz2c(jxx,in1,in2)
+
         xmax = z2cmax(jxx,in1,in2)
 ! note : the points must be equally spaced and start at 0
         h = (xmax - xmin)/(nnum - 1)
@@ -157,6 +158,7 @@
           if (abs((xin - xmax)/xmax) .gt. tol) then
            write (*,*) ' xin, xmax = ', xin, xmax
            write (*,*) '  error in intrp1d : xin > xmax'
+           write(*,*) 'Ankais in1,in2= ', in1, in2
            stop
           end if
           xxp = xmax - xmin

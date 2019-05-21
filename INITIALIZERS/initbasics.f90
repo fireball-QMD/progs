@@ -89,11 +89,15 @@
    integer iatom
    integer in1
    integer icount
+   integer counter
+   integer counter_ini
    integer isorp
    integer ideriv
    integer issh
    integer numorbPP_max
    integer numorb
+   integer l
+   integer imu
 
    real distance
    real, dimension (3) :: vector
@@ -413,7 +417,11 @@
         ind2c(13,0) = icount
         icount = icount + 1
         ind2c(14,0) = icount
-        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2) then
+        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2 .or. itheory_xc .eq. 4 ) then
+         if (itheory_xc .eq. 4) then 
+          icount = icount + 1
+          ind2c(14,0) = icount
+         end if !end if itheory_xc .eq. 4
          do isorp = 1, isorpmax_xc
           icount = icount + 1
           ind2c(15,isorp) = icount
@@ -449,6 +457,7 @@
          icount = icount + 1
          ind2c(23,0) = icount
 !dani.JOM.jel-fr-end
+         
 
         end if
         interactions2c_max = icount
@@ -475,6 +484,24 @@
          degelec(iatom) = degelec(iatom - 1) + num_orb(in1)
         end do
 
+  !orbital to shell
+        if (itheory_xc .eq. 4) then
+           allocate (orb2shell (numorb_max,nspecies) )
+           do in1 = 1,nspecies
+              counter = 1
+              do issh = 1,nssh(in1)
+                 counter_ini = counter
+                 l = lssh(issh,in1)
+                 do imu = counter_ini,counter_ini+2*l
+                    orb2shell(imu,in1) = issh
+                    counter = imu+1
+                 end do !end imu
+              end do ! end do issh = 1,nssh(in1)   
+           end do ! end do in1 = 1,nspecies
+
+                   counter = imu+1
+
+        end if ! end if itheory = 4
 
 ! NPA initialize auxillary arrays (dani goes to hollywood)
          call get_info_orbital (natoms)

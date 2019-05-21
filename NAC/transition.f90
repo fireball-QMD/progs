@@ -119,14 +119,14 @@
                 call getenergy(itime_step)
                 etot_after = etot
                 ejump = etot_after - etot_before
-                write(*,*)'ETOT-BEFORE=',etot_before
-                write(*,*)'ETOT-AFTER=',etot_after
+              !  write(*,*)'ETOT-BEFORE=',etot_before
+              !  write(*,*)'ETOT-AFTER=',etot_after
         end if
 !----------------------------------------------------------
 ! transform energy shift from eV to "dynamical" units ( amu*(angs/fs)**2 )
-        write(*,*)'ejump (eV)=', ejump
+       ! write(*,*)'ejump (eV)=', ejump
         ener = ejump*fovermp
-        write(*,*)'ener (dynamical units)=', ener
+       ! write(*,*)'ener (dynamical units)=', ener
 
 ! ===========================================================================
 ! Find out if transition ij --> is is accesible (i.e. if there is enough
@@ -136,7 +136,7 @@
         g (:,:) = gks (:,:,ij,is)
 !----------------------------------------------------------
         do iatom = 1, natoms
-         write(*,*)'g',  (g (ix,iatom), ix = 1,3)
+       !  write(*,*)'g',  (g (ix,iatom), ix = 1,3)
         end do
 !----------------------------------------------------------
 !
@@ -149,10 +149,10 @@
          end do
         end do
 !----------------------------------------------------------
-        write(*,*)'aa, 4*ener*aa =', aa, 4.0d0*aa*ener
-        write(*,*)'bb, bb**2=', bb, bb**2
+       ! write(*,*)'aa, 4*ener*aa =', aa, 4.0d0*aa*ener
+       ! write(*,*)'bb, bb**2=', bb, bb**2
         cc = bb**2 - 4.0d0*aa*ener
-        write(*,*)'cc=', cc
+       ! write(*,*)'cc=', cc
 ! ===========================================================================
        if (aa .gt. tolaa) then
 !----------------------------------------------------------
@@ -188,11 +188,11 @@
        else  !(aa .gt. tolaa)
          alfa = 0.0d0
        end if  !(aa .gt. tolaa)
-         write(*,*)'alfa=', alfa
+       !  write(*,*)'alfa=', alfa
 ! ===========================================================================
-        do iatom = 1, natoms
-         write(*,*)'vatom-B',  (vatom (ix,iatom), ix = 1,3)
-        end do
+      !  do iatom = 1, natoms
+       !  write(*,*)'vatom-B',  (vatom (ix,iatom), ix = 1,3)
+      !  end do
 !----------------------------------------------------------
         tkinetic = 0.0d0
         do iatom = 1, natoms
@@ -200,7 +200,7 @@
      &       + (0.5d0/fovermp)*xmass(iatom)                             &
      &      *(vatom(1,iatom)**2 + vatom(2,iatom)**2 + vatom(3,iatom)**2)
         end do
-        write(*,*)'KINETIC=',tkinetic
+       ! write(*,*)'KINETIC=',tkinetic
 !----------------------------------------------------------
 
 !----------------------------------------------------------
@@ -212,9 +212,9 @@
         end do
 !----------------------------------------------------------
 !----------------------------------------------------------
-        do iatom = 1, natoms
-         write(*,*)'vatom-A',  (vatom (ix,iatom), ix = 1,3)
-        end do
+      !  do iatom = 1, natoms
+      !   write(*,*)'vatom-A',  (vatom (ix,iatom), ix = 1,3)
+      !  end do
 !----------------------------------------------------------
 !----------------------------------------------------------
         tkinetic = 0.0d0
@@ -223,7 +223,7 @@
      &       + (0.5d0/fovermp)*xmass(iatom)                             &
      &      *(vatom(1,iatom)**2 + vatom(2,iatom)**2 + vatom(3,iatom)**2)
         end do
-        write(*,*)'KINETIC=',tkinetic
+       ! write(*,*)'KINETIC=',tkinetic
 !----------------------------------------------------------
 
 

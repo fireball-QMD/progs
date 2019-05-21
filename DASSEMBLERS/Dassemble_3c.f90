@@ -279,11 +279,11 @@
              do ix = 1, 3
                 !multiply by 2 to use the "symmetrization" argument
               f3naa(ix,ialp) = f3naa(ix,ialp)                           &
-     &         + 2*rho(imu,inu,mneigh,iatom)*f3naXa(ix,imu,inu)*eq2
+     &         + 2.0d0*rho(imu,inu,mneigh,iatom)*f3naXa(ix,imu,inu)*eq2
               f3nab(ix,iatom) = f3nab(ix,iatom)                         &
-     &        + 2*rho(imu,inu,mneigh,iatom)*f3naXb(ix,imu,inu)*eq2
+     &        + 2.0d0*rho(imu,inu,mneigh,iatom)*f3naXb(ix,imu,inu)*eq2
               f3nac(ix,jatom) = f3nac(ix,jatom)                         &
-     &        + 2*rho(imu,inu,mneigh,iatom)*f3naXc(ix,imu,inu)*eq2
+     &        + 2.0d0*rho(imu,inu,mneigh,iatom)*f3naXc(ix,imu,inu)*eq2
              end do
             end do
            end do

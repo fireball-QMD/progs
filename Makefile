@@ -57,8 +57,8 @@ MACHINE = ILINUX_fast05
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-METHOD = DOUBLE 
-#METHOD = GAMMA 
+#METHOD = DOUBLE 
+METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
@@ -102,7 +102,11 @@ DASSEMBLERS = Dassemble_2c.o Dassemble_3c.o Dassemble_ca_2c.o \
 	Dassemble_ca_snxc_2c.o Dassemble_ca_olsxc_2c.o Dassemble_qmmm.o Dassemble_qmmm_dip.o \
 	Dassemble_ca_2c_dip.o Dassemble_ca_3c_dip.o Dassemble_lr_dip.o \
 	getforces_mcweda.o getforces_eh.o getforces_hxc.o \
-	getforces_KS.o getforces_classic.o getforces_classic_RGL.o getforces_classic_vdw.o getforces.o getforces_classic_tersoff.o
+	getforces_KS.o getforces_classic.o getforces_classic_RGL.o getforces_classic_vdw.o \
+	getforces.o getforces_classic_tersoff.o \
+	getforces_zw.o Dassemble_zw_2c_ct.o Dassemble_zw_2c_ct.o \
+	Dassemble_zw_3c_ct.o Dassemble_zw_2c_na.o Dassemble_zw_3c_na.o \
+        Dassemble_zw_on_na.o
 
 INTERACTIONS = cl_value.o Dtrescentros.o doscentros.o doscentrosPP.o  \
 	doscentrosDipY.o doscentrosDipX.o  \
@@ -186,7 +190,7 @@ ifneq (,$(findstring ORDERN, ${METHOD}))
 		assemble_eh_2c_ordern_final.o \
 		Dassemble_2c_ordern_final.o \
 		Dassemble_3c_ordern_final.o \
-		Dassemble_ca_2c_ordern_final.o Dassemble_ca_3c_ordern_final.o
+		Dassemble_ca_2c_ordern_final.o Dassemble_ca_3c_ordern_final.o \
 	FORM_RHO = chebft.o denmata_ordern.o denmatb_ordern.o denmatc_ordern.o \
 		denmat_fk.o formrho_sparse.o ss12.o build_rho.o build_rho_KS.o
 	KSPACE = eandg.o xeandg.o formc_compact.o formsh_compact.o initguess.o \
@@ -299,7 +303,12 @@ ASSEMBLERS = assemble_olsxc_1c.o assemble_hxc_1c.o assemble_2c.o assemble_3c.o \
 	getenergy.o getenergy_hxc.o getenergy_mcweda.o getenergy_eh.o \
 	assemble_h_ks.o getenergy_KS.o assemble_S.o assemble_2c_S.o \
 	assemble_hartree.o assemble_scissor.o assemble_qmmm.o assemble_qmmm_dip.o\
-	assemble_ca_2c_dip.o assemble_ca_3c_dip.o assemble_lr_dip.o
+	assemble_ca_2c_dip.o assemble_ca_3c_dip.o assemble_lr_dip.o \
+        assemble_zw_1c_na.o assemble_zw_2c_ct.o assemble_zw_3c_ct.o \
+        assemble_xczw.o assemble_zw_off_na.o assemble_zw_on_na.o \
+        build_zw_off_na.o build_zw_on_na.o \
+        getenergy_zw.o
+
 
 GRID = assemble_KS_den0.o assemble_KS_den.o assemble_KS_usr.o laplace_fft.o \
 	assemble_KS_dcc.o assemble_KS_mat.o mixer_KS.o writeout_charges_KS.o \
@@ -356,7 +365,7 @@ READFILES = append_string.o read_1c.o read_2c.o read_3c.o readbasis.o \
 	readsa.o readvdw.o readcgo.o readdos.o \
 	readgaussG.o findFdata.o readgrid.o read_wf.o read_vna.o \
 	readtrans.o readbind.o readhop.o readdata.o readdata_hxc.o \
-	readdata_mcweda.o readdata_eh.o checksum_options.o readdata_KS.o \
+	readdata_mcweda.o readdata_xczw.o readdata_eh.o checksum_options.o readdata_KS.o \
 	getsections.o readdata_classicMD.o readhartree.o readephc.o
 
 ROTATIONS = chooser.o chooserd.o deps2center.o deps3center.o makeDmat.o \
@@ -403,10 +412,13 @@ NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
       Dassemble_2c_PP_mdet.o Dassemble_olsxc_on_mdet.o Dassemble_olsxc_2c_mdet.o \
       Dassemble_3c_mdet.o Dassemble_3c_PP_mdet.o Dassemble_olsxc_3c_mdet.o \
       fewest_switches.o mc_switch.o transition.o \
-      Dassemble_ca_2c_mdet.o Dassemble_ca_3c_mdet.o Dassemble_lr_mdet.o \
+      Dassemble_ca_2c_mdet.o Dassemble_ca_3c_mdet.o \
+      Dassemble_lr_mdet.o \
       Dassemble_ca_olsxc_on_mdet.o Dassemble_ca_olsxc_2c_mdet.o \
       Dassemble_ca_olsxc_3c_mdet.o move_correc.o move_predic.o overlap_sign.o \
-      check_swap.o overlap_numeric.o getnac.o MCsolar.o Dassemble_qmmm_mdet.o
+      check_swap.o overlap_numeric.o getnac.o MCsolar.o Dassemble_qmmm_mdet.o \
+      Dassemble_ca_2c_mdet_dip.o Dassemble_qmmm_mdet_dip.o \
+      Dassemble_ca_3c_mdet_dip.o Dassemble_lr_mdet_dip.o
 
 QMMM =  main_loop_MDET_qmmm.o main_loop_MD_qmmm.o fireball_qmmm_loop.o
 
@@ -719,6 +731,24 @@ assemble_ca_3c_dip.o : ASSEMBLERS/assemble_ca_3c_dip.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_ca_3c_dip.f90
 assemble_lr_dip.o : ASSEMBLERS/assemble_lr_dip.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_lr_dip.f90
+assemble_xczw.o : ASSEMBLERS/assemble_xczw.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_xczw.f90
+assemble_zw_1c_na.o : ASSEMBLERS/assemble_zw_1c_na.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_zw_1c_na.f90
+assemble_zw_2c_ct.o : ASSEMBLERS/assemble_zw_2c_ct.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_zw_2c_ct.f90
+assemble_zw_3c_ct.o : ASSEMBLERS/assemble_zw_3c_ct.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_zw_3c_ct.f90
+assemble_zw_off_na.o : ASSEMBLERS/assemble_zw_off_na.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_zw_off_na.f90
+assemble_zw_on_na.o : ASSEMBLERS/assemble_zw_on_na.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/assemble_zw_on_na.f90
+build_zw_on_na.o : ASSEMBLERS/build_zw_on_na.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/build_zw_on_na.f90
+build_zw_off_na.o : ASSEMBLERS/build_zw_off_na.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/build_zw_off_na.f90
+getenergy_zw.o : ASSEMBLERS/getenergy_zw.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c ASSEMBLERS/getenergy_zw.f90
 # *****************************************************************************
 # Grid objects
 # *****************************************************************************
@@ -812,7 +842,18 @@ Dassemble_ca_3c_dip.o : DASSEMBLERS/Dassemble_ca_3c_dip.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_ca_3c_dip.f90
 Dassemble_lr_dip.o : DASSEMBLERS/Dassemble_lr_dip.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_lr_dip.f90
-
+Dassemble_zw_2c_ct.o : DASSEMBLERS/Dassemble_zw_2c_ct.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_zw_2c_ct.f90
+Dassemble_zw_2c_na.o : DASSEMBLERS/Dassemble_zw_2c_na.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_zw_2c_na.f90
+Dassemble_zw_3c_ct.o : DASSEMBLERS/Dassemble_zw_3c_ct.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_zw_3c_ct.f90
+Dassemble_zw_3c_na.o : DASSEMBLERS/Dassemble_zw_3c_na.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_zw_3c_na.f90
+Dassemble_zw_on_na.o : DASSEMBLERS/Dassemble_zw_on_na.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/Dassemble_zw_on_na.f90
+getforces_zw.o : DASSEMBLERS/getforces_zw.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/getforces_zw.f90
 getforces_mcweda.o : DASSEMBLERS/getforces_mcweda.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DASSEMBLERS/getforces_mcweda.f90
 getforces_mdet.o : NAC/getforces_mdet.f90 $(MODULES)
@@ -1277,8 +1318,12 @@ readdata_hxc.o : READFILES/readdata_hxc.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c READFILES/readdata_hxc.f90
 #readdata_mcweda.o : READFILES/readdata_mcweda.f90 $(MODULES)
 #	$(F90) $(FFLAGS) -c READFILES/readdata_mcweda.f90
+#readdata_xczw.o : READFILES/readdata_xczw.f90 $(MODULES)
+#	$(F90) $(FFLAGS) -c READFILES/readdata_xczw.f90
 readdata_mcweda.o : NAC/readdata_mcweda.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/readdata_mcweda.f90
+readdata_xczw.o : NAC/readdata_xczw.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c NAC/readdata_xczw.f90
 readdata_eh.o : READFILES/readdata_eh.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c READFILES/readdata_eh.f90
 checksum_options.o : READFILES/checksum_options.f90 $(MODULES)
@@ -1724,6 +1769,8 @@ Dassemble_2c_mdet.o : NAC/Dassemble_2c_mdet.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/Dassemble_2c_mdet.f90
 Dassemble_ca_2c_mdet.o : NAC/Dassemble_ca_2c_mdet.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/Dassemble_ca_2c_mdet.f90
+Dassemble_ca_2c_mdet_dip.o : NAC/Dassemble_ca_2c_mdet_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c NAC/Dassemble_ca_2c_mdet_dip.f90
 Dassemble_2c_PP_mdet.o : NAC/Dassemble_2c_PP_mdet.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/Dassemble_2c_PP_mdet.f90
 Dassemble_olsxc_on_mdet.o : NAC/Dassemble_olsxc_on_mdet.f90 $(MODULES)
@@ -1738,8 +1785,12 @@ Dassemble_3c_mdet.o : NAC/Dassemble_3c_mdet.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/Dassemble_3c_mdet.f90
 Dassemble_ca_3c_mdet.o : NAC/Dassemble_ca_3c_mdet.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/Dassemble_ca_3c_mdet.f90
+Dassemble_ca_3c_mdet_dip.o : NAC/Dassemble_ca_3c_mdet_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c NAC/Dassemble_ca_3c_mdet_dip.f90
 Dassemble_lr_mdet.o : NAC/Dassemble_lr_mdet.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/Dassemble_lr_mdet.f90
+Dassemble_lr_mdet_dip.o : NAC/Dassemble_lr_mdet_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c NAC/Dassemble_lr_mdet_dip.f90
 Dassemble_3c_PP_mdet.o : NAC/Dassemble_3c_PP_mdet.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/Dassemble_3c_PP_mdet.f90
 Dassemble_olsxc_3c_mdet.o : NAC/Dassemble_olsxc_3c_mdet.f90 $(MODULES)
@@ -1788,6 +1839,8 @@ Dassemble_qmmm_dip.o : QMMM/Dassemble_qmmm_dip.f90
 	$(F90) $(FFLAGS) -c QMMM/Dassemble_qmmm_dip.f90
 Dassemble_qmmm_mdet.o : QMMM/Dassemble_qmmm_mdet.f90
 	$(F90) $(FFLAGS) -c QMMM/Dassemble_qmmm_mdet.f90
+Dassemble_qmmm_mdet_dip.o : QMMM/Dassemble_qmmm_mdet_dip.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c QMMM/Dassemble_qmmm_mdet_dip.f90
 main_loop_MDET_qmmm.o : QMMM/main_loop_MDET_qmmm.f90
 	$(F90) $(FFLAGS) -c QMMM/main_loop_MDET_qmmm.f90
 main_loop_MD_qmmm.o : QMMM/main_loop_MD_qmmm.f90

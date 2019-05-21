@@ -60,7 +60,7 @@
         use forces
         use interactions
         use neighbor_map
-        use options, only: idipole
+        use options, only: idipole, itheory_xc
         implicit none
  
 ! Argument Declaration and Description
@@ -339,7 +339,10 @@
             do imu = 1, num_orb(in1)
              dip(imu,inu,ineigh,iatom) = dipx(imu,inu)
              dipcm(3,imu,inu) = dipx(imu,inu)
-             if (iforce .eq. 1) dippcm(:,3,imu,inu) = dippx(:,imu,inu)
+             if (iforce .eq. 1) then 
+                dippcm(:,3,imu,inu) = dippx(:,imu,inu)
+                if (itheory_xc .eq. 4) dipp(:,imu,inu,ineigh,iatom) = dippx(:,imu,inu)
+             end if ! end if iforce = 1
             end do
            end do
 
@@ -419,19 +422,19 @@
 !****************** DELETE: FOR TESTING PURPOSES ONLY
 
       !do iatom = 1,natoms
-            iatom = 1
-            in1=imass(iatom)
-            matom = neigh_self(iatom)
-            
-            write(*,*) 'The intra-atomic dipoles are coming'
-            write(*,*) dipc(1,1,2,matom,iatom), dipc(1,1,3,matom,iatom),&
-                                 &         dipc(1,1,4,matom,iatom)
-            write(*,*) dipc(2,1,2,matom,iatom), dipc(2,1,3,matom,iatom),&
-                                 &         dipc(2,1,4,matom,iatom)
-            write(*,*) dipc(3,1,2,matom,iatom),dipc(3,1,3,matom,iatom),&
-                                 &         dipc(3,1,4,matom,iatom)
-
-            write(*,*) 'End of writing intra-atomic dipoles'
+      !      iatom = 1
+      !      in1=imass(iatom)
+      !      matom = neigh_self(iatom)
+      !      
+      !      write(*,*) 'The intra-atomic dipoles are coming'
+      !      write(*,*) dipc(1,1,2,matom,iatom), dipc(1,1,3,matom,iatom),&
+      !                           &         dipc(1,1,4,matom,iatom)
+      !      write(*,*) dipc(2,1,2,matom,iatom), dipc(2,1,3,matom,iatom),&
+      !                           &         dipc(2,1,4,matom,iatom)
+      !      write(*,*) dipc(3,1,2,matom,iatom),dipc(3,1,3,matom,iatom),&
+      !                           &         dipc(3,1,4,matom,iatom)
+      !
+      !      write(*,*) 'End of writing intra-atomic dipoles'
 
 
       ! end do ! end do iatom = 1,natoms

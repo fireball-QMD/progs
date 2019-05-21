@@ -58,6 +58,7 @@
      &                         nsh_max, itheory, itheory_xc, igauss, ivdw,  &
      &                         iharmonic, ibias)
         use forces
+        use options, only : idipole
         implicit none
  
 ! Argument Declaration and Description
@@ -130,7 +131,7 @@
         end if
 
 ! Allocate components of the forces - needed for DOGS   
-        if (itheory .eq. 1) then
+        if (itheory .eq. 1 .or. idipole .eq. 1) then
          allocate (dipp (3, numorb_max, numorb_max, neigh_max, natoms))
 ! JIMM
          allocate (dippcm (3, 3, numorb_max, numorb_max))
@@ -155,7 +156,7 @@
         end if
 
 ! Allocate snxc forces
-        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2) then
+        if (itheory_xc .eq. 1 .or. itheory_xc .eq. 2 .or. itheory_xc .eq. 4) then
          allocate (spm_mat (3, nsh_max, nsh_max, neigh_max, natoms))
          allocate (arhop_off (3, nsh_max, nsh_max, neigh_max, natoms)) 
          allocate (arhopij_off (3, nsh_max, nsh_max, neigh_max, natoms)) 
@@ -166,6 +167,9 @@
          ! OLSXC double count corr forces
          allocate (dxcdcc (3, neigh_max, natoms))
         end if
+
+! Allocate xczw forces (double countig correction)
+         if (itheory_xc .eq. 4) allocate (dxcdcc_zw (3, neigh_max, natoms))
 
 ! Allocate vdw forces if requested.
         if (ivdw .eq. 1) allocate (fvdw (3, natoms))
