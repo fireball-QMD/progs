@@ -254,7 +254,7 @@
      &  wa(lwn),wa(lsnd),wa(lz),wa(lr),wa(ld),wa(lt),                   &
      &  wa(lwa),                      &
      &  iwa(1),iwa(n+1),iwa(2*n+1),task,iprint,                         &
-     &  csave,lsave,isave(22),dsave)
+     &  csave,lsave,isave,dsave)
 
      
 !     subroutine mainlb(n, m, x, l, u, nbd, f, g, factr, pgtol, ws, wy, &
@@ -787,7 +787,7 @@
  666  continue
       call lnsrlb(n,l,u,nbd,x,f,fold,gd,gdold,g,d,r,t,z,stp,dnorm,      &
      &            dtd,xstep,stpmx,iter,ifun,iback,nfgv,info,task,       &
-     &            boxed,cnstnd,csave,isave(22:),dsave(17:))
+     &            boxed,cnstnd,csave,isave,dsave)
 !if(dabs(x(1))>3275786477704) write(*,*) "=====================888======================"
       if (info .ne. 0 .or. iback .ge. 20) then
 !          restore the previous iterate.

@@ -249,9 +249,9 @@
         n2=mpmesh(2)
         n3=mpmesh(3)
         write(*,*)n1,n2,n3
-	if(n1.le.0)stop' bad n1 (Must be positive integers, 1,2,3,...)'
-	if(n2.le.0)stop' bad n2 (Must be positive integers, 1,2,3,...)'
-	if(n3.le.0)stop' bad n3 (Must be positive integers, 1,2,3,...)'
+	if(n1.le.0) stop ' bad n1 (Must be positive integers, 1,2,3,...)'
+	if(n2.le.0) stop ' bad n2 (Must be positive integers, 1,2,3,...)'
+	if(n3.le.0) stop ' bad n3 (Must be positive integers, 1,2,3,...)'
 
 ! ====================================================================
 ! Fractions = m/n + shifts.
@@ -424,7 +424,7 @@
         if(ikn.ne.numbnew)then
 	write(*,*)' ikn=',ikn
 	write(*,*)' numbnew=',numbnew
-	stop' ikn.ne.numbnew'
+	stop ' ikn.ne.numbnew'
 	end if
         numb=numbnew
 !	write(*,*)' '
@@ -1528,21 +1528,22 @@
 
 !*****************************************************************************
 
-      subroutine reduc2(ivec)
-      implicit none
-! remove any common factors from ivec
-      integer ivec(4),i,factor
-! common denominator cannot be zero
-      if(ivec(4).eq.0)call bomb
-! transfer minus sign from common denominator to components
-      if(ivec(4).lt.0)then
-        do i=1,4
-          ivec(i)=-ivec(i)
-        enddo
-      endif
-! remove common factors
-      i=factor(4,ivec) ! FIXME : this does not make sense (?) should be i=factor*ivec(4) ?
-      end
+!      subroutine reduc2(ivec)
+!      implicit none
+!! remove any common factors from ivec
+!      integer ivec(4),i,factor
+!! common denominator cannot be zero
+!      if(ivec(4).eq.0)call bomb
+!! transfer minus sign from common denominator to components
+!      if(ivec(4).lt.0)then
+!        do i=1,4
+!          ivec(i)=-ivec(i)
+!        enddo
+!      endif
+!! remove common factors
+!      ! the following line does not compile, at least with gfortran
+!      i=factor(4,ivec) ! FIXME : this does not make sense (?) should be i=factor*ivec(4) ?
+!      end
 
 !****************************************************************************
 

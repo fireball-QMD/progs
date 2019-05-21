@@ -148,7 +148,7 @@
          end do
         end if
 
-       
+        emax=emax+0.20d0 
 ! The value of efermi must be between emin and emax
         iter = 0
         qcharge = 0.0d0
