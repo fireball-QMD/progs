@@ -236,6 +236,7 @@
 
            if (itheory .eq. 1) then
             call average_ca_rho (nprocs, Kscf, iforce, iordern, igauss)
+            !call average_rho (nprocs, Kscf, iforce, iordern, igauss)
            else
             call average_rho (nprocs, Kscf, iforce, iordern, igauss)
            endif

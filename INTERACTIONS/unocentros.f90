@@ -318,7 +318,7 @@
         enddo
        enddo
       !dani.jel }
-!--->double counting correction <mu|exc|mu>=<mu|exc0|mu>+<mu|exc0'*dqi|mu>     
+!--->double counting correction <mu|exc|mu>=<mu|exc0|mu>+<mu|exc0'*dqi|mu>    
       endif ! if( itheory_xc .eq. 2)
       
 
@@ -382,7 +382,6 @@
       !dani.jel }
 !--->double counting correction <mu|exc|mu>=<mu|exc0|mu>+<mu|exc0'*dqi|mu>     
       endif ! if( itheory_xc .eq. 4)
-
 ! Format Statements
 ! ===========================================================================
  

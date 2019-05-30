@@ -11,7 +11,7 @@
 ! These control the integration quadrature.
 
 ! Maximum number of 2-center grid points for interpolation
-         integer, parameter :: nfofx = 207
+         integer, parameter :: nfofx = 207        
 
 ! Maximum x,y grids for 3 center interactions. (nbcba,nnaba in create)
          integer, parameter :: numXmax = 31

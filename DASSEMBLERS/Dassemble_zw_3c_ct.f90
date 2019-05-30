@@ -425,6 +425,9 @@
           end if !end if mneigh = 0
          end do !end do ineigh
         end do !end do ialp
+        !f3xca_ca = 0.0d0
+        !f3xcb_ca = 0.0d0
+        !f3xcc_ca = 0.0d0
  
 ! Format Statements
 ! ===========================================================================

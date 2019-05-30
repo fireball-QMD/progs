@@ -289,10 +289,11 @@
           !Double counting correction:
           do issh1 = 1,nssh(in1)
              dqdc = (Qin(issh1,iatom) - Qneutral(issh1,in1))
+             !dqdc=0.0d0
              uxcdcc_zw = uxcdcc_zw - (Qin(issh1,iatom)-0.50*dqdc)*g2nu(issh1,isorp,ineigh,iatom)*dxn
              !change sign to make dxcdcc_zw force-like
              dxcdcc_zw(:,ineigh,iatom) = dxcdcc_zw(:,ineigh,iatom) &
-              & + (Qin(issh1,iatom)-0.50*dqdc)*g2nup(:,issh1,isorp,ineigh,iatom)*dxn
+             & + (Qin(issh1,iatom)-0.50*dqdc)*g2nup(:,issh1,isorp,ineigh,iatom)*dxn
           end do ! end do issh1 = 1,
 
 !------------------------------------------------------------------------------------
@@ -323,6 +324,7 @@
 
           end do !end do isorp = 1, nssh(in2) (line 270)
           in3 = in1
+          !bcca = 0.0d0
           do inu = 1, num_orb(in3)
            do imu = 1, num_orb(in1)
 !$omp atomic
@@ -411,6 +413,7 @@
            end do !end do isorp
  
 ! Now put into vca.
+           !bcca = 0.0d0
            do inu = 1, num_orb(in3)
             do imu = 1, num_orb(in1)
 !$omp atomic
@@ -427,7 +430,7 @@
          end do ! do ineigh
         end do ! do iatom
 
-
+        !    vxc_ca = 0.0d0
 
 ! Format Statements
 ! ===========================================================================

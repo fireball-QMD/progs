@@ -348,6 +348,7 @@
          
            do inu = 1, num_orb(in2)
             do imu = 1, num_orb(in1)
+              !bccax = 0.0d0
              vxc_ca(imu,inu,mneigh,iatom) = vxc_ca(imu,inu,mneigh,iatom) +    &
                         &              bccax(imu,inu)
             !Symmetrize Hamiltonian (April 2018): jneigh is the

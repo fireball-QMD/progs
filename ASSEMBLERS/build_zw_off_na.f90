@@ -204,7 +204,11 @@
             ! - V'_xc([n_i+n_j]^a){<i,mu|n_i+n_j|i,nu> 
             !     - [n_i+n_j]^a<i,mu|i,nu>]}
             bcxcx(imu,inu) = bcxcx(imu,inu) - muxcij*sx(imu,inu)              &
-     &       - dmuxcij*(den1x(imu,inu) - densij(issh,jssh)*sx(imu,inu)) 
+     &       - dmuxcij*(den1x(imu,inu) - densij(issh,jssh)*sx(imu,inu))
+
+
+           
+           
            end do ! do ind2 = -l2, l2
           end do ! do ind1 = -l1, l1
 

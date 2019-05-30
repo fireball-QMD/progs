@@ -294,6 +294,8 @@
          end do
         end do
 ! Format Statements
+      !fotxc_ca = 0.0d0
+      !faxc_ca = 0.0d0
 ! ===========================================================================
         return
         end
