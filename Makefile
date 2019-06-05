@@ -104,7 +104,7 @@ DASSEMBLERS = Dassemble_2c.o Dassemble_3c.o Dassemble_ca_2c.o \
 	getforces_mcweda.o getforces_eh.o getforces_hxc.o \
 	getforces_KS.o getforces_classic.o getforces_classic_RGL.o getforces_classic_vdw.o \
 	getforces.o getforces_classic_tersoff.o \
-	getforces_zw.o Dassemble_zw_2c_ct.o Dassemble_zw_2c_ct.o \
+	getforces_zw.o Dassemble_zw_2c_ct.o \
 	Dassemble_zw_3c_ct.o Dassemble_zw_2c_na.o Dassemble_zw_3c_na.o \
         Dassemble_zw_on_na.o
 
