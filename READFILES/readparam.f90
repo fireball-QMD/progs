@@ -104,7 +104,7 @@
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
                                          cut_embedding, fdataLocation, verbosity, ntpr, restartxyz,   &
-                                         inputxyz, isocket, socket, inet, port, host
+                                         inputxyz, isocket, socket, inet, port, host, imbd
 
 ! Procedure
 ! ===========================================================================
@@ -201,6 +201,8 @@
         dftd3_s18  = 2.6996
         dftd3_rs18  = 4.2359
         dftd3_alp = 14.0d0 
+! MBD corrections
+        imbd = 0
 ! Long range dipole
         idipole = 0
 
@@ -919,6 +921,7 @@
         write (50, *) '  dftd3_func        : ',dftd3_func
         write (50, *) '  dftd3_version     : ',dftd3_version
         write (50, *) '  dftd3_tz          : ',dftd3_tz
+        write (50, *) '  imbd              : ',imbd
         write (50, *) '  verbosity         : ',verbosity
         write (50, *) '  ntpr              : ',ntpr
         write (50, *) '  restartxyz        : ',restartxyz

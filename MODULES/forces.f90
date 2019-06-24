@@ -18,7 +18,9 @@
          real, dimension (:, :), allocatable :: flrew_qmmm
 ! DFTD3  forces
          real, dimension (:, :), allocatable :: ftot_dftd3
- 
+! MBD  forces
+         real, dimension (:, :), allocatable :: ftot_mbd
+
 ! Derivatives of interactions
          real, dimension (:, :, :, :, :), allocatable :: dipp
          real, dimension (:, :, :, :), allocatable :: dippcm

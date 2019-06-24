@@ -58,7 +58,7 @@
         use dimensions
         use forces
         use neighbor_map
-        use options, only : idftd3, verbosity
+        use options, only : idftd3, imbd, verbosity
         implicit none
 
 ! Argument Declaration and Description
@@ -534,6 +534,7 @@
      &                                + fro(:,iatom)
          if (ivdw .eq. 1) ftot(:,iatom) = ftot(:,iatom) + fvdw(:,iatom)
          if (idftd3 .ge. 1) ftot(:,iatom) = ftot(:,iatom) + ftot_dftd3(:,iatom)
+         if (imbd .eq. 1) ftot(:,iatom) = ftot(:,iatom) + ftot_mbd(:,iatom)
          if (iharmonic .eq. 1) ftot(:,iatom) = ftot(:,iatom)                 &
      &                                        + fharmonic(:,iatom)
          if (ibias .eq. 1) ftot(:,iatom) = ftot(:,iatom)                     &

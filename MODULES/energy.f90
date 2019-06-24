@@ -34,5 +34,6 @@
         real eqmmm
 ! DFTD3 energy  
         real etot_dftd3
-
+! MBD energy
+       real etot_mbd
  end module energy 

@@ -1,4 +1,4 @@
-# copyright info:
+
 #
 #                             @Copyright 2006
 #                           Fireball Committee
@@ -423,7 +423,7 @@ NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
 QMMM =  main_loop_MDET_qmmm.o main_loop_MD_qmmm.o fireball_qmmm_loop.o
 
 
-DFTD3 = common.o sizes.o pars.o core.o api.o dftd3_corrections.o
+DFTD3 = common.o sizes.o pars.o core.o api.o dftd3_corrections.o mbd_corrections.o
 
 #NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
 #      mdetdenmat.o getforces_mdet.o save_mdetstuff.o evolve_ks_states.o \
@@ -1860,3 +1860,5 @@ common.o: dftd3/common.f90
 	$(F90) $(FFLAGS) -c dftd3/common.f90
 dftd3_corrections.o : dftd3/dftd3_corrections.f90
 	$(F90) $(FFLAGS) -c dftd3/dftd3_corrections.f90
+mbd_corrections.o : ASSEMBLERS/mbd_corrections.f90 -lm /home/jesus/git/libmbd/build/src/libmbd.so
+	$(F90) $(FFLAGS) -c ASSEMBLERS/mbd_corrections.f90 -I/home/jesus/git/libmbd/build/src

@@ -113,6 +113,11 @@
           etot = etot + etot_dftd3
          end if
 
+         if (imbd .ge. 1) then
+          call mbd_corrections
+          etot = etot + etot_mbd
+         end if
+
          if (iharmonic .eq. 1) then
           call getHarmonic() 
           etot = etot + enHarmonic

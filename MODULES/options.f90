@@ -53,6 +53,7 @@
         integer mix_embedding          ! mix electrostatic and mechanical embedding
 	integer iephc                  ! do e-ph coupling
         integer idftd3                 ! DFTD3 corrections
+        integer imbd                   ! MBD corrections
         integer idipole                ! Long range term with XYZ dipole
         integer isocket                ! socket for i-pi
         integer ixczw                  ! Second order XC theory

@@ -111,6 +111,7 @@
         allocate (fotxc (3, neigh_max, natoms))
         allocate (fotna (3, neigh_max, natoms))
         allocate (ftot_dftd3 (3, natoms))
+        allocate (ftot_mbd (3, natoms))
  
 ! Procedure
 ! ===========================================================================
