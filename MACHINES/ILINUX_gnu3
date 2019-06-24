@@ -1,4 +1,4 @@
-#ILINUX_fast05.static fast05.ftmc.uam.es 
+#ILINUX_gnu3
 #
 #
 #SERIE       : Makefile: METHOD = DOUBLE    ; PARALLEL =      (diag. complex)
@@ -11,7 +11,7 @@
 #METHOD = DOUBLE GAMMA  ; PARALLEL = OPNMP (only 1 processor)
 ##METHOD = SCALAPACK ; PARALLEL = MPI  (only one kpts GAMMA, n processors)) 
 
-ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
+ifneq (,$(findstring ILINUX_gnu3, ${MACHINE}))
 	F77 = gfortran
 	F90 = gfortran
 	PATH_MKL = /opt/intel/mkl/lib/intel64/
