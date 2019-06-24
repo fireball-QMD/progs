@@ -86,6 +86,7 @@
         integer my_proc
         integer natomsp
         integer jmu
+        integer ix
 
         real dist13
         real dist23
@@ -97,7 +98,6 @@
         real dq4
         real dterm
         real x
-        real ix
         real sterm
 
         real, dimension (3) :: rna
