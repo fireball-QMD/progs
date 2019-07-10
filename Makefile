@@ -333,7 +333,7 @@ INTERPOLATERS = buildspline_1d.o interpolate_1d.o interpolate_2d.o \
 LOOPS = main_loop.o main_loop_MD.o main_loop_CG.o scf_loop.o scf_loop_harris.o \
 	main_loop_NEB.o main_loop_DM.o scf_loop_ks.o main_loop_importrho.o \
 	main_loop_TDSE.o main_loop_MDET.o main_loop_MIN.o main_loop_NAC.o \
-	main_loop_FIRE.o #main_loop_socket.o
+	main_loop_FIRE.o main_loop_socket.o
 
 MAIN = fireball.o 
 
@@ -350,7 +350,7 @@ MODULES = barrier.o charges.o configuration.o constants_fireball.o density.o \
 	kpoints.o neighbor_map.o umbrella.o  steered.o optimization.o module_dos.o \
 	dynamo.o cproc.o noseHoover.o scf.o grid.o wavefunction.o neb_module.o \
 	vnneutral.o transport.o matmultmod.o outputs.o options.o energy.o \
-	MD.o  mpi_main.o tdse.o bias.o nonadiabatic.o hartree.o #sockets.o fsockets.o fb_socket.o
+	MD.o  mpi_main.o tdse.o bias.o nonadiabatic.o hartree.o sockets.o fsockets.o fb_socket.o
 
 MODULES_C =  $(MODULES) classicMD.o
 
@@ -380,7 +380,7 @@ else
 THERMOINT =
 endif
 
-#SOCKETS = get_geometry.o create_socket.o send_geometry.o sendrecv.o soc_init.o
+SOCKETS = get_geometry.o create_socket.o send_geometry.o sendrecv.o soc_init.o
 
 SOLVESH_DIAG = $(KSPACE) $(BLAS)
 
@@ -564,12 +564,12 @@ nonadiabatic.o : MODULES/nonadiabatic.f90
 	$(F90) $(FFLAGS) -c MODULES/nonadiabatic.f90
 hartree.o : MODULES/hartree.f90
 	$(F90) $(FFLAGS) -c MODULES/hartree.f90
-#fsockets.o : MODULES/fsockets.f90
-#	$(F90) $(FFLAGS) -c MODULES/fsockets.f90
-#fb_socket.o : MODULES/fb_socket.f90
-#	$(F90) $(FFLAGS) -c MODULES/fb_socket.f90
-#sockets.o : MODULES/sockets.c
-#	$(CC) $(CFLAGS) -c MODULES/sockets.c
+fsockets.o : MODULES/fsockets.f90
+	$(F90) $(FFLAGS) -c MODULES/fsockets.f90
+fb_socket.o : MODULES/fb_socket.f90
+	$(F90) $(FFLAGS) -c MODULES/fb_socket.f90
+sockets.o : MODULES/sockets.c
+	$(CC) $(CFLAGS) -c MODULES/sockets.c
 # *****************************************************************************
 # modules_c
 # *****************************************************************************
@@ -1177,8 +1177,8 @@ main_loop_NAC.o : LOOPS/main_loop_NAC.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c LOOPS/main_loop_NAC.f90
 main_loop_FIRE.o : LOOPS/main_loop_FIRE.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c LOOPS/main_loop_FIRE.f90
-#main_loop_socket.o : LOOPS/main_loop_socket.f90
-#	$(F90) $(FFLAGS) -c LOOPS/main_loop_socket.f90
+main_loop_socket.o : LOOPS/main_loop_socket.f90
+	$(F90) $(FFLAGS) -c LOOPS/main_loop_socket.f90
 
 # *****************************************************************************
 # molecular dynamics objects
@@ -1376,16 +1376,16 @@ epsilon.o : ROTATIONS/epsilon.f90 $(MODULES)
 # *****************************************************************************
 # socket objects
 # *****************************************************************************
-#get_geometry.o : SOCKETS/get_geometry.f90 $(MODULES)
-#	$(F90) $(FFLAGS) -c SOCKETS/get_geometry.f90
-#create_socket.o : SOCKETS/create_socket.f90 $(MODULES)
-#	$(F90) $(FFLAGS) -c SOCKETS/create_socket.f90
-#send_geometry.o : SOCKETS/send_geometry.f90 $(MODULES)
-#	$(F90) $(FFLAGS) -c SOCKETS/send_geometry.f90
-#sendrecv.o : SOCKETS/sendrecv.c SOCKETS/mysocks.h
-#	$(CC) $(CFLAGS) -c SOCKETS/sendrecv.c
-#soc_init.o : SOCKETS/soc_init.c SOCKETS/mysocks.h
-#	$(CC) $(CFLAGS) -c SOCKETS/soc_init.c
+get_geometry.o : SOCKETS/get_geometry.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c SOCKETS/get_geometry.f90
+create_socket.o : SOCKETS/create_socket.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c SOCKETS/create_socket.f90
+send_geometry.o : SOCKETS/send_geometry.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c SOCKETS/send_geometry.f90
+sendrecv.o : SOCKETS/sendrecv.c SOCKETS/mysocks.h
+	$(CC) $(CFLAGS) -c SOCKETS/sendrecv.c
+soc_init.o : SOCKETS/soc_init.c SOCKETS/mysocks.h
+	$(CC) $(CFLAGS) -c SOCKETS/soc_init.c
 
 # *****************************************************************************
 # thermodynamic integration objects
