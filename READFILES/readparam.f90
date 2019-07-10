@@ -859,7 +859,7 @@
          ENDDO
        write (*,*) 'Socket with i-pi software'
          write (*,*) 'inet:', inet
-         write (*,*) 'Host name:', trim(host
+         write (*,*) 'Host name:', trim(host)
          write (*,*) 'Port:', port
          write (*,*) ''
 
