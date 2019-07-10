@@ -3,6 +3,7 @@ nstepf = 1
 basisfile = 'ini.bas'
 lvsfile = 'ini.lvs'
 kptpreference = 'ini.kpts'
+fdatalocation = '../../Fdata'
 sigmatol = 0.000001
 iquench = 0
 &end
