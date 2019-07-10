@@ -182,6 +182,15 @@
        real, dimension(:,:,:,:,:), allocatable ::   g2nup
        integer, dimension(:,:),       allocatable ::   orb2shell
 
+! new Intra-atomic Dipole: One-center case (for the time being)
+      integer, dimension(:,:), allocatable :: muR
+      integer, dimension(:,:), allocatable :: nuR
+      integer, dimension(:,:), allocatable :: alphaR
+      integer, dimension(:,:), allocatable :: betaR
+      real, dimension(:,:), allocatable :: IR
+      integer, dimension(:), allocatable :: Nlines_vdip1c
+      real, dimension(:,:,:), allocatable :: Vdip_1c
+
 ! =============================================================================
 
         end module

@@ -61,6 +61,7 @@
         use dimensions
         use density
         use bias
+        use options, only: V_intra_dip
         implicit none
 
 ! Argument Declaration and Description
@@ -87,6 +88,7 @@
         integer in1
         integer in2
         integer ineigh
+        integer matom
         integer inu
         integer jatom
         integer mbeta
@@ -162,6 +164,8 @@
             end do
            end do
 
+
+
 ! Here we add in all of the charge interactions, as well as the long range
 ! coulomb(ewaldlr) and the short range correction, 1/R (ewaldsr).
            if (itheory .eq. 1 .or. itheory .eq. 2) then
@@ -177,6 +181,20 @@
            end if ! if (itheory .eq. 1)
           endif ! if (iKS .eq. 1)
          end do ! do ineigh
+
+            !New V_intra_dip_1c JUNE 2019
+            if (V_intra_dip .eq. 1) then
+              matom = neigh_self(iatom)
+              do inu = 1, num_orb(in1)
+               do imu = 1, num_orb(in1)
+
+                h_mat(imu,inu,matom,iatom) = h_mat(imu,inu,matom,iatom) + Vdip_1c(imu,inu,iatom)
+
+               end do ! do imu
+              end do ! do inu
+            end if ! if (V_intra_dip .eq. 1) 
+            !End of New V_intra_dip_1c JUNE 2019
+
         end do ! do iatom
 
 ! Here we add extra terms of Hamiltonian comming from the bias voltage (not KS)

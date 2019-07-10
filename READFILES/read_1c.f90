@@ -91,6 +91,8 @@
 ! Local Variable Declaration and Description
 ! ===========================================================================
         integer iline
+        integer Nlines_vdip1c_max
+        integer trash
         integer in1, in2
         integer ins
         integer issh
@@ -110,7 +112,12 @@
         integer, dimension (nsh_max) :: imask
         integer ideriv
         integer iissh, jjssh
- 
+        character (len = 200) extension
+        character (len = 200) filename
+        character (len = 200) root
+          
+
+
 ! Allocate Arrays
 ! ===========================================================================
 
@@ -243,7 +250,7 @@
 ! Read data from the 1-center spin exchange-correlation extended hubbard
 ! file.
           if (ispin .eq. 1) then
-           open (unit = 38, file = trim(fdataLocation)//'/nuxcs_onecenter.dat',              &
+     open (unit = 38, file = trim(fdataLocation)//'/nuxcs_onecenter.dat',              &
      &           status = 'unknown')
            do iline = 1, 4
             read (38,100) message
@@ -472,6 +479,68 @@
          if (itheory_xc .eq. 4) then
          end if !end if itheory_xc .eq. 4
          end if ! if(itheory_xc.eq.2 .or. itheory_xc .eq. 4) 
+
+
+      !+++++++++++++++++++++++++++++++NEW JUNE 2019+++++++++++++++++++++++++++
+      !.........................Vip 1c...........................................
+      !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      if (V_intra_dip .eq. 1) then
+      write(*,*) 'Ankais 1'
+      allocate(Nlines_vdip1c(nspecies))
+      write(*,*) 'Ankais 2'
+      Nlines_vdip1c_max=0
+      root = trim(fdataLocation)//'/vdip_onecenter'
+      do in1 = 1,nspecies
+       write (extension,'(''_'',i2.2)') in1
+       filename = append_string (root,extension)
+      open (unit = 36, file = filename, status = 'unknown')
+      read(36,*) Nlines_vdip1c(in1)
+      if (Nlines_vdip1c(in1) .gt. Nlines_vdip1c_max) then
+      Nlines_vdip1c_max=Nlines_vdip1c(in1)
+      end if
+      close(36)
+      end do !end do in1
+        
+      write(*,*) 'Ankais 3'
+       allocate(muR(Nlines_vdip1c_max,nspecies))
+       allocate(nuR(Nlines_vdip1c_max,nspecies))
+       allocate(alphaR(Nlines_vdip1c_max,nspecies))
+       allocate(betaR(Nlines_vdip1c_max,nspecies))
+       allocate(IR(Nlines_vdip1c_max,nspecies))
+
+       muR    = 0.0d0
+       nuR    = 0.0d0
+       alphaR = 0.0d0
+       betaR  = 0.0d0
+       IR     = 0.0d0
+
+         
+      do in1 = 1,nspecies
+       write (extension,'(''_'',i2.2)') in1
+       filename = append_string (root,extension)
+       open (unit = 36, file = filename, status = 'unknown')
+       read(36,*) trash
+         
+      write(*,*) 'Ankais 4'
+       do iline = 1,Nlines_vdip1c(in1)
+          
+      write(*,*) 'Ankais 5'
+          
+        read(36,*) muR(iline,in1), nuR(iline,in1), alphaR(iline,in1), betaR(iline,in1), IR(iline,in1)
+
+
+      end do !end do iline = 1,Nlines_vdip1c
+
+      close(36)
+      write(*,*) 'Alles gut bisher' !Ankais
+      end do !end do in1 = 1,nspecies
+
+      end if ! if (V_intra_dip .eq. 1)
+      !+++++++++++++++++++++++++++++++NEW JUNE 2019+++++++++++++++++++++++++++
+      !.........................END OF Vip 1c...........................................
+      !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
         
 ! Deallocate Arrays
 ! ===========================================================================

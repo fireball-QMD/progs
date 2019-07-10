@@ -58,7 +58,7 @@
      &                         itheory_xc, igauss, iwrtdos, iwrthop, iwrtatom)
 
         use interactions
-        use options, only : idipole
+        use options, only : idipole, V_intra_dip
         implicit none
  
 ! Argument Declaration and Description
@@ -137,6 +137,10 @@
          allocate (dipcm (3, numorb_max, numorb_max))
          allocate (dipc (3, numorb_max, numorb_max, neigh_max, natoms))
         endif
+!Intra-atomic dipolar potential
+        if (V_intra_dip .eq. 1) then
+          allocate(Vdip_1c(numorb_max,numorb_max,natoms))
+        end if
 ! Interactions needed only for extended-Hubbard
         if (itheory .eq. 2) then
          allocate (Vcoulomb (nsh_max, natoms))

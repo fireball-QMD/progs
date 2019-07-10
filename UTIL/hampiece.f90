@@ -58,6 +58,7 @@
         use interactions
         use neighbor_map
         use density
+        use options, only: V_intra_dip
         implicit none
 
 ! Argument Declaration and Description
@@ -272,7 +273,18 @@
         end do
         write (*,100)
         write (*,100)
-
+! V_intra_dip
+          if (V_intra_dip .eq. 1) then
+          write (*,*) '  '
+          write (*,*) ' V_intra_dip_1c'
+          write (*,300)
+          do iatom = 1, natoms
+          do imu = 1, num_orb(in1)
+           write(*,301) (Vdip_1c(imu,inu,iatom), inu = 1, num_orb(in2))
+          end do !end do imu
+          end do !end do iatom
+          end if !end if V_intra_dip .eq. 1
+          
 ! Format Statements
 ! ===========================================================================
 100     format (75('*'))

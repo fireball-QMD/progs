@@ -56,6 +56,7 @@
         integer idipole                ! Long range term with XYZ dipole
         integer isocket                ! socket for i-pi
         integer ixczw                  ! Second order XC theory
+        integer V_intra_dip            ! Intra-atomic dipolar potential
 ! ---------------------------------------------------------------------------
 ! Other controls
 ! ---------------------------------------------------------------------------

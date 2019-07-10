@@ -93,6 +93,8 @@
         use forces
         use interactions
         use neighbor_map
+        use energy, only:  dc_v_intra_dip_1c
+        use options, only: V_intra_dip
         implicit none
  
 ! Argument Declaration and Description
@@ -522,7 +524,11 @@
          u0tot = u0tot - eklr
         end if
         uiiuee = u0tot - ue0tot
-
+        if (V_intra_dip .eq. 1) then
+            write(*,*) 'Ankais dc_v_intra_dip = ', dc_v_intra_dip_1c
+             uiiuee = uiiuee + dc_v_intra_dip_1c
+             !Double-counting V_intra_dip_1c here??? Double counting
+        end if !end if V_intra_dip .eq. 1
 
 ! Format Statements
 ! ===========================================================================

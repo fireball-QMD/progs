@@ -66,7 +66,7 @@
         use barrier
         use nonadiabatic
         use integrals, only : fdataLocation
-        use fb_sockets, only : socket, inet, port, host
+        !use fb_sockets, only : socket, inet, port, host
         implicit none
 
 ! Argument Declaration and Description
@@ -104,7 +104,7 @@
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
                                          cut_embedding, fdataLocation, verbosity, ntpr, restartxyz,   &
-                                         inputxyz, isocket, socket, inet, port, host
+                                         inputxyz, V_intra_dip !isocket, socket, inet, port, host
 
 ! Procedure
 ! ===========================================================================
@@ -203,6 +203,8 @@
         dftd3_alp = 14.0d0 
 ! Long range dipole
         idipole = 0
+! Intra-atomic dipolar potential
+        V_intra_dip = 0
 
 ! ------  DEFAULT OUTPUTS  ------
         iwrtcdcoefs = 0
@@ -231,11 +233,11 @@
         iwrtqt = 0
         iwrtdipole = 0
 ! socket for i/pi
-        isocket = 0
-        ccmd = 0
-        inet = 1
-        host = "localhost"//achar(0)
-        port = 31415
+!        isocket = 0
+!        ccmd = 0
+!        inet = 1
+!        host = "localhost"//achar(0)
+!        port = 31415
 
 
         inquire (file = initfile, exist = isfile)
@@ -829,40 +831,40 @@
        dftd3_params(5)=dftd3_alp
       end if
 
-      if (isocket .eq. 1) then 
+  !    if (isocket .eq. 1) then 
+  !
+  !       DO i = 1, COMMAND_ARGUMENT_COUNT()
+  !         CALL GET_COMMAND_ARGUMENT(i, cmdbuffer)
+  !         IF (cmdbuffer == "-u") THEN ! flag for unix socket
+  !           inet = 0
+  !           ccmd = 0
+  !         ELSEIF (cmdbuffer == "-h") THEN ! read the hostname
+  !           ccmd = 1
+  !         ELSEIF (cmdbuffer == "-p") THEN ! reads the port number
+  !           ccmd = 2
+  !         ELSE
+  !           IF (ccmd == 0) THEN
+  !             WRITE(*,*) " Unrecognized command line argument", ccmd
+  !             STOP "ENDED"
+  !           ENDIF
+  !           IF (ccmd == 1) THEN
+  !             host = trim(cmdbuffer)//achar(0)
+  !           ELSEIF (ccmd == 2) THEN
+  !             READ(cmdbuffer,*) port
+  !           ELSE
+  !             WRITE(*,*) " Unrecognized type "
+  !             STOP "ENDED"
+  !           ENDIF
+  !         ENDIF
+  !       ENDDO
 
-         DO i = 1, COMMAND_ARGUMENT_COUNT()
-           CALL GET_COMMAND_ARGUMENT(i, cmdbuffer)
-           IF (cmdbuffer == "-u") THEN ! flag for unix socket
-             inet = 0
-             ccmd = 0
-           ELSEIF (cmdbuffer == "-h") THEN ! read the hostname
-             ccmd = 1
-           ELSEIF (cmdbuffer == "-p") THEN ! reads the port number
-             ccmd = 2
-           ELSE
-             IF (ccmd == 0) THEN
-               WRITE(*,*) " Unrecognized command line argument", ccmd
-               STOP "ENDED"
-             ENDIF
-             IF (ccmd == 1) THEN
-               host = trim(cmdbuffer)//achar(0)
-             ELSEIF (ccmd == 2) THEN
-               READ(cmdbuffer,*) port
-             ELSE
-               WRITE(*,*) " Unrecognized type "
-               STOP "ENDED"
-             ENDIF
-           ENDIF
-         ENDDO
-
-         write (*,*) 'Socket with i-pi software'
+  !       write (*,*) 'Socket with i-pi software'
 !         write (*,*) 'inet:', inet
 !         write (*,*) 'Host name:', trim(host
 !         write (*,*) 'Port:', port
 !         write (*,*) ''
 
-      endif !end if isocket .eq. 1  (PIMD)
+   !   endif !end if isocket .eq. 1  (PIMD)
 
 ! writeout resume of the input variables into param.dat file
         open (unit = 50, file = 'param.dat', status = 'unknown')
@@ -924,7 +926,8 @@
         write (50, *) '  restartxyz        : ',restartxyz
         write (50, *) '  inputxyz          : ',inputxyz
         write (50, *) '  fdatalocation     : ',fdatalocation
-        write (50, *) '  isocket           : ',isocket
+       ! write (50, *) '  isocket           : ',isocket
+        write (50, *) '  V_intra_dip           ; ',V_intra_dip
         write (50,100)
         write (50, *) ''
         write (50, *) ' SCF'

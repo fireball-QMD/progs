@@ -191,6 +191,12 @@
            !write (*,*) ' Assemble OLS-xc exchange-correlation interactions. '
            call assemble_olsxc_1c (natoms, itheory, iforce)
           endif
+  
+         if (V_intra_dip .eq. 1) then
+         
+            call assemble_1c_vdip (natoms, itheory, iforce)
+
+         end if !end V_intra_dip
 
 ! ===========================================================================
 !                               assemble_2c

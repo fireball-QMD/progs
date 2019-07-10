@@ -106,6 +106,7 @@
         integer kssh
         integer kkssh
         integer numsh
+        integer Nlines_vdip1c_max
  
         character (len=70) message
  
@@ -116,7 +117,13 @@
         integer, dimension (nsh_max) :: imask
         integer ideriv
         integer iissh, jjssh
- 
+
+        integer trash
+        character (len = 200) extension
+        character (len = 200) filename
+        character (len = 200) root
+        character (len = 200) append_string
+
 ! Allocate Arrays
 ! ===========================================================================
 
@@ -647,6 +654,60 @@
          end if !end if itheory_xc .eq. 4
 ! ==================================================================
          end if ! if(itheory_xc.eq.2 .or. 4) 
+
+       !+++++++++++++++++++++++++++++++NEW JUNE 2019+++++++++++++++++++++++++++
+      !.........................Vip 1c...........................................
+      !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+      if (V_intra_dip .eq. 1) then
+      allocate(Nlines_vdip1c(nspecies))
+      Nlines_vdip1c_max=0
+      root = trim(fdataLocation)//'/vdip_onecenter'
+      do in1 = 1,nspecies
+       write (extension,'(''_'',i2.2)') in1
+       filename = append_string (root,extension)
+      open (unit = 36, file = filename, status = 'unknown')
+      read(36,501) Nlines_vdip1c(in1)
+      if (Nlines_vdip1c(in1) .gt. Nlines_vdip1c_max) then
+      Nlines_vdip1c_max=Nlines_vdip1c(in1)
+      end if
+      close(36)
+      end do !end do in1
+        
+       allocate(muR(Nlines_vdip1c_max,nspecies))
+       allocate(nuR(Nlines_vdip1c_max,nspecies))
+       allocate(alphaR(Nlines_vdip1c_max,nspecies))
+       allocate(betaR(Nlines_vdip1c_max,nspecies))
+       allocate(IR(Nlines_vdip1c_max,nspecies))
+
+       muR    = 0.0d0
+       nuR    = 0.0d0
+       alphaR = 0.0d0
+       betaR  = 0.0d0
+       IR     = 0.0d0
+
+         
+      do in1 = 1,nspecies
+       write (extension,'(''_'',i2.2)') in1
+       filename = append_string (root,extension)
+       open (unit = 36, file = filename, status = 'unknown')
+       read(36,501) trash
+         
+       do iline = 1,Nlines_vdip1c(in1)
+          
+          
+        read(36,500) muR(iline,in1), nuR(iline,in1), alphaR(iline,in1), betaR(iline,in1), IR(iline,in1)
+
+
+      end do !end do iline = 1,Nlines_vdip1c
+
+      close(36)
+      write(*,*) 'Alles gut bisher' !Ankais
+      end do !end do in1 = 1,nspecies
+
+      end if ! if (V_intra_dip .eq. 1)
+      !+++++++++++++++++++++++++++++++NEW JUNE 2019+++++++++++++++++++++++++++
+      !.........................END OF Vip 1c...........................................
+      !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         
 ! Deallocate Arrays
 ! ===========================================================================
@@ -655,7 +716,9 @@
 ! ===========================================================================
 100     format (a70)
 200     format (2x, i3, 4x, i3, 2x, i3, 2x, i3, 2x, i3, 2x, i3, 2x, i3)
+500     format (4i3,1f12.8)
+501     format (i3)
 !300     format (<numsh>f16.6)       
         return
         end subroutine read_1c
-      
+

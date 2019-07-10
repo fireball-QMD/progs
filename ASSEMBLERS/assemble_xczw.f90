@@ -186,6 +186,13 @@
 ! Assemble the one-center exchange-correlation interactions.
            call assemble_zw_1c_na (natoms, itheory, iforce)
 
+        
+           if (V_intra_dip .eq. 1) then
+
+             call assemble_1c_vdip (natoms, itheory, iforce)
+
+           end if !end V_intra_dip
+
 
 ! ===========================================================================
 !                               assemble_2c
