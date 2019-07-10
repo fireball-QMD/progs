@@ -26,8 +26,8 @@
 # clause at 52.227-7013.
 
 # Do you optimize or do you debug? (OPT/DEBUG)
-#MODE = OPT 
-MODE = DEBUG
+MODE = OPT 
+#MODE = DEBUG
 # Do you use vendor optimized blas and lapack libraries? (YES/NO)
 USEBLAS = YES 
 #USEBLAS = NO 
