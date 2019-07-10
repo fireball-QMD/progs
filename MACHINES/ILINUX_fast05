@@ -11,13 +11,15 @@
 #METHOD = DOUBLE GAMMA  ; PARALLEL = OPNMP (only 1 processor)
 ##METHOD = SCALAPACK ; PARALLEL = MPI  (only one kpts GAMMA, n processors)) 
 
+DIR=${MKLROOT}
+
 ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	F77 = ifort
 	F90 = ifort
-	PATH_MKL = /opt/intel/composerxe-2011.2.137/mkl/lib/intel64/
-	PATH_INCL = -I/opt/intel/composerxe-2011.2.137/mkl/include/
-	PATH_FFTW_LIB = /opt/intel/composerxe-2011.2.137/mkl/interfaces/fftw3xf/
-	PATH_FFTW_INCL = -I/opt/intel/composerxe-2011.2.137/mkl/include/fftw/
+	PATH_MKL = ${DIR}/lib/intel64/
+	PATH_INCL = -I${DIR}/include/
+	PATH_FFTW_LIB = ${DIR}/interfaces/fftw3xf/
+	PATH_FFTW_INCL = -I${DIR}/include/fftw/
 
 	ifneq (,$(findstring OPT, ${MODE}))
 		ifneq (,$(findstring YES, ${CCOMPILE}))
