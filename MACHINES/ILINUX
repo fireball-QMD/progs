@@ -4,7 +4,7 @@
 #SERIE       : Makefile: METHOD = DOUBLE    ; PARALLEL =      (diag. complex)
 #SERIE-GAMMA : Makefile: METHOD = GAMMA     ; PARALLEL =      (diag. real)
 
-ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
+ifneq (,$(findstring ILINUX, ${MACHINE}))
 	F90 = ifort
 	PATH_MKL = ${MKLROOT}/lib/intel64/
 	PATH_INCL = -I${MKLROOT}/include/
