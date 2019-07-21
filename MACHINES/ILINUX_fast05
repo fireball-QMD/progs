@@ -35,7 +35,7 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
 		LFLAGS = -L${PATH_MKL} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm \
-			${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a 
+			${PATH_FFTW_LIB}libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a 
 		BLAS = 
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
@@ -44,7 +44,7 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
        		PATH_MPI_LIB = /opt/openmpi/lib/
         	PATH_MPI_INC = /opt/openmpi/include/
 		PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
-		${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_intel.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
+		${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
 		LFLAGS = 
  		FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
 	endif
@@ -55,7 +55,7 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
         		PATH_MPI_LIB = /opt/intel/impi/4.1.0.024/lib64/
 	        	PATH_MPI_INC = /opt/intel/impi/4.1.0.024/include64/
 			PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
-			${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_intel.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
+			${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
 			LFLAGS = 
  			FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
 		endif
