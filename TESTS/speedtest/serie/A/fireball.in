@@ -1,5 +1,5 @@
 &option
-nstepf = 10
+nstepf = 1
 basisfile = 'ini.bas'
 lvsfile = 'ini.lvs'
 kptpreference = 'ini.kpts'
