@@ -161,7 +161,7 @@ end if
           do iatom = 1, natoms
            in1 = imass(iatom)
            jatom = neigh_self(iatom)
-           in2 = imass(jatom)
+           in2 = imass(iatom)
 
            do imu = 1, num_orb(in1)
             do inu = 1, num_orb(in2)
