@@ -1,8 +1,0 @@
-git clone -b v19.01  https://github.com/fireball-QMD/progs test
-cd branch
-git checkout master
-git merge v19.01
-
-git tag -a 1.4 -m "version 1.4"
-git push origin --tags
-.
