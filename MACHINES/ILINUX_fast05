@@ -18,14 +18,16 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	F90 = ifort
 	PATH_MKL = ${DIR}/lib/intel64/
 	PATH_INCL = -I${DIR}/include/
-	PATH_FFTW_LIB = ${DIR}/interfaces/fftw3xf/
+	PATH_FFTW_LIB = ${DIR}/lib/intel64/
+        #/interfaces/fftw3xf/
 	PATH_FFTW_INCL = -I${DIR}/include/fftw/
 
 	ifneq (,$(findstring OPT, ${MODE}))
 		ifneq (,$(findstring YES, ${CCOMPILE}))
 			FFLAGS = -O3 -r8  -fno-alias -unroll 
 		else
-			FFLAGS = -r8 -O3 -fno-alias -unroll -fpp -no-ipo
+			#FFLAGS = -r8 -O1 -prof-gen -prof-dir /home/dani/FB/pruebas/ -fno-alias -unroll -fpp -no-ipo
+			FFLAGS = -r8 -O1 -fno-alias -unroll -fpp -no-ipo
 		endif
 	endif
 	ifneq (,$(findstring DEBUG, ${MODE}))
