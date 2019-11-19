@@ -4,8 +4,6 @@
 #SERIE       : Makefile: METHOD = DOUBLE    ; PARALLEL =      (diag. complex)
 #SERIE-GAMMA : Makefile: METHOD = GAMMA     ; PARALLEL =      (diag. real)
 ##PARALELO    : Makefile: METHOD = SCALAPACK ; PARALLEL = MPI  (only one kpts GAMMA)
-#export PATH="/opt/intel/impi/4.1.0.024/bin64/":$PATH
-#export LD_LIBRARY_PATH="/opt/intel/impi/4.1.0.024/lib64/":$LD_LIBRARY_PATH
 
 #server
 #METHOD = DOUBLE GAMMA  ; PARALLEL = OPNMP (only 1 processor)
@@ -19,16 +17,10 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	PATH_MKL = ${DIR}/lib/intel64/
 	PATH_INCL = -I${DIR}/include/
 	PATH_FFTW_LIB = ${DIR}/lib/intel64/
-        #/interfaces/fftw3xf/
 	PATH_FFTW_INCL = -I${DIR}/include/fftw/
 
 	ifneq (,$(findstring OPT, ${MODE}))
-		ifneq (,$(findstring YES, ${CCOMPILE}))
-			FFLAGS = -O3 -r8  -fno-alias -unroll 
-		else
-			#FFLAGS = -r8 -O1 -prof-gen -prof-dir /home/dani/FB/pruebas/ -fno-alias -unroll -fpp -no-ipo
-			FFLAGS = -r8 -O1 -fno-alias -unroll -fpp -no-ipo
-		endif
+		FFLAGS = -O3 -r8  -fno-alias -unroll 
 	endif
 	ifneq (,$(findstring DEBUG, ${MODE}))
 		FFLAGS = -g -r8 -check all -fpp  -check output_conversion -check format -no-ipo
@@ -36,9 +28,8 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 		LFLAGS = 
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
-		LFLAGS = -L${PATH_MKL} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm \
-			/opt/intel/composer_xe_2013_sp1.0.080/mkl/lib/intel64/libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a 
-#			${PATH_FFTW_LIB}libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a 
+                LFLAGS = -L${PATH_MKL} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm \
+                        ${PATH_FFTW_LIB}libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a
 		BLAS = 
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
