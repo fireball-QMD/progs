@@ -111,7 +111,7 @@ subroutine main_loop_FIRE ()
 !        write (*,*) ' ================= Move on to Forces ================= '
        end if
 !  FIRE step
-       call getforces ()   ! Assemble forces
+       call getforces (itime_step)   ! Assemble forces
        call move_ions_FIRE (itime_step)   ! Move ions now
 ! call move_ions (itime_step)   ! Move ions now
 !  output

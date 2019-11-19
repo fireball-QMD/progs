@@ -46,7 +46,7 @@
 !
 ! Program Declaration
 ! ===========================================================================
-        subroutine getforces_mcweda ()
+        subroutine getforces_mcweda (itime_step)
 
         use options
         use outputs
@@ -64,7 +64,7 @@
 
 ! Local Parameters and Data Declaration
 ! ===========================================================================
-
+            integer, intent(in) :: itime_step
 ! Local Variable Declaration and Description
 ! ===========================================================================
 
@@ -176,7 +176,7 @@
           !write (*,*) ' ***************************************************** '
           !write (*,*) ' Assemble all force contributions. '
           call assemble_F (natoms, itheory, itheory_xc, igauss, ivdw,       &
-     &     iharmonic, ibias, iwrtfpieces)
+     &     iharmonic, ibias, iwrtfpieces,itime_step)
 
 ! Reassign forces for tolerance testing.
           ftotold = ftotnew

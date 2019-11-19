@@ -138,7 +138,7 @@
               call scf_loop (itime_step)
               call postscf ()
               call getenergy (itime_step)
-              call getforces ()
+              call getforces (itime_step)
 
               call MPI_SEND((etot*23.061d0),1, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)
               call MPI_SEND(-ftot*23.061d0,3*natoms, MPI_DOUBLE_PRECISION,0,0,intercomm,ierr_mpi)

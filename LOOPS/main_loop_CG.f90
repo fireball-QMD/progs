@@ -139,7 +139,7 @@
 !END CHROM 
 
 ! Assemble forces 
-          call getforces ()
+          call getforces (itime_step)
          
 ! For CG optimization         
           write (*,*) '  Call CG subroutine with status = ',istatus

@@ -143,7 +143,7 @@
               call scf_loop (itime_step)
               call postscf ()
               call getenergy (itime_step)
-              call getforces ()
+              call getforces (itime_step)
 
 
               qmmm_struct%Qneutral_TOT = 0.0d0

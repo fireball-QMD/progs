@@ -105,7 +105,7 @@ DASSEMBLERS = Dassemble_2c.o Dassemble_3c.o Dassemble_ca_2c.o \
 	Dassemble_ca_2c_dip.o Dassemble_ca_3c_dip.o Dassemble_lr_dip.o \
 	getforces_mcweda.o getforces_eh.o getforces_hxc.o \
 	getforces_KS.o getforces_classic.o getforces_classic_RGL.o getforces_classic_vdw.o \
-	getforces.o getforces_classic_tersoff.o \
+	getforces.o getforces_socket.o getforces_classic_tersoff.o \
 	getforces_zw.o Dassemble_zw_2c_ct.o \
 	Dassemble_zw_3c_ct.o Dassemble_zw_2c_na.o Dassemble_zw_3c_na.o \
         Dassemble_zw_on_na.o
@@ -878,6 +878,8 @@ getforces_classic_vdw.o : DASSEMBLERS/getforces_classic_vdw.f90 $(MODULES_C)
 	$(F90) $(FFLAGS) -c DASSEMBLERS/getforces_classic_vdw.f90
 getforces.o : DASSEMBLERS/getforces.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c DASSEMBLERS/getforces.f90
+getforces_socket.o : DASSEMBLERS/getforces_socket.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c DASSEMBLERS/getforces_socket.f90
 #******************************************************************************
 # Dos objects
 #******************************************************************************

@@ -178,8 +178,8 @@
 ! contributions
 !--------------------------------------------------------------------------
 ! Loop over the atoms in the central cell.
-!$omp parallel do private (in1, in2, in3, interaction, isorp, jatom, matom)  &
-!$omp             private (mbeta, y, deps, eps, r1, r2, r21, sighat, sm, spm)&
+! $omp parallel do private (in1, in2, in3, interaction, isorp, jatom, matom)  &
+! $omp             private (mbeta, y, deps, eps, r1, r2, r21, sighat, sm, spm)&
         do iatom = iatomstart, iatomstart - 1 + natomsp
          matom = neigh_self(iatom)
          r1(:) = ratom(:,iatom)

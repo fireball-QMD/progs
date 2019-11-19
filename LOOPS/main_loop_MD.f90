@@ -142,7 +142,7 @@
 !END CHROM 
 ! Assemble forces
 
-          call getforces ()
+          call getforces (itime_step)
 
 
 ! Move ions now

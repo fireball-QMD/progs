@@ -101,7 +101,15 @@ contains
            use energy, only : etot
            use forces, only : ftot
            use constants_fireball
+           use configuration, only : vatom
            use f90sockets, only : writebuffer
+           integer :: bas1, bas2
+           integer :: numfrags
+           integer :: ifrag
+           integer :: fatom
+           integer :: fx, fy, fz
+           logical :: readsup
+
 
            do i = 1, nat
              msgbuffer(3*(i-1)+1:3*i) = ftot(:,i) / eq2

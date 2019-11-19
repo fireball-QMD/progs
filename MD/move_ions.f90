@@ -141,12 +141,12 @@ subroutine move_ions (itime_step)
         endif
 
 ! Call umbrella sampling routine if iumbrella = 1
-        if (iumbrella .eq. 1)call get_umbrella (nstepi, nstepf, itime_step, time, natoms,&
-                                                 & iwrtfpieces, ratom, etot, ftot)
+!        if (iumbrella .eq. 1)call get_umbrella (nstepi, nstepf, itime_step, time, natoms,&
+!                                                 & iwrtfpieces, ratom, etot, ftot)
 
 ! Call steered routine if iumbrella = 2
-        if (iumbrella .eq. 2)call get_steered (nstepi, nstepf, itime_step,time,natoms,&
-                                                & iwrtfpieces, ratom, etot,ftot)
+!        if (iumbrella .eq. 2)call get_steered (nstepi, nstepf, itime_step,time,natoms,&
+!                                                & iwrtfpieces, ratom, etot,ftot)
 
 
 ! Calculate crude energy barrier option.

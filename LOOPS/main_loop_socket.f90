@@ -69,7 +69,12 @@
 
 ! Local Parameters and Data Declaration
 ! ===========================================================================
-
+      integer :: bas1, bas2
+      integer :: numfrags
+      integer :: ifrag
+      integer :: fatom
+      integer :: fx, fy, fz
+      logical :: readsup
 ! Local Variable Declaration and Description
 ! ===========================================================================
        integer itime_step
@@ -86,6 +91,7 @@
        endif  ! end icDFT 
 
 ! ===========================================================================
+
 
        call open_socket(socket, inet, port, host)
 
@@ -123,11 +129,43 @@
 
             call getenergy (itime_step)
         
-            call getforces ()
+            call getforces_socket (itime_step)
+
+            !.........FRAGMENTS
+
+         !    inquire (file = 'FRAGMENTS', exist = readsup)
+         !    if(.not. readsup) then
+         !    else
+         !       open(unit = 33, file = 'FRAGMENTS', status = 'old')
+         !       read(33,*) bas1
+         !       read(33,*) bas2
+         !       read(33,*) numfrags
+         !       do ifrag = 1,numfrags
+         !          read(33,*) fatom, fx, fy, fz
+         !          write(*,*) 'Ankais : ',fatom,fx,fy,fz
+         !          if (fx .eq. 1) then
+         !             ftot(fx,fatom) = 0.0d0
+         !             vatom(fx,fatom) = 0.0d0
+         !          end if !end if fx .eq. 1
+         !          if (fy .eq. 1) then
+         !             ftot(fy,fatom) = 0.0d0
+         !             vatom(fy,fatom) = 0.0d0
+         !          end if !end if fy .eq. 1
+         !          if (fz .eq. 1) then
+         !             ftot(fz,fatom) = 0.0d0
+         !             vatom(fz,fatom) = 0.0d0
+         !          end if !end if fz .eq. 1
+         !       end do !end do ifrag
+         !      close(33)
+         !    end if !end if FRAGMENTS exists
+
+
+            !.........END FRAGMENTS
 
             hasdata = .true. ! Signal that we have data ready to be passed back to the wrapper
 
          elseif (trim(header) == "GETFORCE") then  ! The driver calculation is finished, it's time to send the results back to the wrapper
+
 
             call forcesToSocket
 

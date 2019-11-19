@@ -127,7 +127,7 @@
 !         write (*,*) ' ================= Move on to Forces ================= '
  
 ! Assemble forces 
-         call getforces ()
+         call getforces (itime_step)
          
 ! doing NEB
          call move_neb (itime_step, etot, ftot)

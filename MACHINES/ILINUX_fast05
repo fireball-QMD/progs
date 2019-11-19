@@ -35,7 +35,8 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
 		LFLAGS = -L${PATH_MKL} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm \
-			${PATH_FFTW_LIB}libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a 
+			/opt/intel/composer_xe_2013_sp1.0.080/mkl/lib/intel64/libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a 
+#			${PATH_FFTW_LIB}libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a 
 		BLAS = 
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
@@ -50,8 +51,8 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	endif
 	ifneq (,$(findstring MPI, ${PARALLEL}))
 		ifneq (,$(findstring SCALAPACK, ${METHOD}))
-        		F77 = mpiifort
-	        	F90 = mpiifort
+        		F77 = mpifort
+	        	F90 = mpifort
         		PATH_MPI_LIB = /opt/intel/impi/4.1.0.024/lib64/
 	        	PATH_MPI_INC = /opt/intel/impi/4.1.0.024/include64/
 			PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \

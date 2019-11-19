@@ -46,7 +46,7 @@
 !
 ! Program Declaration
 ! ===========================================================================
-        subroutine getforces ()
+        subroutine getforces (itime_step)
 
         use options
         implicit none
@@ -58,7 +58,7 @@
 
 ! Local Parameters and Data Declaration
 ! ===========================================================================
-
+          integer, intent(in) :: itime_step
 ! Local Variable Declaration and Description
 ! ===========================================================================
 
@@ -80,31 +80,31 @@
 
 ! doing extended Hubbard
         if (ihubbard .eq. 1) then
-         call getforces_eh ()
+         call getforces_eh (itime_step)
          return
         endif
 
 ! doing Kohn-Sham
         if (iKS .eq. 1) then
-         call getforces_KS ()
+         call getforces_KS (itime_step)
          return
         endif
 
 ! doing Horsfield data
         if (itheory_xc .eq. 0) then
-          call getforces_hxc ()
+          call getforces_hxc (itime_step)
           return
         endif
 
 ! doing McWeda data
         if (itheory_xc .ne. 0 .and. itheory_xc .lt. 4) then
-          call getforces_mcweda ()
+          call getforces_mcweda (itime_step)
           return
         endif
 
 ! doing xczw data
         if (itheory_xc .eq. 4) then
-          call getforces_zw ()
+          call getforces_zw (itime_step)
           return
         endif
 

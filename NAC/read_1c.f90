@@ -701,7 +701,7 @@
       end do !end do iline = 1,Nlines_vdip1c
 
       close(36)
-      write(*,*) 'Alles gut bisher' !Ankais
+      !write(*,*) 'Alles gut bisher' !Ankais
       end do !end do in1 = 1,nspecies
 
       end if ! if (V_intra_dip .eq. 1)

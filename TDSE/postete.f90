@@ -89,7 +89,7 @@
         call getenergy (itime_step)
 
 ! calc forces
-        call getforces ()
+        call getforces (itime_step)
 
 ! Deallocate Arrays
 ! ===========================================================================

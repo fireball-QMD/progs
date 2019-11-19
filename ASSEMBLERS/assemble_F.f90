@@ -54,11 +54,14 @@
 ! Program Declaration
 ! ===========================================================================
         subroutine assemble_F (natoms, itheory, itheory_xc, igauss, ivdw,    &
-       &                       iharmonic, ibias, iwrt_fpieces)
+       &                       iharmonic, ibias, iwrt_fpieces, itime_step)
         use dimensions
         use forces
         use neighbor_map
-        use options, only : idftd3, verbosity
+        use options, only : idftd3, verbosity, iumbrella
+        use configuration, only : ratom
+        use MD
+        use energy, only : etot
         implicit none
 
 ! Argument Declaration and Description
@@ -72,6 +75,7 @@
         integer, intent(in) :: ibias
         integer, intent(in) :: iwrt_fpieces
         integer, intent(in) :: natoms
+        integer, intent(in) :: itime_step
 
 ! Local Parameters and Data Declaration
 ! ===========================================================================
@@ -326,9 +330,9 @@
 ! ****************************************************************************
         if (iwrt_fpieces .eq. 1) then
          write (*,*) '  '
-         write (*,*) ' ******************************************************* '
-         write (*,*) ' Write out the contributions to the band-structure force.'
-         write (*,*) ' ******************************************************* '
+         write (*,*) ' *********************************************** '
+         write (*,*) 'Contributions to the band-structure force.'
+         write (*,*) ' *********************************************** '
          write (*,*) '  '
          write (*,*) ' The kinetic force: '
          do iatom = 1, natoms
@@ -539,6 +543,15 @@
          if (ibias .eq. 1) ftot(:,iatom) = ftot(:,iatom)                     &
      &                                        + fbias(:,iatom)
         end do
+
+        ! Call umbrella sampling routine if iumbrella = 1
+        if (iumbrella .eq. 1)call get_umbrella (nstepi, nstepf,itime_step, time, natoms,&
+                                                 & iwrt_fpieces, ratom,etot, ftot)
+
+        ! Call steered routine if iumbrella = 2
+        if (iumbrella .eq. 2)call get_steered (nstepi, nstepf,itime_step,time,natoms,&
+                                                & iwrt_fpieces, ratom,etot,ftot)
+
 
         if (verbosity .ge. 1 )  then
           write (*,*) '  '

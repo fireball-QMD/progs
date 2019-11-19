@@ -122,7 +122,7 @@
 !         write (*,*) ' ================= Move on to Forces ================= '
  
 ! Assemble forces 
-         call getforces ()
+         call getforces (itime_step)
 
          write (*,*) '  Perform dynamical matrix calculation '
          write (*,*) '  of vector ', itime_step

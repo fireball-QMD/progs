@@ -485,9 +485,7 @@
       !.........................Vip 1c...........................................
       !+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
       if (V_intra_dip .eq. 1) then
-      write(*,*) 'Ankais 1'
       allocate(Nlines_vdip1c(nspecies))
-      write(*,*) 'Ankais 2'
       Nlines_vdip1c_max=0
       root = trim(fdataLocation)//'/vdip_onecenter'
       do in1 = 1,nspecies
@@ -501,7 +499,6 @@
       close(36)
       end do !end do in1
         
-      write(*,*) 'Ankais 3'
        allocate(muR(Nlines_vdip1c_max,nspecies))
        allocate(nuR(Nlines_vdip1c_max,nspecies))
        allocate(alphaR(Nlines_vdip1c_max,nspecies))
@@ -521,10 +518,8 @@
        open (unit = 36, file = filename, status = 'unknown')
        read(36,*) trash
          
-      write(*,*) 'Ankais 4'
        do iline = 1,Nlines_vdip1c(in1)
           
-      write(*,*) 'Ankais 5'
           
         read(36,*) muR(iline,in1), nuR(iline,in1), alphaR(iline,in1), betaR(iline,in1), IR(iline,in1)
 

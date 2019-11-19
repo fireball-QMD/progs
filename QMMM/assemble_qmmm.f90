@@ -162,7 +162,7 @@
 
 
 !$imp parallel do private (r1, in1, ineigh, jatom, mbeta, r2, in2, distance12) &
-!$omp&  private (inu, imu, sterm, dterm)
+! $omp&  private (inu, imu, sterm, dterm)
         do iatom = iatomstart, iatomstart - 1 + natomsp
  
 ! Position of iatom.

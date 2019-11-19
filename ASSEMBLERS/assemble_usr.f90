@@ -525,7 +525,7 @@
         end if
         uiiuee = u0tot - ue0tot
         if (V_intra_dip .eq. 1) then
-            write(*,*) 'Ankais dc_v_intra_dip = ', dc_v_intra_dip_1c
+            !write(*,*) 'Ankais dc_v_intra_dip = ', dc_v_intra_dip_1c
              uiiuee = uiiuee + dc_v_intra_dip_1c
              !Double-counting V_intra_dip_1c here??? Double counting
         end if !end if V_intra_dip .eq. 1
