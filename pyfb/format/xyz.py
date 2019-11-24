@@ -29,8 +29,8 @@ def load_xyz(archivo,name=""):
       r.append(line[1])
       r.append(line[2])
       r.append(line[3])
-      bas.structure[mod-1].setR(r)
-      bas.structure[mod-1].setZ(line[0])
+      bas.atom[mod-1].setR(r)
+      bas.atom[mod-1].setZ(line[0])
       if mod == natoms:
         dinamic.append(bas)
 

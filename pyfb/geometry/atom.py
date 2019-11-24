@@ -27,19 +27,19 @@ class atom:
         return str(0.5*(self.getM()*self.V2()/fovermp))
 
     def distancia(self,atomo2):
-        d=((self.r[0]-atomo2.r[0])**2+(self.r[1]-atomo2.r[1])**2+(self.r[2]-atomo2.r[2])**2)**0.5
+        d=((float(self.r[0])-float(atomo2.r[0]))**2+(float(self.r[1])-float(atomo2.r[1]))**2+(float(self.r[2])-float(atomo2.r[2]))**2)**0.5
         return d
 
     def ang(self,atomo1,atomo2):
-        x0 = self.r[0]
-        y0 = self.r[1]
-        z0 = self.r[2]
-        x1 = atomo1.r[0]
-        y1 = atomo1.r[1]
-        z1 = atomo1.r[2]
-        x2 = atomo2.r[0]
-        y2 = atomo2.r[1]
-        z2 = atomo2.r[2]
+        x0 = float(self.r[0])
+        y0 = float(self.r[1])
+        z0 = float(self.r[2])
+        x1 = float(atomo1.r[0])
+        y1 = float(atomo1.r[1])
+        z1 = float(atomo1.r[2])
+        x2 = float(atomo2.r[0])
+        y2 = float(atomo2.r[1])
+        z2 = float(atomo2.r[2])
         ax=x0-x1;
         ay=y0-y1;
         az=z0-z1;
