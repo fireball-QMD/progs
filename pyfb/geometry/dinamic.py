@@ -11,3 +11,4 @@ class dinamic:
   def print(self):
     for i in self.dinamic:
       i.print()
+

@@ -3,11 +3,13 @@ import pyfb
 
 dinamic=dinamic()
 
-def load_xyz(archivo):
+def load_xyz(archivo,name=""):
   natoms = 0
   nstep = 0
   nlinea = 0
   bas=pyfb.geometry.structure.structure()
+  if name != "":
+    bas.name=name
   for linea in open(archivo):
     line = linea.split()
     nlinea+=1
@@ -35,3 +37,5 @@ def load_xyz(archivo):
 def print_xyz():
   dinamic.print()
 
+def print_2line():
+  dinamic.print_2line()
