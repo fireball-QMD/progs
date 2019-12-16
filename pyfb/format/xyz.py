@@ -29,6 +29,8 @@ def load_xyz(archivo,name=""):
       r.append(line[1])
       r.append(line[2])
       r.append(line[3])
+      if dinamic.read_charges:
+         bas.atom[mod-1].Q=line[4]
       bas.atom[mod-1].setR(r)
       bas.atom[mod-1].setZ(line[0])
       if mod == natoms:
@@ -36,6 +38,9 @@ def load_xyz(archivo,name=""):
 
 def print_xyz():
   dinamic.print()
+
+def print_xyz_charges():
+  dinamic.print_charges()
 
 def print_2line():
   dinamic.print_2line()
