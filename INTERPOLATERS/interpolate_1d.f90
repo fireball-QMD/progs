@@ -158,7 +158,6 @@
           if (abs((xin - xmax)/xmax) .gt. tol) then
            write (*,*) ' xin, xmax = ', xin, xmax
            write (*,*) '  error in intrp1d : xin > xmax'
-           write(*,*) 'Ankais in1,in2= ', in1, in2
            write(*,*) 'Interaction = ', interaction
            stop
           end if

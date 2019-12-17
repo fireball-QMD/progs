@@ -58,7 +58,7 @@
         subroutine reallocate_h (natoms, neigh_max, neighPP_max, itheory, &
      &                           itheory_xc, igauss)
         use interactions
-        use options, only : idipole
+        use options, only : idipole, iks
         implicit none
  
 ! Argument Declaration and Description
@@ -136,7 +136,7 @@
          allocate (ewaldqmmm (numorb_max, numorb_max, neigh_max,natoms))
         end if
 
-        if (itheory .eq. 1 .or. idipole .eq. 1) then
+        if (itheory .eq. 1 .or. idipole .eq. 1 .or. iks) then
          deallocate (dip)
 !JIMM
          deallocate (dipcm)

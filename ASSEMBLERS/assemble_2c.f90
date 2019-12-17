@@ -60,7 +60,7 @@
         use forces
         use interactions
         use neighbor_map
-        use options, only: idipole, itheory_xc
+        use options, only: idipole, itheory_xc, iks
         implicit none
  
 ! Argument Declaration and Description
@@ -410,9 +410,22 @@
 
           end if ! idipole = 1
 
+       if (iks .eq. 1 .and. idipole .eq. 0) then
 
+          isorp = 0
+          interaction = 9
+          in3 = in2
+          call doscentros (interaction, isorp, iforce, in1, in2, in3, y, &
+     &                     eps, deps, dipx, dippx)
 
+          do inu = 1, num_orb(in2)
+           do imu = 1, num_orb(in1)
+            dip(imu,inu,ineigh,iatom) = dipx(imu,inu)
+            !if (iforce .eq. 1) dipp(:,imu,inu,ineigh,iatom) = dippx(:,imu,inu)
+           end do
+          end do
 
+        end if !end if iks .eq. 1 .and. idipole .eq. 0
 
 ! ****************************************************************************
 ! End loop over iatom and its neighbors - jatom.

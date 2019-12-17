@@ -113,6 +113,7 @@
           if (itheory .eq. 0) exit
 
           if (scf_achieved) then
+            call compute_all_charges  (ifixcharge, icluster)
             write (*,*) '  '
             write (*,*) ' ------- THE TOTAL BAND STRUCTURE ENERGY ------- '
             write (*,*) '  '

@@ -420,6 +420,7 @@
    dip_y = dip_y * dvol
    dip_z = dip_z * dvol
    dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
+   write(*,*) 'Ankais Dip'
    write (*,301) dip_x/Debye
    write (*,302) dip_y/Debye
    write (*,303) dip_z/Debye

@@ -103,7 +103,7 @@
         if (iwrtewf .eq. 1) igrid = 1
 ! check if Mulliken charges are selected, if not select them
         if (iks .eq. 1 .and. iqout .ne. 2) then
-         write (*,*) ' ----- WARNINNG ----'
+         write (*,*) ' ----- WARNING ----'
          write (*,*) ' KS theory requires Mulliken charges'
          write (*,*) ' Mulliken charges switched on'
          iqout = 2

@@ -107,6 +107,14 @@
         write (*,100)
         call read_2c (interaction, nspecies, itheory, ioff2c(interaction), nzx)
 
+! test calling more interactions
+        interaction = 9
+        write (*,*) '  '
+        write (*,*) ' Calling read_2c for 2-Center Interaction # ',interaction
+        write (*,100)
+        call read_2c (interaction, nspecies, itheory, ioff2c(interaction), nzx)
+
+
 ! 3-center bcna (optional)
         if (igauss .eq. 0) then
          interaction = 1   ! bcna

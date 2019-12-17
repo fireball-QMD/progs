@@ -58,7 +58,7 @@
      &                         itheory_xc, igauss, iwrtdos, iwrthop, iwrtatom)
 
         use interactions
-        use options, only : idipole, V_intra_dip
+        use options, only : idipole, V_intra_dip, iks
         implicit none
  
 ! Argument Declaration and Description
@@ -131,7 +131,7 @@
         end if !end if itheory_xc .eq. 4
 
 ! Interactions needed only for DOGS
-        if (itheory .eq. 1 .or. idipole .eq. 1) then
+        if (itheory .eq. 1 .or. idipole .eq. 1 .or. iks .eq. 1) then
          allocate (dip (numorb_max, numorb_max, neigh_max, natoms))
 ! JIMM
          allocate (dipcm (3, numorb_max, numorb_max))

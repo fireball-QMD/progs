@@ -59,8 +59,8 @@ MACHINE = ILINUX_fast05
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-#METHOD = DOUBLE 
-METHOD = GAMMA 
+METHOD = DOUBLE 
+#METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
@@ -90,7 +90,7 @@ UTIL = anderson.o fixfrags.o fixfrags2.o hampiece.o push_atoms.o \
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
-	writeCoefsLCAO.o
+	writeCoefsLCAO.o compute_all_charges.o
 
 	#bcast_k-MPI.o # this last one has to be added in order to at least call the dummy routine
 
@@ -147,7 +147,7 @@ ifneq (,$(findstring SCALAPACK, ${METHOD}))
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
-	writeCoefsLCAO.o
+	writeCoefsLCAO.o compute_all_charges.o
 endif
 
 # OPENMP 
@@ -219,7 +219,7 @@ ifneq (,$(findstring LAPACK95, ${METHOD}))
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
-	writeCoefsLCAO.o
+	writeCoefsLCAO.o compute_all_charges.o
 endif
 
 # DOUBLE
@@ -234,7 +234,7 @@ ifneq (,$(findstring DOUBLE, ${METHOD}))
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
-	writeCoefsLCAO.o
+	writeCoefsLCAO.o compute_all_charges.o
 endif
 
 # REAL ARITHMETICS (only gamma k-point)
@@ -249,7 +249,7 @@ ifneq (,$(findstring GAMMA, ${METHOD}))
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
-	writeCoefsLCAO.o
+	writeCoefsLCAO.o compute_all_charges.o
 endif
 
 # MPI-k
@@ -264,7 +264,7 @@ ifneq (,$(findstring MPI-k, ${PARALLEL}))
 	ew2mesh_fourier.o ew2mesh_kscan.o ew2mesh_ARPES.o \
 	project_orb.o project_orb_complex.o excitations.o kvaziband.o \
 	band_project.o ARPES_LCAO.o writeout_eigenvec.o writeout_eigenvec_G.o \
-	writeCoefsLCAO.o
+	writeCoefsLCAO.o compute_all_charges.o
 	INITMPI = mpi_declarations.o init_MPI.o
 endif
 
@@ -1623,7 +1623,8 @@ writeout_eigenvec.o : UTIL/writeout_eigenvec.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UTIL/writeout_eigenvec.f90
 writeout_eigenvec_G.o : UTIL/writeout_eigenvec_G.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c UTIL/writeout_eigenvec_G.f90
-
+compute_all_charges.o : UTIL/compute_all_charges.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c UTIL/compute_all_charges.f90
 # *****************************************************************************
 # visualization objects
 # *****************************************************************************
