@@ -4,9 +4,14 @@ class atom:
         self.v = []
         self.Z = Z
         self.r = r
+        self.Q = "null"
+        self.q = []
 
     def print(self):
         print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f}'.format(self.Z,float(self.r[0]),float(self.r[1]),float(self.r[2])))
+
+    def print_charges(self):
+        print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f} {4:12.6f}'.format(self.Z,float(self.r[0]),float(self.r[1]),float(self.r[2]),float(self.Q)))
 
     def setV(self , v):
         self.v = v
@@ -28,6 +33,10 @@ class atom:
 
     def distancia(self,atomo2):
         d=((float(self.r[0])-float(atomo2.r[0]))**2+(float(self.r[1])-float(atomo2.r[1]))**2+(float(self.r[2])-float(atomo2.r[2]))**2)**0.5
+        return d
+
+    def diffQ(self,atomo2):
+        d=(float(self.Q)-float(atomo2.Q))
         return d
 
     def ang(self,atomo1,atomo2):

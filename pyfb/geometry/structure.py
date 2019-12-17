@@ -19,3 +19,12 @@ class structure:
     for i in self.atom:
       i.print()  
 
+  def print_charges(self):
+    linea=str(len(self.atom))+"\n"
+    if self.line2 != "":
+      linea=linea+self.line2
+      linea = linea[:-1]
+    print(linea)
+    for i in self.atom:
+      i.print_charges()  
+
