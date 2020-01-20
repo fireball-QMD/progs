@@ -9,6 +9,7 @@ class dinamic:
     self.read_charges=read_charges
     #lee las cargas de cada atomo despues de las posiciones:
     # x y z Qtot qs qp qd .....
+    self.out=[]
 
   def append(self,structure):
     self.structure.append(structure)
@@ -36,35 +37,36 @@ class dinamic:
        a=0.0
        aux.append(a)
     for i in self.structure:
-      salida=""
+      salida=[]
       for c in range(len(col)): 
        if col[c][0] == 'x':
-         salida=salida+" "+i.atom[col[c][1]-1].r[0]
+         salida.append(i.atom[col[c][1]-1].r[0])
        if col[c][0] == 'y':
-         salida=salida+" "+i.atom[col[c][1]-1].r[1]
+         salida.append(i.atom[col[c][1]-1].r[1])
        if col[c][0] == 'z':
-         salida=salida+" "+i.atom[col[c][1]-1].r[2]
+         salida.append(i.atom[col[c][1]-1].r[2])
        if col[c][0] == 'd':
-         salida=salida+" "+str(i.atom[col[c][1]-1].distancia(i.atom[col[c][2]-1]))
+         salida.append(str(i.atom[col[c][1]-1].distancia(i.atom[col[c][2]-1])))
        if col[c][0] == 'ang':
-         salida=salida+" "+str(i.atom[col[c][1]-1].ang(i.atom[col[c][2]-1],i.atom[col[c][3]-1]))
+         salida.append(str(i.atom[col[c][1]-1].ang(i.atom[col[c][2]-1],i.atom[col[c][3]-1])))
        if col[c][0] == 'X':
          aux[c]=float(i.atom[col[c][1]-1].r[0])/(count+1)+float(aux[c])*count/(count+1)
-         salida=salida+" "+str(aux[c])
+         salida.append(str(aux[c]))
        if col[c][0] == 'Y':
          aux[c]=float(i.atom[col[c][1]-1].r[1])/(count+1)+float(aux[c])*count/(count+1)
-         salida=salida+" "+str(aux[c])
+         salida.append(str(aux[c]))
        if col[c][0] == 'Z':
          aux[c]=float(i.atom[col[c][1]-1].r[2])/(count+1)+float(aux[c])*count/(count+1)
-         salida=salida+" "+str(aux[c])
+         salida.append(str(aux[c]))
        if col[c][0] == 'D':
          aux[c]=float(i.atom[col[c][1]-1].distancia(i.atom[col[c][2]-1]))/(count+1)+float(aux[c])*count/(count+1)
-         salida=salida+" "+str(aux[c])
+         salida.append(str(aux[c]))
        if col[c][0] == 'ANG':
          aux[c]=float(i.atom[col[c][1]-1].ang(i.atom[col[c][2]-1],i.atom[col[c][3]-1]))/(count+1)+float(aux[c])*count/(count+1)
-         salida=salida+" "+str(aux[c])
+         salida.append(str(aux[c]))
       count=count+1
-      print(salida)
+#      print(salida)
+      self.out.append(salida)
 
   def load_xyz(self,archivo,name=""):
     natoms = 0
