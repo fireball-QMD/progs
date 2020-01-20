@@ -4,9 +4,10 @@ import sys
 import os
 sys.path.append(os.environ["FIREBALLHOME"])
 
-from pyfb.format.xyz import *
+from pyfb.geometry.dinamic import *
 
-load_xyz("answer.xyz")
-print_xyz()
+din=dinamic()
+din.load_xyz("answer.xyz")
+din.print()
 
 

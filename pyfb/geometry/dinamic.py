@@ -1,4 +1,5 @@
 from  pyfb.geometry.structure import structure
+from  pyfb.geometry.atom import atom
 
 class dinamic:
   read_charges=False
@@ -29,16 +30,73 @@ class dinamic:
       print(i.name)
 
   def get(self,col):
+    count=0.0
+    aux=[]
+    for i in range(len(col)):
+       a=0.0
+       aux.append(a)
     for i in self.structure:
       salida=""
-      for c in col: 
-       if c[0] == 'x':
-         salida=salida+" "+i.atom[c[1]-1].r[0]
-       if c[0] == 'y':
-         salida=salida+" "+i.atom[c[1]-1].r[1]
-       if c[0] == 'z':
-         salida=salida+" "+i.atom[c[1]-1].r[2]
-       if c[0] == 'd':
-         salida=salida+" "+str(i.atom[c[1]-1].distancia(i.atom[c[2]-1]))
+      for c in range(len(col)): 
+       if col[c][0] == 'x':
+         salida=salida+" "+i.atom[col[c][1]-1].r[0]
+       if col[c][0] == 'y':
+         salida=salida+" "+i.atom[col[c][1]-1].r[1]
+       if col[c][0] == 'z':
+         salida=salida+" "+i.atom[col[c][1]-1].r[2]
+       if col[c][0] == 'd':
+         salida=salida+" "+str(i.atom[col[c][1]-1].distancia(i.atom[col[c][2]-1]))
+       if col[c][0] == 'ang':
+         salida=salida+" "+str(i.atom[col[c][1]-1].ang(i.atom[col[c][2]-1],i.atom[col[c][3]-1]))
+       if col[c][0] == 'X':
+         aux[c]=float(i.atom[col[c][1]-1].r[0])/(count+1)+float(aux[c])*count/(count+1)
+         salida=salida+" "+str(aux[c])
+       if col[c][0] == 'Y':
+         aux[c]=float(i.atom[col[c][1]-1].r[1])/(count+1)+float(aux[c])*count/(count+1)
+         salida=salida+" "+str(aux[c])
+       if col[c][0] == 'Z':
+         aux[c]=float(i.atom[col[c][1]-1].r[2])/(count+1)+float(aux[c])*count/(count+1)
+         salida=salida+" "+str(aux[c])
+       if col[c][0] == 'D':
+         aux[c]=float(i.atom[col[c][1]-1].distancia(i.atom[col[c][2]-1]))/(count+1)+float(aux[c])*count/(count+1)
+         salida=salida+" "+str(aux[c])
+       if col[c][0] == 'ANG':
+         aux[c]=float(i.atom[col[c][1]-1].ang(i.atom[col[c][2]-1],i.atom[col[c][3]-1]))/(count+1)+float(aux[c])*count/(count+1)
+         salida=salida+" "+str(aux[c])
+      count=count+1
       print(salida)
+
+  def load_xyz(self,archivo,name=""):
+    natoms = 0
+    nstep = 0
+    nlinea = 0
+    bas=structure()
+    if name != "":
+      bas.name=name
+    for linea in open(archivo):
+      line = linea.split()
+      nlinea+=1
+      if nlinea == 1 :
+        natoms = int(line[0])
+        for i in range(0,natoms):
+          bas.append(atom())
+  #    print(nlinea, line)
+      mod=(nlinea-2) % (natoms + 2)
+      if mod == natoms:
+        nstep+=1
+  #      print ("nstep++")
+      if mod == 0 :
+        bas.line2=linea
+      if mod > 0 and mod < (natoms+1):
+        r=[]
+        r.append(line[1])
+        r.append(line[2])
+        r.append(line[3])
+        if self.read_charges:
+          bas.atom[mod-1].Q=line[4]
+        bas.atom[mod-1].setR(r)
+        bas.atom[mod-1].setZ(line[0])
+        if mod == natoms:
+          self.append(bas)
+    
 
