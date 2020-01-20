@@ -44,3 +44,6 @@ def print_xyz_charges():
 
 def print_2line():
   dinamic.print_2line()
+
+def print_name():
+  dinamic.print_name()
