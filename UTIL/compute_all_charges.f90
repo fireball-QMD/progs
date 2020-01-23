@@ -141,7 +141,7 @@
 ! ****************************************************************************
 ! Compute Mulliken charges.
         !if (iqout .eq. 2) then
-         open(unit = 11, file = 'Mulliken_Charges', status = 'new')
+         open(unit = 11, file = 'Mulliken_Charges', status = 'unknown')
          Qout = 0.0d0
          QMulliken = 0.0d0
          QMulliken_TOT = 0.0d0
@@ -197,7 +197,7 @@
 ! ****************************************************************************
 ! Compute Mulliken-dipole charges.
         !if (iqout .eq. 4) then
-         open(unit = 22, file = 'MullDip_Charges', status = 'new')
+         open(unit = 22, file = 'MullDip_Charges', status = 'unknown')
          Qout = 0.0d0
          QMulliken = 0.0d0
          QMulliken_TOT = 0.0d0
