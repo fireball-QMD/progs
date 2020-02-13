@@ -492,7 +492,8 @@
          dipIntra_tot=dip_tot
      
 
-           if ( iwrtdipole .eq.2 .and. ab .eq. 0 ) then
+!           if ( iwrtdipole .eq.2 .and. ab .eq. 0 ) then
+           if ( iwrtdipole .eq.2) then
 
 
                open( unit = 667, file = 'Charges_and_Dipoles', status = 'unknown',  &
