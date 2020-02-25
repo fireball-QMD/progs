@@ -87,6 +87,10 @@
 !  4 .. vna   atom
 !  5 .. vnl
 ! read 2-center integralsa (2,3,4 optional)
+
+        iforce=0
+
+      
         interaction_start = 1
         do interaction = interaction_start, 5
          write (*,*) '  '
@@ -94,25 +98,69 @@
          write (*,100)
          call read_2c (interaction, nspecies, itheory, ioff2c(interaction), nzx)
         end do
+
+        if (itheory_xc .ne. 1) then
+         !  xc_ontop
+         interaction = 6
+         write (*,*) '  '
+         write (*,*) ' Calling read_2c for 2-Center Interaction # ', interaction
+         write (*,100)
+         call read_2c (interaction, nspecies, itheory,&
+     &                 ioff2c(interaction), nzx)
+         ! xc_atom-atom
+         interaction = 7
+         write (*,*) '  '
+         write (*,*) ' Calling read_2c for 2-Center Interaction # ',interaction
+         write (*,100)
+         call read_2c (interaction, nspecies, itheory,&
+     &                 ioff2c(interaction), nzx)
+         ! xc_correction
+         interaction = 8
+         write (*,*) '  '
+         write (*,*) ' Calling read_2c for 2-Center Interaction # ',interaction
+         write (*,100)
+         call read_2c (interaction, nspecies, itheory,&
+     &                 ioff2c(interaction), nzx)
+        end if
+
+        interaction = 9
+        write (*,*) '  '
+        write (*,*) ' Calling read_2c for 2-Center Interaction #',interaction
+        write (*,100)
+        call read_2c (interaction, nspecies, itheory,ioff2c(interaction), nzx)
+
+
+          interaction = 10
+          write (*,*) '  '
+          write (*,*) ' Calling read_2c for 2-Center Interaction # ',interaction
+          write (*,100)
+          call read_2c (interaction, nspecies, itheory, &
+     &                  ioff2c(interaction), nzx)
+
+          interaction = 11
+          write (*,*) '  '
+          write (*,*) ' Calling read_2c for 2-Center Interaction # ',interaction
+          write (*,100)
+          call read_2c (interaction, nspecies, itheory,&
+     &                  ioff2c(interaction), nzx)
+
+        interaction = 12
+        write (*,*) '  '
+        write (*,*) ' Calling read_2c for 2-Center Interaction # ',interaction
+        write (*,100)
+        call read_2c (interaction, nspecies, itheory,            &
+     &                ioff2c(interaction), nzx)
+
+
+
 ! kinetic
         interaction = 13
         write (*,*) '  '
         write (*,*) ' Calling read_2c for 2-Center Interaction # ', interaction
         write (*,100)
         call read_2c (interaction, nspecies, itheory, ioff2c(interaction), nzx)
-! coulomb
-        interaction = 12
-        write (*,*) '  '
-        write (*,*) ' Calling read_2c for 2-Center Interaction # ', interaction
-        write (*,100)
-        call read_2c (interaction, nspecies, itheory, ioff2c(interaction), nzx)
 
-! test calling more interactions
-        interaction = 9
-        write (*,*) '  '
-        write (*,*) ' Calling read_2c for 2-Center Interaction # ',interaction
-        write (*,100)
-        call read_2c (interaction, nspecies, itheory, ioff2c(interaction), nzx)
+
 
 
 ! 3-center bcna (optional)
