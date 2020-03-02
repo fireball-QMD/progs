@@ -1253,18 +1253,19 @@ subroutine write_dipole (estring)
          Q0_TOT(iatom) = 0
          in1 = imass(iatom)
          do issh = 1, nssh(in1)
-         Q0_TOT(iatom) = Q0_TOT(iatom) + Qneutral(issh,in1)
+            Q0_TOT(iatom) = Q0_TOT(iatom) + Qneutral(issh,in1)
          end do
         end do
 
       dip_x=0.0d0
       dip_y=0.0d0
       dip_z=0.0d0
+
       do iatom = 1, natoms
          Qtot=-Q0_TOT(iatom)
          in1 = imass(iatom)
-         do issh = 1,nssh(in1)
-             Qtot = Qtot+Qout(issh,iatom)
+         do imu = 1,num_orb(in1)
+             Qtot = Qtot+Qout(imu,iatom)
          end do
             
             !write(*,*) 'ratom is ',ratom(1,iatom),ratom(2,iatom),ratom(3,iatom)
@@ -1285,7 +1286,7 @@ subroutine write_dipole (estring)
      open( unit = 1729, file = 'dipole_Qout'//trim(estring), status = 'unknown',  &
                                    &     position = 'append')
        
-       write(1729,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
+       write(1729,446) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
 
      close(1729)
 
@@ -1296,9 +1297,6 @@ subroutine write_dipole (estring)
       do iatom = 1, natoms
          in1 = imass(iatom)
          r1(:) = ratom(:,iatom)
-         do issh = 1,nssh(in1)
-             Qtot = Qtot+Qout(issh,iatom)
-         end do !end do issh = 1,nssh(in1)
          dip_x = dip_x-Q0_TOT(iatom)*r1(1)
          dip_y = dip_y-Q0_TOT(iatom)*r1(2)         
          dip_z = dip_z-Q0_TOT(iatom)*r1(3)
@@ -1354,7 +1352,7 @@ subroutine write_dipole (estring)
      open( unit = 666, file = 'dipole_Tot'//trim(estring), status = 'unknown',  &
                                    &     position = 'append')
 
-     write(666,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
+     write(666,446) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
      close(666)
     !W R I T E     T H E     B I G     F I L E
 
@@ -1368,9 +1366,6 @@ subroutine write_dipole (estring)
       do iatom = 1, natoms
          in1 = imass(iatom)
          r1(:) = ratom(:,iatom)
-         do issh = 1,nssh(in1)
-             Qtot = Qtot+Qout(issh,iatom)
-         end do !end do issh = 1,nssh(in1)
          dip_x = dip_x-Q0_TOT(iatom)*r1(1)
          dip_y = dip_y-Q0_TOT(iatom)*r1(2)         
          dip_z = dip_z-Q0_TOT(iatom)*r1(3)
@@ -1425,7 +1420,7 @@ subroutine write_dipole (estring)
      open( unit = 666, file = 'dipole_Tot_proy'//trim(estring), status = 'unknown',  &
                                    &     position = 'append')
 
-     write(666,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
+     write(666,446) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
      close(666)
 
  
@@ -1444,9 +1439,6 @@ subroutine write_dipole (estring)
       do iatom = 1, natoms
          in1 = imass(iatom)
          r1(:) = ratom(:,iatom)
-         do issh = 1,nssh(in1)
-             Qtot = Qtot+Qout(issh,iatom)
-         end do !end do issh = 1,nssh(in1)
          dip_x = dip_x-Q0_TOT(iatom)*r1(1)
          dip_y = dip_y-Q0_TOT(iatom)*r1(2)
          dip_z = dip_z-Q0_TOT(iatom)*r1(3)
@@ -1510,16 +1502,6 @@ subroutine write_dipole (estring)
          dip_z = 0.0d0
          in1 = imass(iatom)
          r1(:) = ratom(:,iatom)
-         Qtot=0.0d0
-         Qtot1=0.0d0
-         do issh = 1,nssh(in1)
-             Qtot1 = Qtot1+Qout(issh,iatom)
-         end do !end do issh = 1,nssh(in1)
-         Qtot=0.0d0
-         Qtot2=0.0d0
-         do issh = 1,nssh(in1)
-             Qtot2 = Qtot2+Qout(issh,iatom)
-         end do !end do issh = 1,nssh(in1)
          jatom=iatom
          ineigh=neigh_self(iatom)
          in2=in1
@@ -1548,6 +1530,7 @@ subroutine write_dipole (estring)
      
       deallocate(Q0_TOT)
 444     format (a7,4f10.4)
+446     format (4f10.4)
 445     format (a2,4f10.4)
         return
       end subroutine write_dipole
@@ -1556,4 +1539,3 @@ subroutine write_dipole (estring)
 
 
 
- 
