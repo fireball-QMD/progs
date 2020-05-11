@@ -20,7 +20,7 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	PATH_FFTW_INCL = -I${DIR}/include/fftw/
 
 	ifneq (,$(findstring OPT, ${MODE}))
-		FFLAGS = -O3 -r8  -fno-alias -unroll -static
+		FFLAGS = -O3 -r8  -fno-alias -unroll -static-intel
 	endif
 	ifneq (,$(findstring DEBUG, ${MODE}))
 		FFLAGS = -g -r8 -check all -fpp  -check output_conversion -check format -no-ipo
