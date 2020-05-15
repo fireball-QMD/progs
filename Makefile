@@ -46,7 +46,7 @@ MACHINE = ILINUX_fast05
 # or OPENMP 
 #PARALLEL = MPI
 #PARALLEL = OPENMP
-#PARALLEL = 
+PARALLEL = 
 # Note: the linear-scaling option is in the testing stages only right now, so
 # setting to ORDERN here may mess things up.
 # Pick the method that you are using: <blank for nothing special>, SCALAPACK
