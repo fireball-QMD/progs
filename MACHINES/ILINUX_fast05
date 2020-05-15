@@ -28,8 +28,8 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 		LFLAGS = 
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
-                LFLAGS = -L${PATH_MKL} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm \
-                        ${PATH_FFTW_LIB}libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a
+                LFLAGS = -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl\
+		${PATH_FFTW_LIB}libfftw3xf_ifort.a ${PATH_FFTW_INCL}
 		BLAS = 
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
