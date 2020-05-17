@@ -490,7 +490,14 @@
            end do ! do ikpoints
 ! End loop over atoms
           !write(101,120) iatom, (Qout(imu,iatom), imu = 1, num_orb(in1))
-          write(101,121) iatom,QLowdin_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+          !write(101,121) iatom,QLowdin_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+           write(101,'(2x, i4)',advance='no') iatom
+           write(101,'(f10.6)',advance='no') QLowdin_TOT(iatom)
+           do imu = 1, num_orb(in1)
+                write(101,'(f10.6)',advance='no') Qout(imu,iatom)
+           end do
+           write(101,*)
+
           end do ! do iatom
           close(101)
 
@@ -534,7 +541,14 @@ call write_dipole('_LOWD_KS')
            end do ! do ikpoints
 ! End loop over atoms
           !write(103,120) iatom, (Qout(imu,iatom), imu = 1, num_orb(in1))
-          write(103,121) iatom,QLowdin_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+          !write(103,121) iatom,QLowdin_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+           write(103,'(2x, i4)',advance='no') iatom
+           write(103,'(f10.6)',advance='no') QLowdin_TOT(iatom)
+           do imu = 1, num_orb(in1)
+                write(103,'(f10.6)',advance='no') Qout(imu,iatom)
+           end do
+           write(103,*)
+
           end do ! do iatom
           close(103)
 
@@ -596,7 +610,16 @@ call write_dipole('_NAP_KS')
  
 ! End loop over atoms
          ! write(102,120) iatom, (Qout(imu,iatom), imu = 1, num_orb(in1))
-          write(102,121) iatom, QMulliken_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+         ! write(102,121) iatom, QMulliken_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+           write(102,'(2x, i4)',advance='no') iatom
+           write(102,'(f10.6)',advance='no') QMulliken_TOT(iatom)
+           do imu = 1, num_orb(in1)
+                write(102,'(f10.6)',advance='no') Qout(imu,iatom)
+           end do
+           write(102,*)
+
+
+
           end do
           close(102)
          end if     ! endif of Gfixcharges
@@ -694,7 +717,15 @@ call write_dipole('_MULL_KS')
             end do !end do issh = 1, nssh(in1)
 ! End loop over atoms
           !write(104,120) iatom, (Qout(imu,iatom), imu = 1, num_orb(in1))
-          write(104,121) iatom,QMulliken_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+           
+           !121     format (2x, i4,f10.6,<norbitals>f10.6)
+           !write(104,121) iatom,QMulliken_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+           write(104,'(2x, i4)',advance='no') iatom
+           write(104,'(f10.6)',advance='no') QMulliken_TOT(iatom)
+           do imu = 1, num_orb(in1)
+                write(104,'(f10.6)',advance='no') Qout(imu,iatom)
+           end do
+           write(104,*)
           end do
           close(104)
          end if     ! endif of ifixcharges
@@ -734,8 +765,8 @@ call write_dipole('_MULL_KS')
 300     format (2x, ' This is band number: ',2x, i6)
 301     format (2x, i4, f10.6)
 110     format (2x, 4f10.6)
-120     format (2x, i4, <norbitals>f10.6) 
-121     format (2x, i4,f10.6,<norbitals>f10.6) 
+!120     format (2x, i4, <norbitals>f10.6) 
+!121     format (2x, i4,f10.6,<norbitals>f10.6) 
 400     format (2x, 'Qmull =',10f10.6)
 444     format (a7,4f10.4)
 445     format (a2,4f10.4)

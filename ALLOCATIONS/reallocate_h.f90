@@ -136,7 +136,7 @@
          allocate (ewaldqmmm (numorb_max, numorb_max, neigh_max,natoms))
         end if
 
-        if (itheory .eq. 1 .or. idipole .eq. 1 .or. iks) then
+        if (itheory .eq. 1 .or. idipole .eq. 1 .or. iks .eq. 1) then
          deallocate (dip)
 !JIMM
          deallocate (dipcm)
