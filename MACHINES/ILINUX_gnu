@@ -13,8 +13,8 @@
 # mpirun --report-pid PID fireball_server.x
 # pid=$(cat PID) && mpif90 client.f90 -o client && mpirun --ompi-server pid:$pid client
 
-PATH_BLAS = ../gnu/lapack
-PATH_FFTW_LIB = ../gnu/fftw-3.3.6-pl2
+PATH_BLAS = ../lapack-3.9.0/
+PATH_FFTW_LIB = ../fftw-3.3.8/
 
 ifneq (,$(findstring ILINUX_gnu, ${MACHINE}))
 	F77 = gfortran
