@@ -8,7 +8,7 @@ fi
 
 echo '
 &OPTION
-fdatalocation=Fdata_HC_minimal
+fdatalocation="'"Fdata_HC_minimal"'"
 nstepf = 5000
 iquench = -1
 icluster = 1
