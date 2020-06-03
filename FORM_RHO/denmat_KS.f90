@@ -1616,10 +1616,10 @@ subroutine write_dipole (estring)
          open( unit = 667, file = 'Charges_and_Dipoles'//trim(estring), status ='unknown',  &
                                     &     position = 'append')
          write(667,*)   '+++++++++++++++++++ NEW STEP++++++++++++++++++' 
-         write(667,444) 'dip_TOT',-dipTot_x/Debye, -dipTot_y/Debye,dipTot_z/Debye,-dipTot_tot/Debye
-         write(667,444) 'dip_Pro',-dipProy_x/Debye, -dipProy_y/Debye,dipProy_z/Debye,-dipProy_tot/Debye
-         write(667,444) 'dip_Qout',-dipQout_x/Debye, -dipQout_y/Debye, dipQout_z/Debye, -dipQout_tot/Debye
-         write(667,444) 'dip_Int',-dipIntra_x/Debye, -dipIntra_y/Debye,dipIntra_z/Debye,-dipIntra_tot/Debye
+         write(667,444) 'dip_TOT',-dipTot_x/Debye, -dipTot_y/Debye,-dipTot_z/Debye,dipTot_tot/Debye
+         write(667,444) 'dip_Pro',-dipProy_x/Debye, -dipProy_y/Debye,-dipProy_z/Debye,dipProy_tot/Debye
+         write(667,444) 'dip_Qout',-dipQout_x/Debye, -dipQout_y/Debye, -dipQout_z/Debye, dipQout_tot/Debye
+         write(667,444) 'dip_Int',-dipIntra_x/Debye, -dipIntra_y/Debye,-dipIntra_z/Debye,dipIntra_tot/Debye
          !write(667,*)Qout
 !DIP INTRA
 
@@ -1706,7 +1706,7 @@ subroutine write_dipole (estring)
          dip_x=dip_x+dip_res_x
          dip_y=dip_y+dip_res_y
          dip_z=dip_z+dip_res_z
-         write(667,455) symbol(iatom),'dip_res',-(dip_res_x/Debye),-(dip_res_y/Debye),-(dip_res_z/Debye),-(dip_res_tot/Debye)
+         write(667,455) symbol(iatom),'dip_res',-(dip_res_x/Debye),-(dip_res_y/Debye),-(dip_res_z/Debye),(dip_res_tot/Debye)
       end do ! end do iatom = 1,natoms
       dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
       write(667,444)'dip_res_TOT',-(dip_x/Debye),-(dip_y/Debye),-(dip_z/Debye),(dip_tot/Debye) 
