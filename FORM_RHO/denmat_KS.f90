@@ -112,6 +112,7 @@
         integer, dimension (norbitals, nkpoints) :: ioccupy_k
  
         real aux1, aux2, aux3
+        real qmulliken_mix
         real deltae
         real dot
         real gutr
@@ -626,6 +627,116 @@ call write_dipole('_NAP_KS')
 !        end if      ! endif of iqout .eq. 2
 
 call write_dipole('_MULL_KS')
+
+
+! ****************************************************************************
+!
+!  C O M P U T E    M U L L I K E N - D I P O L E - M I X   C H A R G E S
+! ****************************************************************************
+! Compute Mulliken-dipole charges.
+
+         Qout = 0.0d0
+         QMulliken = 0.0d0
+         QMulliken_TOT = 0.0d0
+         qmulliken_mix = 0.5d0
+
+         if (ifixcharge .eq. 1) then
+          do iatom = 1, natoms
+           in1 = imass(iatom)
+           QMulliken_TOT(iatom) = 0.0d0
+           do imu = 1, num_orb(in1)
+            Qout(imu,iatom) = Qin(imu,iatom)
+            QMulliken_TOT(iatom) = QMulliken_TOT(iatom) + Qin(imu,iatom)
+           end do
+          end do
+
+         else
+          open(unit = 146, file = 'CHARGES_MUDM_KS', status = 'unknown')
+
+          do iatom = 1, natoms
+           in1 = imass(iatom)
+           r1(:) = ratom(:,iatom)
+! Loop over neighbors
+           do ineigh = 1, neighn(iatom)
+            jatom = neigh_j(ineigh,iatom)
+            in2 = imass(jatom)
+            r2(:) = ratom(:,jatom)
+
+
+
+! ****************************************************************************
+! Find r21 = vector pointing from r1 to r2, the two ends of the
+! bondcharge, and the bc distance, y
+           r21(:) = r2(:) - r1(:)
+           y = sqrt(r21(1)*r21(1) + r21(2)*r21(2) + r21(3)*r21(3))
+
+            jneigh = neigh_back(iatom,ineigh)
+            do imu = 1, num_orb(in1)
+             do inu = 1, num_orb(in2)
+              QMulliken(imu,iatom) = QMulliken(imu,iatom)                   &
+     &        +0.5d0*(rho(imu,inu,ineigh,iatom)*s_mat(imu,inu,ineigh,iatom) &
+     &        + rho(inu,imu,jneigh,jatom)*s_mat(inu,imu,jneigh,jatom))
+             end do
+            end do
+             
+! dipole correction. Only if the two atoms are different
+          if (y .gt. 1.0d-05) then
+            do imu = 1, num_orb(in1)
+             do inu = 1, num_orb(in2)
+          !    write(*,*) 'Qb(',imu,',',iatom,')= ',QMulliken(imu,iatom)
+              QMulliken(imu,iatom) = QMulliken(imu,iatom)+                  &
+     &        qmulliken_mix*(-rho(imu,inu,ineigh,iatom)*dip(imu,inu,ineigh,iatom)         &
+     &        + rho(inu,imu,jneigh,jatom)*dip(inu,imu,jneigh,jatom))/y
+           !         write(*,*) 'DIPOLE when iatom,jatom,imu,inu = ',  &
+     ! &        iatom,jatom,imu,inu,' is',dip(imu,inu,ineigh,iatom),    &
+     ! &        dip(inu,imu,jneigh,jatom) 
+
+     !          write(*,*) 'Qa(',imu,',',iatom,')= ',QMulliken(imu,iatom)
+             end do
+            end do
+          end if !end if y .gt. 1.0d-05)
+! End loop over neighbors
+           end do
+
+! Finally the imu loop.
+           do imu = 1, num_orb(in1)
+             Qout(imu,iatom) = QMulliken(imu,iatom)
+             QMulliken_TOT(iatom) = QMulliken_TOT(iatom) + Qout(imu,iatom)
+           end do
+
+!Check whether there are negative charges and correct
+!If there's more than one shell whose charge is negative, more work is
+!needed, but that'd be quite pathological a situation...
+            do issh = 1, nssh(in1)
+               if( Qout(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
+                  do jssh = 1,nssh(in1)
+                     if ( jssh .ne. issh ) then
+                        Qout(jssh,iatom) = Qout(jssh,iatom)+            &
+                 &                         Qout(issh,iatom)/(nssh(in1)-1)
+                     end if !end if jssh .ne. issh 
+                  end do !end if jssh = 1,nssh(in1)
+                  Qout(issh,iatom) = 0.0d0               
+               end if !end if  Qout(issh,iatom) .lt. 0
+            end do !end do issh = 1, nssh(in1)
+! End loop over atoms
+          !write(144,120) iatom, (Qout(imu,iatom), imu = 1, num_orb(in1))
+           
+           !121     format (2x, i4,f10.6,<norbitals>f10.6)
+           !write(144,121) iatom,QMulliken_TOT(iatom) , (Qout(imu,iatom), imu = 1, num_orb(in1))
+           write(146,'(2x, i4)',advance='no') iatom
+           write(146,'(f10.6)',advance='no') QMulliken_TOT(iatom)
+           do imu = 1, num_orb(in1)
+                write(146,'(f10.6)',advance='no') Qout(imu,iatom)
+           end do
+           write(146,*)
+          end do
+          close(146)
+         end if     ! endif of ifixcharges
+
+ call write_dipole('_MUDM_KS')
+
+
+
 
 ! ****************************************************************************
 !
@@ -1318,7 +1429,7 @@ subroutine write_dipole (estring)
      open( unit = 1729, file = 'dipole_Qout'//trim(estring), status = 'unknown',  &
                                    &     position = 'append')
        
-       write(1729,446) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
+       write(1729,446) -dip_x/Debye, -dip_y/Debye, -dip_z/Debye, dip_tot/Debye
 
      close(1729)
 
@@ -1384,7 +1495,7 @@ subroutine write_dipole (estring)
      open( unit = 666, file = 'dipole_Tot'//trim(estring), status = 'unknown',  &
                                    &     position = 'append')
 
-     write(666,446) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
+     write(666,446) -dip_x/Debye, -dip_y/Debye, -dip_z/Debye, dip_tot/Debye
      close(666)
     !W R I T E     T H E     B I G     F I L E
 
@@ -1449,16 +1560,11 @@ subroutine write_dipole (estring)
          dipProy_z=dip_z
          dipProy_tot=dip_tot
     
-     open( unit = 666, file = 'dipole_Tot_proy'//trim(estring), status = 'unknown',  &
+     open( unit = 166, file = 'dipole_Tot_proy'//trim(estring), status = 'unknown',  &
                                    &     position = 'append')
 
-     write(666,446) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
-     close(666)
-
- 
-
-
-
+     write(166,446) -dip_x/Debye, -dip_y/Debye, -dip_z/Debye, dip_tot/Debye
+     close(166)
 
      !W R I T E     T H E     B I G     F I L E
 
@@ -1510,10 +1616,10 @@ subroutine write_dipole (estring)
          open( unit = 667, file = 'Charges_and_Dipoles'//trim(estring), status ='unknown',  &
                                     &     position = 'append')
          write(667,*)   '+++++++++++++++++++ NEW STEP++++++++++++++++++' 
-         write(667,444) 'dip_TOT',dipTot_x/Debye, dipTot_y/Debye,dipTot_z/Debye,dipTot_tot/Debye
-         write(667,444) 'dip_Pro',dipProy_x/Debye, dipProy_y/Debye,dipProy_z/Debye,dipProy_tot/Debye
-         write(667,444) 'dip_Qout',dipQout_x/Debye, dipQout_y/Debye, dipQout_z/Debye, dipQout_tot/Debye
-         write(667,444) 'dip_Int',dipIntra_x/Debye, dipIntra_y/Debye,dipIntra_z/Debye,dipIntra_tot/Debye
+         write(667,444) 'dip_TOT',-dipTot_x/Debye, -dipTot_y/Debye,dipTot_z/Debye,-dipTot_tot/Debye
+         write(667,444) 'dip_Pro',-dipProy_x/Debye, -dipProy_y/Debye,dipProy_z/Debye,-dipProy_tot/Debye
+         write(667,444) 'dip_Qout',-dipQout_x/Debye, -dipQout_y/Debye, dipQout_z/Debye, -dipQout_tot/Debye
+         write(667,444) 'dip_Int',-dipIntra_x/Debye, -dipIntra_y/Debye,dipIntra_z/Debye,-dipIntra_tot/Debye
          !write(667,*)Qout
 !DIP INTRA
 
@@ -1549,7 +1655,7 @@ subroutine write_dipole (estring)
             end do !end do imu
          end do !end ineigh = 1,natoms
       dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
-      write(667,455) symbol(iatom),'dip_int',(dip_x/Debye),(dip_y/Debye),(dip_z/Debye),(dip_tot/Debye)
+      write(667,455) symbol(iatom),'dip_int',-(dip_x/Debye),-(dip_y/Debye),-(dip_z/Debye),(dip_tot/Debye)
       end do ! end do iatom = 1,natoms
 
 
@@ -1600,10 +1706,10 @@ subroutine write_dipole (estring)
          dip_x=dip_x+dip_res_x
          dip_y=dip_y+dip_res_y
          dip_z=dip_z+dip_res_z
-         write(667,455) symbol(iatom),'dip_res',(dip_res_x/Debye),(dip_res_y/Debye),(dip_res_z/Debye),(dip_res_tot/Debye)
+         write(667,455) symbol(iatom),'dip_res',-(dip_res_x/Debye),-(dip_res_y/Debye),-(dip_res_z/Debye),-(dip_res_tot/Debye)
       end do ! end do iatom = 1,natoms
       dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
-      write(667,444)'dip_res_TOT',(dip_x/Debye),(dip_y/Debye),(dip_z/Debye),(dip_tot/Debye) 
+      write(667,444)'dip_res_TOT',-(dip_x/Debye),-(dip_y/Debye),-(dip_z/Debye),(dip_tot/Debye) 
      
       deallocate(Q0_TOT)
 444     format (a7,4f10.4)
