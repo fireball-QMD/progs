@@ -16,8 +16,8 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	F90 = ifort
 	PATH_MKL = ${DIR}/lib/intel64/
 	PATH_INCL = -I${DIR}/include/
-	PATH_FFTW_LIB = ${DIR}/lib/intel64/
-	PATH_FFTW_INCL = -I${DIR}/include/fftw/
+	PATH_FFTW_LIB = ${DIR}/interfaces/fftw3xf/
+	PATH_FFTW_INCL = -I${DIR}/interfaces/fftw3xf/
 
 	ifneq (,$(findstring OPT, ${MODE}))
 		FFLAGS = -O3 -r8  -fno-alias -unroll -fPIC
@@ -29,7 +29,7 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
 		LFLAGS = -L${PATH_MKL} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm \
-                        ${PATH_FFTW_LIB}libfftw3xf_ifort.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a
+                        ${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm  ${PATH_MKL}libmkl_intel_lp64.a
 		BLAS = 
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
