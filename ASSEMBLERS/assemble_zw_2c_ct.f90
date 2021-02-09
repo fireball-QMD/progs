@@ -58,6 +58,7 @@
         use scf, only : Kscf
         use energy, only : uxcdcc_zw
         use integrals, only : xcnu1c
+        use options, only : iqout
         implicit none
  
 ! Argument Declaration and Description
@@ -214,6 +215,7 @@
                do issh1 = 1, nssh(in1)
                   do issh2 = 1,nssh(in2)
                     g2nu(issh1,issh2,ineigh,iatom)=bccax(issh1,issh2)  !store the integrals
+              ! write(*,*) 'g2nu:', iatom,issh1,jatom,issh2, bccax(issh1,issh2)
                     g2nup(:,issh1,issh2,ineigh,iatom)=bccapx(:,issh1,issh2) !store the integrals
                   end do !end do issh2 
                end do !end do issh1
@@ -221,6 +223,8 @@
                 do issh1 = 1, nssh(in1)
                   do issh2 = 1, nssh(in2)
                    g2nu(issh1,issh2,matom,iatom) = xcnu1c(issh1,issh2,in1)
+              
+               !write(*,*) 'g2nu 1c:', iatom,issh1,issh2, xcnu1c(issh1,issh2,in1)
                   end do !end do issh2
                 end do !end do issh1
              end if ! end if matom .ne. ineigh
@@ -281,7 +285,14 @@
              do imu = 1,num_orb(in1)
                 issh1=orb2shell(imu,in1)
                 !issh2=orb2shell(inu,in3)
-                bcca(imu,imu) = bcca(imu,imu) + g2nu(issh1,isorp,ineigh,iatom)*dxn 
+                bcca(imu,imu) = bcca(imu,imu) + g2nu(issh1,isorp,ineigh,iatom)*dxn
+                if (Kscf .eq. 1) then
+                if (iqout .eq. 6) then 
+                gvhxc(imu,imu,isorp,jatom,matom,iatom) = &
+                & gvhxc(imu,imu,isorp,jatom,matom,iatom) + &
+                & g2nu(issh1,isorp,ineigh,iatom)
+                end if ! end if iqout .eq. 6
+                end if ! end if Kscf .eq. 1
                 !Here in the atom case we only have diagonal terms
              end do !end do imu = 1, mum_orb(in1)     
            !end do !end do inu = 1,num_orb(in3)
@@ -384,6 +395,14 @@
                      B=0.5*s_mat(imu,inu,ineigh,iatom)+dip(imu,inu,ineigh,iatom)/y  
                       bcca(imu,inu) = bcca(imu,inu)+ &
                       & A*g2nu(issh1,isorp,matom,iatom)*dxn+B*g2nu(isorp,issh2,ineigh,iatom)*dxn
+                      if (Kscf .eq. 1) then
+                      if (iqout .eq. 6) then 
+                      gvhxc(imu,inu,isorp,iatom,ineigh,iatom) = &  
+                      & gvhxc(imu,inu,isorp,iatom,ineigh,iatom) + &
+                      & A*g2nu(issh1,isorp,matom,iatom)+B*g2nu(isorp,issh2,ineigh,iatom)
+                      end if ! end if iqout .eq. 6
+                      end if ! end if Kscf .eq. 1
+                     
                  !end of possibility
              end do !end do inmu
             end do !end do inu
@@ -407,6 +426,14 @@
                    B=0.5*s_mat(imu,inu,ineigh,iatom)+dip(imu,inu,ineigh,iatom)/y  
                    bcca(imu,inu) = bcca(imu,inu)+ &
                    & A*g2nu(issh1,isorp,ineigh,iatom)*dxn+B*g2nu(issh2,isorp,matom2,jatom)*dxn     
+
+                   if (Kscf .eq. 1) then
+                   if (iqout .eq. 6) then 
+                   gvhxc(imu,inu,isorp,jatom,ineigh,iatom) = &  
+                   & gvhxc(imu,inu,isorp,jatom,ineigh,iatom) + &
+                   & A*g2nu(issh1,isorp,ineigh,iatom)+B*g2nu(issh2,isorp,matom2,jatom)
+                   end if ! end if iqout .eq. 6
+                   end if ! end if Kscf .eq. 1
               !end of possibility
              end do !end do imu
             end do !end do inu

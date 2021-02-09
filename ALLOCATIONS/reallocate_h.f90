@@ -58,7 +58,7 @@
         subroutine reallocate_h (natoms, neigh_max, neighPP_max, itheory, &
      &                           itheory_xc, igauss)
         use interactions
-        use options, only : idipole, iks
+        use options, only : idipole, iks, iqout
         implicit none
  
 ! Argument Declaration and Description
@@ -103,6 +103,19 @@
         allocate (vna (numorb_max, numorb_max, neigh_max, natoms))
         allocate (vxc (numorb_max, numorb_max, neigh_max, natoms))
         allocate (vxc_1c (numorb_max, numorb_max, neigh_max, natoms))
+! Stationary charges
+       if (iqout .eq. 6) then
+           !deallocate (gvh)
+           !deallocate (gvxc)
+           deallocate (gvhxc)
+           !deallocate (gvhs)
+           deallocate (gvhxcs)
+          !allocate (gvh(numorb_max,numorb_max,nsh_max,natoms,neigh_max,natoms))
+          !allocate (gvxc(numorb_max,numorb_max,nsh_max,natoms,neigh_max,natoms))
+          allocate (gvhxc(numorb_max,numorb_max,nsh_max,natoms,neigh_max,natoms))
+          !allocate (gvhs(nsh_max,nsh_max,natoms,natoms))
+          allocate (gvhxcs(nsh_max,nsh_max,natoms,natoms))
+       end if ! end if iqout .eq. 6
 
         if (igauss .eq. 1) then
          deallocate (bar_density_2c)

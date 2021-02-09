@@ -103,6 +103,15 @@
         integer mmu
         integer noccupy
         integer nnu
+        integer issh1, mu_min, mu_max, l, inumorb
+        integer :: info, lwork
+        integer, dimension(nssh_tot) :: ipiv
+        integer, dimension(100) :: work
+        integer :: beta, alpha, ialp, ina, matom
+        real,dimension(nssh_tot,nssh_tot) :: M
+        real,dimension(1,nssh_tot) :: B
+        real auxgS
+        real Ntot
 
         integer, dimension (norbitals) :: ioccupy
         integer, dimension (norbitals, nkpoints) :: ioccupy_k
@@ -230,7 +239,7 @@
 
 ! Finish remaining loops
            end do
-           write (*,100) iband, iatom, pcharge
+           !write (*,100) iband, iatom, pcharge
           end do
          end do
         end if
@@ -677,10 +686,158 @@
 
 !****************************************************************************
 
+! ****************************************************************************
+!
+! CHARGES VARIATIONAL
+! ****************************************************************************
+! integer :: beta, alpha, ialp, ina
+! real,dimension(nssh_tot,nssh_tot) :: M
+! real,dimension(nssh_tot) :: B
+! In MODULES/interactions:
+! real, dimension(:,:,:,:,:,:), allocatable :: gvhxc
+! real, dimension(:,:,:,:), allocatable :: gvhxcS
+! In ALLOCATIONS/allocate_rho:
+! allocate (gvhxc(numorb_max,numorb_max,nssh_max,natoms,neigh_max,natoms))
+! allocate (gvhxcS(nssh_max,nssh_max,natoms,natoms))
+! (remember to include them also in deallocate_rho!!!)
+      B = 0.0d0
+      if (iqout .eq. 6) then
+          alpha = 0
+          do ialp = 1, natoms
+              ina = imass(ialp)
+              !gvhxc
+              do issh = 1, nssh(ina)
+                 alpha = alpha + 1 ! transform to one index
+                 !write(*,*) 'alpha indices', ialp, issh, alpha
+                  beta = 0
+                  do iatom = 1, natoms
+                      in1 = imass(iatom)
+                      matom = neigh_self(iatom)                    
+                      inumorb = 1 ! counter for number of orbitals in atom iatom
+                      do issh1 = 1, nssh(in1)
+                          beta = beta + 1 ! transform to one index
+                          write(*,*) 'beta indices', iatom, issh1, beta
+                          ! Spherical approximation to matrix elements:
+                           l = lssh(issh1,in1)
+                           auxgS = 0.0d0
+                           ! define mu_min and mu_max: the orbitals
+                           ! indices associated to the shell issh1
+                           mu_min = inumorb
+                           mu_max = mu_min+2*l
+                           do imu = mu_min, mu_max 
+                                auxgS =  auxgS &
+                              & +  gvhxc(imu,imu,issh,ialp,matom,iatom)
+                           end do ! end do imu = mu_min, mu_max 
+                          auxgS = auxgS/(2*l+1)  ! 4*pi??
+                          ! Now:
+                          M(alpha,beta) =  auxgS !gvhxcs(issh1,issh,iatom,ialp)                   
+                          write(*,*) alpha, beta, M(alpha,beta) 
+                          inumorb = inumorb + 2*l+1
+                      end do ! end do issh1
+                      do ineigh = 1, neighn(iatom)
+                          mbeta = neigh_b(ineigh,iatom)
+                          jatom = neigh_j(ineigh,iatom)
+                          in2 = imass(jatom) 
+                          do imu = 1, num_orb(in1)
+                             do inu = 1, num_orb(in2)
+                                  B(1,alpha) = B(1,alpha) + &
+                                  rho(imu,inu,ineigh,iatom)*gvhxc(imu, &
+                                      &    inu,issh,ialp,ineigh,iatom)
+                              end do ! end do inu
+                         end do ! end do imu
+                      end do ! end do ineigh
+                  end do ! end do iatom
+              end do ! end do issh
+          end do ! end do ialp
+                 do beta = 1, nssh_tot
+                 write(*,*) 'alpha B ', beta, B(1,beta)
+                 end do
+!  +++++++++++++++++++++++++++++++++++++++++++++++++++++
+!
+!  SOLVE SYSTEM Mx = B.  x are the charges
+! 
+      !write(*,*) gvhxc(1,1,1,1,neigh_self(1),1)
+      !write(*,*) M
+
+      ! do alpha = 1,nssh_tot
+      !   do beta = alpha+1,nssh_tot
+      !     M(alpha,beta) = 0.5*(M(alpha,beta)+M(beta,alpha))
+      !     M(beta,alpha) = M(alpha,beta)
+      !   end do !beta
+      ! end do !alpha 
+
+         !LWMAX = 100
+         !call ssysv( 'U', nssh_tot, 1, M, nssh_tot, ipiv, B, &
+         !              &      nssh_tot, work, lwork, info )
+         !call sgesv(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
+         call dgesv(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info)
+         !call sgetrs(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
+!*
+!*     Check for the exact singularity.
+!*
+                 write(*,*) 'B output ', B
+      IF( info.GT.0 ) THEN
+         WRITE(*,*)'The element of the diagonal factor '
+         WRITE(*,*)'D(',info,',',info,') is zero, so that'
+         WRITE(*,*)'D is singular; the solution could not be computed.'
+         STOP
+      END IF
+
+!+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+         alpha = 0
+         Ntot = 0
+         do iatom = 1, natoms
+             in1 = imass(iatom)
+             do issh = 1, nssh(in1)
+                 alpha = alpha + 1
+                 write(*,*) 'indices: ', iatom, issh, alpha, B(1,alpha)
+                 Qout(issh,iatom) = B(1,alpha)
+                 Ntot = Ntot + B(1,alpha)
+             end do ! end do issh
+         end do ! end do iatom
+      ! renorm total charge  (ztot = total charge)
+         do iatom = 1, natoms
+             in1 = imass(iatom)
+             do issh = 1, nssh(in1)
+                 !alpha = alpha + 1
+                 !write(*,*) 'indices: ', iatom, issh, alpha, B(1,alpha)
+                 Qout(issh,iatom) = Qout(issh,iatom) + (ztot-Ntot)/nssh_tot
+             end do ! end do issh
+         end do ! end do iatom
+          write(*,*) 'Ntot = ' , Ntot  
+          write(*,*) 'Qoutno corrected = ', Qout 
+! ******************************************************************************
+! ******************************************************************************
 
 
+!Check whether there are negative charges and correct
+!If there's more than one shell whose charge is negative, more work is
+!needed, but that'd be quite pathological a situation...
+           do iatom = 1,natoms
+            in1 = imass(iatom)
+            do issh = 1, nssh(in1)
 
+               if( Qout(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
+           
+                  do jssh = 1, nssh(in1)
 
+                     if ( jssh .ne. issh ) then
+
+                        Qout(jssh,iatom) = Qout(jssh,iatom)+            &
+                &                         Qout(issh,iatom)/(nssh(in1)-1)
+
+                     end if !end if jssh .ne. issh 
+
+                  end do !end if jssh = 1,nssh(in1)
+
+                  Qout(issh,iatom) = 0.0d0               
+
+               end if !end if  Qout(issh,iatom) .lt. 0
+
+            end do !end do issh = 1, nssh(in1)
+          end do ! end do iatom = 1,natoms
+             write(*,*) 'Qout corrected = ', Qout 
+      end if  !end if (iqout .eq. 6)
 ! ****************************************************************************
 !
 ! C O M P U T E    M U L L I K E N    P O P U L A T I O N    F O R   MOs

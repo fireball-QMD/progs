@@ -75,6 +75,8 @@
         use interactions
         use neighbor_map
         use gaussG
+        use scf, only : Kscf
+        use options, only : iqout
 
         implicit none
  
@@ -144,6 +146,7 @@
         real, dimension (numorb_max, numorb_max) :: bcca
         real, dimension (numorb_max, numorb_max) :: bccax
         real, dimension (numorb_max, numorb_max) :: emnpl
+        real, dimension (numorb_max, numorb_max) :: emnpl_noq
         real, dimension (3, 3, 3) :: deps
         real, dimension (3, 3) :: eps
         real, dimension (3) :: r1
@@ -415,6 +418,7 @@
 
          if (x .lt. 1.0d-05) then
                  emnpl = 0.0d0
+                 emnpl_noq = 0.0d0
 
          else
  
@@ -428,6 +432,7 @@
                 &   + dipc(3,imu,inu,mneigh,iatom)*rnabc(3))
 
              emnpl(imu,inu) = dq3*sterm/x + dq3*dterm/(x*x*x)             
+             emnpl_noq(imu,inu) = sterm/x + dterm/(x*x*x)             
 
              ewaldsr(imu,inu,mneigh,iatom) =                            &
      &        ewaldsr(imu,inu,mneigh,iatom) + emnpl(imu,inu)*eq2
@@ -471,6 +476,18 @@
               end if
 
               bcca(imu,inu) = bcca(imu,inu) + bccax(imu,inu)*dxn
+             if (Kscf .eq. 1) then
+             if (iqout .eq. 6) then
+             gvhxc(imu,inu,isorp,ialp,mneigh,iatom) = & 
+             &     gvhxc(imu,inu,isorp,ialp,mneigh,iatom) +    &
+                                      (stn1*bccax(imu,inu) +    &
+             &                        stn2*emnpl_noq(imu,inu))*eq2
+             ! write(*,*) 'in 3c g = ', gvhxc(imu,inu,isorp,ialp,mneigh,iatom)
+             ! symmetry
+             gvhxc(inu,imu,isorp,ialp,jneigh,jatom) = & 
+             &     gvhxc(imu,inu,isorp,ialp,mneigh,iatom)
+             end if ! end if iqout .eq. 6
+             end if ! end if Kscf .eq. 1
              end do
             end do
 

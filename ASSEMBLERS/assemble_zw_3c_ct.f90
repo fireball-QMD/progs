@@ -50,6 +50,8 @@
         use interactions
         use neighbor_map
         use gaussG
+        use options, only : iqout
+        use scf, only : Kscf 
 
         implicit none
  
@@ -342,6 +344,16 @@
            !Here is the split of the INTEGRAL gcab...--->     
                  bccax(imu,inu) = bccax(imu,inu)+ &
       & (A*g2nu(isorp,issh1,ineigh1,ialp)+B*g2nu(isorp,issh2,ineigh2,ialp))*dxn
+                   if (Kscf .eq. 1) then
+                   if (iqout .eq. 6) then 
+                   gvhxc(imu,inu,isorp,ialp,mneigh,iatom) = &  
+                   & gvhxc(imu,inu,isorp,ialp,mneigh,iatom) + &
+                   & A*g2nu(isorp,issh1,ineigh1,ialp)+B*g2nu(isorp,issh2,ineigh2,ialp)
+                   ! symmetry
+                   gvhxc(inu,imu,isorp,ialp,jneigh,jatom) = &  
+                   & gvhxc(imu,inu,isorp,ialp,mneigh,iatom)
+                   end if ! end if iqout .eq. 6
+                   end if ! end if Kscf .eq. 1
              end do !end do imu
            end do !end do inu
           end do ! end do of isorp loop

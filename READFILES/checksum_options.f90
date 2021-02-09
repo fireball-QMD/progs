@@ -114,7 +114,7 @@
             imcweda = 0
             igsn = 0
             iks = 0
-            iqout = 4
+            ! iqout = 4 could be iqout = 4 o iqout = 6
             itheory_xc = 4
         end if
 

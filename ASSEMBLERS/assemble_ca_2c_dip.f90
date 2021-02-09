@@ -61,6 +61,8 @@
         use forces
         use interactions
         use neighbor_map
+        use scf, only : Kscf
+        use options, only : iqout
         implicit none
  
 ! Argument Declaration and Description
@@ -125,6 +127,7 @@
         real, dimension (numorb_max, numorb_max) :: dipx
         real, dimension (3, numorb_max, numorb_max) :: dippx
         real, dimension (numorb_max, numorb_max) :: emnpl
+        real, dimension (numorb_max, numorb_max) :: emnpl_noq
         real, dimension (3, 3) :: eps
         real, dimension (3) :: r1
         real, dimension (3) :: r2
@@ -146,6 +149,9 @@
 ! Initialize interactions to zero.
         vca = 0.0d0
         ewaldsr = 0.0d0
+        if (Kscf .eq. 1) then
+        gvhxc = 0.0d0
+        end if ! end if Kscf .eq. 1
 
 ! Determine which atoms are assigned to this processor.
         if (iordern .eq. 1) then
@@ -244,6 +250,7 @@
           stn1 = 1.0d0
           stn2 = 0.0d0
           emnpl = 0.0d0
+          emnpl_noq = 0.0d0
  
 ! Second, calculate the long-range effective monopole.  This term is included
 ! so that we obtain no discontinuities when atoms leave or enter the 2*rc
@@ -284,7 +291,9 @@
 
              emnpl(imu,inu) =  dq2*(s_mat(imu,inu,matom,iatom)/y)    &
      &                       + dq2*(dterm/(y*y*y))
-
+             
+             emnpl_noq(imu,inu) =  (s_mat(imu,inu,matom,iatom)/y)    &
+     &                       + (dterm/(y*y*y))
              ewaldsr(imu,inu,matom,iatom) =                                  &
      &             ewaldsr(imu,inu,matom,iatom) + emnpl(imu,inu)*eq2
             end do
@@ -325,9 +334,18 @@
            do inu = 1, num_orb(in3)
             do imu = 1, num_orb(in1)
              bcca(imu,inu) = bcca(imu,inu) + bccax(imu,inu)*dxn
+              if (Kscf .eq. 1) then
+              if (iqout .eq. 6) then
+              !write(*,*) 'Hello there'
+              gvhxc(imu,inu,isorp,jatom,matom,iatom) = &
+           & gvhxc(imu,inu,isorp,jatom,matom,iatom) + &
+           &     (stn1*bccax(imu,inu) + stn2*emnpl_noq(imu,inu))*eq2
+              !write(*,*) gvhxc(imu,inu,isorp,jatom,matom,iatom) 
+              end if ! end if iqout .eq. 6
+              end if ! end if Kscf .eq. 1
             end do
            end do
-          end do
+          end do  ! isorp
  
 ! Add bcca to vca, including the smoothing.
 ! Note that the loop below involves num_orb(in1) ONLY. Why?
@@ -372,6 +390,13 @@
             do inu = 1, num_orb(in3)
              do imu = 1, num_orb(in1)
               bcca(imu,inu) = bcca(imu,inu) + dxn*bccax(imu,inu)
+              if (Kscf .eq. 1) then
+              if (iqout .eq. 6) then
+              gvhxc(imu,inu,isorp,iatom,ineigh,iatom) = &
+           & gvhxc(imu,inu,isorp,iatom,ineigh,iatom) + &
+           &     bccax(imu,inu)*eq2
+              end if ! end if iqout .eq. 6
+              end if ! end if Kscf .eq. 1
              end do
             end do
            end do
@@ -388,6 +413,13 @@
             do inu = 1, num_orb(in3)
              do imu = 1, num_orb(in1)
               bcca(imu,inu) = bcca(imu,inu) + dxn*bccax(imu,inu)
+              if (Kscf .eq. 1) then
+              if (iqout .eq. 6) then
+              gvhxc(imu,inu,isorp,jatom,ineigh,iatom) = &
+           & gvhxc(imu,inu,isorp,jatom,ineigh,iatom) + &
+           &     bccax(imu,inu)*eq2
+              end if ! end if iqout .eq. 6
+              end if ! end if Kscf .eq. 1
              end do
             end do
            end do

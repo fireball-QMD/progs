@@ -136,7 +136,12 @@
 ! Dipole with XYZ components
          real, dimension (:, :, :), allocatable :: dipcm
          real, dimension (:, :, :, :, :), allocatable :: dipc
-
+! Stationary Charges February 2021
+        ! real, dimension (:,:,:,:,:,:), allocatable :: gvh
+        ! real, dimension (:,:,:,:),   allocatable :: gvhs
+        ! real, dimension (:,:,:,:,:,:), allocatable :: gvxc
+         real, dimension (:,:,:,:,:,:), allocatable :: gvhxc
+         real, dimension (:,:,:,:),   allocatable :: gvhxcs
 ! These arrays store interactions which are needed for the extended-Hubbard
 ! contributions to the Hamiltonian matrix. 
          real, dimension (:, :), allocatable :: Vcoulomb

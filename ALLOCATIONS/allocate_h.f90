@@ -58,7 +58,7 @@
      &                         itheory_xc, igauss, iwrtdos, iwrthop, iwrtatom)
 
         use interactions
-        use options, only : idipole, V_intra_dip, iks
+        use options, only : idipole, V_intra_dip, iks, iqout
         implicit none
  
 ! Argument Declaration and Description
@@ -100,7 +100,14 @@
         allocate (vna (numorb_max, numorb_max, neigh_max, natoms))
         allocate (vxc (numorb_max, numorb_max, neigh_max, natoms))
         allocate (vxc_1c (numorb_max, numorb_max, neigh_max, natoms))
-
+! Stationary charges  
+       if (iqout .eq. 6) then
+          !allocate (gvh(numorb_max,numorb_max,nsh_max,natoms,neigh_max,natoms))
+          !allocate (gvxc(numorb_max,numorb_max,nsh_max,natoms,neigh_max,natoms))
+          allocate (gvhxc(numorb_max,numorb_max,nsh_max,natoms,neigh_max,natoms))
+          !allocate (gvhs(nsh_max,nsh_max,natoms,natoms))
+          allocate (gvhxcs(nsh_max,nsh_max,natoms,natoms))
+       end if ! end if iqout .eq. 6
 ! Interactions needed for gaussian approximation to three-center
 ! exchange-correlation interactions.        
         if (igauss .eq. 1) then
