@@ -62,6 +62,8 @@
         use forces
         use interactions
         use neighbor_map
+        use options, only : iqout
+        use scf, only : Kscf
         implicit none
  
 ! Argument Declaration and Description
@@ -125,6 +127,7 @@
         real, dimension (numorb_max, numorb_max) :: dipx
         real, dimension (3, numorb_max, numorb_max) :: dippx
         real, dimension (numorb_max, numorb_max) :: emnpl
+        real, dimension (numorb_max, numorb_max) :: emnpl_noq
         real, dimension (3, 3) :: eps
         real, dimension (3) :: r1
         real, dimension (3) :: r2
@@ -144,6 +147,9 @@
         ewaldsr = 0.0d0
         dip = 0.0d0
         dipp = 0.0d0
+         if (Kscf .eq. 1) then
+        gvhxc = 0.0d0
+        end if ! end if Kscf .eq. 1
 
 ! Determine which atoms are assigned to this processor.
         if (iordern .eq. 1) then
@@ -303,9 +309,19 @@
            do inu = 1, num_orb(in1)
             do imu = 1, num_orb(in1)
              emnpl(imu,inu) = (s_mat(imu,inu,matom,iatom)/y)*dq2
+             emnpl_noq(imu,inu) = (s_mat(imu,inu,matom,iatom)/y)
 !$omp atomic
              ewaldsr(imu,inu,matom,iatom) =                                  &
      &        ewaldsr(imu,inu,matom,iatom) + emnpl(imu,inu)*eq2
+             ! Add the ewaldsr to the gvhxc
+        if (Kscf .eq. 1 .and. iqout .eq. 6) then
+          do issh = 1, nssh(in2)
+             gvhxc(imu,imu,issh,jatom,matom,iatom) = &
+      &    gvhxc(imu,imu,issh,jatom,matom,iatom) - emnpl_noq(imu,inu)*eq2
+          end do ! end- do issh
+        end if ! end if Kscf .eq. 1 .and. iqout .eq. 6               
+
+
             end do
            end do
  
@@ -344,6 +360,14 @@
            do inu = 1, num_orb(in3)
             do imu = 1, num_orb(in1)
              bcca(imu,inu) = bcca(imu,inu) + bccax(imu,inu)*dxn
+              if (Kscf .eq. 1) then
+              if (iqout .eq. 6) then
+              gvhxc(imu,inu,isorp,jatom,matom,iatom) = &
+            & gvhxc(imu,inu,isorp,jatom,matom,iatom) + &
+            & (stn1(imu,inu)*bccax(imu,inu) + stn2(imu,inu)*emnpl_noq(imu,inu))*eq2
+              !write(*,*) 'Hello there'
+              end if ! end if iqout .eq. 6
+              end if ! end if Kscf .eq. 1
             end do
            end do
           end do
@@ -371,13 +395,25 @@
           if (y .gt. 1.0d-4) then
            do inu = 1, num_orb(in2)
             do imu = 1, num_orb(in1)
-             sterm_1 = dq1*eq2*s_mat(imu,inu,ineigh,iatom)/(2.0d0*y)
-             sterm_2 = dq2*eq2*s_mat(imu,inu,ineigh,iatom)/(2.0d0*y)
-             dterm_1 = dq1*eq2*dip(imu,inu,ineigh,iatom)/(y*y)
-             dterm_2 = dq2*eq2*dip(imu,inu,ineigh,iatom)/(y*y)
+             sterm_1 = eq2*s_mat(imu,inu,ineigh,iatom)/(2.0d0*y)
+             sterm_2 = eq2*s_mat(imu,inu,ineigh,iatom)/(2.0d0*y)
+             dterm_1 = eq2*dip(imu,inu,ineigh,iatom)/(y*y)
+             dterm_2 = eq2*dip(imu,inu,ineigh,iatom)/(y*y)
 !$omp atomic
+
              ewaldsr(imu,inu,ineigh,iatom) = ewaldsr(imu,inu,ineigh,iatom)   &
-     &        + (sterm_1 + dterm_1) + (sterm_2 - dterm_2)
+     &        + (dq1*sterm_1 + dq1*dterm_1) + (dq2*sterm_2 - dq2*dterm_2)
+           ! ???? ewaldsr on top case??
+            if (Kscf .eq. 1 .and. iqout .eq. 6) then
+               do issh = 1, nssh(in2)
+             emnpl_noq(imu,inu) = sterm_1-dterm_1  ! on top right
+             gvhxc(imu,inu,issh,jatom,ineigh,iatom) = &
+     &             gvhxc(imu,inu,issh,jatom,ineigh,iatom) - emnpl_noq(imu,inu)*eq2
+             emnpl_noq(imu,inu) = sterm_1+dterm_1   ! on top left
+             gvhxc(imu,inu,issh,iatom,ineigh,iatom) = &
+     &             gvhxc(imu,inu,issh,iatom,ineigh,iatom) - emnpl_noq(imu,inu)*eq2
+          end do ! end do issh
+            end if ! end Kscf .eq. 1 .and. iqout .eq. 6)
             end do
            end do
           end if
@@ -409,6 +445,13 @@
             do inu = 1, num_orb(in3)
              do imu = 1, num_orb(in1)
               bcca(imu,inu) = bcca(imu,inu) + dxn*bccax(imu,inu)
+               if (Kscf .eq. 1) then
+              if (iqout .eq. 6) then
+              gvhxc(imu,inu,isorp,iatom,ineigh,iatom) = &
+           & gvhxc(imu,inu,isorp,iatom,ineigh,iatom) + &
+           &     bccax(imu,inu)*eq2
+              end if ! end if iqout .eq. 6
+              end if ! end if Kscf .eq. 1
              end do
             end do
            end do
@@ -425,6 +468,13 @@
             do inu = 1, num_orb(in3)
              do imu = 1, num_orb(in1)
               bcca(imu,inu) = bcca(imu,inu) + dxn*bccax(imu,inu)
+              if (Kscf .eq. 1) then
+              if (iqout .eq. 6) then
+              gvhxc(imu,inu,isorp,jatom,ineigh,iatom) = &
+           & gvhxc(imu,inu,isorp,jatom,ineigh,iatom) + &
+           &     bccax(imu,inu)*eq2
+              end if ! end if iqout .eq. 6
+              end if ! end if Kscf .eq. 1
              end do
             end do
            end do

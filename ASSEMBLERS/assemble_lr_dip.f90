@@ -67,6 +67,8 @@
         use dimensions
         use interactions
         use neighbor_map
+        use options, only : iqout
+        use scf, only : Kscf
         implicit none
  
 ! Argument Declaration and Description
@@ -115,6 +117,7 @@
         real, dimension (3) :: rnabc
         real, dimension (natoms) :: sub_ewald
         real, dimension (numorb_max, numorb_max) :: emnpl
+        real, dimension (numorb_max, numorb_max) :: emnpl_noq
 
 ! BTN communication domain
         integer MPI_BTN_WORLD, MPI_OPT_WORLD, MPI_BTN_WORLD_SAVE
@@ -191,9 +194,22 @@
                 &     + dipc(3,imu,inu,ineigh,iatom)*rnabc(3))
 
                emnpl(imu,inu) = dq3*sterm/x + dq3*dterm/(x*x*x)
+               if (Kscf .eq. 1 .and. iqout .eq. 6) then
+               emnpl_noq(imu,inu) = sterm/x + dterm/(x*x*x)
+               end if 
 
                ewaldlr(imu,inu,ineigh,iatom) = ewaldlr(imu,inu,ineigh,iatom)  &
                &                             + emnpl(imu,inu)*eq2
+               if (Kscf .eq. 1 .and. iqout .eq. 6) then
+               do issh = 1, nssh(inalp)
+               gvhxc(imu,inu,issh,ialp,ineigh,iatom) = &
+               & gvhxc(imu,inu,issh,ialp,ineigh,iatom)  &
+               &            + emnpl_noq(imu,inu)*eq2
+               ! symmetrize
+               gvhxc(inu,imu,issh,ialp,jneigh,jatom) = &
+               & gvhxc(imu,inu,issh,ialp,ineigh,iatom)  
+               end do ! end do issh
+               end if ! end if Kscf .eq. 1 iqout .eq. 6
                !symmetrize:
                 ewaldlr(inu,imu,jneigh,jatom)  = ewaldlr(imu,inu,ineigh,iatom)
              end do !end do imu = 1, num_orb(in1)
@@ -243,10 +259,21 @@ do iatom = 1,natoms
                 &     + dipc(3,imu,inu,ineigh,iatom)*rnabc(3))
 
                emnpl(imu,inu) = dq3*sterm/x + dq3*dterm/(x*x*x)
+               emnpl_noq(imu,inu) = sterm/x + dterm/(x*x*x)
 
                ewaldlr(imu,inu,ineigh,iatom) = ewaldlr(imu,inu,ineigh,iatom)  &
                &                             + emnpl(imu,inu)*eq2
 
+               if (Kscf .eq. 1 .and. iqout .eq. 6) then
+               do issh = 1, nssh(inalp)
+               gvhxc(imu,inu,issh,ialp,ineigh,iatom) = &
+               & gvhxc(imu,inu,issh,ialp,ineigh,iatom)  &
+               &            + emnpl_noq(imu,inu)*eq2
+               ! symmetrize
+               !gvhxc(inu,imu,issh,ialp,jneigh,jatom) = &
+               !& gvhxc(imu,inu,issh,ialp,ineigh,iatom)  
+               end do ! end do issh
+               end if ! end if Kscf .eq. 1 iqout .eq. 6
                 end do !end do imu = 1, num_orb(in1)
             end do  ! end do inu = 1, num_orb(in2)
            end if   ! end if (x .lt. 1.0d-05)

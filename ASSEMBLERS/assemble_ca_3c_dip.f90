@@ -437,6 +437,17 @@
              ewaldsr(imu,inu,mneigh,iatom) =                            &
      &        ewaldsr(imu,inu,mneigh,iatom) + emnpl(imu,inu)*eq2
 
+           if (Kscf .eq. 1 .and. iqout .eq. 6) then 
+            do issh = 1, nssh(indna)
+             gvhxc(imu,inu,issh,ialp,mneigh,iatom) =                            &
+           &   gvhxc(imu,inu,issh,ialp,mneigh,iatom) &
+              &- emnpl_noq(imu,inu)*eq2
+             ! symmetrize
+             gvhxc(inu,imu,issh,ialp,jneigh,jatom) =                            &
+           &   gvhxc(imu,inu,issh,ialp,mneigh,iatom)
+            end do ! end do issh 
+           end if ! end if Kscf .eq. 1 .and. iqout .eq. 6
+
          !Symmetrize Hamiltonian (April 2018): jneigh is the
             !back_neigh:
            ewaldsr(inu,imu,jneigh,jatom) = ewaldsr(imu,inu,mneigh,iatom)
@@ -480,7 +491,7 @@
              if (iqout .eq. 6) then
              gvhxc(imu,inu,isorp,ialp,mneigh,iatom) = & 
              &     gvhxc(imu,inu,isorp,ialp,mneigh,iatom) +    &
-                                      (stn1*bccax(imu,inu) +    &
+             &                         (stn1*bccax(imu,inu) +    &
              &                        stn2*emnpl_noq(imu,inu))*eq2
              ! write(*,*) 'in 3c g = ', gvhxc(imu,inu,isorp,ialp,mneigh,iatom)
              ! symmetry

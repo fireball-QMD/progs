@@ -296,6 +296,13 @@
      &                       + (dterm/(y*y*y))
              ewaldsr(imu,inu,matom,iatom) =                                  &
      &             ewaldsr(imu,inu,matom,iatom) + emnpl(imu,inu)*eq2
+        ! Add the ewaldsr to the gvhxc
+        if (Kscf .eq. 1 .and. iqout .eq. 6) then
+          do issh = 1, nssh(in2)
+             gvhxc(imu,inu,issh,jatom,matom,iatom) =                                  &
+     &             gvhxc(imu,inu,issh,jatom,matom,iatom) - emnpl_noq(imu,inu)*eq2
+          end do ! end do issh
+        end if ! end if Kscf .eq. 1 .and. iqout .eq. 6
             end do
            end do
  

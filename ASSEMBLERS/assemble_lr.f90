@@ -68,6 +68,8 @@
         use dimensions
         use interactions
         use neighbor_map
+        use options, only : iqout
+        use scf, only : Kscf
         implicit none
  
 ! Argument Declaration and Description
@@ -94,11 +96,14 @@
         integer mbeta
         integer my_proc
         integer natomsp
- 
+        integer katom
+        integer in3
+         
         real distance12
         real dq1
         real dterm
         real sterm
+
  
         real, dimension (3) :: r1
         real, dimension (3) :: r2
@@ -201,6 +206,17 @@
             ewaldlr(imu,inu,ineigh,iatom) = ewaldlr(imu,inu,ineigh,iatom)    &
      &       + (sterm - dterm)*sub_ewald(iatom)*eq2                          &
      &       + (sterm + dterm)*sub_ewald(jatom)*eq2
+              if (Kscf .eq. 1 .and. iqout .eq. 6) then
+               do katom = 1,natoms
+                in3 = imass(katom)
+                do issh = 1, nssh(in3)
+                  gvhxc(imu,inu,issh,katom,ineigh,iatom) = &
+               & gvhxc(imu,inu,issh,katom,ineigh,iatom) + &
+               &  (sterm - dterm)*ewald(iatom,katom)*eq2 + &
+                 & (sterm + dterm)*ewald(jatom,katom)*eq2
+                 end do ! end do issh
+               end do   ! end do katom
+              end if !  end if Kscf .eq. 1 .and. iqout .eq. 6
            end do
           end do
  

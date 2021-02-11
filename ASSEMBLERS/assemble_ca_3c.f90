@@ -76,6 +76,8 @@
         use interactions
         use neighbor_map
         use gaussG
+        use options, only : iqout
+        use scf, only : Kscf
 
         implicit none
  
@@ -142,6 +144,7 @@
         real, dimension (numorb_max, numorb_max) :: bcca
         real, dimension (numorb_max, numorb_max) :: bccax
         real, dimension (numorb_max, numorb_max) :: emnpl
+        real, dimension (numorb_max, numorb_max) :: emnpl_noq
         real, dimension (3, 3, 3) :: deps
         real, dimension (3, 3) :: eps
         real, dimension (3) :: r1
@@ -424,11 +427,28 @@
              dterm = dq3*dip(imu,inu,mneigh,iatom)/y
              emnpl(imu,inu) = (sterm - dterm)/distance_13               &
      &                       + (sterm + dterm)/distance_23
+
+             emnpl_noq(imu,inu) = ((s_mat(imu,inu,mneigh,iatom)/2.0d0)-&
+             & (dip(imu,inu,mneigh,iatom)/y))/distance_13+ &
+             &  ((s_mat(imu,inu,mneigh,iatom)/2.0d0)+&
+             & (dip(imu,inu,mneigh,iatom)/y))/distance_23
+
              ewaldsr(imu,inu,mneigh,iatom) =                            &
      &        ewaldsr(imu,inu,mneigh,iatom) + emnpl(imu,inu)*eq2
             !SFIRE
             ewaldsr(inu,imu,jneigh,jatom)=ewaldsr(imu,inu,mneigh,iatom)
             !SFIRE
+            
+             if (Kscf .eq. 1 .and. iqout .eq. 6) then
+            do issh = 1, nssh(indna)
+             gvhxc(imu,inu,issh,ialp,mneigh,iatom) = &
+           &   gvhxc(imu,inu,issh,ialp,mneigh,iatom) &
+              &- emnpl_noq(imu,inu)*eq2
+             ! symmetrize
+             gvhxc(inu,imu,issh,ialp,jneigh,jatom) = &
+           &   gvhxc(imu,inu,issh,ialp,mneigh,iatom)
+            end do ! end do issh
+           end if ! end if Kscf .eq. 1 .and. iqout .eq. 6
             end do
            end do
  
@@ -464,6 +484,19 @@
               end if
 
               bcca(imu,inu) = bcca(imu,inu) + bccax(imu,inu)*dxn
+               if (Kscf .eq. 1) then
+             if (iqout .eq. 6) then
+             gvhxc(imu,inu,isorp,ialp,mneigh,iatom) = &
+             &     gvhxc(imu,inu,isorp,ialp,mneigh,iatom) +    &
+             &       (stn1(imu,inu)*bccax(imu,inu) +    &
+             &       stn2(imu,inu)*emnpl_noq(imu,inu))*eq2
+             ! write(*,*) 'in 3c g = ',
+             ! gvhxc(imu,inu,isorp,ialp,mneigh,iatom)
+             ! symmetry
+             gvhxc(inu,imu,isorp,ialp,jneigh,jatom) = &
+             &     gvhxc(imu,inu,isorp,ialp,mneigh,iatom)
+             end if ! end if iqout .eq. 6
+             end if ! end if Kscf .eq. 1
              end do
             end do
 
