@@ -405,14 +405,16 @@
      &        + (dq1*sterm_1 + dq1*dterm_1) + (dq2*sterm_2 - dq2*dterm_2)
            ! ???? ewaldsr on top case??
             if (Kscf .eq. 1 .and. iqout .eq. 6) then
-               do issh = 1, nssh(in2)
+             do issh = 1, nssh(in2)
              emnpl_noq(imu,inu) = sterm_1-dterm_1  ! on top right
-             gvhxc(imu,inu,issh,jatom,ineigh,iatom) = &
-     &             gvhxc(imu,inu,issh,jatom,ineigh,iatom) - emnpl_noq(imu,inu)*eq2
+               gvhxc(imu,inu,issh,jatom,ineigh,iatom) = &
+        &             gvhxc(imu,inu,issh,jatom,ineigh,iatom) - emnpl_noq(imu,inu)
+             end do ! end do issh
+             do issh = 1, nssh(in1)
              emnpl_noq(imu,inu) = sterm_1+dterm_1   ! on top left
              gvhxc(imu,inu,issh,iatom,ineigh,iatom) = &
-     &             gvhxc(imu,inu,issh,iatom,ineigh,iatom) - emnpl_noq(imu,inu)*eq2
-          end do ! end do issh
+      &             gvhxc(imu,inu,issh,iatom,ineigh,iatom) - emnpl_noq(imu,inu)
+            end do ! end do issh
             end if ! end Kscf .eq. 1 .and. iqout .eq. 6)
             end do
            end do

@@ -108,8 +108,10 @@
         integer, dimension(nssh_tot) :: ipiv
         integer, dimension(100) :: work
         integer :: beta, alpha, ialp, ina, matom
-        real,dimension(nssh_tot,nssh_tot) :: M
-        real,dimension(1,nssh_tot) :: B
+        !real,dimension(nssh_tot,nssh_tot) :: M
+        !real,dimension(1,nssh_tot) :: B
+        real,dimension(nssh_tot+1,nssh_tot+1) :: M
+        real,dimension(1,nssh_tot+1) :: B
         real auxgS
         real Ntot
 
@@ -749,6 +751,13 @@
                   end do ! end do iatom
               end do ! end do issh
           end do ! end do ialp
+          M(nssh_tot+1,nssh_tot+1) = 0
+          B(1,nssh_tot+1) = ztot
+          do alpha = 1,nssh_tot
+           M(nssh_tot+1,alpha) = 1
+           M(alpha,nssh_tot+1) = 1
+          end do
+              
                  do beta = 1, nssh_tot
                  write(*,*) 'alpha B ', beta, B(1,beta)
                  end do
@@ -770,7 +779,7 @@
          !call ssysv( 'U', nssh_tot, 1, M, nssh_tot, ipiv, B, &
          !              &      nssh_tot, work, lwork, info )
          !call sgesv(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
-         call dgesv(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info)
+         call dgesv(nssh_tot+1,1,M,nssh_tot+1,ipiv,B,nssh_tot+1,info)
          !call sgetrs(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
 !*
 !*     Check for the exact singularity.
@@ -785,27 +794,28 @@
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++
          alpha = 0
-         Ntot = 0
+!         Ntot = 0
          do iatom = 1, natoms
              in1 = imass(iatom)
              do issh = 1, nssh(in1)
                  alpha = alpha + 1
-                 write(*,*) 'indices: ', iatom, issh, alpha, B(1,alpha)
+!                 write(*,*) 'indices: ', iatom, issh, alpha, B(1,alpha)
                  Qout(issh,iatom) = B(1,alpha)
-                 Ntot = Ntot + B(1,alpha)
+!                 Ntot = Ntot + B(1,alpha)
              end do ! end do issh
          end do ! end do iatom
+!          write(*,*) 'Now Ntot is: ', Ntot
       ! renorm total charge  (ztot = total charge)
-         do iatom = 1, natoms
-             in1 = imass(iatom)
-             do issh = 1, nssh(in1)
+!         do iatom = 1, natoms
+!            in1 = imass(iatom)
+!             do issh = 1, nssh(in1)
                  !alpha = alpha + 1
                  !write(*,*) 'indices: ', iatom, issh, alpha, B(1,alpha)
-                 Qout(issh,iatom) = Qout(issh,iatom) + (ztot-Ntot)/nssh_tot
-             end do ! end do issh
-         end do ! end do iatom
-          write(*,*) 'Ntot = ' , Ntot  
-          write(*,*) 'Qoutno corrected = ', Qout 
+                 !Qout(issh,iatom) = Qout(issh,iatom) + (ztot-Ntot)/nssh_tot
+!            end do ! end do issh
+!         end do ! end do iatom
+        !  write(*,*) 'Ntot = ' , Ntot  
+!          write(*,*) 'Qoutno corrected = ', Qout 
 ! ******************************************************************************
 ! ******************************************************************************
 
@@ -838,6 +848,9 @@
           end do ! end do iatom = 1,natoms
              write(*,*) 'Qout corrected = ', Qout 
       end if  !end if (iqout .eq. 6)
+
+!                 CORRECT NEGATIVE CHARGES BY FIXING THEM TO ZERO AND
+!                 RESOLVING THE SYSTEM
 ! ****************************************************************************
 !
 ! C O M P U T E    M U L L I K E N    P O P U L A T I O N    F O R   MOs
