@@ -104,7 +104,8 @@
                                          idftd3, dftd3_func, dftd3_version, dftd3_tz, dftd3_s6,       &
                                          dftd3_rs6, dftd3_s18, dftd3_rs18, dftd3_alp, mix_embedding,  &
                                          cut_embedding, fdataLocation, verbosity, ntpr, restartxyz,   &
-                                         inputxyz, V_intra_dip, isocket, socket, inet, port, host
+                                         inputxyz, V_intra_dip, isocket, socket, inet, port, host,    &
+                                         fine_tuning
 
 ! Procedure
 ! ===========================================================================
@@ -126,6 +127,7 @@
         iensemble = 0
         ifixcharge = 0
         ifixneigh = 0
+        fine_tuning = 0
         iumbrella = 0
         ibarrier = 0
         ivdw = 0
@@ -511,6 +513,7 @@
         write (*,*) ' (This is necessary if you are doing a band-structure '
         write (*,*) ' calculation for example). '
         write (*,*) ' ifixcharge = ', ifixcharge
+        write (*,*) ' fine_tuning = ', fin_tuning
 
 ! option 12: ifixneigh
         write (*,*) '  '
@@ -894,6 +897,7 @@
         write (50, *) '  qstate            : ',qstate
         write (50, *) '  icluster          : ',icluster
         write (50, *) '  iensemble         : ',iensemble
+        write (50, *) '  fine_tuning       : ',fine_tuning
         write (50, *) '  ifixcharge        : ',ifixcharge
         write (50, *) '  ifixneigh         : ',ifixneigh
         write (50, *) '  iumbrella         : ',iumbrella
