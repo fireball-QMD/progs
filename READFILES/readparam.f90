@@ -513,7 +513,7 @@
         write (*,*) ' (This is necessary if you are doing a band-structure '
         write (*,*) ' calculation for example). '
         write (*,*) ' ifixcharge = ', ifixcharge
-        write (*,*) ' fine_tuning = ', fin_tuning
+        write (*,*) ' fine_tuning = ', fine_tuning
 
 ! option 12: ifixneigh
         write (*,*) '  '

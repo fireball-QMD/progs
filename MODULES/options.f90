@@ -27,6 +27,7 @@
         integer icluster               ! Calculate gas-phase
         integer ifixcharge             ! Fix the charges
         integer ifixneigh              ! Fix the neighbors
+        integer fine_tuning            ! Fix the neighbors
         integer igauss                 ! Use gaussian approximation to 3-center
         integer iimage                 ! How often we image the box.
         integer ipathintegral          ! Add quantum effects - path integral
