@@ -5,6 +5,8 @@
 ! Energy and force contributions and terms 
         real atomic_energy
         real etot
+        real etot_1
+        real etot_2
         real ebs
         real etotnew
         real etotold

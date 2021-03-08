@@ -478,9 +478,10 @@ subroutine Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step, &
         use outputs, only: iwrtvel,iwrtxyz
         use configuration, only: natoms,ratom,ximage,symbol,xyz2line,vatom,init_time
         use interactions, only: imass
-        use charges, only: nzx
+        use charges, only: nzx, Qin, Qold
         use md, only: acfile,xvfile
-        use options, only : restartxyz
+        use options, only : restartxyz, ifixcharge, fine_tuning
+        use energy, only : etot_1,etot_2
         implicit none
         logical :: writeOutput
         integer :: itime_step,iatom,in1
@@ -526,6 +527,17 @@ subroutine Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step, &
           close (unit = 18)
          endif
         endif
+
+!d@ni Qmin
+        if (fine_tuning .eq. 1) then
+          if ((etot > etot_1) .and. (etot_1 < etot_2)) then
+            ifixcharge=1
+            Qin=Qold
+          end if
+          Qold=Qin
+          etot_2=etot_1
+          etot_1=etot
+        end if
 
         700 format (2x, i2, 3(2x,f12.6))
         701 format (2x, a2, 3(2x,f12.6))

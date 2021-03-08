@@ -12,6 +12,7 @@
          integer, dimension (:), allocatable :: nzx
 
          real, dimension (:, :), allocatable :: Qin
+         real, dimension (:, :), allocatable :: Qold
          real, dimension (:), allocatable :: Qinmixer
          real, dimension (:, :), allocatable :: Qneutral
          real, dimension (:, :), allocatable :: Qout
