@@ -29,7 +29,7 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
                 LFLAGS =   ${MKLROOT}/lib/intel64/libmkl_blas95_lp64.a ${MKLROOT}/lib/intel64/libmkl_lapack95_lp64.a -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl \
-                          ${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm -static-intel 
+                          ${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm -static
 		BLAS = 
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
