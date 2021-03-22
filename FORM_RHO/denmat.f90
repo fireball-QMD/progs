@@ -718,7 +718,7 @@
                       inumorb = 1 ! counter for number of orbitals in atom iatom
                       do issh1 = 1, nssh(in1)
                           beta = beta + 1 ! transform to one index
-                          write(*,*) 'beta indices', iatom, issh1, beta
+                          !write(*,*) 'beta indices', iatom, issh1, beta
                           ! Spherical approximation to matrix elements:
                            l = lssh(issh1,in1)
                            auxgS = 0.0d0
@@ -733,7 +733,7 @@
                           auxgS = auxgS/(2*l+1)  ! 4*pi??
                           ! Now:
                           M(alpha,beta) =  auxgS !gvhxcs(issh1,issh,iatom,ialp)                   
-                          write(*,*) alpha, beta, M(alpha,beta) 
+                          !write(*,*) alpha, beta, M(alpha,beta) 
                           inumorb = inumorb + 2*l+1
                       end do ! end do issh1
                       do ineigh = 1, neighn(iatom)
@@ -758,9 +758,9 @@
            M(alpha,nssh_tot+1) = 1
           end do
               
-                 do beta = 1, nssh_tot
-                 write(*,*) 'alpha B ', beta, B(1,beta)
-                 end do
+                 !do beta = 1, nssh_tot
+                 !write(*,*) 'alpha B ', beta, B(1,beta)
+                 !end do
 !  +++++++++++++++++++++++++++++++++++++++++++++++++++++
 !
 !  SOLVE SYSTEM Mx = B.  x are the charges
@@ -784,7 +784,7 @@
 !*
 !*     Check for the exact singularity.
 !*
-                 write(*,*) 'B output ', B
+               !  write(*,*) 'B output ', B
       IF( info.GT.0 ) THEN
          WRITE(*,*)'The element of the diagonal factor '
          WRITE(*,*)'D(',info,',',info,') is zero, so that'
@@ -846,7 +846,7 @@
 
             end do !end do issh = 1, nssh(in1)
           end do ! end do iatom = 1,natoms
-             write(*,*) 'Qout corrected = ', Qout 
+            ! write(*,*) 'Qout corrected = ', Qout 
       end if  !end if (iqout .eq. 6)
 
 !                 CORRECT NEGATIVE CHARGES BY FIXING THEM TO ZERO AND

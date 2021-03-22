@@ -114,6 +114,7 @@
         real aux1, aux2, aux3
         real qmulliken_mix
         real deltae
+
         real dot
         real gutr
         real pcharge
@@ -130,6 +131,20 @@
         complex step1, step2
  
         logical read_occupy
+
+        integer issh1, mu_min, mu_max, l, inumorb
+        integer :: info, lwork
+        integer, dimension(nssh_tot) :: ipiv
+        integer, dimension(100) :: work
+        integer :: beta, alpha, ialp, ina, matom
+        !real,dimension(nssh_tot,nssh_tot) :: M
+        !real,dimension(1,nssh_tot) :: B
+        real,dimension(nssh_tot+1,nssh_tot+1) :: M
+        real,dimension(1,nssh_tot+1) :: B
+        real auxgS
+        real Ntot
+        real, dimension(nsh_max,natoms) :: Qout_est
+        real, dimension(natoms) :: Qest_TOT
 
 ! A bunch of memory to be used in many ways
         integer jnu,jmu
@@ -842,6 +857,154 @@ call write_dipole('_MULL_KS')
          end if     ! endif of ifixcharges
 
  call write_dipole('_MULD_KS')
+
+
+
+
+!##################################################################
+
+!*****
+!
+! CHARGES VARIATIONAL
+! ****************************************************************************
+! integer :: beta, alpha, ialp, ina
+! real,dimension(nssh_tot,nssh_tot) :: M
+! real,dimension(nssh_tot) :: B
+! In MODULES/interactions:
+! real, dimension(:,:,:,:,:,:), allocatable :: gvhxc
+! real, dimension(:,:,:,:), allocatable :: gvhxcS
+! In ALLOCATIONS/allocate_rho:
+! allocate (gvhxc(numorb_max,numorb_max,nssh_max,natoms,neigh_max,natoms))
+! allocate (gvhxcS(nssh_max,nssh_max,natoms,natoms))
+! (remember to include them also in deallocate_rho!!!)
+      if (iqout .eq. 6) then
+      B = 0.0d0
+           open(unit = 111, file = 'CHARGES_STATIONARY', status = 'unknown')
+          !write(*,*) 'ANKAIS'     
+     alpha = 0
+          do ialp = 1, natoms
+              ina = imass(ialp)
+              !gvhxc
+              do issh = 1, nssh(ina)
+                 alpha = alpha + 1 ! transform to one index
+                 !write(*,*) 'alpha indices', ialp, issh, alpha
+                  beta = 0
+                  do iatom = 1, natoms
+                      in1 = imass(iatom)
+                      matom = neigh_self(iatom)
+                      inumorb = 1 ! counter for number of orbitals in atom iatom
+ do issh1 = 1, nssh(in1)
+                          beta = beta + 1 ! transform to one index
+                          !write(*,*) 'beta indices', iatom, issh1, beta
+                          ! Spherical approximation to matrix elements:
+                           l = lssh(issh1,in1)
+                           auxgS = 0.0d0
+                           ! define mu_min and mu_max: the orbitals
+                           ! indices associated to the shell issh1
+                           mu_min = inumorb
+                           mu_max = mu_min+2*l
+                           do imu = mu_min, mu_max
+          !write(*,*) 'ANKAIS11'     
+                                auxgS =  auxgS &
+                              & +  gvhxc(imu,imu,issh,ialp,matom,iatom)
+          !write(*,*) 'ANKAIS12'     
+                           end do ! end do imu = mu_min, mu_max
+                          auxgS = auxgS/(2*l+1)  ! 4*pi??
+                          ! Now:
+                          M(alpha,beta) =  auxgS !gvhxcs(issh1,issh,iatom,ialp)
+                          !write(*,*) alpha, beta, M(alpha,beta)
+                          inumorb = inumorb + 2*l+1
+                      end do ! end do issh1
+                      do ineigh = 1, neighn(iatom)
+                          mbeta = neigh_b(ineigh,iatom)
+                          jatom = neigh_j(ineigh,iatom)
+                          in2 = imass(jatom)
+                          do imu = 1, num_orb(in1)
+                             do inu = 1, num_orb(in2)
+                                  B(1,alpha) = B(1,alpha) + &
+                                  rho(imu,inu,ineigh,iatom)*gvhxc(imu, &
+                                      &    inu,issh,ialp,ineigh,iatom)
+                              end do ! end do inu
+                         end do ! end do imu
+                      end do ! end do ineigh
+                 end do ! end do iatom
+              end do ! end do issh
+          end do ! end do ialp
+          M(nssh_tot+1,nssh_tot+1) = 0
+          B(1,nssh_tot+1) = ztot
+          do alpha = 1,nssh_tot
+           M(nssh_tot+1,alpha) = 1
+           M(alpha,nssh_tot+1) = 1
+          end do
+
+                 !do beta = 1, nssh_tot
+                 !write(*,*) 'alpha B ', beta, B(1,beta)
+                 !end do
+!  +++++++++++++++++++++++++++++++++++++++++++++++++++++
+!
+          !write(*,*) 'ANKAIS3'     
+call dgesv(nssh_tot+1,1,M,nssh_tot+1,ipiv,B,nssh_tot+1,info)
+ IF( info.GT.0 ) THEN
+         WRITE(*,*)'The element of the diagonal factor '
+         WRITE(*,*)'D(',info,',',info,') is zero, so that'
+         WRITE(*,*)'D is singular; the solution could not be computed.'
+         STOP
+      END IF
+ alpha = 0
+!         Ntot = 0
+         Qout_est = 0.0d0
+         do iatom = 1, natoms
+             in1 = imass(iatom)
+             do issh = 1, nssh(in1)
+                 alpha = alpha + 1
+!                 write(*,*) 'indices: ', iatom, issh, alpha, B(1,alpha)
+                 Qout_est(issh,iatom) = B(1,alpha)
+!                 Ntot = Ntot + B(1,alpha)
+             end do ! end do issh
+         end do ! end do iatom
+
+ do iatom = 1,natoms
+            in1 = imass(iatom)
+            do issh = 1, nssh(in1)
+
+               if( Qout_est(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
+
+                  do jssh = 1, nssh(in1)
+
+                     if ( jssh .ne. issh ) then
+
+                        Qout_est(jssh,iatom) = Qout_est(jssh,iatom)+            &
+                &                         Qout_est(issh,iatom)/(nssh(in1)-1)
+
+                     end if !end if jssh .ne. issh
+
+                  end do !end if jssh = 1,nssh(in1)
+
+                  Qout_est(issh,iatom) = 0.0d0
+
+               end if !end if  Qout(issh,iatom) .lt. 0
+
+            end do !end do issh = 1, nssh(in1)
+          end do ! end do iatom = 1,natoms
+
+            Qest_TOT = 0.0d0
+            do iatom = 1,natoms
+               in1 = imass(iatom)
+               do issh = 1,nssh(in1)
+                 Qest_TOT(iatom) = Qest_TOT(iatom) + Qout_est(issh,iatom)
+               end do ! end do issh
+             write(111,'(2x, i4)',advance='no') iatom
+           write(111,'(f10.6)',advance='no') Qest_TOT(iatom)
+           do imu = 1, num_orb(in1)
+                write(111,'(f10.6)',advance='no') Qout_est(imu,iatom)
+           end do ! end do imu
+           write(111,*)
+          end do ! end do iatom
+          close(111)
+          !write(*,*) 'ANKAIS2'     
+            ! write(*,*) 'Qout corrected = ', Qout
+      end if  !end if (iqout .eq. 6)
+!##################################################################
 
 ! ****************************************************************************
 !

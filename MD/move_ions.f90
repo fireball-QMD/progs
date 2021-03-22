@@ -490,8 +490,8 @@ subroutine Move_ions_WriteOut_answerBasXyz(writeOutput,time,itime_step, &
 
         if(writeOutput)then
          
-!         call writeout_xv (xvfile, itime_step, time, imass, nzx, iwrtvel)
-!         call writeout_ac (acfile, itime_step, time, imass, nzx)
+         call writeout_xv (xvfile, itime_step, time, imass, nzx, iwrtvel)
+         call writeout_ac (acfile, itime_step, time, imass, nzx)
 ! Open the answer file. This file has the input format and is overwritten
 ! every step. For empirical (potential) is written in freq_of_outputs cycle.
          open (unit = 17, file = 'answer.bas', status = 'unknown')
