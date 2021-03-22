@@ -16,11 +16,11 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	F90 = ifort
 	PATH_MKL = ${DIR}/lib/intel64/
 	PATH_INCL = -I${DIR}/include/
-	PATH_FFTW_LIB = ${DIR}/lib/intel64/
-	PATH_FFTW_INCL = -I${DIR}/include/fftw/
+	PATH_FFTW_LIB = ${DIR}/interfaces/fftw3xf/
+	PATH_FFTW_INCL = -I${DIR}/interfaces/fftw3xf/
 
 	ifneq (,$(findstring OPT, ${MODE}))
-		FFLAGS = -O3 -r8  -fno-alias -unroll -static-intel
+		FFLAGS =  -I${MKLROOT}/include/intel64/ilp64 -i8  -I"${MKLROOT}/include" -O3 -r8  -fno-alias -unroll -static-intel
 	endif
 	ifneq (,$(findstring DEBUG, ${MODE}))
 		FFLAGS = -g -r8 -check all -fpp  -check output_conversion -check format -no-ipo
@@ -28,9 +28,8 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 		LFLAGS = 
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
-		LFLAGS =  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_ilp64.a \
-		${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a \
-		${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -Wl,--end-group -lpthread -lm -ldl -static
+                LFLAGS =   ${MKLROOT}/lib/intel64/libmkl_blas95_lp64.a ${MKLROOT}/lib/intel64/libmkl_lapack95_lp64.a -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl \
+                          ${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm -static
 		BLAS = 
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
@@ -41,7 +40,7 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 		PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
 		${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
 		LFLAGS = 
- 		FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad -static-intel
+ 		FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
 	endif
 	ifneq (,$(findstring MPI, ${PARALLEL}))
 		ifneq (,$(findstring SCALAPACK, ${METHOD}))
