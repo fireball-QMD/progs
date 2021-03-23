@@ -10,24 +10,20 @@
 ##METHOD = SCALAPACK ; PARALLEL = MPI  (only one kpts GAMMA, n processors)) 
 
 
-ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
+ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
 	F77 = ifort
 	F90 = ifort
 	PATH_MKL = ${MKLROOT}/lib/intel64/
 	PATH_INCL = -I${MKLROOT}/include/
 	PATH_FFTW_LIB = ${MKLROOT}/interfaces/fftw3xf/
 	PATH_FFTW_INCL = -I${MKLROOT}/interfaces/fftw3xf/
-
 	ifneq (,$(findstring OPT, ${MODE}))
 		FFLAGS =  -I${MKLROOT}/include/intel64/ilp64 -i8  -I"${MKLROOT}/include" -O3 -r8  -fno-alias -unroll -static-intel
 	endif
-	ifneq (,$(findstring DEBUG, ${MODE}))
-		FFLAGS = -g -r8 -check all -fpp  -check output_conversion -check format -no-ipo
-		DFLAGS = -g -r8 -check all -mp1 
-		LFLAGS = 
-	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
-                LFLAGS =   ${MKLROOT}/lib/intel64/libmkl_blas95_lp64.a ${MKLROOT}/lib/intel64/libmkl_lapack95_lp64.a -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl \
+                LFLAGS = ${MKLROOT}/lib/intel64/libmkl_blas95_lp64.a ${MKLROOT}/lib/intel64/libmkl_lapack95_lp64.a \
+                         -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_sequential.a \
+                          ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl \
                           ${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm -static
 		BLAS = 
 	endif
@@ -36,8 +32,10 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
         	F90 = mpif90
        		PATH_MPI_LIB = /opt/openmpi/lib/
         	PATH_MPI_INC = /opt/openmpi/include/
-		PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
-		${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
+		PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential \ 
+                            -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
+		            ${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic \
+                            -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
 		LFLAGS = 
  		FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
 	endif
@@ -47,8 +45,10 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	        	F90 = mpifort
         		PATH_MPI_LIB = /opt/intel/impi/4.1.0.024/lib64/
 	        	PATH_MPI_INC = /opt/intel/impi/4.1.0.024/include64/
-			PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
-			${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
+			PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential \
+                                    -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
+			             ${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic \
+                                     -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
 			LFLAGS = 
  			FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
 		endif
