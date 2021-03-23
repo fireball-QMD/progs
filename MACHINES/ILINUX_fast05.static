@@ -9,15 +9,14 @@
 #METHOD = DOUBLE GAMMA  ; PARALLEL = OPNMP (only 1 processor)
 ##METHOD = SCALAPACK ; PARALLEL = MPI  (only one kpts GAMMA, n processors)) 
 
-DIR=${MKLROOT}
 
 ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	F77 = ifort
 	F90 = ifort
-	PATH_MKL = ${DIR}/lib/intel64/
-	PATH_INCL = -I${DIR}/include/
-	PATH_FFTW_LIB = ${DIR}/interfaces/fftw3xf/
-	PATH_FFTW_INCL = -I${DIR}/interfaces/fftw3xf/
+	PATH_MKL = ${MKLROOT}/lib/intel64/
+	PATH_INCL = -I${MKLROOT}/include/
+	PATH_FFTW_LIB = ${MKLROOT}/interfaces/fftw3xf/
+	PATH_FFTW_INCL = -I${MKLROOT}/interfaces/fftw3xf/
 
 	ifneq (,$(findstring OPT, ${MODE}))
 		FFLAGS =  -I${MKLROOT}/include/intel64/ilp64 -i8  -I"${MKLROOT}/include" -O3 -r8  -fno-alias -unroll -static-intel
