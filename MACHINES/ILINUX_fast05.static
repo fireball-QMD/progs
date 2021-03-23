@@ -26,6 +26,7 @@ ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
                           ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl \
                           ${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm -static
 		BLAS = 
+	        CFLAGS = ${FFLAGS}
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
        		F77 = mpif90
@@ -38,22 +39,22 @@ ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
                             -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
 		LFLAGS = 
  		FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
+	        CFLAGS = ${FFLAGS}
 	endif
 	ifneq (,$(findstring MPI, ${PARALLEL}))
 		ifneq (,$(findstring SCALAPACK, ${METHOD}))
-        		F77 = mpifort
-	        	F90 = mpifort
-        		PATH_MPI_LIB = /opt/intel/impi/4.1.0.024/lib64/
-	        	PATH_MPI_INC = /opt/intel/impi/4.1.0.024/include64/
-			PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential \
-                                    -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
-			             ${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic \
-                                     -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
+        		F77 = mpiifort
+	        	F90 = mpiifort
+        		PATH_MPI_LIB = ${I_MPI_ROOT}/lib64/
+	        	PATH_MPI_INC = ${I_MPI_ROOT}/include64/
+			PARLFLAGS =   ${MKLROOT}/lib/intel64/libmkl_blas95_ilp64.a ${MKLROOT}/lib/intel64/libmkl_lapack95_ilp64.a \
+                                      -L${MKLROOT}/lib/intel64 -lmkl_scalapack_ilp64 -lmkl_intel_ilp64 \
+                                      -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_ilp64 -lpthread -lm -ldl \
+                                      ${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm
 			LFLAGS = 
- 			FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
+ 			FFLAGS = -I${MKLROOT}/include/intel64/ilp64 -i8  -I"${MKLROOT}/include" -r8 
+ 			CFLAGS = -O3 -fno-alias -unroll
 		endif
 	endif
 	CC = icc
-	CFLAGS = ${FFLAGS}
 endif
-

@@ -45,9 +45,9 @@ MACHINE = ILINUX_fast05.static
 
 # Pick your parallel type: <blank for none>, MPI, MPICH (MUST set method below)
 # or OPENMP 
-#PARALLEL = MPI
+PARALLEL = MPI
 #PARALLEL = OPENMP
-PARALLEL = 
+#PARALLEL = 
 # Note: the linear-scaling option is in the testing stages only right now, so
 # setting to ORDERN here may mess things up.
 # Pick the method that you are using: <blank for nothing special>, SCALAPACK
@@ -61,8 +61,8 @@ PARALLEL =
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
 #METHOD = DOUBLE 
-METHOD = GAMMA 
-#METHOD = SCALAPACK
+#METHOD = GAMMA 
+METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
 CCOMPILE = NO
