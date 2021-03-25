@@ -158,7 +158,7 @@
 !
 ! ****************************************************************************
 !
-             if (iqout .eq. 6)
+             if (iqout .eq. 6)then
                allocate( M(nssh_tot+1,nssh_tot+1) )
                allocate( B(1,nssh_tot+1) )
                allocate( ipiv(nssh_tot) )
