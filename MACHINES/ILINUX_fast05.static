@@ -45,8 +45,8 @@ ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
 		ifneq (,$(findstring SCALAPACK, ${METHOD}))
         		F77 = mpiifort
 	        	F90 = mpiifort
-        		PATH_MPI_LIB = ${I_MPI_ROOT}/lib64/
-	        	PATH_MPI_INC = ${I_MPI_ROOT}/include64/
+        		PATH_MPI_LIB = ${I_MPI_ROOT}/lib/debug_mt/
+	        	PATH_MPI_INC = ${I_MPI_ROOT}/include/
 			PARLFLAGS =   ${MKLROOT}/lib/intel64/libmkl_blas95_ilp64.a ${MKLROOT}/lib/intel64/libmkl_lapack95_ilp64.a \
                                       -L${MKLROOT}/lib/intel64 -lmkl_scalapack_ilp64 -lmkl_intel_ilp64 \
                                       -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_ilp64 -lpthread -lm -ldl \

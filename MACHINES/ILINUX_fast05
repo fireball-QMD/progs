@@ -9,22 +9,22 @@
 #METHOD = DOUBLE GAMMA  ; PARALLEL = OPNMP (only 1 processor)
 ##METHOD = SCALAPACK ; PARALLEL = MPI  (only one kpts GAMMA, n processors)) 
 
-DIR=${MKLROOT}
-
 ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	F77 = ifort
 	F90 = ifort
-	PATH_MKL = ${DIR}/lib/intel64/
-	PATH_INCL = -I${DIR}/include/
-	PATH_FFTW_LIB = ${DIR}/interfaces/fftw3xf/
-	PATH_FFTW_INCL = -I${DIR}/interfaces/fftw3xf/
+	PATH_MKL = ${MKLROOT}/lib/intel64/
+	PATH_INCL = -I${MKLROOT}/include/
+	PATH_FFTW_LIB = ${MKLROOT}/interfaces/fftw3xf/
+	PATH_FFTW_INCL = -I${MKLROOT}/interfaces/fftw3xf/
 
 	ifneq (,$(findstring OPT, ${MODE}))
 		FFLAGS = -O3 -r8  -fno-alias -unroll -fPIC
+		CFLAGS = -O3 -fno-alias -unroll
 	endif
 	ifneq (,$(findstring DEBUG, ${MODE}))
 		FFLAGS = -g -r8 -check all -fpp  -check output_conversion -check format -no-ipo
 		DFLAGS = -g -r8 -check all -mp1 
+		CFLAGS = -O3 -fno-alias -unroll
 		LFLAGS = 
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
@@ -41,20 +41,21 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 		${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
 		LFLAGS = 
  		FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
+		CFLAGS = ${FFLAGS}
 	endif
 	ifneq (,$(findstring MPI, ${PARALLEL}))
 		ifneq (,$(findstring SCALAPACK, ${METHOD}))
-        		F77 = mpifort
-	        	F90 = mpifort
-        		PATH_MPI_LIB = /opt/intel/impi/4.1.0.024/lib64/
-	        	PATH_MPI_INC = /opt/intel/impi/4.1.0.024/include64/
-			PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
-			${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
-			LFLAGS = 
- 			FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
+        		F77 = mpiifort
+	        	F90 = mpiifort
+        		PATH_MPI_LIB = ${I_MPI_ROOT}/lib/debug_mt/
+	        	PATH_MPI_INC = ${I_MPI_ROOT}/include/
+			PARLFLAGS =  -L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl \
+			${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_intel.a -lm 
+			LFLAGS =
+                        FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad
+                        CFLAGS = -O3 -fno-alias -unroll 
 		endif
 	endif
 	CC = icc
-	CFLAGS = ${FFLAGS}
 endif
 

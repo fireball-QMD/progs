@@ -51,7 +51,6 @@
         use options 
         use scf
         use energy
-        use options, only : verbosity
         use interactions, only : g2nu 
         implicit none
  
