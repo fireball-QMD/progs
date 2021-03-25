@@ -105,13 +105,16 @@
         integer nnu
         integer issh1, mu_min, mu_max, l, inumorb
         integer :: info, lwork
-        integer, dimension(nssh_tot) :: ipiv
+        !integer, dimension(nssh_tot) :: ipiv
         integer, dimension(100) :: work
         integer :: beta, alpha, ialp, ina, matom
         !real,dimension(nssh_tot,nssh_tot) :: M
         !real,dimension(1,nssh_tot) :: B
-        real,dimension(nssh_tot+1,nssh_tot+1) :: M
-        real,dimension(1,nssh_tot+1) :: B
+        !real,dimension(nssh_tot+1,nssh_tot+1) :: M
+        !real,dimension(1,nssh_tot+1) :: B
+        integer, dimension(:), allocatable :: ipiv
+        real,dimension(:,:),allocatable :: M
+        real,dimension(:,:), allocatable :: B
         real auxgS
         real Ntot
 
@@ -155,6 +158,15 @@
 !
 ! ****************************************************************************
 !
+             if (iqout .eq. 6)
+               allocate( M(nssh_tot+1,nssh_tot+1) )
+               allocate( B(1,nssh_tot+1) )
+               allocate( ipiv(nssh_tot) )
+             else
+               allocate( M(1,1) )
+               allocate( B(1,1) )
+               allocate( ipiv(1) )
+             end if
 !                     C H A R G E    O C C U P A T I O N S
 ! ****************************************************************************
 ! If there exists a file 'OCCUPATION', then make a list of energy eigenvalues
