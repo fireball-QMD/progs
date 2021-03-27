@@ -19,6 +19,8 @@ ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
 	PATH_FFTW_INCL = -I${MKLROOT}/interfaces/fftw3xf/
 	ifneq (,$(findstring OPT, ${MODE}))
 		FFLAGS =  -I${MKLROOT}/include/intel64/ilp64 -i8  -I"${MKLROOT}/include" -O3 -r8  -fno-alias -unroll -static-intel
+		FFLAGS = -O3 -r8  -fno-alias -unroll -fPIC -static-intel
+	        CFLAGS = -O3
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
                 LFLAGS = ${MKLROOT}/lib/intel64/libmkl_blas95_lp64.a ${MKLROOT}/lib/intel64/libmkl_lapack95_lp64.a \
@@ -26,7 +28,6 @@ ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
                           ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm -ldl \
                           ${PATH_FFTW_LIB}libfftw3xf_intel.a ${PATH_FFTW_INCL} -lm -static
 		BLAS = 
-	        CFLAGS = ${FFLAGS}
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
        		F77 = mpif90
