@@ -49,7 +49,8 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 	        	F90 = mpiifort
         		PATH_MPI_LIB = ${I_MPI_ROOT}/lib/debug_mt/
 	        	PATH_MPI_INC = ${I_MPI_ROOT}/include/
-			PARLFLAGS =  -L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl \
+			PARLFLAGS = -L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64\
+                        -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl \
 			${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_intel.a -lm 
 			LFLAGS =
                         FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad
