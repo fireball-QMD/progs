@@ -33,15 +33,15 @@ ifneq (,$(findstring ILINUX_fast05, ${MACHINE}))
 		BLAS = 
 	endif
 	ifneq (,$(findstring OPENMP, ${PARALLEL}))
-       		F77 = mpif90
-        	F90 = mpif90
+       		F77 = mpiifort
+        	F90 = mpiifort
        		PATH_MPI_LIB = /opt/openmpi/lib/
         	PATH_MPI_INC = /opt/openmpi/include/
 		PARLFLAGS = -L${PATH_MKL} -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm \
 		${PATH_FFTW_INCL} ${PATH_FFTW_LIB}libfftw3xf_ifort.a -lm -Bdynamic -L${PATH_MPI_LIB} -I${PATH_MPI_INC} -lmpi	
 		LFLAGS = 
  		FFLAGS = -r8 -O2 -funroll-loops -mtune=pentium4 -assume byterecl -align -pad 
-		CFLAGS = ${FFLAGS}
+		CFLAGS = -O3 -fno-alias -unroll
 	endif
 	ifneq (,$(findstring MPI, ${PARALLEL}))
 		ifneq (,$(findstring SCALAPACK, ${METHOD}))
