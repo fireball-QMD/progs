@@ -1,6 +1,5 @@
 &option
 nstepf = 1
-iqout=6
 basisfile = 'ini.bas'
 lvsfile = 'ini.lvs'
 kptpreference = 'ini.kpts'
