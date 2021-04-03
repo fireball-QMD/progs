@@ -30,3 +30,25 @@ n_atom =  2048 : time =  2564.55112800000  :  ETOT = -217862.785396
 Utilizando fireball.12.11_intel64-gamma.x (-dynamic)
 n_atom =  1024 : time =  471.829271000000  :  ETOT = -108930.943913
 n_atom =  2048 : time =  2581.94648300000  :  ETOT = -217862.785396
+
+
+Las pruebas han sido realizadas en 40 cores Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz y MemTotal : 377 GB
+n_atom =  2 : time =  0.227785000000000  :  ETOT = -193.097124
+n_atom =  16 : time =  0.690364000000000  :  ETOT = -1682.833561
+n_atom =  128 : time =  5.19193100000000  :  ETOT = -13608.135670
+n_atom =  512 : time =  48.5050540000000  :  ETOT = -54460.017633
+n_atom =  1024 : time =  251.457414000000  :  ETOT = -108930.943911
+n_atom =  2048 : time =  1473.92808900000  :  ETOT = -217862.785390
+
+
+
+      
+        
+
+      
+
+
+
+      
+        
+
