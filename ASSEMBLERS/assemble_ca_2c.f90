@@ -147,8 +147,8 @@
         ewaldsr = 0.0d0
         dip = 0.0d0
         dipp = 0.0d0
-         if (Kscf .eq. 1) then
-        gvhxc = 0.0d0
+        if (Kscf .eq. 1 .and. iqout .eq. 6) then
+          gvhxc = 0.0d0
         end if ! end if Kscf .eq. 1
 
 ! Determine which atoms are assigned to this processor.
