@@ -33,9 +33,21 @@ n_atom =  1024 : time =  1914.11101100000  :  ETOT = -108931.880617
 n_atom =  2048 : time =  11873.8838950000  :  ETOT = -217863.579315
 
 Las pruebas han sido realizadas en 40 cores Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz y MemTotal : 377 GB
+fireball.21.03_intel-double.x
 n_atom =  2 : time =  0.325662000000000  :  ETOT = -212.756604
 n_atom =  16 : time =  1.00625100000000  :  ETOT = -1702.052753
 n_atom =  128 : time =  12.1400490000000  :  ETOT = -13616.480003
 n_atom =  512 : time =  314.395859000000  :  ETOT = -54462.126250
 n_atom =  1024 : time =  1033.93559000000  :  ETOT = -108931.880615
 n_atom =  2048 : time =  5978.88824700000  :  ETOT = -217863.579309
+fireball.21.03_gnu-double.x
+n_atom =  2 : time =  0.278123000000000  :  ETOT = -212.756604
+n_atom =  16 : time =  0.988824000000000  :  ETOT = -1702.052753
+n_atom =  128 : time =  12.3134490000000  :  ETOT = -13616.480003
+n_atom =  512 : time =  315.953536000000  :  ETOT = -54462.126250
+n_atom =  1024 : time =  1038.86327600000  :  ETOT = -108931.880615
+
+
+
+
+
