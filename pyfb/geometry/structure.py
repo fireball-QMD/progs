@@ -1,6 +1,6 @@
 from  pyfb.geometry.atom import atom
 
-class structure:
+class step:
 
   def __init__(self):
     self.atom=[]
