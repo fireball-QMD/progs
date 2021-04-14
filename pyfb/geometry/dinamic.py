@@ -11,6 +11,9 @@ class dinamic:
     # x y z Qtot qs qp qd .....
     self.out=[]
 
+  def print_total_steps(self):
+    print(len(self.structure))
+  
   def append(self,structure):
     self.structure.append(structure)
 
@@ -38,6 +41,8 @@ class dinamic:
        aux.append(a)
     for i in self.structure:
       salida=[]
+      i.print()
+      print(i.atom[col[0][1]-1].r[0])
       for c in range(len(col)): 
        if col[c][0] == 'x':
          salida.append(i.atom[col[c][1]-1].r[0])
@@ -68,37 +73,58 @@ class dinamic:
 #      print(salida)
       self.out.append(salida)
 
+  def print_out(self):
+    print(self.out)
+#    for i in range(len(self.out)):
+#      print(self.out[i])
+
   def load_xyz(self,archivo,name=""):
     natoms = 0
     nstep = 0
     nlinea = 0
-    bas=structure()
-    if name != "":
-      bas.name=name
-    for linea in open(archivo):
-      line = linea.split()
-      nlinea+=1
-      if nlinea == 1 :
-        natoms = int(line[0])
-        for i in range(0,natoms):
-          bas.append(atom())
-  #    print(nlinea, line)
-      mod=(nlinea-2) % (natoms + 2)
-      if mod == natoms:
-        nstep+=1
-  #      print ("nstep++")
-      if mod == 0 :
-        bas.line2=linea
-      if mod > 0 and mod < (natoms+1):
-        r=[]
-        r.append(line[1])
-        r.append(line[2])
-        r.append(line[3])
-        if self.read_charges:
-          bas.atom[mod-1].Q=line[4]
-        bas.atom[mod-1].setR(r)
-        bas.atom[mod-1].setZ(line[0])
-        if mod == natoms:
-          self.append(bas)
-    
+    for line in open(archivo):
+        line = line.split()
+        nlinea = nlinea + 1
+        if nlinea == 1 :
+            natoms = int(line[0])
+        nstep = nlinea / (natoms + 2)
+#    print (nlinea)
+#    print natoms
+#    print (nstep)
 
+    for istep in range(1,int(nstep+1)) :
+        bas=structure()
+        if name != "":
+          bas.name=name
+        self.structure.append(bas)
+
+    nlinea = 0
+    istep = -1
+    for line in open(archivo):
+        line = line.split()
+        mod =  nlinea % (natoms + 2)
+        nlinea = nlinea + 1
+        if mod == 0 :
+            istep = istep + 1
+        if mod > 1 :
+            a=line[0]
+            ra=[]
+            ra.append(float(line[1]))
+            ra.append(float(line[2]))
+            ra.append(float(line[3]))
+           # if self.read_charges:
+           #     bas.atom[mod-1].Q=line[4]
+           # self[istep].atom[mod-1].setR(r)
+           # self[istep].atom[mod-1].setZ(line[0])
+            self.structure[istep].append(atom(a,ra))
+    
+#  def r(iatom,k,h,media):
+#    s = 0
+#    RA = 0 
+#    for bas in self.structure:
+#      if media == 0 :
+#          salida[s]=salida[s]+" "+str(bas[iatom-1].r[k]+h)
+#      else : 
+#          RA = (RA*s+bas[iatom-1].r[k])/(s+1)
+#          salida[s]=salida[s]+" "+str(RA)
+#      s=s+1
