@@ -1,4 +1,4 @@
-from  pyfb.geometry.structure import structure
+from  pyfb.geometry.step import step
 from  pyfb.geometry.atom import atom
 
 class dinamic:
