@@ -81,50 +81,34 @@ class dinamic:
   def load_xyz(self,archivo,name=""):
     natoms = 0
     nstep = 0
-    nlinea = 0
-    for line in open(archivo):
-        line = line.split()
-        nlinea = nlinea + 1
-        if nlinea == 1 :
-            natoms = int(line[0])
-        nstep = nlinea / (natoms + 2)
-#    print (nlinea)
-#    print natoms
-#    print (nstep)
-
-    for istep in range(1,int(nstep+1)) :
-        bas=step()
-        if name != "":
-          bas.name=name
-        self.step.append(bas)
-
-    nlinea = 0
-    istep = -1
-    for line in open(archivo):
-        line = line.split()
-        mod =  nlinea % (natoms + 2)
-        nlinea = nlinea + 1
-        if mod == 0 :
-            istep = istep + 1
-        if mod > 1 :
-            a=line[0]
-            ra=[]
-            ra.append(float(line[1]))
-            ra.append(float(line[2]))
-            ra.append(float(line[3]))
-           # if self.read_charges:
-           #     bas.atom[mod-1].Q=line[4]
-           # self[istep].atom[mod-1].setR(r)
-           # self[istep].atom[mod-1].setZ(line[0])
-            self.step[istep].append(atom(a,ra))
+    text=open(archivo).readlines()
+    nmaxlines=len(text)
+    i=0
+    while i < nmaxlines:
+      line=text[i].split()
+      bas=step()
+      if name != "":
+        bas.name=name
+      else:
+        bas.name="step = "+str(nstep)
+      if i == 0 :
+        natoms = int(line[0])
+        i=i+1
+      bas.line2=text[i]
+      for j in range(natoms):
+        i=i+1
+        line=text[i].split()
+        a=line[0]
+        ra=[]
+        ra.append(float(line[1]))
+        ra.append(float(line[2]))
+        ra.append(float(line[3]))
+        if self.read_charges:
+          bas.atom[mod-1].Q=line[4]
+          self[istep].atom[mod-1].setR(r)
+          self[istep].atom[mod-1].setZ(line[0])
+        bas.append(atom(a,ra))
+      i=i+1 #natom
+      i=i+1 #line2
+      self.append(bas)
     
-#  def r(iatom,k,h,media):
-#    s = 0
-#    RA = 0 
-#    for bas in self.step:
-#      if media == 0 :
-#          salida[s]=salida[s]+" "+str(bas[iatom-1].r[k]+h)
-#      else : 
-#          RA = (RA*s+bas[iatom-1].r[k])/(s+1)
-#          salida[s]=salida[s]+" "+str(RA)
-#      s=s+1
