@@ -33,50 +33,62 @@ class dinamic:
     for i in self.step:
       print(i.name)
 
-  def get(self,col):
-    count=0.0
-    aux=[]
-    for i in range(len(col)):
-       a=0.0
-       aux.append(a)
-    for i in self.step:
-      salida=[]
-      i.print()
-      print(i.atom[col[0][1]-1].r[0])
-      for c in range(len(col)): 
-       if col[c][0] == 'x':
-         salida.append(i.atom[col[c][1]-1].r[0])
-       if col[c][0] == 'y':
-         salida.append(i.atom[col[c][1]-1].r[1])
-       if col[c][0] == 'z':
-         salida.append(i.atom[col[c][1]-1].r[2])
-       if col[c][0] == 'd':
-         salida.append(str(i.atom[col[c][1]-1].distancia(i.atom[col[c][2]-1])))
-       if col[c][0] == 'ang':
-         salida.append(str(i.atom[col[c][1]-1].ang(i.atom[col[c][2]-1],i.atom[col[c][3]-1])))
-       if col[c][0] == 'X':
-         aux[c]=float(i.atom[col[c][1]-1].r[0])/(count+1)+float(aux[c])*count/(count+1)
-         salida.append(str(aux[c]))
-       if col[c][0] == 'Y':
-         aux[c]=float(i.atom[col[c][1]-1].r[1])/(count+1)+float(aux[c])*count/(count+1)
-         salida.append(str(aux[c]))
-       if col[c][0] == 'Z':
-         aux[c]=float(i.atom[col[c][1]-1].r[2])/(count+1)+float(aux[c])*count/(count+1)
-         salida.append(str(aux[c]))
-       if col[c][0] == 'D':
-         aux[c]=float(i.atom[col[c][1]-1].distancia(i.atom[col[c][2]-1]))/(count+1)+float(aux[c])*count/(count+1)
-         salida.append(str(aux[c]))
-       if col[c][0] == 'ANG':
-         aux[c]=float(i.atom[col[c][1]-1].ang(i.atom[col[c][2]-1],i.atom[col[c][3]-1]))/(count+1)+float(aux[c])*count/(count+1)
-         salida.append(str(aux[c]))
-      count=count+1
-#      print(salida)
-      self.out.append(salida)
-
   def print_out(self):
     print(self.out)
-#    for i in range(len(self.out)):
-#      print(self.out[i])
+    for i in range(len(self.out[0])):
+      a=""
+      for j in range(len(self.out)):
+        a=a+'{0:12.6f}  '.format(self.out[j][i])
+      print(a)
+
+
+  def get(self,info,col):
+    count=0.0
+    aux=[]
+    salida=[]
+    for i in self.step:
+      if info == '-x':
+        salida.append(i.atom[col[0]-1].r[0])
+      if info == '-y':
+        salida.append(i.atom[col[0]-1].r[1])
+      if info == '-z':
+        salida.append(i.atom[col[0]-1].r[2])
+
+      if info == '-X':
+        if int(count)==0:
+          salida.append(float(i.atom[col[0]-1].r[0]))
+        else:
+          salida.append(float(i.atom[col[0]-1].r[0])/(count+1)+float(salida[int(count-1)])*count/(count+1))
+      if info == '-Y':
+        if int(count)==0:
+          salida.append(float(i.atom[col[0]-1].r[1]))
+        else:
+          salida.append(float(i.atom[col[0]-1].r[1])/(count+1)+float(salida[int(count-1)])*count/(count+1))
+      if info == '-Z':
+        if int(count)==0:
+          salida.append(float(i.atom[col[0]-1].r[2]))
+        else:
+          salida.append(float(i.atom[col[0]-1].r[2])/(count+1)+float(salida[int(count-1)])*count/(count+1))
+
+      if info == '-d':
+        salida.append(float(i.atom[col[0]-1].distancia(i.atom[col[1]-1])))
+      if info == '-D':
+        if int(count)==0:
+          salida.append(float(i.atom[col[0]-1].distancia(i.atom[col[0]-1])))
+        else:
+          salida.append(float(i.atom[col[0]-1].distancia(i.atom[col[0]-1]))/(count+1)+float(salida[int(count-1)])*count/(count+1))
+
+      if info == '-ang':
+        salida.append(float(i.atom[col[0]-1].ang(i.atom[col[1]-1],i.atom[col[2]-1])))
+      if info == '-ANG':
+        if int(count)==0:
+          salida.append(float(i.atom[col[0]-1].ang(i.atom[col[1]-1],i.atom[col[2]-1])))
+        else:
+          salida.append(float(i.atom[col[0]-1].ang(i.atom[col[1]-1],i.atom[col[2]-1]))/(count+1)+float(salida[int(count-1)])*count/(count+1))
+      count=count+1
+#     print(salida)
+    self.out.append(salida)
+
 
   def load_xyz(self,archivo,name=""):
     natoms = 0
