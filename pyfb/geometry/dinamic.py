@@ -21,6 +21,10 @@ class dinamic:
     for i in self.step:
       i.print()
 
+  def print_bas_format(self):
+    for i in self.step:
+      i.print_bas_format()
+
   def print_charges(self):
     for i in self.step:
       i.print_charges()
@@ -92,17 +96,18 @@ class dinamic:
 
   def load_xyz(self,archivo,name=""):
     natoms = 0
-    nstep = 0
+    istep = 0
     text=open(archivo).readlines()
     nmaxlines=len(text)
     i=0
     while i < nmaxlines:
       line=text[i].split()
       bas=step()
+      istep=istep+1
       if name != "":
         bas.name=name
       else:
-        bas.name="step = "+str(nstep)
+        bas.name="step = "+str(istep)
       if i == 0 :
         natoms = int(line[0])
         i=i+1
@@ -124,3 +129,34 @@ class dinamic:
       i=i+1 #line2
       self.append(bas)
     
+
+  def loadstep(self,archivo,istep):
+    natoms = 0
+    text=open(archivo).readlines()
+    nmaxlines=len(text)
+    i=0
+    while i < nmaxlines:
+      line=text[i].split()
+      bas=step()
+      bas.name="step = "+str(istep)
+      if i == 0 :
+        natoms = int(line[0])
+      i=(istep-1)*(natoms+2)+1
+      bas.line2=text[i]
+      for j in range(natoms):
+        i=i+1
+        line=text[i].split()
+        a=line[0]
+        ra=[]
+        ra.append(float(line[1]))
+        ra.append(float(line[2]))
+        ra.append(float(line[3]))
+        if self.read_charges:
+          bas.atom[mod-1].Q=line[4]
+          self[istep].atom[mod-1].setR(r)
+          self[istep].atom[mod-1].setZ(line[0])
+        bas.append(atom(a,ra))
+      i=nmaxlines
+      self.append(bas)
+  
+ 

@@ -1,5 +1,7 @@
+from pyfb.geometry.tabla import tabla
 import math
 
+tabla=tabla()
 class atom:
     def __init__(self,Z='H',r=['0.00', '0.00', '0.00']):
         self.r = []
@@ -14,6 +16,9 @@ class atom:
 
     def print_charges(self):
         print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f} {4:12.6f}'.format(self.Z,float(self.r[0]),float(self.r[1]),float(self.r[2]),float(self.Q)))
+
+    def print_bas_format(self):
+        print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f}'.format(tabla.getN('H'),float(self.r[0]),float(self.r[1]),float(self.r[2])))
 
     def setV(self , v):
         self.v = v

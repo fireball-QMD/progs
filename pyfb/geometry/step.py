@@ -28,3 +28,8 @@ class step:
     for i in self.atom:
       i.print_charges()  
 
+  def print_bas_format(self):
+    print(len(self.atom))
+    for i in self.atom:
+      i.print_bas_format()
+

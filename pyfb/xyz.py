@@ -18,6 +18,7 @@ def print_help() :
   print (sep[:len(sys.argv[0])],'                     -op = -d -D' )
   print (sys.argv[0], '-i <file xyz format> -op <atom1 position> <atom2 position> <atom3 position>')
   print (sep[:len(sys.argv[0])],'                     -op = -ang -ANG ' )
+  print (sys.argv[0], '-loadstep <file xyz format> <step> -print , -print_bas_format , -loadstep ...')
 
 if len(sys.argv) == 1 :
   print_help()
@@ -26,11 +27,20 @@ for i in range(1,len(sys.argv)):
   if sys.argv[i] == '-i' :
     din.load_xyz(sys.argv[i+1])
 
+  if sys.argv[i] == '-loadstep' :
+    din.loadstep(sys.argv[i+1],int(sys.argv[i+2]))
+
   if sys.argv[i] == '-print' :
     if len(din.step) == 0:
       print("nothing is load")
     else:
       din.print()
+
+  if sys.argv[i] == '-print_bas_format' :
+    if len(din.step) == 0:
+      print("nothing is load")
+    else:
+      din.print_bas_format()
 
   if sys.argv[i] == '-x' or sys.argv[i] == '-y' or sys.argv[i] == '-z' or sys.argv[i] == '-X' or sys.argv[i] == '-Y' or sys.argv[i] == '-Z' :
     col=[int(sys.argv[i+1])]
