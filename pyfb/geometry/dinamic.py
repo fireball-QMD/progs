@@ -34,7 +34,7 @@ class dinamic:
       print(i.name)
 
   def print_out(self):
-    print(self.out)
+    #print(self.out)
     for i in range(len(self.out[0])):
       a=""
       for j in range(len(self.out)):
@@ -74,9 +74,9 @@ class dinamic:
         salida.append(float(i.atom[col[0]-1].distancia(i.atom[col[1]-1])))
       if info == '-D':
         if int(count)==0:
-          salida.append(float(i.atom[col[0]-1].distancia(i.atom[col[0]-1])))
+          salida.append(float(i.atom[col[0]-1].distancia(i.atom[col[1]-1])))
         else:
-          salida.append(float(i.atom[col[0]-1].distancia(i.atom[col[0]-1]))/(count+1)+float(salida[int(count-1)])*count/(count+1))
+          salida.append(float(i.atom[col[0]-1].distancia(i.atom[col[1]-1]))/(count+1)+float(salida[int(count-1)])*count/(count+1))
 
       if info == '-ang':
         salida.append(float(i.atom[col[0]-1].ang(i.atom[col[1]-1],i.atom[col[2]-1])))

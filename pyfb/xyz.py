@@ -8,13 +8,16 @@ from pyfb.geometry.dinamic import *
 
 din=dinamic()
 acumular_salida=False
-
+sep="                                                                                                            "
 def print_help() :
   print (sys.argv[0], '-i <file xyz format>')
   print (sys.argv[0], '-i <file xyz format> -print')
-  print (sys.argv[0], '-i <file xyz format> -op <atom position> # -op = -x -y -z -X -Y -X'  )
-  print (sys.argv[0], '-i <file xyz format> -op <atom1 position> <atom2 position> # -op = -d -D'  )
-  print (sys.argv[0], '-i <file xyz format> -op <atom1 position> <atom2 position> <atom3 position># -op = -ang -ANG'  )
+  print (sys.argv[0], '-i <file xyz format> -op <atom position>')
+  print (sep[:len(sys.argv[0])], '                     -op = -x -y -z -X -Y -X'  )
+  print (sys.argv[0], '-i <file xyz format> -op <atom1 position> <atom2 position>' ) 
+  print (sep[:len(sys.argv[0])],'                     -op = -d -D' )
+  print (sys.argv[0], '-i <file xyz format> -op <atom1 position> <atom2 position> <atom3 position>')
+  print (sep[:len(sys.argv[0])],'                     -op = -ang -ANG ' )
 
 if len(sys.argv) == 1 :
   print_help()
