@@ -1,5 +1,7 @@
 from  pyfb.geometry.step import step
 from  pyfb.geometry.atom import atom
+import pandas as pd
+import numpy as np
 
 class dinamic:
   def __init__(self):
@@ -41,6 +43,21 @@ class dinamic:
       for j in range(len(self.out)):
         a=a+'{0:12.6f}  '.format(self.out[j][i])
       print(a)
+
+  def dintra_matrix(self):
+    for bas in self.step:
+      out=[]
+      col=[]
+      for iatom in bas.atom:
+        col.append(iatom.Z)
+        aux=[]
+        for jatom in bas.atom:
+          aux.append(iatom.distancia(jatom))
+        out.append(aux)
+      c=np.array(out)
+      df2 = pd.DataFrame(c,index=col,columns=col)
+      print(df2)
+
 
 
   def get(self,info,col):
