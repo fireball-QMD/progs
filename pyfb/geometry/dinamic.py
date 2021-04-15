@@ -5,32 +5,32 @@ class dinamic:
   read_charges=False
 
   def __init__(self,read_charges=False):
-    self.structure=[]
+    self.step=[]
     self.read_charges=read_charges
     #lee las cargas de cada atomo despues de las posiciones:
     # x y z Qtot qs qp qd .....
     self.out=[]
 
   def print_total_steps(self):
-    print(len(self.structure))
+    print(len(self.step))
   
-  def append(self,structure):
-    self.structure.append(structure)
+  def append(self,step):
+    self.step.append(step)
 
   def print(self):
-    for i in self.structure:
+    for i in self.step:
       i.print()
 
   def print_charges(self):
-    for i in self.structure:
+    for i in self.step:
       i.print_charges()
 
   def print_2line(self):
-    for i in self.structure:
+    for i in self.step:
       print(i.line2)
 
   def print_name(self):
-    for i in self.structure:
+    for i in self.step:
       print(i.name)
 
   def get(self,col):
@@ -39,7 +39,7 @@ class dinamic:
     for i in range(len(col)):
        a=0.0
        aux.append(a)
-    for i in self.structure:
+    for i in self.step:
       salida=[]
       i.print()
       print(i.atom[col[0][1]-1].r[0])
@@ -93,10 +93,10 @@ class dinamic:
 #    print (nstep)
 
     for istep in range(1,int(nstep+1)) :
-        bas=structure()
+        bas=step()
         if name != "":
           bas.name=name
-        self.structure.append(bas)
+        self.step.append(bas)
 
     nlinea = 0
     istep = -1
@@ -116,12 +116,12 @@ class dinamic:
            #     bas.atom[mod-1].Q=line[4]
            # self[istep].atom[mod-1].setR(r)
            # self[istep].atom[mod-1].setZ(line[0])
-            self.structure[istep].append(atom(a,ra))
+            self.step[istep].append(atom(a,ra))
     
 #  def r(iatom,k,h,media):
 #    s = 0
 #    RA = 0 
-#    for bas in self.structure:
+#    for bas in self.step:
 #      if media == 0 :
 #          salida[s]=salida[s]+" "+str(bas[iatom-1].r[k]+h)
 #      else : 

@@ -21,7 +21,7 @@ for i in range(1,len(sys.argv)):
     din.load_xyz(sys.argv[i+1])
 
   if sys.argv[i] == '-print' :
-    if len(din.structure) == 0:
+    if len(din.step) == 0:
       print("nothing is load")
     else:
       din.print()
