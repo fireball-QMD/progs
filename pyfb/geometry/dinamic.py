@@ -2,11 +2,8 @@ from  pyfb.geometry.step import step
 from  pyfb.geometry.atom import atom
 
 class dinamic:
-  read_charges=False
-
-  def __init__(self,read_charges=False):
+  def __init__(self):
     self.step=[]
-    self.read_charges=read_charges
     #lee las cargas de cada atomo despues de las posiciones:
     # x y z Qtot qs qp qd .....
     self.out=[]
@@ -94,7 +91,7 @@ class dinamic:
     self.out.append(salida)
 
 
-  def load_xyz(self,archivo,name=""):
+  def loadxyz(self,archivo,name=""):
     natoms = 0
     istep = 0
     text=open(archivo).readlines()
@@ -120,10 +117,6 @@ class dinamic:
         ra.append(float(line[1]))
         ra.append(float(line[2]))
         ra.append(float(line[3]))
-        if self.read_charges:
-          bas.atom[mod-1].Q=line[4]
-          self[istep].atom[mod-1].setR(r)
-          self[istep].atom[mod-1].setZ(line[0])
         bas.append(atom(a,ra))
       i=i+1 #natom
       i=i+1 #line2
@@ -151,12 +144,27 @@ class dinamic:
         ra.append(float(line[1]))
         ra.append(float(line[2]))
         ra.append(float(line[3]))
-        if self.read_charges:
-          bas.atom[mod-1].Q=line[4]
-          self[istep].atom[mod-1].setR(r)
-          self[istep].atom[mod-1].setZ(line[0])
         bas.append(atom(a,ra))
       i=nmaxlines
       self.append(bas)
-  
  
+  def laststep(self,archivo,read_charges):
+    natoms = 0
+    text = open(archivo).readlines()
+    nmaxlines = len(text)
+    natoms = int(text[0])
+    bas=step()
+    i=nmaxlines-(natoms+1)
+    bas.line2=text[i]
+    for j in range(natoms):
+      i=i+1
+      line=text[i].split()
+      a=line[0]
+      ra=[]
+      ra.append(float(line[1]))
+      ra.append(float(line[2]))
+      ra.append(float(line[3]))
+      bas.append(atom(a,ra))
+    if read_charges: #load after read de step
+      bas.loadcharges() 
+    self.append(bas) 

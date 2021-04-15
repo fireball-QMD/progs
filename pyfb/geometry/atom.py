@@ -15,7 +15,10 @@ class atom:
         print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f}'.format(self.Z,float(self.r[0]),float(self.r[1]),float(self.r[2])))
 
     def print_charges(self):
-        print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f} {4:12.6f}'.format(self.Z,float(self.r[0]),float(self.r[1]),float(self.r[2]),float(self.Q)))
+        a='{0:2} {1:12.6f} {2:12.6f} {3:12.6f} {4:12.6f}'.format(self.Z,float(self.r[0]),float(self.r[1]),float(self.r[2]),float(self.Q))
+        for i in self.q:
+           a=a+'{0:12.6f}'.format(float(i))
+        print(a)
 
     def print_bas_format(self):
         print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f}'.format(tabla.getN('H'),float(self.r[0]),float(self.r[1]),float(self.r[2])))
