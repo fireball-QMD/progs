@@ -71,6 +71,13 @@ class dinamic:
         salida.append(i.atom[col[0]-1].r[1])
       if info == '-z':
         salida.append(i.atom[col[0]-1].r[2])
+      if info == '-dx':
+        i.atom[col[0]-1].r[0]=i.atom[col[0]-1].r[0]+float(col[1])
+      if info == '-dy':
+        i.atom[col[0]-1].r[1]=i.atom[col[0]-1].r[1]+float(col[1])
+      if info == '-dz':
+        i.atom[col[0]-1].r[2]=i.atom[col[0]-1].r[2]+float(col[1])
+
 
       if info == '-X':
         if int(count)==0:
