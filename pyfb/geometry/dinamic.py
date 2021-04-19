@@ -65,12 +65,19 @@ class dinamic:
     aux=[]
     salida=[]
     for i in self.step:
+      if info == '-rescal':
+        for j in i.atom:
+          j.r[0]=j.r[0]*float(col[0])
+          j.r[1]=j.r[1]*float(col[0])
+          j.r[2]=j.r[2]*float(col[0])
+
       if info == '-x':
         salida.append(i.atom[col[0]-1].r[0])
       if info == '-y':
         salida.append(i.atom[col[0]-1].r[1])
       if info == '-z':
         salida.append(i.atom[col[0]-1].r[2])
+
       if info == '-dx':
         i.atom[col[0]-1].r[0]=i.atom[col[0]-1].r[0]+float(col[1])
       if info == '-dy':

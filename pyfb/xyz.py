@@ -24,6 +24,7 @@ def print_help() :
   print (sys.argv[0], '-laststep <file xyz format> -print')
   print (sys.argv[0], '-laststep_charges <file xyz format> -print_charges')
   print (sys.argv[0], '-i <file xyz format> -dintra_matrix')
+  print (sys.argv[0], '-i <file xyz format> -rescal <float>')
 
 if len(sys.argv) == 1 :
   print_help()
@@ -66,7 +67,7 @@ for i in range(1,len(sys.argv)):
       din.dintra_matrix()
 
 
-  if sys.argv[i] == '-x' or sys.argv[i] == '-y' or sys.argv[i] == '-z' or sys.argv[i] == '-X' or sys.argv[i] == '-Y' or sys.argv[i] == '-Z':
+  if sys.argv[i] == '-x' or sys.argv[i] == '-y' or sys.argv[i] == '-z' or sys.argv[i] == '-X' or sys.argv[i] == '-Y' or sys.argv[i] == '-Z' or sys.argv[i] == '-rescal':
     col=[int(sys.argv[i+1])]
     din.get(sys.argv[i],col)
     acumular_salida=True
