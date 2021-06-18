@@ -1,6 +1,6 @@
 ! copyright info:
 !
-!                             @Copyright 2001
+!                             @@Copyright 2001
 !                           Fireball Committee
 ! Brigham Young University of Utah - James P. Lewis, Chair
 ! Arizona State University - Otto F. Sankey
@@ -112,9 +112,9 @@
         !real,dimension(1,nssh_tot) :: B
         !real,dimension(nssh_tot+1,nssh_tot+1) :: M
         !real,dimension(1,nssh_tot+1) :: B
-        integer, dimension(:), allocatable :: ipiv
-        real,dimension(:,:),allocatable :: M
-        real,dimension(:,:), allocatable :: B
+        !integer, dimension(:), allocatable :: ipiv
+        !real,dimension(:,:),allocatable :: M
+        !real,dimension(:,:), allocatable :: B
         real auxgS
         real Ntot
 
@@ -140,6 +140,10 @@
         complex step1, step2
 
         logical read_occupy
+        real,dimension(nssh_tot,nssh_tot) :: A
+        real,dimension(nssh_tot) :: c, SQ ! carga
+        real,dimension(nssh_tot) :: LB, UB, nalpha
+        real :: diff_err,Ep2
 
 ! Procedure
 ! ===========================================================================
@@ -158,16 +162,16 @@
 !
 ! ****************************************************************************
 !
-             if (iqout .eq. 6)then
-               allocate( M(nssh_tot+1,nssh_tot+1) )
-               print*,'allocate M',nssh_tot+1,nssh_tot+1,'=',nssh_tot+1*nssh_tot+1
-               allocate( B(1,nssh_tot+1) )
-               allocate( ipiv(nssh_tot) )
-             else
-               allocate( M(1,1) )
-               allocate( B(1,1) )
-               allocate( ipiv(1) )
-             end if
+!             if (iqout .eq. 6)then
+!               allocate( M(nssh_tot+1,nssh_tot+1) )
+!               print*,'allocate M',nssh_tot+1,nssh_tot+1,'=',nssh_tot+1*nssh_tot+1
+!               allocate( B(1,nssh_tot+1) )
+!               allocate( ipiv(nssh_tot) )
+!             else
+!               allocate( M(1,1) )
+!               allocate( B(1,1) )
+!               allocate( ipiv(1) )
+!             end if
 !                     C H A R G E    O C C U P A T I O N S
 ! ****************************************************************************
 ! If there exists a file 'OCCUPATION', then make a list of energy eigenvalues
@@ -200,7 +204,7 @@
           iband = ioccupy(iorbital)
           write (*,*) '  '
           write (*,*) ' Band # ', iband,' shifted E = ', eigen_k(iband,1)
-          write (*,*) ' **************************************************** '
+          write (*,*) ' ***************************************** '
 
 ! Loop over the atoms and the neighbors
           do iatom = 1, natoms
@@ -715,7 +719,9 @@
 ! allocate (gvhxc(numorb_max,numorb_max,nssh_max,natoms,neigh_max,natoms))
 ! allocate (gvhxcS(nssh_max,nssh_max,natoms,natoms))
 ! (remember to include them also in deallocate_rho!!!)
-      B = 0.0d0
+      !B = 0.0d0
+      SQ = 0.0d0
+      c = 0.0d0
       if (iqout .eq. 6) then
           alpha = 0
           do ialp = 1, natoms
@@ -745,7 +751,8 @@
                            end do ! end do imu = mu_min, mu_max 
                           auxgS = auxgS/(2*l+1)  ! 4*pi??
                           ! Now:
-                          M(alpha,beta) =  auxgS !gvhxcs(issh1,issh,iatom,ialp)                   
+                          !M(alpha,beta) =  auxgS !gvhxcs(issh1,issh,iatom,ialp)                   
+                          A(alpha,beta) = auxgS 
                           !write(*,*) alpha, beta, M(alpha,beta) 
                           inumorb = inumorb + 2*l+1
                       end do ! end do issh1
@@ -755,7 +762,8 @@
                           in2 = imass(jatom) 
                           do imu = 1, num_orb(in1)
                              do inu = 1, num_orb(in2)
-                                  B(1,alpha) = B(1,alpha) + &
+                                  !B(1,alpha) = B(1,alpha) + &
+                                  c(alpha) = c(alpha) + &
                                   rho(imu,inu,ineigh,iatom)*gvhxc(imu, &
                                       &    inu,issh,ialp,ineigh,iatom)
                               end do ! end do inu
@@ -764,12 +772,12 @@
                   end do ! end do iatom
               end do ! end do issh
           end do ! end do ialp
-          M(nssh_tot+1,nssh_tot+1) = 0
-          B(1,nssh_tot+1) = ztot
-          do alpha = 1,nssh_tot
-           M(nssh_tot+1,alpha) = 1
-           M(alpha,nssh_tot+1) = 1
-          end do
+          !M(nssh_tot+1,nssh_tot+1) = 0
+          !B(1,nssh_tot+1) = ztot
+          !do alpha = 1,nssh_tot
+          ! M(nssh_tot+1,alpha) = 1
+          ! M(alpha,nssh_tot+1) = 1
+          !end do
               
                  !do beta = 1, nssh_tot
                  !write(*,*) 'alpha B ', beta, B(1,beta)
@@ -792,31 +800,141 @@
          !call ssysv( 'U', nssh_tot, 1, M, nssh_tot, ipiv, B, &
          !              &      nssh_tot, work, lwork, info )
          !call sgesv(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
-         call dgesv(nssh_tot+1,1,M,nssh_tot+1,ipiv,B,nssh_tot+1,info)
+         !print*,'=========== cargamos valores de A y c ==============='
+         !do i = 1, nssh_tot
+         !  do j = 1, nssh_tot
+         !    A(i,j)=M(i,j)
+         !  end do
+         !  c(i)=B(1,i)
+         !end do
+   
+         !call dgesv(nssh_tot+1,1,M,nssh_tot+1,ipiv,B,nssh_tot+1,info)
          !call sgetrs(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
+         
 !*
 !*     Check for the exact singularity.
 !*
                !  write(*,*) 'B output ', B
-      IF( info.GT.0 ) THEN
-         WRITE(*,*)'The element of the diagonal factor '
-         WRITE(*,*)'D(',info,',',info,') is zero, so that'
-         WRITE(*,*)'D is singular; the solution could not be computed.'
-         STOP
-      END IF
+!      IF( info.GT.0 ) THEN
+!         WRITE(*,*)'The element of the diagonal factor '
+!         WRITE(*,*)'D(',info,',',info,') is zero, so that'
+!         WRITE(*,*)'D is singular; the solution could not be computed.'
+!         STOP
+!      END IF
 
 !+++++++++++++++++++++++++++++++++++++++++++++++++++++++
          alpha = 0
-!         Ntot = 0
+         Ntot = 0.0
          do iatom = 1, natoms
              in1 = imass(iatom)
              do issh = 1, nssh(in1)
                  alpha = alpha + 1
-!                 write(*,*) 'indices: ', iatom, issh, alpha, B(1,alpha)
-                 Qout(issh,iatom) = B(1,alpha)
-!                 Ntot = Ntot + B(1,alpha)
+!                 Qout(issh,iatom) = B(1,alpha)
+!                 carga(alpha)=B(1,alpha)
+                 SQ(alpha) = Qin(issh,iatom)
+                 LB(alpha) = 0.00
+                 if ( lssh(issh,in1) .eq. 0 ) then 
+                   UB(alpha) = 2.00
+                   nalpha(alpha) = 1.00 
+                 end if
+                 if ( lssh(issh,in1) .eq. 1 ) then
+                    UB(alpha) = 6.00
+                   nalpha(alpha) = 3.00 
+                 end if
+                 if ( lssh(issh,in1) .eq. 2 ) then
+                    UB(alpha) = 10.00
+                   nalpha(alpha) = 5.00 
+                 end if 
+                 !UB(alpha) = 100.00
+                 !nalpha(alpha) = 1.00
+                 Ntot = Ntot + Qin(issh,iatom)                 
              end do ! end do issh
          end do ! end do iatom
+!         print*,''
+!         print*,"=============================  solución dgesv ============================="
+!         print*,'Qtot =',Ntot 
+!         write(*,'(A6,<nssh_tot>F7.3,A3)')'Q = (/ ',(carga(alpha),alpha = 1, nssh_tot),' /)'
+!         diff_err = Ep2(carga,A,c,nssh_tot)
+!         print*,'err dgesv   = ',diff_err
+!
+!         alpha = 0
+!         do iatom = 1, natoms
+!           in1 = imass(iatom)
+!           do issh = 1,nssh(in1)
+!            alpha=alpha+1
+!           ! carga(alpha)=Qneutral(issh,in1)
+!           end do
+!          end do
+
+         !diff_err=Ep2(carga,A,c,nssh_tot)
+         !print*,'err cargas neutras =',diff_err
+
+ 
+!         Ntot=0
+!         do i = 1, nssh_tot
+!           Ntot = Ntot + carga(i)
+!         end do
+         !  SOLVE SYSTEM Mx = B.  x are the charges
+         print*,''
+         print*,"============  step_size  ============================="
+         print*,'Qtot =',Ntot
+         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qin = (/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
+         call step_size(nssh_tot,A,c,SQ, LB, UB, nalpha) !,,LB,UB) B(1,alpha
+         Ntot=0
+         do alpha = 1, nssh_tot
+           Ntot = Ntot + SQ(alpha)
+         end do
+         !write(*,'(A6,<nssh_tot>F7.3,A3)')'LB =(/ ',(LB(alpha),alpha = 1, nssh_tot),' /)'
+         !write(*,'(A6,<nssh_tot>F10.3,A3)')'UB =(/ ',(UB(alpha),alpha = 1, nssh_tot),' /)'
+         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qout =(/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
+         print*,'Qtot(out) =',Ntot
+         diff_err=Ep2(SQ,A,c,nssh_tot,nalpha)
+         print*,'err step_size   =',diff_err
+         
+         alpha = 0 
+         do iatom = 1, natoms
+           in1 = imass(iatom)
+           do issh = 1, nssh(in1)
+             alpha = alpha + 1
+             Qout(issh,iatom) = SQ(alpha) 
+           end do ! end do issh
+         end do ! end do iatom
+         print*,"===================================="
+
+!         alpha = 0
+!         do iatom = 1, natoms
+!           in1 = imass(iatom)
+!           do issh = 1,nssh(in1)
+!            alpha=alpha+1
+!            carga(alpha)=Qneutral(issh,in1)
+!           end do
+!          end do
+!
+!         !diff_err=Ep2(carga,A,c,nssh_tot)
+!         !print*,'err cargas neutras =',diff_err
+!
+! 
+!         Ntot=0
+!         do i = 1, nssh_tot
+!           Ntot = Ntot + carga(i)
+!         end do
+!         !  SOLVE SYSTEM Mx = B.  x are the charges
+!         print*,''
+!         print*,"=============================  step_size  ============================="
+!         print*,'Qtot =',Ntot
+!         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qin=(/ ',(carga(alpha),alpha = 1, nssh_tot),' /)'
+!         call step_size(nssh_tot,A,c,carga) !,,LB,UB) B(1,alpha
+!         Ntot=0
+!         do i = 1, nssh_tot
+!           Ntot = Ntot + carga(i)
+!         end do
+!         print*,'Qtot(out) =',Ntot
+!         write(*,'(A6,<nssh_tot>F7.3,A3)')'Q=(/ ',(carga(alpha),alpha = 1, nssh_tot),' /)'
+!         diff_err=Ep2(carga,A,c,nssh_tot)
+!         print*,'err step_size   =',diff_err
+!
+
+     
 !          write(*,*) 'Now Ntot is: ', Ntot
       ! renorm total charge  (ztot = total charge)
 !         do iatom = 1, natoms
@@ -833,35 +951,35 @@
 ! ******************************************************************************
 
 
-!Check whether there are negative charges and correct
-!If there's more than one shell whose charge is negative, more work is
-!needed, but that'd be quite pathological a situation...
-           do iatom = 1,natoms
-            in1 = imass(iatom)
-            do issh = 1, nssh(in1)
-
-               if( Qout(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
-           
-                  do jssh = 1, nssh(in1)
-
-                     if ( jssh .ne. issh ) then
-
-                        Qout(jssh,iatom) = Qout(jssh,iatom)+            &
-                &                         Qout(issh,iatom)/(nssh(in1)-1)
-
-                     end if !end if jssh .ne. issh 
-
-                  end do !end if jssh = 1,nssh(in1)
-
-                  Qout(issh,iatom) = 0.0d0               
-
-               end if !end if  Qout(issh,iatom) .lt. 0
-
-            end do !end do issh = 1, nssh(in1)
-          end do ! end do iatom = 1,natoms
-            ! write(*,*) 'Qout corrected = ', Qout 
+!!Check whether there are negative charges and correct
+!!If there's more than one shell whose charge is negative, more work is
+!!needed, but that'd be quite pathological a situation...
+!           do iatom = 1,natoms
+!            in1 = imass(iatom)
+!            do issh = 1, nssh(in1)
+!
+!               if( Qout(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
+!           
+!                  do jssh = 1, nssh(in1)
+!
+!                     if ( jssh .ne. issh ) then
+!
+!                        Qout(jssh,iatom) = Qout(jssh,iatom)+            &
+!                &                         Qout(issh,iatom)/(nssh(in1)-1)
+!
+!                     end if !end if jssh .ne. issh 
+!
+!                  end do !end if jssh = 1,nssh(in1)
+!
+!                  Qout(issh,iatom) = 0.0d0               
+!
+!               end if !end if  Qout(issh,iatom) .lt. 0
+!
+!            end do !end do issh = 1, nssh(in1)
+!          end do ! end do iatom = 1,natoms
+!            ! write(*,*) 'Qout corrected = ', Qout 
       end if  !end if (iqout .eq. 6)
-
+!
 !                 CORRECT NEGATIVE CHARGES BY FIXING THEM TO ZERO AND
 !                 RESOLVING THE SYSTEM
 ! ****************************************************************************
@@ -1006,3 +1124,279 @@
         return
       end subroutine denmat
 
+
+!               allocate( M(nssh_tot+1,nssh_tot+1) )
+!               allocate( B(1,nssh_tot+1) )
+! call step_size(nssh_tot,M,B) !,,LB,UB) B(1,alpha)
+!==================================================================
+      subroutine step_size(nssh_tot,A,c,Q,LB,UB,nalpha) !,LB,UB,nstep)
+        integer, intent(in) :: nssh_tot
+        real,intent(in),dimension(nssh_tot,nssh_tot) :: A
+        real,intent(in),dimension(nssh_tot) :: c
+        real,intent(inout),dimension(nssh_tot) :: Q
+        real,intent(in),dimension(nssh_tot) :: LB, UB, nalpha
+!        real,dimension(nssh_tot) :: LB, UB
+!        integer, intent(inout) :: nstep
+        integer :: nstep = 0
+        logical, dimension(nssh_tot) :: cero
+        integer :: i, j, k,nceros
+        real :: err0,err1,dp,g0,dqmax,x,y1,y2,y3,gmod,qmod
+        real,dimension(nssh_tot) ::Q0,g,fc
+        real,dimension(nssh_tot,nssh_tot) :: F
+        real :: dq , diff_err
+        logical :: g_err, igualceros
+        !========== control ==========
+        real :: tol_err=0.001, nstepmax=2000
+        real :: tol = 0.001
+        !=============================
+        Q0=Q
+!        write(*,'(A12,<nssh_tot>F7.3,A3)')'Q in =(/ ',(Q(i),i = 1, nssh_tot),' /)'
+        F=0
+        do i=1,nssh_tot
+          do j=1, nssh_tot
+            do k=1, nssh_tot
+               F(i,j)=F(i,j)+2*A(k,i)*nalpha(k)*A(k,j)
+            end do
+          end do
+        end do
+
+        fc=0
+        do i=1,nssh_tot
+          do j=1, nssh_tot
+            fc(i)=fc(i)-2*c(j)*nalpha(j)*A(j,i)
+          end do
+        end do
+
+        nstep=0
+        diff_err=100.0
+        do while (diff_err > tol_err ) ! .and. nstep .lt. nstepmax) 
+          nstep=nstep+1
+          ! proyectamos en plano Qtot = cte
+          g=0.00
+          do i=1,nssh_tot
+            do j=1, nssh_tot
+              g(i)=g(i)-F(i,j)*Q(j)
+            end do
+            g(i)=g(i)-fc(i)
+          end do
+
+
+          g0=0.00
+          do i=1,nssh_tot
+              g0=g0+g(i)
+          end do
+
+          g0=g0/nssh_tot
+
+          do i=1,nssh_tot
+            g(i)=g(i)-g0
+          end do
+
+            !proyectamos en las componentes q<0
+
+          do i=1,nssh_tot
+            if((Q0(i) < LB(i)+tol .and. g(i) < 0.00 ) .or. (Q0(i) > UB(i)-tol .and. g(i) > 0.00 )) then
+              nceros=nceros+1
+              g(i)=0.00
+              cero(i)=.True.
+            else
+              cero(i)=.False.
+              g0=g0+g(i)
+            end if
+          end do
+          igualceros=.False.
+          do while (igualceros .eq. .False.)
+            call getceros(nssh_tot,Q0,g,LB,UB,tol,cero,igualceros)
+          end do
+
+          nceros=0
+          g0=0.00
+          do i=1,nssh_tot
+            if(cero(i) .eq. .True.) then
+              nceros=nceros+1
+              g(i)=0.00
+            else
+              g0=g0+g(i)
+            end if
+          end do
+
+          g0=g0/(nssh_tot-nceros)
+
+          do i=1,nssh_tot
+            if (cero(i) .eq. .False.) then
+              g(i)=g(i)-g0
+            else
+              g(i)=0.00
+            end if
+          end do
+
+          gmod=0.00
+          do i=1,nssh_tot
+            gmod=gmod+g(i)**2
+          end do
+          gmod=gmod**0.5
+
+          qmod=0.00
+          do i=1,nssh_tot
+            qmod=qmod+Q(i)**2
+          end do
+
+          qmod=qmod**0.5
+          dq=qmod/gmod
+          !obtenemos el min
+          x=get_min_parabola(-dq,0,dq,Ep2(Q0-dq*g,A,c,nssh_tot,nalpha),Ep2(Q0,A,c,nssh_tot,nalpha),Ep2(Q0+dq*g,A,c,nssh_tot,nalpha))
+          Q=Q0+x*g
+
+          diff_err=Ep2(Q0,A,c,nssh_tot,nalpha)-Ep2(Q,A,c,nssh_tot,nalpha)
+         dqmax=1.0E+10
+          k=0
+          do i=1,nssh_tot
+            if(cero(i) .eq. .False.) then  !ojo !!!!
+              if(Q(i) < LB(i)) then
+                if (dqmax > -Q0(i)/g(i)) then
+                  dqmax=-Q0(i)/g(i)
+                  k=k+1
+                end if
+              end if
+              if(Q(i) > UB(i)) then
+                if (dqmax > (UB(i)-Q0(i))/g(i)) then
+                  dqmax=(UB(i)-Q0(i))/g(i)
+                  k=k+1
+                end if
+              end if
+            end if
+          end do
+          if(k .eq.0 ) then
+            Q=Q
+          else
+            Q=Q0+dqmax*g
+          end if
+
+      !  aux=0
+      !  do i = 1, nssh_tot
+      !    aux=aux+g(i)**2
+      !  end do
+      !  aux=aux**0.5
+
+      !  aux2=0
+      !  do i = 1, nssh_tot
+      !    aux2=aux2+abs(Q0(i)-Q(i))
+      !  end do
+
+
+      !     diff=diffQ(nssh_tot,Q0,Q)
+      !    print*,Ep2(Q,A,c,nssh_tot),aux,aux2
+!        write(*,'(A6,<nssh_tot>F7.3,A3)')'Q     = (/ ',(Q(i),i = 1, nssh_tot),' /)'
+!        print*,Ep2(Q,A,c,nssh_tot)
+          Q0=Q
+
+        !write(*,'(A6,<nssh_tot>F7.3,A3)')'g     = (/ ',(g(i),i = 1, nssh_tot),' /)'
+        end do
+
+        aux=0
+        do i = 1, nssh_tot
+          aux=aux+Q(i)
+        end do
+      
+     print*,'nstep = ',nstep
+ 
+      !  write(*,'(A6,<nssh_tot>L7,A3)')'ceros =(/ ',(cero(i),i = 1, nssh_tot),' /)'
+      !  do i = 1, nssh_tot
+      !    print*,g(i),cero(i),Q(i),dqmax,k,x
+      !  end do
+      
+      !  print*,'diff err = ',diff_err,';  nstep    =',nstep,'; dqmax =',dqmax
+      !  print*,'Qtot     =',aux,' ;  n ceros  =',nceros,'; err   =',Ep2(Q,A,c,nssh_tot)
+      !  if ( nstep .eq. nstepmax ) then
+      !    print*,'*************** stop nstepmax *************************'
+      !    stop
+      !  end if
+      end
+      !=============================================
+      real function Ep2(q,A,c,nssh_tot,nalpha)
+        integer, intent(in) :: nssh_tot
+        real,intent(in),dimension(nssh_tot,nssh_tot) :: A
+        real,intent(in),dimension(nssh_tot) :: q,c,nalpha
+        integer i,j,k
+        real aux
+        !Ep=(Aq-c)**2
+        Ep2=0.00
+        do i = 1, nssh_tot
+          aux=0.00
+          do j = 1, nssh_tot
+            aux=aux+A(i,j)*q(j)
+          end do
+          aux=aux-c(i)
+          aux=aux**2*nalpha(i)
+          Ep2=Ep2+aux
+        end do
+      end function Ep2
+ 
+      subroutine getceros(nssh_tot,Q0,g,LB,UB,tol,cero,igualceros)
+      integer, intent(in) :: nssh_tot
+      real, intent(in) :: tol
+      real,intent(in),dimension(nssh_tot) :: Q0
+      real,intent(in),dimension(nssh_tot) :: LB, UB
+      real,intent(in),dimension(nssh_tot) :: g
+      
+      logical,intent(inout) ,dimension(nssh_tot) :: cero
+      logical, intent(inout) :: igualceros
+      
+      real,dimension(nssh_tot) :: gaux
+      real :: g0
+      integer :: i, j,nceros
+      real :: aux
+          nceros=0
+          g0=0.00
+          gaux=g
+          !write(*,'(A6,<nssh_tot>F12.3,A3)')'g0=(/ ',(gaux(i),i = 1, nssh_tot),' /)'
+          !write(*,'(A6,<nssh_tot>F12.3,A3)')'Q0=(/ ',(Q0(i),i = 1, nssh_tot),' /)'
+          do i=1,nssh_tot
+            if(cero(i) .eq. .True.) then
+              nceros=nceros+1
+              gaux(i)=0.00
+            else
+              g0=g0+g(i)
+            end if
+          end do
+      
+          g0=g0/(nssh_tot-nceros)
+      
+          do i=1,nssh_tot
+            if (cero(i) .eq. .False.) then
+              gaux(i)=gaux(i)-g0
+            else
+              gaux(i)=0.00
+            end if
+          end do
+
+        igualceros=.True.
+         do i=1,nssh_tot
+           if(cero(i)  .eq. .False.)then
+              if((Q0(i) < LB(i)+tol .and. gaux(i) < 0.00 ) .or. (Q0(i) > UB(i)-tol .and. gaux(i) > 0.00 )) then
+                nceros=nceros+1
+                cero(i)=.True.
+                igualceros=.False.
+              end if
+           end if
+         end do
+
+
+      ! write(*,'(A6,<nssh_tot>L)')'cein =(/ ',(cero(i),i = 1, nssh_tot),' /)'
+      ! print*,'igualceros=',igualceros
+      end subroutine getceros
+ 
+      real function get_min_parabola(x1,x2,x3,y1,y2,y3)
+        real,intent(in) :: x1,x2,x3,y1,y2,y3
+        real a,b,c
+        b=(y2-y3)-(y1-y2)*(x2**2-x3**2)/(x1**2-x2**2)
+        b=b/( (x2-x3)-(x1-x2)*(x2**2-x3**2)/(x1**2-x2**2) )
+        a=(y1-y2)/(x1**2-x2**2)-b*(x1-x2)/(x1**2-x2**2)
+        c=y1-a*x1**2-b*x1
+        get_min_parabola=-b/(2*a)
+        ! print*,a,'*x**2+',b,'*x+',c
+      end function get_min_parabola
+
+!=================================================
+ 
+      
