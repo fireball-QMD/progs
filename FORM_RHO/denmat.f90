@@ -103,20 +103,8 @@
         integer mmu
         integer noccupy
         integer nnu
-        integer issh1, mu_min, mu_max, l, inumorb
         integer :: info, lwork
-        !integer, dimension(nssh_tot) :: ipiv
         integer, dimension(100) :: work
-        integer :: beta, alpha, ialp, ina, matom
-        !real,dimension(nssh_tot,nssh_tot) :: M
-        !real,dimension(1,nssh_tot) :: B
-        !real,dimension(nssh_tot+1,nssh_tot+1) :: M
-        !real,dimension(1,nssh_tot+1) :: B
-        !integer, dimension(:), allocatable :: ipiv
-        !real,dimension(:,:),allocatable :: M
-        !real,dimension(:,:), allocatable :: B
-        real auxgS
-        real Ntot
 
         integer, dimension (norbitals) :: ioccupy
         integer, dimension (norbitals, nkpoints) :: ioccupy_k
@@ -129,22 +117,15 @@
         real ztest
         real checksum
         real Wmu
-        real y
         real, dimension (norbitals, nkpoints) :: foccupy
-        real, dimension (numorb_max, natoms) :: QMulliken
-        real, dimension (3) :: vec, r1, r2, r21
         real, dimension (natoms) :: pqmu
 
+        real, dimension (3) :: vec
         complex ai
         complex phase, phasex
         complex step1, step2
 
         logical read_occupy
-        real,dimension(nssh_tot,nssh_tot) :: A
-        real,dimension(nssh_tot) :: c, SQ ! carga
-        real,dimension(nssh_tot) :: LB, UB, nalpha
-        real :: diff_err,Ep2
-
 ! Procedure
 ! ===========================================================================
 ! Initialize some things
@@ -152,26 +133,6 @@
 ! jel: where you set rho to zero ??? JOM: in build_rho
         rhoPP = 0.0d0
 
-!        write (*,*) '  '
-!        write (*,*) '  '
-!        write (*,*) ' ****************************************************** '
-!        write (*,*) '  '
-!        write (*,*) '                   Welcome to denmat --              '
-!        write (*,*) '  '
-!        write (*,*) ' ****************************************************** '
-!
-! ****************************************************************************
-!
-!             if (iqout .eq. 6)then
-!               allocate( M(nssh_tot+1,nssh_tot+1) )
-!               print*,'allocate M',nssh_tot+1,nssh_tot+1,'=',nssh_tot+1*nssh_tot+1
-!               allocate( B(1,nssh_tot+1) )
-!               allocate( ipiv(nssh_tot) )
-!             else
-!               allocate( M(1,1) )
-!               allocate( B(1,1) )
-!               allocate( ipiv(1) )
-!             end if
 !                     C H A R G E    O C C U P A T I O N S
 ! ****************************************************************************
 ! If there exists a file 'OCCUPATION', then make a list of energy eigenvalues
@@ -266,8 +227,6 @@
 ! ****************************************************************************
 ! Get the Fermi energy.
         call fermie (norbitals, ztot, eigen_k, efermi, ioccupy_k, foccupy)
-!        write (*,*) ' Fermi Level = ', efermi
-
         if (iwrtefermi .eq. 1) then
          write (*,*) '  '
          write (*,*) ' We write out the occupancies of the levels  '
@@ -281,7 +240,7 @@
          end do
 
          write (*,*) '  '
-         write (*,*) ' We write out the electron fraction in each level '
+         write (*,*) 'We write out the electron fraction in each level '
          write (*,*) ' ------ from the subroutine fermie. '
          do ikpoint = 1, nkpoints
           write (*,*) '  '
@@ -439,549 +398,63 @@
          end do
         end do
 
-! ****************************************************************************
-!
-!  C O M P U T E    L O W D I N    C H A R G E S
-! ****************************************************************************
-! Initialize
-        if (iqout .eq. 1 .or. iqout .eq. 3) then
-         Qout = 0.0d0
-         QLowdin_TOT = 0.0d0
 
-         if (ifixcharge .eq. 1) then
+        if (ifixcharge .eq. 1) then
 
           do iatom = 1, natoms
            in1 = imass(iatom)
+           if (iqout .eq. 1 .or. iqout .eq. 3) QLowdin_TOT(iatom) = 0.0d0
+           if (iqout .eq. 2 .or. iqout .eq. 4) QMulliken_TOT(iatom) = 0.0d0
            do issh = 1, nssh(in1)
             Qout(issh,iatom) = Qin(issh,iatom)
-            QLowdin_TOT(iatom) = QLowdin_TOT(iatom) + Qin(issh,iatom)
+            if (iqout .eq. 1 .or. iqout .eq. 3) then
+              QLowdin_TOT(iatom) =  QLowdin_TOT(iatom) +Qin(issh,iatom)
+            end if
+            if (iqout .eq. 2 .or. iqout .eq. 4) then
+              QMulliken_TOT(iatom) = QMulliken_TOT(iatom) +Qin(issh,iatom)
+            end if
            end do
           end do
 
-         else
-
-          do iatom = 1, natoms
-           in1 = imass(iatom)
-
-! Loop over the special k points.
-           do ikpoint = 1, nkpoints
-            aux1 = weight_k(ikpoint)*spin
-            do iorbital = 1, norbitals
-             if (ioccupy_k(iorbital,ikpoint) .eq. 1) then
-              aux2 = aux1*foccupy(iorbital,ikpoint)
-
-! Finally the imu loop.
-              imu = 0
-              do issh = 1, nssh(in1)
-               do mqn = 1, 2*lssh(issh,in1) + 1
-                imu = imu + 1
-                mmu = imu + degelec(iatom)
-                if (icluster .ne. 1) then
-                 aux3 = aux2*(blowre(mmu,iorbital,ikpoint)**2                &
-     &                        + blowim(mmu,iorbital,ikpoint)**2)
-                else
-                 aux3 = aux2*blowre(mmu,iorbital,ikpoint)**2
-                end if
-                Qout(issh,iatom) = Qout(issh,iatom) + aux3
-                QLowdin_TOT(iatom) = QLowdin_TOT(iatom) + aux3
-               end do
-              end do
-             end if
-
-! End loop over orbitals and kpoints
-            end do
-           end do
-
-! End loop over atoms
-          end do
-
-         end if      ! endif of ifixcharges
-        end if       ! endif of iqout .ne. 1
-
-
-! ****************************************************************************
-!
-!  C O M P U T E    M U L L I K E N    C H A R G E S
-! ****************************************************************************
-! Compute Mulliken charges.
-        if (iqout .eq. 2) then
-
-         Qout = 0.0d0
-         QMulliken = 0.0d0
-         QMulliken_TOT = 0.0d0
-
-         if (ifixcharge .eq. 1) then
-
-          do iatom = 1, natoms
-           in1 = imass(iatom)
-           QMulliken_TOT(iatom) = 0.0d0
-           do issh = 1, nssh(in1)
-            Qout(issh,iatom) = Qin(issh,iatom)
-            QMulliken_TOT(iatom) = QMulliken_TOT(iatom) + Qin(issh,iatom)
-           end do
-          end do
-
-         else
-
-          do iatom = 1, natoms
-           in1 = imass(iatom)
-
-! Loop over neighbors
-           do ineigh = 1, neighn(iatom)
-            jatom = neigh_j(ineigh,iatom)
-            in2 = imass(jatom)
-
-     
-            jneigh = neigh_back(iatom,ineigh)
-            do imu = 1, num_orb(in1)
-             do inu = 1, num_orb(in2)
-              QMulliken(imu,iatom) = QMulliken(imu,iatom)                    &
-     &        + 0.5d0*(rho(imu,inu,ineigh,iatom)*s_mat(imu,inu,ineigh,iatom) &
-     &        + rho(inu,imu,jneigh,jatom)*s_mat(inu,imu,jneigh,jatom))
-             end do
-            end do
-
-! End loop over neighbors
-           end do
-
-! Finally the imu loop.
-           imu = 0
-           do issh = 1, nssh(in1)
-            do mqn = 1, 2*lssh(issh,in1) + 1
-               imu = imu + 1
-               Qout(issh,iatom) = Qout(issh,iatom) + QMulliken(imu,iatom)
-            end do
-               QMulliken_TOT(iatom) = QMulliken_TOT(iatom) + Qout(issh,iatom)
-           end do
-
-! End loop over atoms
-          end do
-         end if     ! endif of ifixcharges
-        end if      ! endif of iqout .eq. 2
-
-
-! GAP ENRIQUE-FF
-       if ((igap.eq.1).or.(igap.eq.2)) then
-         call buildnij(ioccupy_k,foccupy, bmix, Kscf)
-       end if
-       if (igap .eq. 2 ) then
-         call koopman(natoms,nkpoints,ratom,ioccupy_k,foccupy)
-       end if
-! end GAP ENRIQUE-FF
-
-
-
-
-
-! ****************************************************************************
-!
-!  C O M P U T E    M U L L I K E N - D I P O L E    C H A R G E S
-! ****************************************************************************
-! Compute Mulliken-dipole charges.
-        if (iqout .eq. 4) then
-         Qout = 0.0d0
-         QMulliken = 0.0d0
-         QMulliken_TOT = 0.0d0
-
-         if (ifixcharge .eq. 1) then
-
-          do iatom = 1, natoms
-           in1 = imass(iatom)
-           QMulliken_TOT(iatom) = 0.0d0
-           do issh = 1, nssh(in1)
-            Qout(issh,iatom) = Qin(issh,iatom)
-            QMulliken_TOT(iatom) = QMulliken_TOT(iatom) +Qin(issh,iatom)
-           end do
-          end do
-
-         else
-
-          do iatom = 1, natoms
-           in1 = imass(iatom)
-           r1(:) = ratom(:,iatom)
-! Loop over neighbors
-           do ineigh = 1, neighn(iatom)
-            jatom = neigh_j(ineigh,iatom)
-            in2 = imass(jatom)
-            r2(:) = ratom(:,jatom)
-
-
-! ****************************************************************************
-! Find r21 = vector pointing from r1 to r2, the two ends of the
-! bondcharge, and the bc distance, y
-           r21(:) = r2(:) - r1(:)
-           y = sqrt(r21(1)*r21(1) + r21(2)*r21(2) + r21(3)*r21(3))
-
-            jneigh = neigh_back(iatom,ineigh)
-            do imu = 1, num_orb(in1)
-             do inu = 1, num_orb(in2)
-              QMulliken(imu,iatom) = QMulliken(imu,iatom)                   &
-     &        +0.5d0*(rho(imu,inu,ineigh,iatom)*s_mat(imu,inu,ineigh,iatom) &
-     &        + rho(inu,imu,jneigh,jatom)*s_mat(inu,imu,jneigh,jatom))
-             end do
-            end do
-             
-! dipole correction. Only if the two atoms are different
-          if (y .gt. 1.0d-05) then
-           
-
-            do imu = 1, num_orb(in1)
-             do inu = 1, num_orb(in2)
-
-          !    write(*,*) 'Qb(',imu,',',iatom,')= ',QMulliken(imu,iatom)
-
-              QMulliken(imu,iatom) = QMulliken(imu,iatom)+                  &
-     &        (-rho(imu,inu,ineigh,iatom)*dip(imu,inu,ineigh,iatom)         &
-     &        + rho(inu,imu,jneigh,jatom)*dip(inu,imu,jneigh,jatom))/y
-             
+        else !ifixcharge
+          if (iqout .eq. 1 .or. iqout .eq. 3) then
+           Qout = 0.0d0
+           QLowdin_TOT = 0.0d0
+           call LOWDIN_CHARGES(ioccupy_k,foccupy)
+          end if !iqout = 1,3
  
-           !         write(*,*) 'DIPOLE when iatom,jatom,imu,inu = ',  &
-     ! &        iatom,jatom,imu,inu,' is',dip(imu,inu,ineigh,iatom),    &
-     ! &        dip(inu,imu,jneigh,jatom) 
+          if (iqout .eq. 2) then
+           Qout = 0.0d0
+           QMulliken_TOT = 0.0d0
+           call MULLIKEN_CHARGES()
+          end if !iqout = 2
 
-     !          write(*,*) 'Qa(',imu,',',iatom,')= ',QMulliken(imu,iatom)
-
-             end do
-            end do
-          end if !end if y .gt. 1.0d-05)
+          ! GAP ENRIQUE-FF
+          if ((igap.eq.1).or.(igap.eq.2)) then
+            call buildnij(ioccupy_k,foccupy, bmix, Kscf)
+          end if
+          if (igap .eq. 2 ) then
+            call koopman(natoms,nkpoints,ratom,ioccupy_k,foccupy)
+          end if
+          ! end GAP ENRIQUE-FF
 
          
-
-! End loop over neighbors
-           end do
-
-! Finally the imu loop.
-           imu = 0
-           do issh = 1, nssh(in1)
-            do mqn = 1, 2*lssh(issh,in1) + 1
-               imu = imu + 1
-               Qout(issh,iatom) = Qout(issh,iatom) + QMulliken(imu,iatom)
-            end do
-               QMulliken_TOT(iatom) = QMulliken_TOT(iatom) +Qout(issh,iatom)
-           end do
-
-!Check whether there are negative charges and correct
-!If there's more than one shell whose charge is negative, more work is
-!needed, but that'd be quite pathological a situation...
-            do issh = 1, nssh(in1)
-
-               if( Qout(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
+          if (iqout .eq. 4) then
+            Qout = 0.0d0                                                   
+            QMulliken_TOT = 0.0d0 
+            call MULLIKEN_DIPOLE_CHARGES()
+          end if !iqout = 4
            
-                  do jssh = 1,nssh(in1)
+          !if (iqout .eq. 5)  call charges_L2(Kscf,0) !DIAGONAL CHARGES           
+       
+          if (iqout .eq. 6) then
+            call STATIONARY_CHARGES()
 
-                     if ( jssh .ne. issh ) then
+          end if !iqout = 6
 
-                        Qout(jssh,iatom) = Qout(jssh,iatom)+            &
-                 &                         Qout(issh,iatom)/(nssh(in1)-1)
-
-                     end if !end if jssh .ne. issh 
-
-                  end do !end if jssh = 1,nssh(in1)
-
-                  Qout(issh,iatom) = 0.0d0               
-
-               end if !end if  Qout(issh,iatom) .lt. 0
-
-            end do !end do issh = 1, nssh(in1)
+        end if !ifixcharge
 
 
-! End loop over atoms
-          end do
-         end if     ! endif of ifixcharges
-        end if      ! endif of iqout .eq. 4
-
-
-! ***************************************************************************
-!
-! C O M P U T E   L2   DIAGONAL   CHARGES
-!
-!****************************************************************************
-
-!      if (iqout .eq. 5) then
-!
-!         call charges_L2(Kscf,0)
-!
-!      endif
-
-!****************************************************************************
-
-! ****************************************************************************
-!
-! CHARGES VARIATIONAL
-! ****************************************************************************
-! integer :: beta, alpha, ialp, ina
-! real,dimension(nssh_tot,nssh_tot) :: M
-! real,dimension(nssh_tot) :: B
-! In MODULES/interactions:
-! real, dimension(:,:,:,:,:,:), allocatable :: gvhxc
-! real, dimension(:,:,:,:), allocatable :: gvhxcS
-! In ALLOCATIONS/allocate_rho:
-! allocate (gvhxc(numorb_max,numorb_max,nssh_max,natoms,neigh_max,natoms))
-! allocate (gvhxcS(nssh_max,nssh_max,natoms,natoms))
-! (remember to include them also in deallocate_rho!!!)
-      !B = 0.0d0
-      SQ = 0.0d0
-      c = 0.0d0
-      if (iqout .eq. 6) then
-          alpha = 0
-          do ialp = 1, natoms
-              ina = imass(ialp)
-              !gvhxc
-              do issh = 1, nssh(ina)
-                 alpha = alpha + 1 ! transform to one index
-                 !write(*,*) 'alpha indices', ialp, issh, alpha
-                  beta = 0
-                  do iatom = 1, natoms
-                      in1 = imass(iatom)
-                      matom = neigh_self(iatom)                    
-                      inumorb = 1 ! counter for number of orbitals in atom iatom
-                      do issh1 = 1, nssh(in1)
-                          beta = beta + 1 ! transform to one index
-                          !write(*,*) 'beta indices', iatom, issh1, beta
-                          ! Spherical approximation to matrix elements:
-                           l = lssh(issh1,in1)
-                           auxgS = 0.0d0
-                           ! define mu_min and mu_max: the orbitals
-                           ! indices associated to the shell issh1
-                           mu_min = inumorb
-                           mu_max = mu_min+2*l
-                           do imu = mu_min, mu_max 
-                                auxgS =  auxgS &
-                              & +  gvhxc(imu,imu,issh,ialp,matom,iatom)
-                           end do ! end do imu = mu_min, mu_max 
-                          auxgS = auxgS/(2*l+1)  ! 4*pi??
-                          ! Now:
-                          !M(alpha,beta) =  auxgS !gvhxcs(issh1,issh,iatom,ialp)                   
-                          A(alpha,beta) = auxgS 
-                          !write(*,*) alpha, beta, M(alpha,beta) 
-                          inumorb = inumorb + 2*l+1
-                      end do ! end do issh1
-                      do ineigh = 1, neighn(iatom)
-                          mbeta = neigh_b(ineigh,iatom)
-                          jatom = neigh_j(ineigh,iatom)
-                          in2 = imass(jatom) 
-                          do imu = 1, num_orb(in1)
-                             do inu = 1, num_orb(in2)
-                                  !B(1,alpha) = B(1,alpha) + &
-                                  c(alpha) = c(alpha) + &
-                                  rho(imu,inu,ineigh,iatom)*gvhxc(imu, &
-                                      &    inu,issh,ialp,ineigh,iatom)
-                              end do ! end do inu
-                         end do ! end do imu
-                      end do ! end do ineigh
-                  end do ! end do iatom
-              end do ! end do issh
-          end do ! end do ialp
-          !M(nssh_tot+1,nssh_tot+1) = 0
-          !B(1,nssh_tot+1) = ztot
-          !do alpha = 1,nssh_tot
-          ! M(nssh_tot+1,alpha) = 1
-          ! M(alpha,nssh_tot+1) = 1
-          !end do
-              
-                 !do beta = 1, nssh_tot
-                 !write(*,*) 'alpha B ', beta, B(1,beta)
-                 !end do
-!  +++++++++++++++++++++++++++++++++++++++++++++++++++++
-!
-!  SOLVE SYSTEM Mx = B.  x are the charges
-! 
-      !write(*,*) gvhxc(1,1,1,1,neigh_self(1),1)
-      !write(*,*) M
-
-      ! do alpha = 1,nssh_tot
-      !   do beta = alpha+1,nssh_tot
-      !     M(alpha,beta) = 0.5*(M(alpha,beta)+M(beta,alpha))
-      !     M(beta,alpha) = M(alpha,beta)
-      !   end do !beta
-      ! end do !alpha 
-
-         !LWMAX = 100
-         !call ssysv( 'U', nssh_tot, 1, M, nssh_tot, ipiv, B, &
-         !              &      nssh_tot, work, lwork, info )
-         !call sgesv(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
-         !print*,'=========== cargamos valores de A y c ==============='
-         !do i = 1, nssh_tot
-         !  do j = 1, nssh_tot
-         !    A(i,j)=M(i,j)
-         !  end do
-         !  c(i)=B(1,i)
-         !end do
-   
-         !call dgesv(nssh_tot+1,1,M,nssh_tot+1,ipiv,B,nssh_tot+1,info)
-         !call sgetrs(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
-         
-!*
-!*     Check for the exact singularity.
-!*
-               !  write(*,*) 'B output ', B
-!      IF( info.GT.0 ) THEN
-!         WRITE(*,*)'The element of the diagonal factor '
-!         WRITE(*,*)'D(',info,',',info,') is zero, so that'
-!         WRITE(*,*)'D is singular; the solution could not be computed.'
-!         STOP
-!      END IF
-
-!+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-         alpha = 0
-         Ntot = 0.0
-         do iatom = 1, natoms
-             in1 = imass(iatom)
-             do issh = 1, nssh(in1)
-                 alpha = alpha + 1
-!                 Qout(issh,iatom) = B(1,alpha)
-!                 carga(alpha)=B(1,alpha)
-                 SQ(alpha) = Qin(issh,iatom)
-                 LB(alpha) = 0.00
-                 if ( lssh(issh,in1) .eq. 0 ) then 
-                   UB(alpha) = 2.00
-                   nalpha(alpha) = 1.00 
-                 end if
-                 if ( lssh(issh,in1) .eq. 1 ) then
-                    UB(alpha) = 6.00
-                   nalpha(alpha) = 3.00 
-                 end if
-                 if ( lssh(issh,in1) .eq. 2 ) then
-                    UB(alpha) = 10.00
-                   nalpha(alpha) = 5.00 
-                 end if 
-                 !UB(alpha) = 100.00
-                 !nalpha(alpha) = 1.00
-                 Ntot = Ntot + Qin(issh,iatom)                 
-             end do ! end do issh
-         end do ! end do iatom
-!         print*,''
-!         print*,"=============================  solución dgesv ============================="
-!         print*,'Qtot =',Ntot 
-!         write(*,'(A6,<nssh_tot>F7.3,A3)')'Q = (/ ',(carga(alpha),alpha = 1, nssh_tot),' /)'
-!         diff_err = Ep2(carga,A,c,nssh_tot)
-!         print*,'err dgesv   = ',diff_err
-!
-!         alpha = 0
-!         do iatom = 1, natoms
-!           in1 = imass(iatom)
-!           do issh = 1,nssh(in1)
-!            alpha=alpha+1
-!           ! carga(alpha)=Qneutral(issh,in1)
-!           end do
-!          end do
-
-         !diff_err=Ep2(carga,A,c,nssh_tot)
-         !print*,'err cargas neutras =',diff_err
-
- 
-!         Ntot=0
-!         do i = 1, nssh_tot
-!           Ntot = Ntot + carga(i)
-!         end do
-         !  SOLVE SYSTEM Mx = B.  x are the charges
-         print*,''
-         print*,"============  step_size  ============================="
-         print*,'Qtot =',Ntot
-         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qin = (/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
-         call step_size(nssh_tot,A,c,SQ, LB, UB, nalpha) !,,LB,UB) B(1,alpha
-         Ntot=0
-         do alpha = 1, nssh_tot
-           Ntot = Ntot + SQ(alpha)
-         end do
-         !write(*,'(A6,<nssh_tot>F7.3,A3)')'LB =(/ ',(LB(alpha),alpha = 1, nssh_tot),' /)'
-         !write(*,'(A6,<nssh_tot>F10.3,A3)')'UB =(/ ',(UB(alpha),alpha = 1, nssh_tot),' /)'
-         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qout =(/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
-         print*,'Qtot(out) =',Ntot
-         diff_err=Ep2(SQ,A,c,nssh_tot,nalpha)
-         print*,'err step_size   =',diff_err
-         
-         alpha = 0 
-         do iatom = 1, natoms
-           in1 = imass(iatom)
-           do issh = 1, nssh(in1)
-             alpha = alpha + 1
-             Qout(issh,iatom) = SQ(alpha) 
-           end do ! end do issh
-         end do ! end do iatom
-         print*,"===================================="
-
-!         alpha = 0
-!         do iatom = 1, natoms
-!           in1 = imass(iatom)
-!           do issh = 1,nssh(in1)
-!            alpha=alpha+1
-!            carga(alpha)=Qneutral(issh,in1)
-!           end do
-!          end do
-!
-!         !diff_err=Ep2(carga,A,c,nssh_tot)
-!         !print*,'err cargas neutras =',diff_err
-!
-! 
-!         Ntot=0
-!         do i = 1, nssh_tot
-!           Ntot = Ntot + carga(i)
-!         end do
-!         !  SOLVE SYSTEM Mx = B.  x are the charges
-!         print*,''
-!         print*,"=============================  step_size  ============================="
-!         print*,'Qtot =',Ntot
-!         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qin=(/ ',(carga(alpha),alpha = 1, nssh_tot),' /)'
-!         call step_size(nssh_tot,A,c,carga) !,,LB,UB) B(1,alpha
-!         Ntot=0
-!         do i = 1, nssh_tot
-!           Ntot = Ntot + carga(i)
-!         end do
-!         print*,'Qtot(out) =',Ntot
-!         write(*,'(A6,<nssh_tot>F7.3,A3)')'Q=(/ ',(carga(alpha),alpha = 1, nssh_tot),' /)'
-!         diff_err=Ep2(carga,A,c,nssh_tot)
-!         print*,'err step_size   =',diff_err
-!
-
-     
-!          write(*,*) 'Now Ntot is: ', Ntot
-      ! renorm total charge  (ztot = total charge)
-!         do iatom = 1, natoms
-!            in1 = imass(iatom)
-!             do issh = 1, nssh(in1)
-                 !alpha = alpha + 1
-                 !write(*,*) 'indices: ', iatom, issh, alpha, B(1,alpha)
-                 !Qout(issh,iatom) = Qout(issh,iatom) + (ztot-Ntot)/nssh_tot
-!            end do ! end do issh
-!         end do ! end do iatom
-        !  write(*,*) 'Ntot = ' , Ntot  
-!          write(*,*) 'Qoutno corrected = ', Qout 
-! ******************************************************************************
-! ******************************************************************************
-
-
-!!Check whether there are negative charges and correct
-!!If there's more than one shell whose charge is negative, more work is
-!!needed, but that'd be quite pathological a situation...
-!           do iatom = 1,natoms
-!            in1 = imass(iatom)
-!            do issh = 1, nssh(in1)
-!
-!               if( Qout(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
-!           
-!                  do jssh = 1, nssh(in1)
-!
-!                     if ( jssh .ne. issh ) then
-!
-!                        Qout(jssh,iatom) = Qout(jssh,iatom)+            &
-!                &                         Qout(issh,iatom)/(nssh(in1)-1)
-!
-!                     end if !end if jssh .ne. issh 
-!
-!                  end do !end if jssh = 1,nssh(in1)
-!
-!                  Qout(issh,iatom) = 0.0d0               
-!
-!               end if !end if  Qout(issh,iatom) .lt. 0
-!
-!            end do !end do issh = 1, nssh(in1)
-!          end do ! end do iatom = 1,natoms
-!            ! write(*,*) 'Qout corrected = ', Qout 
-      end if  !end if (iqout .eq. 6)
-!
-!                 CORRECT NEGATIVE CHARGES BY FIXING THEM TO ZERO AND
-!                 RESOLVING THE SYSTEM
 ! ****************************************************************************
 !
 ! C O M P U T E    M U L L I K E N    P O P U L A T I O N    F O R   MOs
@@ -1124,19 +597,322 @@
         return
       end subroutine denmat
 
+      subroutine LOWDIN_CHARGES(ioccupy_k,foccupy)
+        use charges
+        use options
+        use density
+        use configuration
+        use interactions
+        use kpoints
+        use constants_fireball
+        implicit none
+        integer iatom
+        integer ikpoint
+        integer imu, inu
+        integer in1, in2
+        integer issh, jssh,mmu
+        integer noccupy
+        integer mqn
+        integer iorbital
+        real aux1, aux2, aux3
 
-!               allocate( M(nssh_tot+1,nssh_tot+1) )
-!               allocate( B(1,nssh_tot+1) )
-! call step_size(nssh_tot,M,B) !,,LB,UB) B(1,alpha)
-!==================================================================
+        integer,intent(in), dimension (norbitals, nkpoints) :: ioccupy_k
+        real,intent(in), dimension (norbitals, nkpoints) :: foccupy
+
+        Qout = 0.0d0
+        QLowdin_TOT = 0.0d0
+
+        do iatom = 1, natoms
+         in1 = imass(iatom)
+         do ikpoint = 1, nkpoints
+           aux1 = weight_k(ikpoint)*spin
+           do iorbital = 1, norbitals
+            if (ioccupy_k(iorbital,ikpoint) .eq. 1) then
+             aux2 = aux1*foccupy(iorbital,ikpoint)
+             imu = 0
+             do issh = 1, nssh(in1)
+              do mqn = 1, 2*lssh(issh,in1) + 1
+               imu = imu + 1
+               mmu = imu + degelec(iatom)
+               if (icluster .ne. 1) then
+                aux3 = aux2*(blowre(mmu,iorbital,ikpoint)**2           &
+     &                        + blowim(mmu,iorbital,ikpoint)**2)
+               else
+                aux3 = aux2*blowre(mmu,iorbital,ikpoint)**2
+               end if
+               Qout(issh,iatom) = Qout(issh,iatom) + aux3
+               QLowdin_TOT(iatom) = QLowdin_TOT(iatom) + aux3
+              end do
+             end do
+            end if
+           end do !kpoints
+          end do
+         end do !atoms
+       end subroutine LOWDIN_CHARGES 
+
+      subroutine MULLIKEN_CHARGES()                                   
+        use charges                                                     
+        use configuration
+        use interactions
+        use neighbor_map
+        use kpoints
+        use density
+        implicit none
+        integer iatom                                                   
+        integer ikpoint                                                 
+        integer imu, inu                                                
+        integer in1, in2                                                
+        integer issh, jssh
+        integer ineigh ,jatom,jneigh                                    
+        integer noccupy   
+        integer mqn                                                     
+        real, dimension (numorb_max, natoms) :: QMulliken
+
+        QMulliken = 0.0d0                                              
+        do iatom = 1, natoms
+          in1 = imass(iatom)
+          do ineigh = 1, neighn(iatom)
+            jatom = neigh_j(ineigh,iatom)
+            in2 = imass(jatom)
+            jneigh = neigh_back(iatom,ineigh)
+            do imu = 1, num_orb(in1)
+              do inu = 1, num_orb(in2)
+                QMulliken(imu,iatom) = QMulliken(imu,iatom)                    &
+     &          + 0.5d0*(rho(imu,inu,ineigh,iatom)*s_mat(imu,inu,ineigh,iatom) &
+     &          + rho(inu,imu,jneigh,jatom)*s_mat(inu,imu,jneigh,jatom))
+              end do
+            end do
+          end do !ineig
+          imu = 0
+          do issh = 1, nssh(in1)
+            do mqn = 1, 2*lssh(issh,in1) + 1
+              imu = imu + 1
+              Qout(issh,iatom) = Qout(issh,iatom) + QMulliken(imu,iatom)
+            end do
+            QMulliken_TOT(iatom) = QMulliken_TOT(iatom) + Qout(issh,iatom)
+          end do
+        end do   !atoms
+        
+      end subroutine MULLIKEN_CHARGES 
+
+
+      subroutine MULLIKEN_DIPOLE_CHARGES()                              
+        use charges                                                     
+        use configuration
+        use interactions
+        use kpoints
+        use neighbor_map
+        use density
+        implicit none
+        integer iatom                                                   
+        integer ikpoint                                                 
+        integer imu, inu                                                
+        integer in1, in2                                                
+        integer issh, jssh
+        integer ineigh , jatom,jneigh                                       
+        integer noccupy   
+        integer mqn                                                     
+        real y
+        real, dimension (numorb_max, natoms) :: QMulliken
+        real, dimension (3) :: vec, r1, r2, r21
+
+        QMulliken = 0.0d0
+        do iatom = 1, natoms
+          in1 = imass(iatom)
+          r1(:) = ratom(:,iatom)
+          do ineigh = 1, neighn(iatom)
+            jatom = neigh_j(ineigh,iatom)
+            in2 = imass(jatom)
+            r2(:) = ratom(:,jatom)
+            ! Find r21 = vector pointing from r1 to r2, the two ends of the
+            ! bondcharge, and the bc distance, y
+            r21(:) = r2(:) - r1(:)
+            y = sqrt(r21(1)*r21(1) + r21(2)*r21(2) + r21(3)*r21(3))
+            jneigh = neigh_back(iatom,ineigh)
+            do imu = 1, num_orb(in1)
+              do inu = 1, num_orb(in2)
+                QMulliken(imu,iatom) = QMulliken(imu,iatom)                    &
+     &          + 0.5d0*(rho(imu,inu,ineigh,iatom)*s_mat(imu,inu,ineigh,iatom) &
+     &          + rho(inu,imu,jneigh,jatom)*s_mat(inu,imu,jneigh,jatom))
+              end do
+            end do
+           
+            ! dipole correction. Only if the two atoms are different
+            if (y .gt. 1.0d-05) then
+              do imu = 1, num_orb(in1)
+                do inu = 1, num_orb(in2)
+                  QMulliken(imu,iatom) = QMulliken(imu,iatom)+                    &
+     &              (-rho(imu,inu,ineigh,iatom)*dip(imu,inu,ineigh,iatom)         &
+     &              + rho(inu,imu,jneigh,jatom)*dip(inu,imu,jneigh,jatom))/y
+                end do
+              end do
+            end if !end if y .gt. 1.0d-05)
+          end do !ineig 
+
+          imu = 0
+          do issh = 1, nssh(in1)
+            do mqn = 1, 2*lssh(issh,in1) + 1
+              imu = imu + 1
+              Qout(issh,iatom) = Qout(issh,iatom) + QMulliken(imu,iatom)
+            end do
+            QMulliken_TOT(iatom) = QMulliken_TOT(iatom) +Qout(issh,iatom)
+          end do
+          !Check whether there are negative charges and correct
+          !If there's more than one shell whose charge is negative, more work is
+          !needed, but that'd be quite pathological a situation...
+          do issh = 1, nssh(in1)
+            if( Qout(issh,iatom) .lt. 0 .and. nssh(in1) .gt. 1 ) then
+              do jssh = 1,nssh(in1)
+                if ( jssh .ne. issh ) then
+                  Qout(jssh,iatom) = Qout(jssh,iatom) + Qout(issh,iatom)/(nssh(in1)-1)
+                   end if !end if jssh .ne. issh 
+                end do !end if jssh = 1,nssh(in1)
+                Qout(issh,iatom) = 0.0d0               
+             end if !end if  Qout(issh,iatom) .lt. 0
+          end do !end do issh = 1, nssh(in1)
+        end do !iatoms
+      end subroutine MULLIKEN_DIPOLE_CHARGES 
+
+      subroutine STATIONARY_CHARGES()                              
+        use charges
+        use neighbor_map                                                     
+        use configuration
+        use interactions
+        use kpoints
+        use density
+        implicit none
+        integer iatom                                                   
+        integer ikpoint                                                 
+        integer imu,inu                                                
+        integer in1, in2
+        integer issh, jssh                                              
+        integer ineigh, jatom
+        integer mbeta
+        integer noccupy                                                 
+        integer mqn
+        real,dimension(nssh_tot,nssh_tot) :: A
+        real,dimension(nssh_tot) :: c, SQ ! carga
+        real,dimension(nssh_tot) :: LB, UB, nalpha
+        real :: diff_err,Ep2
+        integer issh1, mu_min, mu_max, l, inumorb
+        real Ntot
+        real auxgS
+        integer :: beta, alpha, ialp, ina, matom
+
+        SQ = 0.0d0
+        c = 0.0d0
+        alpha = 0
+        do ialp = 1, natoms
+          ina = imass(ialp)
+          !gvhxc
+          do issh = 1, nssh(ina)
+            alpha = alpha + 1 ! transform to one index
+            beta = 0
+            do iatom = 1, natoms
+              in1 = imass(iatom)
+              matom = neigh_self(iatom)                    
+              inumorb = 1 ! counter for number of orbitals in atom iatom
+              do issh1 = 1, nssh(in1)
+                beta = beta + 1 ! transform to one index
+                ! Spherical approximation to matrix elements:
+                l = lssh(issh1,in1)
+                auxgS = 0.0d0
+                ! define mu_min and mu_max: the orbitals
+                ! indices associated to the shell issh1
+                mu_min = inumorb
+                mu_max = mu_min+2*l
+                do imu = mu_min, mu_max 
+                  auxgS =  auxgS  +  gvhxc(imu,imu,issh,ialp,matom,iatom)
+                end do ! end do imu = mu_min, mu_max 
+                auxgS = auxgS/(2*l+1)  ! 4*pi??
+                !M(alpha,beta) =  auxgS !gvhxcs(issh1,issh,iatom,ialp)                   
+                A(alpha,beta) = auxgS 
+                inumorb = inumorb + 2*l+1
+              end do ! end do issh1
+              do ineigh = 1, neighn(iatom)
+                mbeta = neigh_b(ineigh,iatom)
+                jatom = neigh_j(ineigh,iatom)
+                in2 = imass(jatom) 
+                do imu = 1, num_orb(in1)
+                  do inu = 1, num_orb(in2)
+                    c(alpha) = c(alpha) + &
+             &      rho(imu,inu,ineigh,iatom)*gvhxc(imu,inu,issh,ialp,ineigh,iatom)
+                  end do ! end do inu
+                end do ! end do imu
+              end do ! end do ineigh
+            end do ! end do iatom
+          end do ! end do issh
+        end do ! end do ialp
+
+        !SOLVE SYSTEM Mx = B.  x are the charges
+        !M(nssh_tot+1,nssh_tot+1) = 0
+        !B(1,nssh_tot+1) = ztot
+        !do alpha = 1,nssh_tot
+        ! M(nssh_tot+1,alpha) = 1
+        ! M(alpha,nssh_tot+1) = 1
+        !end do
+        !LWMAX = 100
+        !call ssysv( 'U', nssh_tot, 1, M, nssh_tot, ipiv, B, nssh_tot, work, lwork, info )
+        !call sgesv(nssh_tot,1,M,nssh_tot,ipiv,B,nssh_tot,info )
+
+        alpha = 0
+        Ntot = 0.0
+        do iatom = 1, natoms
+          in1 = imass(iatom)
+            do issh = 1, nssh(in1)
+              alpha = alpha + 1
+              SQ(alpha) = Qin(issh,iatom)
+              LB(alpha) = 0.00
+              if ( lssh(issh,in1) .eq. 0 ) then 
+                UB(alpha) = 2.00
+                nalpha(alpha) = 1.00 
+              end if
+              if ( lssh(issh,in1) .eq. 1 ) then
+                UB(alpha) = 6.00
+                nalpha(alpha) = 3.00 
+              end if
+              if ( lssh(issh,in1) .eq. 2 ) then
+                UB(alpha) = 10.00
+                nalpha(alpha) = 5.00 
+              end if 
+              !descomentar para anular UB y nalpha
+              !UB(alpha) = 100.00
+              !nalpha(alpha) = 1.00
+              Ntot = Ntot + Qin(issh,iatom)                 
+            end do ! end do issh
+          end do ! end do iatom
+         print*,''
+         print*,"============  step_size  ============================="
+         print*,'Qtot =',Ntot
+         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qin = (/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
+         call step_size(nssh_tot,A,c,SQ, LB, UB, nalpha) !,,LB,UB) B(1,alpha
+         Ntot=0
+         do alpha = 1, nssh_tot
+           Ntot = Ntot + SQ(alpha)
+         end do
+         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qout =(/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
+         print*,'Qtot(out) =',Ntot
+         diff_err=Ep2(SQ,A,c,nssh_tot,nalpha)
+         print*,'err step_size   =',diff_err
+         
+         alpha = 0 
+         do iatom = 1, natoms
+           in1 = imass(iatom)
+           do issh = 1, nssh(in1)
+             alpha = alpha + 1
+             Qout(issh,iatom) = SQ(alpha) 
+           end do ! end do issh
+         end do ! end do iatom
+
+      end subroutine STATIONARY_CHARGES
+
+      !==============================================================
       subroutine step_size(nssh_tot,A,c,Q,LB,UB,nalpha) !,LB,UB,nstep)
         integer, intent(in) :: nssh_tot
         real,intent(in),dimension(nssh_tot,nssh_tot) :: A
         real,intent(in),dimension(nssh_tot) :: c
         real,intent(inout),dimension(nssh_tot) :: Q
         real,intent(in),dimension(nssh_tot) :: LB, UB, nalpha
-!        real,dimension(nssh_tot) :: LB, UB
-!        integer, intent(inout) :: nstep
         integer :: nstep = 0
         logical, dimension(nssh_tot) :: cero
         integer :: i, j, k,nceros
@@ -1150,7 +926,6 @@
         real :: tol = 0.001
         !=============================
         Q0=Q
-!        write(*,'(A12,<nssh_tot>F7.3,A3)')'Q in =(/ ',(Q(i),i = 1, nssh_tot),' /)'
         F=0
         do i=1,nssh_tot
           do j=1, nssh_tot
@@ -1192,7 +967,7 @@
             g(i)=g(i)-g0
           end do
 
-            !proyectamos en las componentes q<0
+          !proyectamos en las componentes q<0
 
           do i=1,nssh_tot
             if((Q0(i) < LB(i)+tol .and. g(i) < 0.00 ) .or. (Q0(i) > UB(i)-tol .and. g(i) > 0.00 )) then
@@ -1248,7 +1023,7 @@
           Q=Q0+x*g
 
           diff_err=Ep2(Q0,A,c,nssh_tot,nalpha)-Ep2(Q,A,c,nssh_tot,nalpha)
-         dqmax=1.0E+10
+          dqmax=1.0E+10
           k=0
           do i=1,nssh_tot
             if(cero(i) .eq. .False.) then  !ojo !!!!
@@ -1272,25 +1047,8 @@
             Q=Q0+dqmax*g
           end if
 
-      !  aux=0
-      !  do i = 1, nssh_tot
-      !    aux=aux+g(i)**2
-      !  end do
-      !  aux=aux**0.5
-
-      !  aux2=0
-      !  do i = 1, nssh_tot
-      !    aux2=aux2+abs(Q0(i)-Q(i))
-      !  end do
-
-
-      !     diff=diffQ(nssh_tot,Q0,Q)
-      !    print*,Ep2(Q,A,c,nssh_tot),aux,aux2
-!        write(*,'(A6,<nssh_tot>F7.3,A3)')'Q     = (/ ',(Q(i),i = 1, nssh_tot),' /)'
-!        print*,Ep2(Q,A,c,nssh_tot)
           Q0=Q
-
-        !write(*,'(A6,<nssh_tot>F7.3,A3)')'g     = (/ ',(g(i),i = 1, nssh_tot),' /)'
+          !write(*,'(A6,<nssh_tot>F7.3,A3)')'g     = (/ ',(g(i),i = 1, nssh_tot),' /)'
         end do
 
         aux=0
@@ -1298,19 +1056,19 @@
           aux=aux+Q(i)
         end do
       
-     print*,'nstep = ',nstep
+        print*,'nstep = ',nstep
  
-      !  write(*,'(A6,<nssh_tot>L7,A3)')'ceros =(/ ',(cero(i),i = 1, nssh_tot),' /)'
-      !  do i = 1, nssh_tot
-      !    print*,g(i),cero(i),Q(i),dqmax,k,x
-      !  end do
+        !write(*,'(A6,<nssh_tot>L7,A3)')'ceros =(/ ',(cero(i),i = 1, nssh_tot),' /)'
+        !do i = 1, nssh_tot
+        ! print*,g(i),cero(i),Q(i),dqmax,k,x
+        !end do
       
-      !  print*,'diff err = ',diff_err,';  nstep    =',nstep,'; dqmax =',dqmax
-      !  print*,'Qtot     =',aux,' ;  n ceros  =',nceros,'; err   =',Ep2(Q,A,c,nssh_tot)
-      !  if ( nstep .eq. nstepmax ) then
-      !    print*,'*************** stop nstepmax *************************'
-      !    stop
-      !  end if
+        !print*,'diff err = ',diff_err,';  nstep    =',nstep,'; dqmax =',dqmax
+        !print*,'Qtot     =',aux,' ;  n ceros  =',nceros,'; err   =',Ep2(Q,A,c,nssh_tot)
+        !if ( nstep .eq. nstepmax ) then
+        !print*,'*************** stop nstepmax *************************'
+        !stop
+        !end if
       end
       !=============================================
       real function Ep2(q,A,c,nssh_tot,nalpha)
@@ -1333,57 +1091,54 @@
       end function Ep2
  
       subroutine getceros(nssh_tot,Q0,g,LB,UB,tol,cero,igualceros)
-      integer, intent(in) :: nssh_tot
-      real, intent(in) :: tol
-      real,intent(in),dimension(nssh_tot) :: Q0
-      real,intent(in),dimension(nssh_tot) :: LB, UB
-      real,intent(in),dimension(nssh_tot) :: g
+        integer, intent(in) :: nssh_tot
+        real, intent(in) :: tol
+        real,intent(in),dimension(nssh_tot) :: Q0
+        real,intent(in),dimension(nssh_tot) :: LB, UB
+        real,intent(in),dimension(nssh_tot) :: g
       
-      logical,intent(inout) ,dimension(nssh_tot) :: cero
-      logical, intent(inout) :: igualceros
+        logical,intent(inout) ,dimension(nssh_tot) :: cero
+        logical, intent(inout) :: igualceros
       
-      real,dimension(nssh_tot) :: gaux
-      real :: g0
-      integer :: i, j,nceros
-      real :: aux
-          nceros=0
-          g0=0.00
-          gaux=g
-          !write(*,'(A6,<nssh_tot>F12.3,A3)')'g0=(/ ',(gaux(i),i = 1, nssh_tot),' /)'
-          !write(*,'(A6,<nssh_tot>F12.3,A3)')'Q0=(/ ',(Q0(i),i = 1, nssh_tot),' /)'
-          do i=1,nssh_tot
-            if(cero(i) .eq. .True.) then
-              nceros=nceros+1
-              gaux(i)=0.00
-            else
-              g0=g0+g(i)
-            end if
-          end do
-      
-          g0=g0/(nssh_tot-nceros)
-      
-          do i=1,nssh_tot
-            if (cero(i) .eq. .False.) then
-              gaux(i)=gaux(i)-g0
-            else
-              gaux(i)=0.00
-            end if
-          end do
-
+        real,dimension(nssh_tot) :: gaux
+        real :: g0
+        integer :: i, j,nceros
+        real :: aux
+        nceros=0
+        g0=0.00
+        gaux=g
+        !write(*,'(A6,<nssh_tot>F12.3,A3)')'g0=(/ ',(gaux(i),i = 1, nssh_tot),' /)'
+        !write(*,'(A6,<nssh_tot>F12.3,A3)')'Q0=(/ ',(Q0(i),i = 1, nssh_tot),' /)'
+        do i=1,nssh_tot
+          if(cero(i) .eq. .True.) then
+            nceros=nceros+1
+            gaux(i)=0.00
+          else
+            g0=g0+g(i)
+          end if
+        end do
+    
+        g0=g0/(nssh_tot-nceros)
+    
+        do i=1,nssh_tot
+          if (cero(i) .eq. .False.) then
+            gaux(i)=gaux(i)-g0
+          else
+            gaux(i)=0.00
+          end if
+        end do
         igualceros=.True.
-         do i=1,nssh_tot
-           if(cero(i)  .eq. .False.)then
-              if((Q0(i) < LB(i)+tol .and. gaux(i) < 0.00 ) .or. (Q0(i) > UB(i)-tol .and. gaux(i) > 0.00 )) then
-                nceros=nceros+1
-                cero(i)=.True.
-                igualceros=.False.
-              end if
-           end if
-         end do
-
-
-      ! write(*,'(A6,<nssh_tot>L)')'cein =(/ ',(cero(i),i = 1, nssh_tot),' /)'
-      ! print*,'igualceros=',igualceros
+        do i=1,nssh_tot
+          if(cero(i)  .eq. .False.)then
+            if((Q0(i) < LB(i)+tol .and. gaux(i) < 0.00 ) .or. (Q0(i) > UB(i)-tol .and. gaux(i) > 0.00 )) then
+              nceros=nceros+1
+              cero(i)=.True.
+              igualceros=.False.
+            end if
+          end if
+        end do
+        !write(*,'(A6,<nssh_tot>L)')'cein =(/ ',(cero(i),i = 1, nssh_tot),' /)'
+        !print*,'igualceros=',igualceros
       end subroutine getceros
  
       real function get_min_parabola(x1,x2,x3,y1,y2,y3)
@@ -1397,6 +1152,5 @@
         ! print*,a,'*x**2+',b,'*x+',c
       end function get_min_parabola
 
-!=================================================
  
       
