@@ -56,7 +56,7 @@ class dinamic:
         out.append(aux)
       c=np.array(out)
       df2 = pd.DataFrame(c,index=col,columns=col)
-      print(df2)
+      print(df2.to_string())
 
 
 
