@@ -21,7 +21,7 @@ class atom:
         print(a)
 
     def print_bas_format(self):
-        print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f}'.format(tabla.getN('H'),float(self.r[0]),float(self.r[1]),float(self.r[2])))
+        print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f}'.format(tabla.getN(self.Z),float(self.r[0]),float(self.r[1]),float(self.r[2])))
 
     def setV(self , v):
         self.v = v
