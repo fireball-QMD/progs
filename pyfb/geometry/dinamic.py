@@ -61,7 +61,7 @@ class dinamic:
   def load_enlaces(self):
       for bas in self.step: #solo debería haber un step cargado
           bas.load_enlaces()
-          bas.print_enlaces()
+          #bas.print_enlaces()
 
   def get(self,info,col):
     count=0.0
