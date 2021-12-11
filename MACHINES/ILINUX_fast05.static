@@ -14,7 +14,7 @@ ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
 	PATH_FFTW_INCL = -I${MKLROOT}/interfaces/fftw3xf/
 	ifneq (,$(findstring OPT, ${MODE}))
 		FFLAGS = -O3 -r8  -fno-alias -unroll -fPIC -static-intel
-	        CFLAGS = -O3
+	        CFLAGS = -O3 -fPIC
 	endif
 	ifneq (,$(findstring YES,${USEBLAS}))
                 LFLAGS = ${MKLROOT}/lib/intel64/libmkl_blas95_lp64.a ${MKLROOT}/lib/intel64/libmkl_lapack95_lp64.a \

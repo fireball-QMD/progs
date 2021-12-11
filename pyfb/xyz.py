@@ -24,6 +24,7 @@ def print_help() :
   print (sys.argv[0], '-laststep <file xyz format> -print')
   print (sys.argv[0], '-laststep_charges <file xyz format> -print_charges')
   print (sys.argv[0], '-i <file xyz format> -dintra_matrix')
+  print (sys.argv[0], '-loadstep <file xyz format> <step> -enlaces')
   print (sys.argv[0], '-i <file xyz format> -rescal <float>')
 
 if len(sys.argv) == 1 :
@@ -65,6 +66,13 @@ for i in range(1,len(sys.argv)):
       print("nothing is load")
     else:
       din.dintra_matrix()
+
+  if sys.argv[i] == '-enlaces' :
+    if len(din.step) == 0:
+      print("nothing is load")
+    else:
+      din.load_enlaces()
+
 
 
   if sys.argv[i] == '-x' or sys.argv[i] == '-y' or sys.argv[i] == '-z' or sys.argv[i] == '-X' or sys.argv[i] == '-Y' or sys.argv[i] == '-Z' or sys.argv[i] == '-rescal':

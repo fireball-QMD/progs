@@ -7,9 +7,30 @@ class step:
     self.charges=[]
     self.line2=""
     self.name=""
+    self.tol=4
 
   def append(self,atomo):
     self.atom.append(atomo)
+
+  def load_enlaces(self):
+    for i in range(len(self.atom)-1):
+        for j in range(i+1,len(self.atom)):
+            ri=self.atom[i].getRadio()
+            rj=self.atom[j].getRadio()
+            radio=(float(ri+rj))/2/self.tol
+            if((100*self.atom[i].distancia(self.atom[j])) < radio ):
+                 self.atom[i].neighbor.append(self.atom[j])
+                 self.atom[j].neighbor.append(self.atom[i])
+
+  def print_enlaces(self):
+    for i in self.atom:
+      print(i.Z,self.atom.index(i)+1)
+      for j in i.neighbor:
+        radio=float(i.getRadio()+j.getRadio())/2/self.tol
+        print("  - "+str(j.Z)+str(self.atom.index(j)+1)+" "+str(radio)+" "+str(100*i.distancia(j)))
+      print("  ")
+      print("  ")
+
 
   def print(self):
     linea=str(len(self.atom))+"\n"

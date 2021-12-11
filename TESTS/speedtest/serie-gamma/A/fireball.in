@@ -3,7 +3,7 @@ nstepf = 1
 basisfile = 'ini.bas'
 lvsfile = 'ini.lvs'
 kptpreference = 'ini.kpts'
-fdatalocation = '../../Fdata'
+fdatalocation='/home/dani/FB/git/progs/TESTS/speedtest/Fdata'
 sigmatol = 0.000001
 iquench = 0
 &end

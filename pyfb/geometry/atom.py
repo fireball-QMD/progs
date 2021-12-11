@@ -10,6 +10,7 @@ class atom:
         self.r = r
         self.Q = "null"
         self.q = []
+        self.neighbor = []
 
     def print(self):
         print ('{0:2} {1:12.6f} {2:12.6f} {3:12.6f}'.format(self.Z,float(self.r[0]),float(self.r[1]),float(self.r[2])))
@@ -37,6 +38,9 @@ class atom:
 
     def getM(self):
         return float(getM(self.Z))
+
+    def getRadio(self):
+        return int(tabla.getRadio(self.Z))
 
     def getEc(self):
         return str(0.5*(self.getM()*self.V2()/fovermp))
@@ -68,4 +72,5 @@ class atom:
         cos=(ax*bx+ay*by+az*bz)/(ax*ax+ay*ay+az*az)**0.5/(bx*bx+by*by+bz*bz)**0.5;
         d=math.acos(cos)*180/math.pi;
         return d
+
 
