@@ -10,6 +10,9 @@ class tabla:
   def getN(self,Z):
     return (self.ele.index(Z)+1)
   
+  def getZ(self,N):
+    return (self.ele[N-1])
+
   def getM(self,Z):
     return self.masa[self.ele.index(Z)]
 
