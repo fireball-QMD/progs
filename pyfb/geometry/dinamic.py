@@ -1,7 +1,10 @@
 from  pyfb.geometry.step import step
 from  pyfb.geometry.atom import atom
+from pyfb.geometry.tabla import tabla
 import pandas as pd
 import numpy as np
+
+tabla=tabla()
 
 class dinamic:
   def __init__(self):
@@ -155,7 +158,6 @@ class dinamic:
       i=i+1 #natom
       i=i+1 #line2
       self.append(bas)
-    
 
   def loadstep(self,archivo,istep):
     natoms = 0
@@ -202,3 +204,21 @@ class dinamic:
     if read_charges: #load after read de step
       bas.loadcharges() 
     self.append(bas) 
+
+  def loadbas(self,archivo,name=""):
+    bas=step()
+    text=open(archivo).readlines()
+    nmaxlines=len(text)
+    natoms = int(text[0].split()[0])
+    for i in range(1,natoms+1):
+      line=text[i].split()
+      a=tabla.getZ(int(line[0]))
+      ra=[]
+      ra.append(float(line[1]))
+      ra.append(float(line[2]))
+      ra.append(float(line[3]))
+      bas.append(atom(a,ra))
+    self.append(bas)
+
+
+ 

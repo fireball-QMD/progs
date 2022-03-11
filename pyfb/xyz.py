@@ -11,6 +11,7 @@ acumular_salida=False
 sep="                                                                                                            "
 def print_help() :
   print (sys.argv[0], '-i <file xyz format>')
+  print (sys.argv[0], '-ibas <file bas format>')
   print (sys.argv[0], '-i <file xyz format> -print')
   print (sys.argv[0], '-i <file xyz format> -op <atom position>')
   print (sep[:len(sys.argv[0])], '                     -op = -x -y -z -X -Y -X') 
@@ -33,6 +34,9 @@ if len(sys.argv) == 1 :
 for i in range(1,len(sys.argv)):
   if sys.argv[i] == '-i' :
     din.loadxyz(sys.argv[i+1])
+
+  if sys.argv[i] == '-ibas' :
+    din.loadbas(sys.argv[i+1])
 
   if sys.argv[i] == '-loadstep' :
     din.loadstep(sys.argv[i+1],int(sys.argv[i+2]))
