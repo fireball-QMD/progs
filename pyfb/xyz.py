@@ -94,8 +94,11 @@ for i in range(1,len(sys.argv)):
 
 
   if sys.argv[i] == '-x' or sys.argv[i] == '-y' or sys.argv[i] == '-z' or sys.argv[i] == '-X' or sys.argv[i] == '-Y' or sys.argv[i] == '-Z' or sys.argv[i] == '-rescal':
-    col=[int(sys.argv[i+1])]
-    din.get(sys.argv[i],col)
+    if sys.argv[i] == '-rescal':
+       din.get(sys.argv[i],[sys.argv[i+1]])
+    else:
+      col=[int(sys.argv[i+1])]
+      din.get(sys.argv[i],col)
     acumular_salida=True
 
   if sys.argv[i] == '-d' or sys.argv[i] == '-D' or sys.argv[i] == '-dx' or sys.argv[i] == '-dy' or sys.argv[i] == '-dz':
