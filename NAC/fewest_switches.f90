@@ -181,20 +181,20 @@
 !----------------------------------------------------------
 ! JOM-test
 !        read (2121,*) xrand  
-         write(*,*)'random',xrand
+        ! write(*,*)'random',xrand
 
 !----------------------------------------------------------
           ajj = real(conjg(c_na(ij,ij,ikpoint))*c_na(ij,ij,ikpoint))
           do ik = 1, nele
              akj = c_na(ij,ik,ikpoint)*conjg(c_na(ij,ij,ikpoint))
-!            bkj = -2.0d0*real(conjg(akj)*dnac(ik,ij))
-             bkj = -2.0d0*real(conjg(akj)*suma(ik,ij))
+             bkj = -2.0d0*real(conjg(akj)*dnac(ik,ij))
+!             bkj = -2.0d0*real(conjg(akj)*suma(ik,ij))
 ! JOM-warning: may be later we can "imporve" this by using eq(29) in JCP
 ! 101 4657 (1994)
 !----------------------------------------------------------
 !JOM-info : probability of the j ---> k transition
            prob(ik) = bkj*dt/ajj
-           write(*,*)'prob',ij,ik,prob(ik)
+          write(*,*)'prob',ij,ik,prob(ik)
            if (prob(ik) .lt. 0.0d0) then
             prob(ik) = 0.0d0
            end if
@@ -227,7 +227,7 @@
              write(*,*)'SWITCH!!',ij, '--->',iswitch
 !----------------------------------------------------------
 ! perform transition ij ---> iswitch
-             call transition (itime_step, ij, iswitch, ikpoint)
+            call transition (itime_step, ij, iswitch, ikpoint)
 !----------------------------------------------------------
              return  ! we can only have one switch
           end if

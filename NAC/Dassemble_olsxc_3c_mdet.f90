@@ -147,6 +147,7 @@
         integer n1
         integer n2
         integer natomsp
+        integer jneigh
 
         integer itestg
 
@@ -270,6 +271,7 @@
            jbeta = neigh_comb(2,ineigh,ialp)
            r2(:) = ratom(:,jatom) + xl(:,jbeta)
            in2 = imass(jatom)
+           jneigh = neigh_back(iatom,mneigh)
 !JOM-test
 !          write(*,*)'----------------------------------------'
 !          write(*,*)'ialp=',ialp,'iatom=',iatom,'jatom=',jatom
@@ -507,11 +509,25 @@
 !              gh_xc_3c(:,jatom,imu,inu,mneigh,iatom) =                          &
 !     &        gh_xc_3c(:,jatom,imu,inu,mneigh,iatom) + mxcc(:,imu,inu)
              gh_3c(:,ialp,imu,inu,mneigh,iatom) =                           &
-    &        gh_3c(:,ialp,imu,inu,mneigh,iatom) + 2.0d0*mxca(:,imu,inu)
+    &        gh_3c(:,ialp,imu,inu,mneigh,iatom) + mxca(:,imu,inu)
+
+
+              gh_3c(:,ialp,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(:,ialp,imu,inu,mneigh,iatom)
+
              gh_3c(:,iatom,imu,inu,mneigh,iatom) =                          &
-    &        gh_3c(:,iatom,imu,inu,mneigh,iatom) + 2.0d0*mxcb(:,imu,inu)
+    &        gh_3c(:,iatom,imu,inu,mneigh,iatom) + mxcb(:,imu,inu)
+
+
+              gh_3c(:,iatom,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(:,iatom,imu,inu,mneigh,iatom) 
+
              gh_3c(:,jatom,imu,inu,mneigh,iatom) =                          &
-    &        gh_3c(:,jatom,imu,inu,mneigh,iatom) +2.0d0* mxcc(:,imu,inu)
+    &        gh_3c(:,jatom,imu,inu,mneigh,iatom) + mxcc(:,imu,inu)
+
+
+              gh_3c(:,jatom,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(:,jatom,imu,inu,mneigh,iatom) 
 
             end do
            end do   

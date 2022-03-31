@@ -188,8 +188,8 @@
          nonac = dnac + ddnac*(it - 1)
          c_aux = c_na
 ! Calculate derivative d/dt c_na(t)
-         call dcdt_nac (v,g,nonac,eig,c_aux,dc_na,natoms,nele,nkpoints,norbitals)
-!        call dcdt_nac (nonac,eig,c_aux,dc_na,natoms,nele,nkpoints) 
+!         call dcdt_nac (v,g,nonac,eig,c_aux,dc_na,natoms,nele,nkpoints,norbitals)
+        call dcdt_nac (nonac,eig,c_aux,dc_na,natoms,nele,nkpoints) 
 ! JOM-test
 !        write(*,*) 'primera llamada a dcdt, it =',it
 !        write(*,*)'c_na',c_na(2,2,1),c_aux(2,2,1),dc_na(2,2,1)
@@ -202,8 +202,8 @@
          nonac = dnac + ddnac*(it - 0.5d0)
          c_aux = c_na + dc_na*ddt*0.5d0
 ! Calculate derivative d/dt c_na(t)
-         call dcdt_nac (v,g,nonac,eig,c_aux,dc_na,natoms,nele,nkpoints,norbitals)
-!        call dcdt_nac (nonac,eig,c_aux,dc_na,natoms,nele,nkpoints) 
+!         call dcdt_nac (v,g,nonac,eig,c_aux,dc_na,natoms,nele,nkpoints,norbitals)
+        call dcdt_nac (nonac,eig,c_aux,dc_na,natoms,nele,nkpoints) 
 ! JOM-test
 !        write(*,*) 'segunda llamada a dcdt, it =',it
 !        write(*,*)'c_na',c_na(2,2,1),c_aux(2,2,1),dc_na(2,2,1)
@@ -216,8 +216,8 @@
          nonac = dnac + ddnac*(it - 0.5d0)
          c_aux = c_na + dc_na*ddt*0.5d0
 ! Calculate derivative d/dt c_na(t)
-         call dcdt_nac (v,g,nonac,eig,c_aux,dc_na,natoms,nele,nkpoints,norbitals)
-!        call dcdt_nac (nonac,eig,c_aux,dc_na,natoms,nele,nkpoints) 
+!         call dcdt_nac (v,g,dnac,eig,c_aux,dc_na,natoms,nele,nkpoints,norbitals)
+        call dcdt_nac (dnac,eig,c_aux,dc_na,natoms,nele,nkpoints) 
 ! JOM-test
 !        write(*,*) 'tercera llamada a dcdt, it =',it
 !        write(*,*)'c_na',c_na(2,2,1),c_aux(2,2,1),dc_na(2,2,1)
@@ -230,8 +230,8 @@
          nonac = dnac + ddnac*(it - 0.5d0)
          c_aux = c_na + dc_na*ddt
 ! Calculate derivative d/dt c_na(t)
-         call dcdt_nac (v,g,nonac,eig,c_aux,dc_na,natoms,nele,nkpoints,norbitals)
-!        call dcdt_nac (nonac,eig,c_aux,dc_na,natoms,nele,nkpoints) 
+!         call dcdt_nac (v,g,dnac,eig,c_aux,dc_na,natoms,nele,nkpoints,norbitals)
+        call dcdt_nac (dnac,eig,c_aux,dc_na,natoms,nele,nkpoints) 
 ! JOM-test
 !        write(*,*) 'cuarta llamada a dcdt, it =',it
 !        write(*,*)'c_na',c_na(2,2,1),c_aux(2,2,1),dc_na(2,2,1)

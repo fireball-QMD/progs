@@ -128,6 +128,7 @@
         integer mneigh
         integer my_proc
         integer natomsp
+        integer jneigh
  
         real cost
         real distance13
@@ -270,7 +271,7 @@
            jbeta = neigh_comb(2,ineigh,ialp)
            r2(:) = ratom(:,jatom) + xl(:,jbeta)
            in2 = imass(jatom)
- 
+           jneigh = neigh_back(iatom,mneigh)
 ! Find the net charge on iatom
            dq2 = 0.0d0
            do issh = 1, nssh(in2)
@@ -513,19 +514,19 @@
             do imu = 1, num_orb(in1)
              do ix = 1, 3
               f3caa(ix,ialp) = f3caa(ix,ialp)                                &
-     &         + 2*rho(imu,inu,mneigh,iatom)*eq2                               &
+     &         + 2.0d0*rho(imu,inu,mneigh,iatom)*eq2                               &
      &           *(stn1*f3caXa(ix,imu,inu)                          &
      &             - dstnA(ix)*bcca(imu,inu)                         &
      &             - stn2*demnplA(ix,imu,inu)                       &
      &             + dstnA(ix)*emnpl(imu,inu))
               f3cab(ix,iatom) = f3cab(ix,iatom)                              &
-     &         + 2*rho(imu,inu,mneigh,iatom)*eq2                               &
+     &         + 2.0d0*rho(imu,inu,mneigh,iatom)*eq2                               &
      &           *(stn1*f3caXb(ix,imu,inu)                          &
      &             - dstnB(ix)*bcca(imu,inu)                         &
      &             - stn2*demnplB(ix,imu,inu)                       &
      &             + dstnB(ix)*emnpl(imu,inu))
               f3cac(ix,jatom) = f3cac(ix,jatom)                              &
-     &         + 2*rho(imu,inu,mneigh,iatom)*eq2                               &
+     &         + 2.0d0*rho(imu,inu,mneigh,iatom)*eq2                               &
      &           *(stn1*f3caXc(ix,imu,inu)                          &
      &             - dstnC(ix)*bcca(imu,inu)                         &
      &             - stn2*demnplC(ix,imu,inu)                       &
@@ -542,11 +543,11 @@
             do imu = 1, num_orb(in1)
              do ix = 1, 3
               f3caa(ix,ialp) = f3caa(ix,ialp)                                &
-     &         + 2*rho(imu,inu,mneigh,iatom)*demnplA(ix,imu,inu)*eq2
+     &         + 2.0d0*rho(imu,inu,mneigh,iatom)*demnplA(ix,imu,inu)*eq2
               f3cab(ix,iatom) = f3cab(ix,iatom)                              &
-     &         + 2*rho(imu,inu,mneigh,iatom)*demnplB(ix,imu,inu)*eq2
+     &         + 2.0d0*rho(imu,inu,mneigh,iatom)*demnplB(ix,imu,inu)*eq2
               f3cac(ix,jatom) = f3cac(ix,jatom)                              &
-     &         + 2*rho(imu,inu,mneigh,iatom)*demnplC(ix,imu,inu)*eq2
+     &         + 2.0d0*rho(imu,inu,mneigh,iatom)*demnplC(ix,imu,inu)*eq2
              end do ! do ix
 
             end do ! do imu
@@ -559,23 +560,35 @@
             do imu = 1, num_orb(in1)
              do ix = 1, 3
               gh_3c(ix,ialp,imu,inu,mneigh,iatom) =                     &
-     &        gh_3c(ix,ialp,imu,inu,mneigh,iatom) - 2.0d0*eq2                 &
+     &        gh_3c(ix,ialp,imu,inu,mneigh,iatom) - eq2                 &
      &         *(stn1*f3caXa(ix,imu,inu)                         &
      &             - dstnA(ix)*bcca(imu,inu)                         &
      &             - stn2*demnplA(ix,imu,inu)                       &
      &             + dstnA(ix)*emnpl(imu,inu))
+
+              gh_3c(ix,ialp,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,ialp,imu,inu,mneigh,iatom)
+
               gh_3c(ix,iatom,imu,inu,mneigh,iatom) =                     &
-     &        gh_3c(ix,iatom,imu,inu,mneigh,iatom) - 2.0d0*eq2                 &
+     &        gh_3c(ix,iatom,imu,inu,mneigh,iatom) - eq2                 &
      &           *(stn1*f3caXb(ix,imu,inu)                          &
      &             - dstnB(ix)*bcca(imu,inu)                         &
      &             - stn2*demnplB(ix,imu,inu)                       &
      &             + dstnB(ix)*emnpl(imu,inu))
+
+              gh_3c(ix,iatom,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,iatom,imu,inu,mneigh,iatom) 
+
               gh_3c(ix,jatom,imu,inu,mneigh,iatom) =                     &
-     &        gh_3c(ix,jatom,imu,inu,mneigh,iatom) - 2.0d0*eq2                 &
+     &        gh_3c(ix,jatom,imu,inu,mneigh,iatom) - eq2                 &
      &           *(stn1*f3caXc(ix,imu,inu)                          &
      &             - dstnC(ix)*bcca(imu,inu)                         &
      &             - stn2*demnplC(ix,imu,inu)                       &
-     &             + dstnC(ix)*emnpl(imu,inu))   
+     &             + dstnC(ix)*emnpl(imu,inu))
+
+              gh_3c(ix,jatom,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,jatom,imu,inu,mneigh,iatom)
+
              end do ! do ix
             end do ! do imu
            end do ! do inu
@@ -585,14 +598,30 @@
             do imu = 1, num_orb(in1)
              do ix = 1, 3
               gh_3c(ix,ialp,imu,inu,mneigh,iatom) =                     &
-     &        gh_3c(ix,ialp,imu,inu,mneigh,iatom) - 2.0d0*eq2                 &
+     &        gh_3c(ix,ialp,imu,inu,mneigh,iatom) - eq2                 &
      &         *demnplA(ix,imu,inu)
+
+
+              gh_3c(ix,ialp,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,ialp,imu,inu,mneigh,iatom) 
+
+
               gh_3c(ix,iatom,imu,inu,mneigh,iatom) =                     &
-     &        gh_3c(ix,iatom,imu,inu,mneigh,iatom) - 2.0d0*eq2                 &
+     &        gh_3c(ix,iatom,imu,inu,mneigh,iatom) - eq2                 &
      &         *demnplB(ix,imu,inu)
+
+
+              gh_3c(ix,iatom,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,iatom,imu,inu,mneigh,iatom)
+
               gh_3c(ix,jatom,imu,inu,mneigh,iatom) =                     &
-     &        gh_3c(ix,jatom,imu,inu,mneigh,iatom) - 2.0d0*eq2                 &
+     &        gh_3c(ix,jatom,imu,inu,mneigh,iatom) - eq2                 &
      &         *demnplC(ix,imu,inu)
+
+
+              gh_3c(ix,jatom,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,jatom,imu,inu,mneigh,iatom)
+
              end do ! do ix
             end do ! do imu
            end do ! do inu

@@ -133,6 +133,7 @@
         integer mneigh
         integer my_proc
         integer natomsp
+        integer jneigh
  
 
         real cost
@@ -214,7 +215,7 @@
            jbeta = neigh_comb(2,ineigh,ialp)
            r2(:) = ratom(:,jatom) + xl(:,jbeta)
            in2 = imass(jatom)
-
+           jneigh = neigh_back(iatom,mneigh)
 ! ****************************************************************************
 !
 ! SET-UP STUFF
@@ -305,13 +306,28 @@
              do ix = 1, 3
               gh_3c(ix,ialp,imu,inu,mneigh,iatom) =                     &
      &        gh_3c(ix,ialp,imu,inu,mneigh,iatom) -                     &
-     &         2.0d0*f3naXa(ix,imu,inu)*eq2
+     &         f3naXa(ix,imu,inu)*eq2
+
+              
+              gh_3c(ix,ialp,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,ialp,imu,inu,mneigh,iatom) 
+
               gh_3c(ix,iatom,imu,inu,mneigh,iatom) =                     &
      &        gh_3c(ix,iatom,imu,inu,mneigh,iatom) -                     &
-     &         2.0d0*f3naXb(ix,imu,inu)*eq2
+     &         f3naXb(ix,imu,inu)*eq2
+
+
+              gh_3c(ix,iatom,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,iatom,imu,inu,mneigh,iatom) 
+
               gh_3c(ix,jatom,imu,inu,mneigh,iatom) =                     &
      &        gh_3c(ix,jatom,imu,inu,mneigh,iatom) -                     &
-     &         2.0d0*f3naXc(ix,imu,inu)*eq2
+     &         f3naXc(ix,imu,inu)*eq2
+
+
+              gh_3c(ix,jatom,inu,imu,jneigh,jatom) =                     &
+     &        gh_3c(ix,jatom,imu,inu,mneigh,iatom) 
+
              end do
             end do
            end do

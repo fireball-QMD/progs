@@ -146,12 +146,18 @@
 ! them here now
      !   gh_3c = gh_3c + gh_xc_3c
          gh_3c = gh_3c + gh_lrew_qmmm
+         !gh_3c = 0.0d0
 ! itheory = 1 : sum contributions
 !        if (itheory .eq. 1) then
        !  gh_3c = gh_3c + gh_3c_ca + gh_lrew
        !  gh_2c = gh_2c + gh_2c_ca
        !  gh_atm = gh_atm + gh_atm_ca
 !        end if
+
+
+        !write(*,*) 'testgh gh_3c', gh_3c
+        !write(*,*) 'testgh gh_2c', gh_2c
+        !write(*,*) 'testgh gh_atm', gh_atm
 
 ! JOM so far only icluster.eq.1 works
         if (icluster .ne. 1) then
@@ -212,6 +218,8 @@
                   gks(:,jatom,iband,jband) = gks(:,jatom,iband,jband) +    &
      &   cmunu*( - gover(:,imu,inu,ineigh,iatom)*eigen_k(map_ks(iband),ikpoint)  &
      &           + gh_2c(:,imu,inu,ineigh,iatom) )
+     !write(*,*) 'ankais2, iatom, jatom, imu, inu, gh2, gks,cmunu', gh_2c(:,imu,inu,ineigh,iatom), gks(:,jatom,iband,jband), cmunu
+!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 !++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ! Loop to add 3-C contributions
                   do katom = 1, natoms
@@ -431,22 +439,22 @@
 ! dump dij 
 
 
-     do iband = 1, nele
-      do jband = 1, nele
-  !      iband = 1
-  !      jband = 2
+     !do iband = 1, nele
+      !do jband = 1, nele
+        iband = 1
+        jband = 2
         ikpoint = 1
         ! write (210,*)
          do katom = 1, natoms
             diff = eigen_k(map_ks(iband),ikpoint) - eigen_k(map_ks(jband),ikpoint)
-      if (iband .gt. jband) then
+  !    if (iband .gt. jband) then
             write(210,100) katom, iband, jband, diff, gks(:,katom,iband,jband),   &
          & sqrt(gks(1,katom,iband,jband)**2 + gks(2,katom,iband,jband)**2 + gks(3,katom,iband,jband)**2)  ! ENRIQUE-JOM
-      end if 
+   !   end if 
          end do ! do katom
   !          write(210,*) "----------"
-      end do
-     end do  
+  !    end do
+  !   end do  
 ! Provisionally, deallocate bbnkre, blowre, eigen_k here
 !       deallocate (eigen_k)
 !       deallocate (bbnkre)

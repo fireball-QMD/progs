@@ -167,12 +167,12 @@
             call Dassemble_ca_3c_mdet_dip (nprocs, iordern,igauss)
             call Dassemble_lr_mdet_dip (nprocs, iordern)
            else !else idipole .eq. 1
-            call Dassemble_ca_3c_mdet (nprocs, iordern, igauss)
-            call Dassemble_lr_mdet (nprocs, iordern)
+             call Dassemble_ca_3c_mdet (nprocs, iordern, igauss)
+             call Dassemble_lr_mdet (nprocs, iordern)
            !write (*,*) ' Dassemble three-center long-range '
            end if !end if idipole .eq. 1 
            if (iqmmm .eq. 1) then
-             !write (*,*) ' Dassemble three-center qm/mm contributions. '
+             write (*,*) ' Dassemble three-center qm/mm contributions. '
            if (idipole .eq. 1) then
                    !Dassemble_qmmm_mdet_dip
              call Dassemble_qmmm_mdet_dip (nprocs, iordern)
@@ -196,7 +196,7 @@
           else if(itheory_xc .eq. 2) then
            !write (*,*) ' Dassemble off-site OLS exchange-correlation forces. '
            if (itheory .eq. 1) then
-            call Dassemble_ca_olsxc_3c_mdet (nprocs, iordern, igauss)
+           call Dassemble_ca_olsxc_3c_mdet (nprocs, iordern, igauss)
            else
             call Dassemble_olsxc_3c_mdet (nprocs, iordern, igauss)
            endif
@@ -227,6 +227,10 @@
 ! Call nacouplings.f90 : Calculates the non-adiabatic couplings between 
 ! Kohn-Sham states
           call nacouplings()
+! Calculate vibronic couplings...
+          if (iwrtVibcouplings .eq. 1) then
+             call vibcouplings()          
+          endif
 ! Instead of calling nacouplings, now we are going to calculate them using
 ! the numerical derivative
 !         call delta_t_ks()
