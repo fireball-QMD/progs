@@ -91,7 +91,7 @@
                                          iwrtefermi, iwrtfpieces, iwrthampiece, iwrtcomponents, &
                                          iwrtneigh, iwrtneigh_com, iwrtxyz, iwrtdos, iwrtdosng, iwrthop,   &
                                          iwrtatom, iwrtpop, iwrtHS, iwrtvel, iwrtden, iwrtewf, iwrtdipole, &
-                                         iwrtxsf, idensimport, iwrtpsit, iwrtqt, iwrtkvaziband, iwrtexcit
+                                         iwrtxsf, idensimport, iwrtpsit, iwrtqt, iwrtkvaziband, iwrtexcit, iwrtVibcouplings
 
   Namelist /option/ iharris, idogs, ihubbard, ihorsfield, imcweda, ixczw, igsn, iquench, &
                                          iqout, qstate, icluster, iensemble, ifixcharge, ifixneigh,   &
@@ -232,6 +232,7 @@
         iwrtpsit = 0
         iwrtqt = 0
         iwrtdipole = 0
+        iwrtVibcouplings = 0
 ! socket for i/pi
         isocket = 0
         ccmd = 0
@@ -815,6 +816,7 @@
         if (iwrtewf .gt. 0) write (*,*) ' Writing out eigenfunctions projected on the grid '
         if (iwrtxsf .gt. 0) write (*,*) ' Writing out xsf-format file  '
         if (idensimport .gt. 0) write (*,*) ' Importing density file for projection  '
+        if (iwrtVibcouplings .gt. 0) write (*,*) ' Writing out vibronic couplings in vibronic.dat '
 
       endif ! verbosity = 3
       

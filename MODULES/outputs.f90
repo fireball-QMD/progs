@@ -28,6 +28,7 @@
         integer iwrtxsf             ! write xsf-format file (xcrysden)
         integer idensimport         ! importing density file 'rhoin' for projection
         integer iwrtdipole          ! write out dipolar moment
+        integer iwrtVibcouplings    ! write out vibronic couplings
 ! TDSE output options
         integer iwrtpsit            ! write w.f. coeff of each electron in time
         integer iwrtqt              ! write charge occupancy in time
