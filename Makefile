@@ -421,7 +421,7 @@ NAC = allocate_nac.o assemble_G_S.o nacouplings.o build_gover1c.o init_mdet.o \
       Dassemble_ca_olsxc_3c_mdet.o move_correc.o move_predic.o overlap_sign.o \
       check_swap.o overlap_numeric.o getnac.o MCsolar.o Dassemble_qmmm_mdet.o \
       Dassemble_ca_2c_mdet_dip.o Dassemble_qmmm_mdet_dip.o \
-      Dassemble_ca_3c_mdet_dip.o Dassemble_lr_mdet_dip.o
+      Dassemble_ca_3c_mdet_dip.o Dassemble_lr_mdet_dip.o vibcouplings.o
 
 QMMM =  main_loop_MDET_qmmm.o main_loop_MD_qmmm.o fireball_qmmm_loop.o
 
@@ -1825,6 +1825,8 @@ getnac.o : NAC/getnac.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/getnac.f90
 MCsolar.o : NAC/MCsolar.f90 $(MODULES)
 	$(F90) $(FFLAGS) -c NAC/MCsolar.f90
+vibcouplings.o : NAC/vibcouplings.f90 $(MODULES)
+	$(F90) $(FFLAGS) -c NAC/vibcouplings.f90
 # *****************************************************************************
 # qmmm
 # *****************************************************************************
