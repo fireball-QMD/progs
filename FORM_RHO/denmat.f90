@@ -884,13 +884,13 @@
          print*,''
          print*,"============  step_size  ============================="
          print*,'Qtot =',Ntot
-         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qin = (/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
+         !write(*,'(A6,<nssh_tot>F7.3,A3)')'Qin = (/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
          call step_size(nssh_tot,A,c,SQ, LB, UB, nalpha) !,,LB,UB) B(1,alpha
          Ntot=0
          do alpha = 1, nssh_tot
            Ntot = Ntot + SQ(alpha)
          end do
-         write(*,'(A6,<nssh_tot>F7.3,A3)')'Qout =(/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
+         !write(*,'(A6,<nssh_tot>F7.3,A3)')'Qout =(/ ',(SQ(alpha),alpha = 1, nssh_tot),' /)'
          print*,'Qtot(out) =',Ntot
          diff_err=Ep2(SQ,A,c,nssh_tot,nalpha)
          print*,'err step_size   =',diff_err
@@ -980,14 +980,14 @@
             end if
           end do
           igualceros=.False.
-          do while (igualceros .eq. .False.)
+          do while (igualceros .eqv. .False.)
             call getceros(nssh_tot,Q0,g,LB,UB,tol,cero,igualceros)
           end do
 
           nceros=0
           g0=0.00
           do i=1,nssh_tot
-            if(cero(i) .eq. .True.) then
+            if(cero(i) .eqv. .True.) then
               nceros=nceros+1
               g(i)=0.00
             else
@@ -998,7 +998,7 @@
           g0=g0/(nssh_tot-nceros)
 
           do i=1,nssh_tot
-            if (cero(i) .eq. .False.) then
+            if (cero(i) .eqv. .False.) then
               g(i)=g(i)-g0
             else
               g(i)=0.00
@@ -1026,7 +1026,7 @@
           dqmax=1.0E+10
           k=0
           do i=1,nssh_tot
-            if(cero(i) .eq. .False.) then  !ojo !!!!
+            if(cero(i) .eqv. .False.) then  !ojo !!!!
               if(Q(i) < LB(i)) then
                 if (dqmax > -Q0(i)/g(i)) then
                   dqmax=-Q0(i)/g(i)
@@ -1110,7 +1110,7 @@
         !write(*,'(A6,<nssh_tot>F12.3,A3)')'g0=(/ ',(gaux(i),i = 1, nssh_tot),' /)'
         !write(*,'(A6,<nssh_tot>F12.3,A3)')'Q0=(/ ',(Q0(i),i = 1, nssh_tot),' /)'
         do i=1,nssh_tot
-          if(cero(i) .eq. .True.) then
+          if(cero(i) .eqv. .True.) then
             nceros=nceros+1
             gaux(i)=0.00
           else
@@ -1121,7 +1121,7 @@
         g0=g0/(nssh_tot-nceros)
     
         do i=1,nssh_tot
-          if (cero(i) .eq. .False.) then
+          if (cero(i) .eqv. .False.) then
             gaux(i)=gaux(i)-g0
           else
             gaux(i)=0.00
@@ -1129,7 +1129,7 @@
         end do
         igualceros=.True.
         do i=1,nssh_tot
-          if(cero(i)  .eq. .False.)then
+          if(cero(i)  .eqv. .False.)then
             if((Q0(i) < LB(i)+tol .and. gaux(i) < 0.00 ) .or. (Q0(i) > UB(i)-tol .and. gaux(i) > 0.00 )) then
               nceros=nceros+1
               cero(i)=.True.
