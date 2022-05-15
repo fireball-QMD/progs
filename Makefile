@@ -467,7 +467,7 @@ clean:
 			 *.vo *~ *.il
 
 veryclean: clean
-	rm -f fireball.x libfireball.a
+	rm -f fireball.x libfireball.a libf2py.*so
 
 extraclean: veryclean
 
@@ -477,6 +477,11 @@ all:
 libfireball: $(OBJECTS_QMMM)
 	ar rv libfireball.a $(OBJECTS_QMMM)
 	ranlib libfireball.a
+
+libf2py:  $(MODULES_C) $(OBJECTS_COM)
+	ar rv libf2py.a  $(MODULES_C) $(OBJECTS_COM) 
+	ranlib libf2py.a
+	f2py3 -m libpyfb -c pyfb/f2py/libf2py.f90 --fcompiler='ifort' -I. libf2py.a --link-lapack_opt
 
 server: $(OBJECTS_SERVER)
 	$(F90)  -o  fireball_server.x $(FFLAGS) $(OBJECTS_SERVER) $(VISFLAGS) $(PARLFLAGS) \
