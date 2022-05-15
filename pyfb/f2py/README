@@ -1,0 +1,8 @@
+cd progs
+#Makefile : MACHINE = ILINUX_fast05.static
+#create libf2py.a libpyfb*so
+make libf2py
+#test
+cd TESTS/relax/
+./start.py
+
