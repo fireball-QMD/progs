@@ -1,4 +1,8 @@
-from  pyfb.geometry.atom import atom
+from pyfb.geometry.atom import atom
+from pyfb.geometry.tabla import tabla
+import numpy as np 
+
+tabla=tabla()
 
 class step:
 
@@ -64,4 +68,19 @@ class step:
         self.atom[i-1].q.append(line[j])
         charge=charge+float(line[j])
       self.atom[i-1].Q=charge
-     
+
+  def getNatoms(self):
+    print(len(self.atom),"N")
+    return len(self.atom)
+
+  def getnumpy_pos(self):
+    aux=[]
+    for i in self.atom:
+      aux.append(i.r)
+    return np.array(aux) 
+
+  def getZarray(self):
+     aux=[]
+     for i in self.atom:
+       aux.append(tabla.getN(i.Z))
+     return aux
