@@ -7,33 +7,29 @@ import libpyfb as fb
 from pyfb.geometry.dinamic import *
 import numpy as np 
 
-fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/speedtest/Fdata"
-#fdatalocation="/home/dani/Fdata_HCNOS/"
-
-print(fb.f2py_initbasics)
-fb.f2py_initbasics(fdatalocation)
-fb.f2py_options(1)
 
 din=dinamic()
-din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/speedtest/serie/A/ini.bas")
-din.print()
-
-
+#din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/speedtest/serie/A/ini.bas")
+din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
 n_atomos=din.step[0].getNatoms()
-#fb.f2py_setnatoms(n_atomos)
-#print(natoms)
-
 pos=din.step[0].getnumpy_pos()
-#print(pos)
-
 Zin=np.array(din.step[0].getZarray())
-#print(Zin)
+#din.print()
 
+fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/relax/Fdata_HC_minimal"
+#fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/speedtest/Fdata"
+fb.f2py_initbasics(fdatalocation)
+
+fb.set_icluster(1)
+fb.set_iquot(4)
+fb.set_iquench(0)
+fb.set_dt(0.5)
+fb.set_nstepf(1)
+fb.set_iwrtxyz(1)
 
 fb.f2py_natoms(n_atomos) 
 fb.f2py_nucz(Zin) 
-print(pos)
 fb.f2py_ratom(pos) 
-#fb.f2py_loadbas(n_atomos,Zin,pos) 
 #np.asfortranarray(pos)) #pos,Zin)
 fb.f2py_init()
+fb.f2py_run()
