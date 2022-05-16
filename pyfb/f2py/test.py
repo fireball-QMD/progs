@@ -21,10 +21,10 @@ fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/relax/Fdata_HC_minimal"
 fb.f2py_initbasics(fdatalocation)
 
 fb.set_icluster(1)
-fb.set_iquot(4)
-fb.set_iquench(0)
+fb.set_iquot(3)
+fb.set_iquench(-1)
 fb.set_dt(0.5)
-fb.set_nstepf(1)
+fb.set_nstepf(5000)
 fb.set_iwrtxyz(1)
 
 fb.f2py_natoms(n_atomos) 

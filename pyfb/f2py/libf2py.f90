@@ -1,6 +1,7 @@
 subroutine start()
   use mpi_main
   use interactions
+  wrtout = .true.
   call init_MPI (iammaster, iammpi, my_proc, nprocs)
   call cpu_time (time_begin)
   call initbasics ()
@@ -13,6 +14,7 @@ end
 subroutine f2py_run()
   use mpi_main
   use interactions
+  wrtout = .true.
   call init_MPI (iammaster, iammpi, my_proc, nprocs)
   call cpu_time (time_begin)
   !call initbasics () = f2py_initbasics(fdatalocation) + fb.f2py_init()
@@ -53,7 +55,7 @@ end
 
 
 subroutine set_iwrtxyz(iwrtxyzaux)
-  use options
+  use outputs
   integer,intent(in)::iwrtxyzaux
   iwrtxyz=iwrtxyzaux
 end
