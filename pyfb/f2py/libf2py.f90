@@ -15,9 +15,14 @@ subroutine f2py_run()
   use mpi_main
   use interactions
   wrtout = .true.
-  call init_MPI (iammaster, iammpi, my_proc, nprocs)
   call cpu_time (time_begin)
   !call initbasics () = f2py_initbasics(fdatalocation) + fb.f2py_init()
+  !en f2py_initbasics cambiamos readinfo por readinfoall para que lea todo el Fdata
+  !El problema es que cuando intentamos cargar otra estructura 
+  !ya tiene alocateado muchas matrices con natoms y hay que reallocatear...
+  !rehacerlo escribiendo en disco duro solo con start() !!!!
+  !pensar si esto sirve para algo.... yo creo que no, quedarme solo con start..ufff
+  !ultimo commit no push
   call main_loop ()
   call cpu_time (time_end)
   write (*,*) ' FIREBALL RUNTIME : ',time_end-time_begin,'[sec]'
@@ -48,7 +53,7 @@ subroutine set_dt(idtaux)
 end
 
 subroutine set_nstepf(instepfaux)
-  use options
+  use md
   integer,intent(in)::instepfaux
   nstepf=instepfaux
 end
@@ -60,12 +65,16 @@ subroutine set_iwrtxyz(iwrtxyzaux)
   iwrtxyz=iwrtxyzaux
 end
 
+subroutine set_verbosity(aux)
+  use options
+  integer,intent(in)::aux
+  verbosity=aux
+  end
 
 subroutine f2py_natoms(aux)
   use configuration
   implicit none
   integer, intent(inout) :: aux
-  print*,'naux',aux
   natoms = aux
 end
 
@@ -79,6 +88,8 @@ subroutine f2py_nucz(zaux,nuczaux)
   integer, intent(in), dimension(zaux) ::  nuczaux
   integer i,nucz,iatom,ispec
   logical zindata
+  print*,'naux :',zaux,nuczaux
+  print*,'........................'
 
   allocate (imass (natoms))
   do iatom = 1, natoms
@@ -164,7 +175,6 @@ subroutine f2py_initbasics(f2py_fdataLocation)
    call readparam ()
    !pero fireball.in no existe
    fdatalocation = f2py_fdatalocation
-   verbosity=10
    !cambiamos readinfo para cargar Fdata completa sin necesidad de leer 
    !las posiciones en el bas
    !call readinfo ()
@@ -360,21 +370,21 @@ subroutine f2py_init() !zauxf2py) !,pos,Zin)
    real, dimension (3) :: vector
 
    logical file_exists
+   call init_MPI (iammaster, iammpi, my_proc, nprocs)
 ! Initialize aux. variable
         if (nstepi .eq. 1) then
          T_average = T_initial
          T_previous = 0.0d0
          time = 0.0d0
         end if
-
 ! Allocate more arrays.
-        allocate (degelec (natoms))
 !        allocate (imass (natoms))
 !        allocate (ratom (3, natoms))
+!        allocate (symbol (natoms))
+        allocate (degelec (natoms))
         allocate (nowMinusInitialPos (3, natoms))
         allocate (initialPosition (3, natoms))
         allocate (vatom (3, natoms))
-!        allocate (symbol (natoms))
         allocate (xmass (natoms))
         allocate (ximage (3, natoms))
         allocate (mask (3,natoms))
@@ -398,10 +408,10 @@ subroutine f2py_init() !zauxf2py) !,pos,Zin)
         call initboxes (1)
 
 ! Get kpoints for Brillouin zone integration or bandstructure calculation
-		if(iclassicMD /= 1) then !not usefull with empirical potentials
-	        call getkpoints(icluster, Vouc, a1vec, a2vec, a3vec, &
-    	 &       lvsfile, basisfile, iquench, ireducekpts, rescal)
-		end if
+        if(iclassicMD /= 1) then !not usefull with empirical potentials
+         call getkpoints(icluster, Vouc, a1vec, a2vec, a3vec, &
+               &       lvsfile, basisfile, iquench, ireducekpts, rescal)
+        end if
 
         if (iordern .eq. 1 .and. nkpoints .ne. 1) then
          write (*,*) ' Order-N method only works with one k-point! '
@@ -878,7 +888,6 @@ subroutine readinfoall ()
    stop
  end if
 
-  deallocate (cutoff)
 ! end jel-grid
  
 ! Format Statements
@@ -907,3 +916,329 @@ end
 
 
 
+subroutine f2py_deallocate_all()
+ use barrier
+ use bias
+ use classicMD
+ use configuration
+ use constants_fireball
+ use density
+ use dftd3_api
+ use dftd3_common
+ use dftd3_core
+ use dftd3_pars
+ use dftd3_sizes
+ use dimensions
+ use dynamo
+ use energy
+ use f90sockets
+ use fb_sockets
+ use forces
+ use fragments
+ use gaussG
+ use grid
+ use hartree_fock
+ use integrals
+ use interactions
+ use kpoints
+ use matmult
+ use md
+ use MD
+ use module_dos
+ use mpi_main
+ use neb
+ use neighbor_map
+ use nonadiabatic
+ use noseHoover
+ use omp_lib
+ use optimization
+ use options
+ use outputs
+ use scf
+ use steered
+ use tdse
+ use transport
+ use umbrella
+ use vnneutral
+ use wavefunction
+!if ( allocated ( alfa )) deallocate ( alfa )
+if ( allocated ( arhoij_off )) deallocate ( arhoij_off )
+if ( allocated ( arhoi_on )) deallocate ( arhoi_on )
+if ( allocated ( arho_off )) deallocate ( arho_off )
+if ( allocated ( arho_on )) deallocate ( arho_on )
+if ( allocated ( arhopij_off )) deallocate ( arhopij_off )
+if ( allocated ( arhop_off )) deallocate ( arhop_off )
+if ( allocated ( arhop_on )) deallocate ( arhop_on )
+!if ( allocated ( atompos )) deallocate ( atompos )
+if ( allocated ( bar_density_2c )) deallocate ( bar_density_2c )
+if ( allocated ( bar_density_3c )) deallocate ( bar_density_3c )
+if ( allocated ( cape )) deallocate ( cape )
+if ( allocated ( cape_es )) deallocate ( cape_es )
+if ( allocated ( degelec )) deallocate ( degelec )
+if ( allocated ( deigen )) deallocate ( deigen )
+if ( allocated ( density_2c )) deallocate ( density_2c )
+if ( allocated ( density_3c )) deallocate ( density_3c )
+if ( allocated ( dewald )) deallocate ( dewald )
+!if ( allocated ( dewaldl )) deallocate ( dewaldl )
+!if ( allocated ( dip )) deallocate ( dip )
+if ( allocated ( dipc )) deallocate ( dipc )
+if ( allocated ( dipp )) deallocate ( dipp )
+if ( allocated ( dippc )) deallocate ( dippc )
+!if ( allocated ( dqmmm )) deallocate ( dqmmm )
+if ( allocated ( dusr )) deallocate ( dusr )
+if ( allocated ( dxcdcc )) deallocate ( dxcdcc )
+if ( allocated ( dxcdcc_zw )) deallocate ( dxcdcc_zw )
+if ( allocated ( dxcv )) deallocate ( dxcv )
+if ( allocated ( ewald )) deallocate ( ewald )
+!if ( allocated ( ewaldl )) deallocate ( ewaldl )
+if ( allocated ( ewaldlr )) deallocate ( ewaldlr )
+if ( allocated ( ewaldqmmm )) deallocate ( ewaldqmmm )
+if ( allocated ( ewaldsr )) deallocate ( ewaldsr )
+if ( allocated ( f0 )) deallocate ( f0 )
+if ( allocated ( f3caa )) deallocate ( f3caa )
+if ( allocated ( f3cab )) deallocate ( f3cab )
+if ( allocated ( f3cac )) deallocate ( f3cac )
+if ( allocated ( f3naa )) deallocate ( f3naa )
+if ( allocated ( f3nab )) deallocate ( f3nab )
+if ( allocated ( f3nac )) deallocate ( f3nac )
+if ( allocated ( f3nla )) deallocate ( f3nla )
+if ( allocated ( f3nlb )) deallocate ( f3nlb )
+if ( allocated ( f3nlc )) deallocate ( f3nlc )
+if ( allocated ( f3xca )) deallocate ( f3xca )
+if ( allocated ( f3xca_ca )) deallocate ( f3xca_ca )
+if ( allocated ( f3xcb )) deallocate ( f3xcb )
+if ( allocated ( f3xcb_ca )) deallocate ( f3xcb_ca )
+if ( allocated ( f3xcc )) deallocate ( f3xcc )
+if ( allocated ( f3xcc_ca )) deallocate ( f3xcc_ca )
+if ( allocated ( faca )) deallocate ( faca )
+if ( allocated ( fana )) deallocate ( fana )
+if ( allocated ( fanl )) deallocate ( fanl )
+if ( allocated ( faxc )) deallocate ( faxc )
+if ( allocated ( faxc_ca )) deallocate ( faxc_ca )
+if ( allocated ( fbias )) deallocate ( fbias )
+if ( allocated ( fcoulomb )) deallocate ( fcoulomb )
+if ( allocated ( fewald )) deallocate ( fewald )
+!if ( allocated ( fewald1 )) deallocate ( fewald1 )
+!if ( allocated ( fewald2 )) deallocate ( fewald2 )
+if ( allocated ( fharmonic )) deallocate ( fharmonic )
+!if ( allocated ( fix )) deallocate ( fix )
+if ( allocated ( flrew )) deallocate ( flrew )
+!if ( allocated ( flrewl )) deallocate ( flrewl )
+!if ( allocated ( flrew_qmmm )) deallocate ( flrew_qmmm )
+if ( allocated ( Fneb )) deallocate ( Fneb )
+if ( allocated ( fotca )) deallocate ( fotca )
+if ( allocated ( fotna )) deallocate ( fotna )
+if ( allocated ( fotnl )) deallocate ( fotnl )
+if ( allocated ( fotxc )) deallocate ( fotxc )
+if ( allocated ( fotxc_ca )) deallocate ( fotxc_ca )
+if ( allocated ( fragatm )) deallocate ( fragatm )
+if ( allocated ( fraggots )) deallocate ( fraggots )
+if ( allocated ( fragxyz )) deallocate ( fragxyz )
+if ( allocated ( Frec )) deallocate ( Frec )
+if ( allocated ( fro )) deallocate ( fro )
+if ( allocated ( Fs )) deallocate ( Fs )
+if ( allocated ( ft )) deallocate ( ft )
+if ( allocated ( ftot )) deallocate ( ftot )
+if ( allocated ( ftot1 )) deallocate ( ftot1 )
+if ( allocated ( ftot_dftd3 )) deallocate ( ftot_dftd3 )
+if ( allocated ( ftot_neb )) deallocate ( ftot_neb )
+if ( allocated ( ftotnew )) deallocate ( ftotnew )
+if ( allocated ( ftotold )) deallocate ( ftotold )
+!if ( allocated ( fumb )) deallocate ( fumb )
+if ( allocated ( fvdw )) deallocate ( fvdw )
+if ( allocated ( fxcnu )) deallocate ( fxcnu )
+if ( allocated ( fxcro )) deallocate ( fxcro )
+if ( allocated ( g )) deallocate ( g )
+if ( allocated ( g2nu )) deallocate ( g2nu )
+if ( allocated ( g2nup )) deallocate ( g2nup )
+if ( allocated ( gh_2c )) deallocate ( gh_2c )
+if ( allocated ( gh_3c )) deallocate ( gh_3c )
+if ( allocated ( gh_atm )) deallocate ( gh_atm )
+if ( allocated ( gh_lrew_qmmm )) deallocate ( gh_lrew_qmmm )
+if ( allocated ( gh_pp_3c )) deallocate ( gh_pp_3c )
+if ( allocated ( gh_pp_atm )) deallocate ( gh_pp_atm )
+if ( allocated ( gh_pp_otl )) deallocate ( gh_pp_otl )
+if ( allocated ( gh_pp_otr )) deallocate ( gh_pp_otr )
+if ( allocated ( gks )) deallocate ( gks )
+if ( allocated ( gks_old )) deallocate ( gks_old )
+if ( allocated ( gover )) deallocate ( gover )
+if ( allocated ( gvhxc )) deallocate ( gvhxc )
+if ( allocated ( gvhxcs )) deallocate ( gvhxcs )
+if ( allocated ( h )) deallocate ( h )
+if ( allocated ( hf_mat )) deallocate ( hf_mat )
+if ( allocated ( h_mat )) deallocate ( h_mat )
+if ( allocated ( hr_box )) deallocate ( hr_box )
+!if ( allocated ( iatomtype )) deallocate ( iatomtype )
+if ( allocated ( ideta )) deallocate ( ideta )
+if ( allocated ( imass )) deallocate ( imass )
+if ( allocated ( initialPosition )) deallocate ( initialPosition )
+!if ( allocated ( ipsi22m )) deallocate ( ipsi22m )
+if ( allocated ( jatoms_dm )) deallocate ( jatoms_dm )
+if ( allocated ( Jialpha )) deallocate ( Jialpha )
+if ( allocated ( mask )) deallocate ( mask )
+if ( allocated ( neigh_b )) deallocate ( neigh_b )
+if ( allocated ( neigh_back )) deallocate ( neigh_back )
+!if ( allocated ( neighb_aux )) deallocate ( neighb_aux )
+if ( allocated ( neigh_b_classic )) deallocate ( neigh_b_classic )
+if ( allocated ( neighb_tot )) deallocate ( neighb_tot )
+if ( allocated ( neigh_b_vdw )) deallocate ( neigh_b_vdw )
+if ( allocated ( neigh_classic )) deallocate ( neigh_classic )
+if ( allocated ( neigh_comb )) deallocate ( neigh_comb )
+if ( allocated ( neigh_comj )) deallocate ( neigh_comj )
+if ( allocated ( neigh_comm )) deallocate ( neigh_comm )
+if ( allocated ( neigh_comn )) deallocate ( neigh_comn )
+if ( allocated ( neigh_com_ng )) deallocate ( neigh_com_ng )
+if ( allocated ( neigh_j )) deallocate ( neigh_j )
+!if ( allocated ( neighj_aux )) deallocate ( neighj_aux )
+if ( allocated ( neighj_tot )) deallocate ( neighj_tot )
+if ( allocated ( neigh_j_vdw )) deallocate ( neigh_j_vdw )
+if ( allocated ( neighn )) deallocate ( neighn )
+if ( allocated ( neighn_classic )) deallocate ( neighn_classic )
+if ( allocated ( neighn_tot )) deallocate ( neighn_tot )
+if ( allocated ( neighn_vdw )) deallocate ( neighn_vdw )
+if ( allocated ( neigh_pair_a1 )) deallocate ( neigh_pair_a1 )
+if ( allocated ( neigh_pair_a2 )) deallocate ( neigh_pair_a2 )
+if ( allocated ( neigh_pair_n1 )) deallocate ( neigh_pair_n1 )
+if ( allocated ( neigh_pair_n2 )) deallocate ( neigh_pair_n2 )
+if ( allocated ( neighPP_b )) deallocate ( neighPP_b )
+if ( allocated ( neighPP_comb )) deallocate ( neighPP_comb )
+if ( allocated ( neighPP_comj )) deallocate ( neighPP_comj )
+if ( allocated ( neighPP_comm )) deallocate ( neighPP_comm )
+if ( allocated ( neighPP_comn )) deallocate ( neighPP_comn )
+if ( allocated ( neighPP_j )) deallocate ( neighPP_j )
+if ( allocated ( neighPPn )) deallocate ( neighPPn )
+if ( allocated ( neighPP_self )) deallocate ( neighPP_self )
+if ( allocated ( neigh_self )) deallocate ( neigh_self )
+if ( allocated ( neigh_vdw_self )) deallocate ( neigh_vdw_self )
+!if ( allocated ( nelectron )) deallocate ( nelectron )
+if ( allocated ( nij )) deallocate ( nij )
+!if ( allocated ( nitimeshole )) deallocate ( nitimeshole )
+if ( allocated ( nowMinusInitialPos )) deallocate ( nowMinusInitialPos )
+if ( allocated ( nPP_b )) deallocate ( nPP_b )
+if ( allocated ( nPP_j )) deallocate ( nPP_j )
+if ( allocated ( nPP_map )) deallocate ( nPP_map )
+if ( allocated ( nPPn )) deallocate ( nPPn )
+if ( allocated ( nPP_self )) deallocate ( nPP_self )
+if ( allocated ( nPPx_b )) deallocate ( nPPx_b )
+if ( allocated ( nPPx_j )) deallocate ( nPPx_j )
+if ( allocated ( nPPx_map )) deallocate ( nPPx_map )
+if ( allocated ( nPPxn )) deallocate ( nPPxn )
+if ( allocated ( nPPx_point )) deallocate ( nPPx_point )
+if ( allocated ( nPPx_self )) deallocate ( nPPx_self )
+!if ( allocated ( npsi22m )) deallocate ( npsi22m )
+if ( allocated ( nuxc_total )) deallocate ( nuxc_total )
+if ( allocated ( phidm )) deallocate ( phidm )
+!if ( allocated ( psi22m )) deallocate ( psi22m )
+!if ( allocated ( Q0 )) deallocate ( Q0 )
+!if ( allocated ( Q0_TOT )) deallocate ( Q0_TOT )
+!if ( allocated ( Qin )) deallocate ( Qin )
+!if ( allocated ( Qin_es )) deallocate ( Qin_es )
+!if ( allocated ( Qinmixer )) deallocate ( Qinmixer )
+!if ( allocated ( QLowdin_TOT )) deallocate ( QLowdin_TOT )
+!if ( allocated ( QLowdin_TOT_es )) deallocate ( QLowdin_TOT_es )
+!if ( allocated ( qmmm_struct%Qneutral_TOT )) deallocate ( qmmm_struct%Qneutral_TOT )
+!if ( allocated ( qmmm_struct%scf_mchg )) deallocate ( qmmm_struct%scf_mchg )
+!if ( allocated ( QMulliken_TOT )) deallocate ( QMulliken_TOT )
+!if ( allocated ( Qout )) deallocate ( Qout )
+!if ( allocated ( Qoutmixer )) deallocate ( Qoutmixer )
+!if ( allocated ( R )) deallocate ( R )
+!if ( allocated ( r1_tmp )) deallocate ( r1_tmp )
+!if ( allocated ( r2_tmp )) deallocate ( r2_tmp )
+!if ( allocated ( r3_tmp )) deallocate ( r3_tmp )
+!if ( allocated ( r4_tmp )) deallocate ( r4_tmp )
+!if ( allocated ( r5_tmp )) deallocate ( r5_tmp )
+if ( allocated ( ratom )) deallocate ( ratom )
+if ( allocated ( ratom0 )) deallocate ( ratom0 )
+if ( allocated ( ratom2g )) deallocate ( ratom2g )
+if ( allocated ( ratom_final )) deallocate ( ratom_final )
+if ( allocated ( ratom_frag )) deallocate ( ratom_frag )
+if ( allocated ( ratom_frag_save )) deallocate ( ratom_frag_save )
+if ( allocated ( ratom_neb )) deallocate ( ratom_neb )
+if ( allocated ( ratom_old )) deallocate ( ratom_old )
+if ( allocated ( ratom_opt )) deallocate ( ratom_opt )
+if ( allocated ( rho )) deallocate ( rho )
+if ( allocated ( rhoA )) deallocate ( rhoA )
+!if ( allocated ( rhoc )) deallocate ( rhoc )
+if ( allocated ( rho_es )) deallocate ( rho_es )
+if ( allocated ( rhoij_off )) deallocate ( rhoij_off )
+if ( allocated ( rhoi_on )) deallocate ( rhoi_on )
+!if ( allocated ( rhom_3c )) deallocate ( rhom_3c )
+if ( allocated ( rho_off )) deallocate ( rho_off )
+if ( allocated ( rho_old )) deallocate ( rho_old )
+if ( allocated ( rho_on )) deallocate ( rho_on )
+if ( allocated ( rhopij_off )) deallocate ( rhopij_off )
+if ( allocated ( rhop_off )) deallocate ( rhop_off )
+if ( allocated ( rhop_on )) deallocate ( rhop_on )
+if ( allocated ( rhoPP )) deallocate ( rhoPP )
+if ( allocated ( rhoPP_es )) deallocate ( rhoPP_es )
+!if ( allocated ( sample1%atom )) deallocate ( sample1%atom )
+!if ( allocated ( sample2%atom )) deallocate ( sample2%atom )
+if ( allocated ( s_mat )) deallocate ( s_mat )
+!if ( allocated ( smatG )) deallocate ( smatG )
+if ( allocated ( sm_mat )) deallocate ( sm_mat )
+if ( allocated ( sp_mat )) deallocate ( sp_mat )
+!if ( allocated ( spmatG )) deallocate ( spmatG )
+if ( allocated ( spm_mat )) deallocate ( spm_mat )
+if ( allocated ( spVNL )) deallocate ( spVNL )
+if ( allocated ( States_total )) deallocate ( States_total )
+if ( allocated ( sVNL )) deallocate ( sVNL )
+if ( allocated ( symbol )) deallocate ( symbol )
+if ( allocated ( tang )) deallocate ( tang )
+!if ( allocated ( temp2 )) deallocate ( temp2 )
+if ( allocated ( t_mat )) deallocate ( t_mat )
+if ( allocated ( tp_mat )) deallocate ( tp_mat )
+if ( allocated ( u0vec )) deallocate ( u0vec )
+!if ( allocated ( v )) deallocate ( v )
+if ( allocated ( vatom )) deallocate ( vatom )
+if ( allocated ( vatom_neb )) deallocate ( vatom_neb )
+if ( allocated ( vatom_old )) deallocate ( vatom_old )
+if ( allocated ( Vbias_mat )) deallocate ( Vbias_mat )
+if ( allocated ( Vbiasp_mat )) deallocate ( Vbiasp_mat )
+if ( allocated ( vca )) deallocate ( vca )
+if ( allocated ( Vcoulomb )) deallocate ( Vcoulomb )
+if ( allocated ( Vdip_1c )) deallocate ( Vdip_1c )
+if ( allocated ( Vewaldsr )) deallocate ( Vewaldsr )
+if ( allocated ( vna )) deallocate ( vna )
+if ( allocated ( vnl )) deallocate ( vnl )
+if ( allocated ( vxc )) deallocate ( vxc )
+if ( allocated ( vxc_1c )) deallocate ( vxc_1c )
+if ( allocated ( vxc_3c )) deallocate ( vxc_3c )
+if ( allocated ( vxc_ca )) deallocate ( vxc_ca )
+if ( allocated ( Vxcnu )) deallocate ( Vxcnu )
+if ( allocated ( x0 )) deallocate ( x0 )
+if ( allocated ( xdot )) deallocate ( xdot )
+if ( allocated ( ximage )) deallocate ( ximage )
+if ( allocated ( xmass )) deallocate ( xmass )
+if ( allocated ( xl )) deallocate ( xl )
+if ( allocated ( ratom )) deallocate ( ratom )
+if ( allocated ( symbol )) deallocate ( symbol )
+if ( allocated ( imass )) deallocate ( imass )
+if ( allocated ( special_k )) deallocate ( special_k)
+if ( allocated ( special_k_orig )) deallocate (special_k_orig)
+if ( allocated ( scale_k )) deallocate (scale_k)
+if ( allocated ( weight_k )) deallocate (weight_k)
+if ( allocated ( weight_k_orig )) deallocate (weight_k_orig)
+if ( allocated ( special_k )) deallocate (special_k)
+if ( allocated ( special_k_orig )) deallocate (special_k_orig)
+if ( allocated ( scale_k )) deallocate (scale_k)
+if ( allocated ( weight_k )) deallocate (weight_k)
+if ( allocated ( weight_k_orig  )) deallocate (weight_k_orig)
+!call f2py_deallocate_charges()
+end
+subroutine f2py_deallocate_charges()
+use charges
+if ( allocated (nelectron )) deallocate (nelectron )
+if ( allocated (Qin )) deallocate (Qin )
+if ( allocated (Qinmixer)) deallocate (Qinmixer )
+if ( allocated (QLowdin_TOT )) deallocate (QLowdin_TOT )
+if ( allocated (QMulliken_TOT )) deallocate (QMulliken_TOT )
+if ( allocated (Qout)) deallocate (Qout )
+if ( allocated (Qoutmixer)) deallocate (Qoutmixer )
+if ( allocated (dq)) deallocate (dq )
+if ( allocated (Q0_TOT)) deallocate (Q0_TOT )
+if ( allocated (Qin_es)) deallocate (Qin_es )
+if ( allocated (QLowdin_TOT_es )) deallocate (QLowdin_TOT_es )
+if ( allocated (Qout_es)) deallocate (Qout_es )
+if ( allocated (qaux)) deallocate (qaux )
+
+end
