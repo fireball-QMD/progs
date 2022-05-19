@@ -42,6 +42,8 @@ fb.f2py_deallocate_all()
 #fb.f2py_run()
 
 #Load new positions
+from os import remove
+remove("CHARGES")
 din2=dinamic()
 din2.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
 n_atomos=din2.step[0].getNatoms()

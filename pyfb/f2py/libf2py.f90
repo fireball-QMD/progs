@@ -1223,7 +1223,7 @@ if ( allocated ( special_k_orig )) deallocate (special_k_orig)
 if ( allocated ( scale_k )) deallocate (scale_k)
 if ( allocated ( weight_k )) deallocate (weight_k)
 if ( allocated ( weight_k_orig  )) deallocate (weight_k_orig)
-!call f2py_deallocate_charges()
+call f2py_deallocate_charges()
 end
 subroutine f2py_deallocate_charges()
 use charges
