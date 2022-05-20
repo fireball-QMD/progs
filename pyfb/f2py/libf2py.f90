@@ -495,7 +495,7 @@ subroutine f2py_init() !zauxf2py) !,pos,Zin)
            call bvec ( nstepi, natoms, nstepf, ratom)
 ! jel-eph
 ! Electron-phono coupling
-       	   if (iephc .eq. 1) call readephc (natoms)
+              if (iephc .eq. 1) call readephc (natoms)
         endif
 
 ! write out population analysis of MOs
@@ -667,15 +667,18 @@ subroutine f2py_init() !zauxf2py) !,pos,Zin)
         if (iensemble .eq. 2) call initNH(natoms,T_want)
 
 ! Allocate the stuff that depends on natoms, neigh_max, and numorb_max
-        write (*,*) ' Initiallizing arrays '
+        write (*,*) ' Initiallizing arrays allocate_neigh '
         call allocate_neigh (nprocs, my_proc, iordern, icluster,     &
      &                       ivdw, ifixneigh, iwrthampiece,  &
      &                       iwrtatom)
+        write (*,*) ' Initiallizing arrays allocate_f'
         call allocate_f (natoms, neigh_max, neighPP_max, numorb_max, nsh_max,&
      &                   itheory, itheory_xc, igauss, ivdw, iharmonic, ibias)
+        write (*,*) ' Initiallizing arrays allocate_h'
         call allocate_h (natoms, neigh_max, neighPP_max, itheory, itheory_xc,&
      &                   igauss, iwrtdos, iwrthop, iwrtatom)
 ! jel-grid
+        write (*,*) ' Initiallizing arrays allocate_rho'
         call allocate_rho (natoms, neigh_max, neighPP_max, numorb_max,       &
      &                     nsh_max, itheory_xc, igrid)
 ! end jel-grid
@@ -706,17 +709,17 @@ subroutine f2py_init() !zauxf2py) !,pos,Zin)
 ! end jel-grid
 !CHROM
         elseif ( iclassicMD > 0 .and. igrid /= 1 )then
-		 	call neighbors (nprocs, my_proc, iordern, icluster, iwrtneigh, ivdw)
+             call neighbors (nprocs, my_proc, iordern, icluster, iwrtneigh, ivdw)
                          !SFIRE  APRIL 2018
                         call neighbors_pairs(icluster)
                          !SFIRE  APRIL 2018
-		endif
+        endif
 !END CHROM
 
 ! initialize time dependent variables
         if (itdse .eq. 1) then
 ! allocate arrays
-		 write (*,*) ' Read TD parameters'
+         write (*,*) ' Read TD parameters'
          call readtdse ()
          write (*,*) ' Allocate TD-matrices'
          call allocate_tdse ()
@@ -729,7 +732,7 @@ subroutine f2py_init() !zauxf2py) !,pos,Zin)
 
 ! GAP ENRIQUE-FF
         if (igap .eq. 1) then
-	  call readhartree (nspecies,natoms)
+      call readhartree (nspecies,natoms)
             max_scf_iterations = 2
             sigmatol = 1e-20
         else if (igap .eq. 2) then
