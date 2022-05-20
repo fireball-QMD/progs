@@ -1237,6 +1237,8 @@ if ( allocated ( getiatom )) deallocate ( getiatom)
 if ( allocated ( getissh )) deallocate ( getissh)
 if ( allocated ( getlssh )) deallocate ( getlssh)
 if ( allocated ( getmssh )) deallocate ( getmssh )
+if ( allocated (bbnkre_o)) deallocate ( bbnkre_o)
+if ( allocated (blowre_o)) deallocate ( blowre_o)
 
 
 call f2py_deallocate_charges()
