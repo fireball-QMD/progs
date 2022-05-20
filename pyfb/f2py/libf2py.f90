@@ -674,6 +674,7 @@ subroutine f2py_init() !zauxf2py) !,pos,Zin)
         write (*,*) ' Initiallizing arrays allocate_f'
         call allocate_f (natoms, neigh_max, neighPP_max, numorb_max, nsh_max,&
      &                   itheory, itheory_xc, igauss, ivdw, iharmonic, ibias)
+        if ( allocated ( dip)) deallocate (dip)
         write (*,*) ' Initiallizing arrays allocate_h'
         call allocate_h (natoms, neigh_max, neighPP_max, itheory, itheory_xc,&
      &                   igauss, iwrtdos, iwrthop, iwrtatom)
@@ -988,6 +989,7 @@ if ( allocated ( dipc )) deallocate ( dipc )
 if ( allocated ( dipp )) deallocate ( dipp )
 if ( allocated ( dippc )) deallocate ( dippc )
 if ( allocated ( dippcm )) deallocate ( dippcm )
+if ( allocated ( dipcm )) deallocate ( dipcm )
 !if ( allocated ( dqmmm )) deallocate ( dqmmm )
 if ( allocated ( dusr )) deallocate ( dusr )
 if ( allocated ( dxcdcc )) deallocate ( dxcdcc )
