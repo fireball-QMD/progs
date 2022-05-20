@@ -6,9 +6,17 @@ print(sys.path)
 import libpyfb as fb
 from pyfb.geometry.dinamic import *
 import numpy as np 
+import tarfile
+from os.path import exists
+
 
 #Load Fdata
 fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/relax/Fdata_HC_minimal"
+if not exists(fdatalocation):
+  file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
+  file.extractall(os.environ["FIREBALLHOME"]+"/TESTS/relax/")
+  file.close()
+
 fb.f2py_initbasics(fdatalocation)
 
 

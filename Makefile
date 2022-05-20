@@ -478,7 +478,8 @@ libfireball: $(OBJECTS_QMMM)
 	ar rv libfireball.a $(OBJECTS_QMMM)
 	ranlib libfireball.a
 
-libf2py:  $(OBJECTS_QMMM)
+libf2py:
+	make libfireball
 	f2py3 -m libpyfb -c pyfb/f2py/libf2py.f90 --fcompiler='ifort' -I. libfireball.a --link-lapack_opt 
 
 server: $(OBJECTS_SERVER)
