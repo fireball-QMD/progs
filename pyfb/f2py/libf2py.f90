@@ -923,6 +923,7 @@ end
 subroutine f2py_deallocate_all()
  use barrier
  use bias
+ use charges
  use classicMD
  use configuration
  use constants_fireball
@@ -935,8 +936,6 @@ subroutine f2py_deallocate_all()
  use dimensions
  use dynamo
  use energy
- use f90sockets
- use fb_sockets
  use forces
  use fragments
  use gaussG
@@ -1240,11 +1239,6 @@ if ( allocated ( getmssh )) deallocate ( getmssh )
 if ( allocated (bbnkre_o)) deallocate ( bbnkre_o)
 if ( allocated (blowre_o)) deallocate ( blowre_o)
 
-
-call f2py_deallocate_charges()
-end
-subroutine f2py_deallocate_charges()
-use charges
 if ( allocated (nelectron )) deallocate (nelectron )
 if ( allocated (Qin )) deallocate (Qin )
 if ( allocated (Qinmixer)) deallocate (Qinmixer )
@@ -1258,5 +1252,7 @@ if ( allocated (Qin_es)) deallocate (Qin_es )
 if ( allocated (QLowdin_TOT_es )) deallocate (QLowdin_TOT_es )
 if ( allocated (Qout_es)) deallocate (Qout_es )
 if ( allocated (qaux)) deallocate (qaux )
+
+
 
 end
