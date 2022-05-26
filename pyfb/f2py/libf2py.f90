@@ -1252,7 +1252,10 @@ if ( allocated (Qin_es)) deallocate (Qin_es )
 if ( allocated (QLowdin_TOT_es )) deallocate (QLowdin_TOT_es )
 if ( allocated (Qout_es)) deallocate (Qout_es )
 if ( allocated (qaux)) deallocate (qaux )
-
-
+if ( allocated (Fv )) deallocate (Fv)
+if ( allocated (Xv )) deallocate (Xv)
+if ( allocated (delX )) deallocate (delX)
+if ( allocated (delF )) deallocate (delF)
+if ( allocated (r2_sav )) deallocate (r2_sav)
 
 end
