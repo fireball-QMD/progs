@@ -8,6 +8,7 @@ from pyfb.geometry.dinamic import *
 import numpy as np 
 import tarfile
 from os.path import exists
+from os import remove
 
 
 #Load Fdata
@@ -21,6 +22,7 @@ fb.f2py_initbasics(fdatalocation)
 
 
 #Load positions
+remove("CHARGES")
 din=dinamic()
 din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
 pos=din.step[0].getnumpy_pos()
@@ -43,12 +45,11 @@ fb.f2py_run()
 fb.f2py_deallocate_all()
 
 #Load new positions
-from os import remove
 remove("CHARGES")
-din2=dinamic()
-din2.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
-pos=din2.step[0].getnumpy_pos()
-Zin=np.array(din2.step[0].getZarray())
+din=dinamic()
+din.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
+pos=din.step[0].getnumpy_pos()
+Zin=np.array(din.step[0].getZarray())
 fb.f2py_getbas(Zin,pos)
 
 #run fireball 
