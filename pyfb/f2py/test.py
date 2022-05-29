@@ -31,9 +31,14 @@ fb.set_icluster(1)
 fb.set_iquot(3)
 fb.set_iquench(-1)
 fb.set_dt(0.5)
-fb.set_nstepf(5000)
+fb.set_nstepf(2)
 fb.set_iwrtxyz(1)
 
 #Run fireball 
 fb.f2py_init()
 fb.f2py_run()
+din=dinamic()
+din.laststep("restart.xyz",True)
+din.print_charges()
+
+
