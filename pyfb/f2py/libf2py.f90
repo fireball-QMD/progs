@@ -103,6 +103,52 @@ subroutine f2py_nucz(zaux,nuczaux)
   end do
 end
 
+subroutine f2py_getbas(zaux,nuczaux,raux)
+  use configuration
+  use interactions
+  use charges
+  implicit none
+  integer, intent(in) :: zaux
+!  integer, intent(in) :: naux
+  integer, intent(in), dimension(zaux) ::  nuczaux
+  real, intent(in), dimension(zaux,3) ::  raux
+  integer i,nucz, iatom,j,in1,ispec
+  logical zindata
+  natoms = zaux
+  print*,'++naux :',zaux,nuczaux
+  print*,'........................'
+  print*,'raux',raux
+  allocate (ratom (3, natoms))
+  allocate (symbol (natoms))
+  allocate (imass (natoms))
+  do iatom = 1, natoms
+   nucz = nuczaux(iatom)
+    do ispec = 1, nspecies
+      if (nucz .eq. nzx(ispec)) then
+        zindata = .true.
+        imass(iatom) = ispec
+      end if
+    end do
+  end do
+  do iatom = 1, natoms
+  print*,raux(iatom,:)
+  end do
+  do iatom = 1, natoms
+    in1 = imass(iatom)
+    symbol(iatom) = symbolA(in1)
+    ratom(:,iatom) = raux(iatom,:)
+  end do
+  do iatom = 1, natoms
+    ratom(:,iatom)=ratom(:,iatom)*rescal
+  end do 
+  print*,'iatom,symbol,ratom,imass'
+  do iatom = 1, natoms
+     write (*,202) iatom, symbol(iatom), ratom(:,iatom), imass(iatom)
+  end do
+202     format (3x, i5, 7x, a2, 3(2x,f9.3), 7x, i2)
+end
+
+
 subroutine f2py_ratom(zaux,raux)
   use configuration
   use interactions
@@ -123,13 +169,15 @@ subroutine f2py_ratom(zaux,raux)
   end do
   do iatom = 1, natoms
     ratom(:,iatom)=ratom(:,iatom)*rescal
-  end do 
+  end do
   print*,'iatom,symbol,ratom,imass'
   do iatom = 1, natoms
      write (*,202) iatom, symbol(iatom), ratom(:,iatom), imass(iatom)
   end do
 202     format (3x, i5, 7x, a2, 3(2x,f9.3), 7x, i2)
 end
+
+
 
 subroutine f2py_initbasics(f2py_fdataLocation)
    ! es como initbasics (), pero sin cargar posiciones de atomos

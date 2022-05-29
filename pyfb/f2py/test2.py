@@ -23,12 +23,9 @@ fb.f2py_initbasics(fdatalocation)
 #Load positions
 din=dinamic()
 din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
-n_atomos=din.step[0].getNatoms()
 pos=din.step[0].getnumpy_pos()
 Zin=np.array(din.step[0].getZarray())
-fb.f2py_natoms(n_atomos) 
-fb.f2py_nucz(Zin) 
-fb.f2py_ratom(pos) 
+fb.f2py_getbas(Zin,pos)
 
 #Load options
 fb.set_icluster(1)
@@ -44,22 +41,15 @@ fb.set_verbosity(1)
 fb.f2py_init()
 fb.f2py_run()
 fb.f2py_deallocate_all()
-#fb.f2py_deallocate_charges()
-#run fireball 
-#fb.f2py_init()
-#fb.f2py_run()
 
 #Load new positions
 from os import remove
 remove("CHARGES")
 din2=dinamic()
 din2.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
-n_atomos=din2.step[0].getNatoms()
 pos=din2.step[0].getnumpy_pos()
 Zin=np.array(din2.step[0].getZarray())
-fb.f2py_natoms(n_atomos)
-fb.f2py_nucz(Zin)
-fb.f2py_ratom(pos)
+fb.f2py_getbas(Zin,pos)
 
 #run fireball 
 fb.f2py_init()

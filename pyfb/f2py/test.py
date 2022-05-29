@@ -19,12 +19,12 @@ fb.f2py_initbasics(fdatalocation)
 #Load bas
 din=dinamic()
 din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
-n_atomos=din.step[0].getNatoms()
+#n_atomos=din.step[0].getNatoms()
 pos=din.step[0].getnumpy_pos()
 Zin=np.array(din.step[0].getZarray())
-fb.f2py_natoms(n_atomos) 
-fb.f2py_nucz(Zin) 
-fb.f2py_ratom(pos) 
+#fb.f2py_natoms(n_atomos) 
+#fb.f2py_nucz(Zin) 
+fb.f2py_getbas(Zin,pos) 
 
 #Load options
 fb.set_icluster(1)
