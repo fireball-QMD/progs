@@ -28,6 +28,28 @@ subroutine f2py_run()
   write (*,*) ' FIREBALL RUNTIME : ',time_end-time_begin,'[sec]'
 end
 
+real function f2py_getenergy()
+  use energy
+  call scf_loop (1)
+  call postscf ()
+  call getenergy (1)
+  f2py_getenergy=etot
+  return
+end
+
+
+subroutine f2py_print_charges()
+        use dimensions
+        use interactions
+        use charges
+        use configuration
+         do iatom = 1, natoms
+          in1 = imass(iatom)
+          write (*,601) (Qin(issh,iatom), issh = 1, nssh(in1))
+         end do
+601     format (2x, 10f14.8)
+end
+
 
 subroutine set_icluster(iclusteraux)
   use options
@@ -439,9 +461,7 @@ subroutine f2py_init() !zauxf2py) !,pos,Zin)
          distance = sqrt(distance)
          if (distance .lt. 1.0d-4) ishiftO = 1
         end do
-
-! Read data from the lattice vectors file - XXX.lvs.
-! Set up the boxes surrounding the central unit cell.
+        
         call readlvs (lvsfile, a1vec, a2vec, a3vec, icluster, rescal)
 
 ! Define volume of unit cell
