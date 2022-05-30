@@ -88,9 +88,6 @@ subroutine f2py_nucz(zaux,nuczaux)
   integer, intent(in), dimension(zaux) ::  nuczaux
   integer i,nucz,iatom,ispec
   logical zindata
-  print*,'naux :',zaux,nuczaux
-  print*,'........................'
-
   allocate (imass (natoms))
   do iatom = 1, natoms
    nucz = nuczaux(iatom)
@@ -115,9 +112,6 @@ subroutine f2py_getbas(zaux,nuczaux,raux)
   integer i,nucz, iatom,j,in1,ispec
   logical zindata
   natoms = zaux
-  print*,'++naux :',zaux,nuczaux
-  print*,'........................'
-  print*,'raux',raux
   allocate (ratom (3, natoms))
   allocate (symbol (natoms))
   allocate (imass (natoms))

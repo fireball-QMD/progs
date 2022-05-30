@@ -22,7 +22,8 @@ fb.f2py_initbasics(fdatalocation)
 
 
 #Load positions
-remove("CHARGES")
+if exists("CHARGES"):
+  remove("CHARGES")
 din=dinamic()
 din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
 pos=din.step[0].getnumpy_pos()
@@ -45,7 +46,8 @@ fb.f2py_run()
 fb.f2py_deallocate_all()
 
 #Load new positions
-remove("CHARGES")
+if exists("CHARGES"):
+  remove("CHARGES")
 din=dinamic()
 din.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
 pos=din.step[0].getnumpy_pos()
