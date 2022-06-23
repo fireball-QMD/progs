@@ -1319,5 +1319,6 @@ if ( allocated (Xv )) deallocate (Xv)
 if ( allocated (delX )) deallocate (delX)
 if ( allocated (delF )) deallocate (delF)
 if ( allocated (r2_sav )) deallocate (r2_sav)
+#if ( allocated (atompos)) deallocate (atompos)
 
 end

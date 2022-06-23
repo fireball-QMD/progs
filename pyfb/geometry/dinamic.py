@@ -128,6 +128,25 @@ class dinamic:
     self.out.append(salida)
 
 
+  def loadxyz_fromString(self,cadena):
+    natoms = 0
+    text = cadena.split("\n")
+    print(text)
+    nmaxlines = len(text)
+    natoms = int(text[0])
+    bas=step()
+    for j in range(natoms):
+      line=text[j+2].split()
+      print(line)
+      a=line[0]
+      ra=[]
+      ra.append(float(line[1]))
+      ra.append(float(line[2]))
+      ra.append(float(line[3]))
+      bas.append(atom(a,ra))
+    print(natoms)
+    
+
   def loadxyz(self,archivo,name=""):
     natoms = 0
     istep = 0

@@ -25,7 +25,8 @@ fb.f2py_initbasics(fdatalocation)
 if exists("CHARGES"):
   remove("CHARGES")
 din=dinamic()
-din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
+#din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
+din.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
 pos=din.step[0].getnumpy_pos()
 Zin=np.array(din.step[0].getZarray())
 fb.f2py_getbas(Zin,pos)
@@ -57,5 +58,33 @@ fb.f2py_getbas(Zin,pos)
 #run fireball 
 fb.f2py_init()
 fb.f2py_run()
+fb.f2py_deallocate_all()
 
+#Load new positions
+if exists("CHARGES"):
+  remove("CHARGES")
+din=dinamic()
+din.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
+pos=din.step[0].getnumpy_pos()
+Zin=np.array(din.step[0].getZarray())
+fb.f2py_getbas(Zin,pos)
 
+#run fireball 
+fb.f2py_init()
+fb.f2py_run()
+fb.f2py_deallocate_all()
+
+#Load new positions
+if exists("CHARGES"):
+  remove("CHARGES")
+din=dinamic()
+#din.loadbas("/home/dani/bases/H2O.bas")
+din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
+pos=din.step[0].getnumpy_pos()
+Zin=np.array(din.step[0].getZarray())
+fb.f2py_getbas(Zin,pos)
+
+#run fireball 
+fb.f2py_init()
+fb.f2py_run()
+fb.f2py_deallocate_all()
