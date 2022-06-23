@@ -144,7 +144,7 @@ class dinamic:
       ra.append(float(line[2]))
       ra.append(float(line[3]))
       bas.append(atom(a,ra))
-    print(natoms)
+    self.append(bas)
     
 
   def loadxyz(self,archivo,name=""):
