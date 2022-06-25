@@ -48,7 +48,7 @@ for i in range(1,din.step[0].getNatoms()+1):
     charge=charge+float(line[j])
   din.step[0].atom[i-1].Q=charge
 din.step[0].print_charges()
-
+print(din.step[0].print_charges_to_string())
 #fb.f2py_run()
 #din=dinamic()
 #din.laststep("restart.xyz",True)

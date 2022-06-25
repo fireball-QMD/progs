@@ -54,6 +54,18 @@ class step:
     for i in self.atom:
       i.print_charges()  
 
+  def print_charges_to_string(self):
+    out=""
+    linea=str(len(self.atom))+"\n"
+    if self.line2 != "":
+      linea=linea+self.line2
+      linea = linea[:-1]
+    out=out+linea+"\n"
+    for i in self.atom:
+      out=out+i.print_charges_to_string()+"\n"
+    return out
+
+
   def print_bas_format(self):
     print(len(self.atom))
     for i in self.atom:
