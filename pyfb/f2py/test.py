@@ -28,7 +28,7 @@ fb.f2py_getbas(Zin,pos)
 
 #Load options
 fb.set_icluster(1)
-fb.set_iquot(3)
+fb.set_iquot(4)
 fb.set_iquench(-1)
 fb.set_dt(0.5)
 fb.set_nstepf(1)
@@ -37,9 +37,17 @@ fb.set_iwrtxyz(1)
 #Run fireball 
 fb.f2py_init()
 ETOT=fb.f2py_getenergy()
-print(ETOT)
+din.step[0].line2=('ETOT = {0:12.6f}  eV '.format(ETOT))
 fb.f2py_print_charges()
-
+#print("CHARGES")
+for i in range(1,din.step[0].getNatoms()+1):
+  line=fb.f2py_charge(i).split()
+  charge=0
+  for j in range(len(line)):
+    din.step[0].atom[i-1].q.append(line[j])
+    charge=charge+float(line[j])
+  din.step[0].atom[i-1].Q=charge
+din.step[0].print_charges()
 
 #fb.f2py_run()
 #din=dinamic()

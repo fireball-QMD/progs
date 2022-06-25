@@ -39,17 +39,29 @@ end
 
 
 subroutine f2py_print_charges()
-        use dimensions
-        use interactions
-        use charges
-        use configuration
-         do iatom = 1, natoms
-          in1 = imass(iatom)
-          write (*,601) (Qin(issh,iatom), issh = 1, nssh(in1))
-         end do
+  use dimensions
+  use interactions
+  use charges
+  use configuration
+   do iatom = 1, natoms
+    in1 = imass(iatom)
+    write (*,601) (Qin(issh,iatom), issh = 1, nssh(in1))
+   end do
 601     format (2x, 10f14.8)
 end
 
+
+character(140) function f2py_charge(iaux)
+  use dimensions
+  use interactions
+  use charges
+  use configuration
+  integer,intent(in)::iaux 
+  in1 = imass(iaux)
+  write (f2py_charge,601) (Qin(issh,iaux), issh = 1, nssh(in1))
+601     format (2x, 10f14.8)
+  return
+end
 
 subroutine set_icluster(iclusteraux)
   use options
@@ -1319,6 +1331,6 @@ if ( allocated (Xv )) deallocate (Xv)
 if ( allocated (delX )) deallocate (delX)
 if ( allocated (delF )) deallocate (delF)
 if ( allocated (r2_sav )) deallocate (r2_sav)
-#if ( allocated (atompos)) deallocate (atompos)
+!if ( allocated (atompos)) deallocate (atompos)
 
 end
