@@ -402,8 +402,9 @@
          end do
  
 ! The second piece will be the force with respect to atom 1.
+         bmt = (cost*sighat(ix) - rhat(ix))/y
          do iME = 1, index_max3c(in1,in2)
-           hlist(iME) = - sighat(ix)*dyhlist(iME) - hlist(iME)/2.0d0
+           hlist(iME) = - sighat(ix)*dyhlist(iME) + bmt*dphlist(iME) - hlist(iME)/2.0d0
          end do
  
 ! Now recover f3naMb which is a two-dimensional array from hlist which
