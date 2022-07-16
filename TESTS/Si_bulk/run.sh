@@ -113,6 +113,7 @@ iwrtxyz = 1
 fermi=$(grep "Fermi Level" salida.out | tail -1 | cut -d'=' -f2)
 $FIREBALLHOME/pyfb/plotbands.py -r ek.dat -fermi ${fermi} -print > ek0.dat
 $FIREBALLHOME/pyfb/plotbands.py -r ek0.dat -c dia -save
+
 cp Vol.dat Vol_${name}.dat
 cp uno.lvs ${name}.lvs
 cp uno.bas ${name}.bas
