@@ -31,8 +31,8 @@ nstepf = 1
 &output
 iwrtxyz = 1
 &end" > fireball.in
-#$FIREBALLHOME/fireball.x > salida.out
-/home/dani/FB/git/bin/fireball.21.09_intel-double.x > salida.out 
+$FIREBALLHOME/fireball.x > salida.out
+#/home/dani/FB/git/bin/fireball.21.09_intel-double.x > salida.out 
 ETOT=$(grep 'ETOT' salida.out|cut -d'=' -f2)
 echo $1$'\t'$ETOT>>salida
 }
@@ -107,8 +107,7 @@ ifixcharge = 1
 iwrteigen = 1
 iwrtxyz = 1
 &end" > fireball.in
-#$FIREBALLHOME/fireball.x > salida.out 
-/home/dani/FB/git/bin/fireball.21.09_intel-double.x > salida.out 
+$FIREBALLHOME/fireball.x > salida.out 
 
 fermi=$(grep "Fermi Level" salida.out | tail -1 | cut -d'=' -f2)
 $FIREBALLHOME/pyfb/plotbands.py -r ek.dat -fermi ${fermi} -print > ek0.dat
