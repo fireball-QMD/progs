@@ -1,20 +1,14 @@
 #./fast05S.sh $iqout  ${basedir} ${create} ${name} ${idftd3} ${dftd3_func}
 
 unitarios="$FIREBALLHOME/TESTS/unitarios/"
-
-if test -d Fdata_HC_minimal
-then
-echo 'Fdata existe'
-else
-tar -xvf ../Fdata.tar.gz
-fi
+fdata=$FIREBALLHOME/TESTS/speedtest/Fdata/
 
 Z=14
 name=Si
 cristal=dia
 a0=5.43
 
-iqout = 4
+iqout=4
 
 sed "s/Z/${Z}/" ${unitarios}/${cristal}.bas > uno.bas
 cp ${unitarios}/${cristal}.lvs uno.lvs
@@ -24,7 +18,7 @@ cp ${unitarios}/${cristal}_*.kpts camino.kpts
 
 function start {
 echo "&option
-fdatalocation="'"Fdata_HC_minimal"'"
+fdatalocation = '$fdata'
 basisfile = 'uno.bas'
 lvsfile = 'uno.lvs'
 kptpreference = 'uno.kpts'
@@ -37,7 +31,8 @@ nstepf = 1
 &output
 iwrtxyz = 1
 &end" > fireball.in
-$FIREBALLHOME/fireball.x > salida.out 
+#$FIREBALLHOME/fireball.x > salida.out
+/home/dani/FB/git/bin/fireball.21.09_intel-double.x > salida.out 
 ETOT=$(grep 'ETOT' salida.out|cut -d'=' -f2)
 echo $1$'\t'$ETOT>>salida
 }
@@ -70,7 +65,7 @@ fi
     start $rescal
   done
 
-  min=$($FIREBALLHOME/TEST/unitarios/get_min.py salida)
+  min=$($FIREBALLHOME/TESTS/unitarios/get_min.py salida)
   cp salida borrar
 
   N=20
@@ -89,31 +84,20 @@ fi
 ##------------------------------------------------------------------------------------------## 
 
 min=$(/home/dani/bin/get_min.py Vol.dat)
-$FIREBALLHOME/TEST/unitarios/./rescal_lvs.py uno.lvs $min > min.lvs
-$FIREBALLHOME/TEST/unitarios/./rescal_bas.py uno.bas $min > min.bas
-$FIREBALLHOME/TEST/unitarios/./rescal_kpts.py uno.kpts $min > min.kpts
-$FIREBALLHOME/TEST/unitarios/./rescal_kpts.py camino.kpts $min > camino_min.kpts
+$FIREBALLHOME/TESTS/unitarios/./rescal_lvs.py uno.lvs $min > min.lvs
+$FIREBALLHOME/TESTS/unitarios/./rescal_bas.py uno.bas $min > min.bas
+$FIREBALLHOME/TESTS/unitarios/./rescal_kpts.py uno.kpts $min > min.kpts
+$FIREBALLHOME/TESTS/unitarios/./rescal_kpts.py camino.kpts $min > camino_min.kpts
 
 start 1.0
 
-fermi=$(grep "Fermi Level" salida.out | tail -1 | cut -d'=' -f2)
-f=$(echo "$fermi-3-0.1" | bc -l)
-
-echo "1.0                   ! scale factor (leave 1.0)
-1        1            ! list of atoms to analyze DOS
-100                   ! number of energy steps
-$f 0.1
-0                     ! leave untouched
-0.0     0.0           ! leave untouched
-0.05                  ! imaginary part of Green function (controls energy level smearing)" > dos.optional
 
 echo "&option
-fdatalocation="'"Fdata_HC_minimal"'"
-basisfile = 'uno.bas'
-lvsfile = 'uno.lvs'
+fdatalocation = '$fdata'
+basisfile = 'min.bas'
+lvsfile = 'min.lvs'
 kptpreference = 'camino_min.kpts'
 iqout = $iqout
-rescal = $1
 iquench = -1
 sigmatol = 0.000001
 nstepf = 1
@@ -122,18 +106,20 @@ ifixcharge = 1
 &output
 iwrteigen = 1
 iwrtxyz = 1
-iwrtdos = 1
 &end" > fireball.in
-$FIREBALLHOME/fireball.x > salida.out 
+#$FIREBALLHOME/fireball.x > salida.out 
+/home/dani/FB/git/bin/fireball.21.09_intel-double.x > salida.out 
 
-#get-ek0.py ek.dat $fermi > ek0.dat
-plotbands.py -r ek.dat -fermi $fermi -print > ek0.dat
+fermi=$(grep "Fermi Level" salida.out | tail -1 | cut -d'=' -f2)
+echo $FIREBALLHOME/pyfb/plotbands.py -r ek.dat -fermi ${fermi} -print >>LOG
+$FIREBALLHOME/pyfb/plotbands.py -r ek.dat -fermi ${fermi} -print > ek0.dat
 
 cp Vol.dat Vol_${name}.dat
 cp uno.lvs ${name}.lvs
 cp uno.bas ${name}.bas
 cp uno.kpts ${name}.kpts
 cp CHARGES CHARGES_${name}
-
+cp ek.dat ek_${name}.dat
+cp ek0.dat ek0_${name}.dat
 
 
