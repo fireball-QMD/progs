@@ -1,0 +1,12 @@
+<form action="{% url 'index' %}" method="post">
+
+Element,X,Y,Z,Qtot,Q_shell <br>
+<textarea name="input"  rows="10" cols="120">
+{{peticion}}
+</textarea>
+{% csrf_token %}
+<br>
+<input type="submit" value="go back">
+
+</form>
+

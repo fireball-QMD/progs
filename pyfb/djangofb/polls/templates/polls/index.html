@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href='https://fonts.googleapis.com/css?family=Oleo Script' rel='stylesheet'>
+<style>
+h1 {    font-family: 'Oleo Script';font-size: 22px; }
+p { font-family: 'Ubuntu';font-size: 16px; }
+</style>
+</head>
+<body>
+<h1>
+Fireball Mulliken Dipole Charges
+</h1>
+<p>
+Copy the positions of the atoms in the textarea below using xyz-format <!-- and less than {{n_atomos}} atoms -->
+<br> 
+or select a xyz-format File to Load:
+<br> 
+<input type="file" id="fileToLoad">
+<button onclick="loadFileAsText()">Load Selected File</button>
+<br> 
+only {{atomos_cargados}} interactions had been loaded
+</p>
+<form action="{% url 'getPositions' %}" method="post">
+<textarea name="input" id="inputTextToSave"  rows="8" cols="60">{{peticion}}</textarea>
+<br>
+<input type="submit" value="Get Mulliken-dipole charges">
+<br>
+<p>
+To use another format:
+<input type="submit" name="pybel" value="Use pybel to get xyz-format">
+</p>
+{% csrf_token %}
+</form>
+</p>
+
+<script>
+function loadFileAsText()
+{
+	var fileToLoad = document.getElementById("fileToLoad").files[0];
+
+	var fileReader = new FileReader();
+	fileReader.onload = function(fileLoadedEvent) 
+	{
+		var textFromFileLoaded = fileLoadedEvent.target.result;
+		document.getElementById("inputTextToSave").value = textFromFileLoaded;
+	};
+	fileReader.readAsText(fileToLoad, "UTF-8");
+}
+</script>
+
+
+
+
+
+</html>

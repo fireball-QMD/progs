@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<body>
+{% load static %}
+<form action="{% url 'index' %}" method="post">
+<textarea name="input" id="inputTextToSave" style="width:512px;height:256px">{{peticion}}</textarea>
+<br>
+<input type="submit" name="peticion_pybel" value="Load xyz-format to get charges">
+{% csrf_token %}
+<label for="Formatos">Format:</label>
+  <select name="format" id="format">
+    {% for i in formatos %}
+    {% if i == "pdb" %}
+      <option value="{{i}}" selected>{{i}}</option>
+    {% else %}
+      <option value="{{i}}">{{i}}</option>
+    {% endif %}
+    {% endfor %}
+{% csrf_token %}
+  </select>
+</form>
+<p>
+Select a File to Load:
+<br>
+<input type="file" id="fileToLoad">
+<button onclick="loadFileAsText()">Load Selected File</button>
+</p>
+<script>
+function loadFileAsText()
+{
+	var fileToLoad = document.getElementById("fileToLoad").files[0];
+
+	var fileReader = new FileReader();
+	fileReader.onload = function(fileLoadedEvent) 
+	{
+		var textFromFileLoaded = fileLoadedEvent.target.result;
+		document.getElementById("inputTextToSave").value = textFromFileLoaded;
+	};
+	fileReader.readAsText(fileToLoad, "UTF-8");
+}
+</script>
+
+    </body>
+</html>
