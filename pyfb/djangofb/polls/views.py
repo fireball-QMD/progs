@@ -38,7 +38,7 @@ din=dinamic()
 if BASE_minima:
   din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
 else:
-  din.loadbas("/home/dani/djangofb/polls/input.bas")
+  din.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/djangofb/polls/input.bas")
 n_atomos=din.step[0].getNatoms()
 pos=din.step[0].getnumpy_pos()
 Zin=np.array(din.step[0].getZarray())
