@@ -16,6 +16,16 @@ class step:
   def append(self,atomo):
     self.atom.append(atomo)
 
+  def getEnergy(self):
+    return self.line2.split()[2]
+
+  def getNumberof(self,ele):
+    aux=0
+    for i in self.atom:
+      if i.Z == ele:
+        aux=aux+1
+    return aux
+
   def load_enlaces(self):
     for i in range(len(self.atom)-1):
         for j in range(i+1,len(self.atom)):
