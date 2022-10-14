@@ -60,15 +60,22 @@ ETOT=fb.f2py_getenergy()
 print(ETOT)
 fb.f2py_print_charges()
 
-
+atomo_infodat=[]
+carga_infodat=[]
 archivo=fdatalocation+"/info.dat"
 text=open(archivo).readlines()
 atomos_cargados=""
+linea=0
 for line in text:
   if(len(line.split())>2): 
     if line.split()[2] == 'Element':
       atomos_cargados=atomos_cargados+line.split()[0]+","
-
+      atomo_infodat.append(int(text[linea+1].split()[0]))
+      q=0.0
+      for iq in text[linea+8].split():
+        q=q+float(iq)
+      carga_infodat.append(q)
+  linea=linea+1
 
 def index(request):
   #print('****************************')
@@ -144,7 +151,20 @@ def getPositions(request):
             din.step[0].atom[i-1].q.append(line[j])
             charge=charge+float(line[j])
           din.step[0].atom[i-1].Q=charge
-        peticion=din.step[0].print_charges_to_string()
+        # peticion=din.step[0].print_charges_to_string()
+
+        print(peticion)
+        aux=pybel.readstring("xyz",peticion)
+        mol2=aux.write("mol2")
+        for i in range(len(aux.atoms)):
+          q=carga_infodat[atomo_infodat.index(aux.atoms[i].OBAtom.GetAtomicNum())]
+          aux.atoms[i].OBAtom.SetPartialCharge(-q+din.step[0].atom[i].Q)
+        mol2=aux.write("mol2")
+        peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
+        #print(mol2)
+        #print(atomo_infodat)
+        #print(carga_infodat)
+
         return render(request, 'polls/getpositions.html',{ 'peticion': peticion })
       else:
         peticion=peticion+"\r There are some error in the imput"
