@@ -158,7 +158,7 @@ def getPositions(request):
         mol2=aux.write("mol2")
         for i in range(len(aux.atoms)):
           q=carga_infodat[atomo_infodat.index(aux.atoms[i].OBAtom.GetAtomicNum())]
-          aux.atoms[i].OBAtom.SetPartialCharge(-q+din.step[0].atom[i].Q)
+          aux.atoms[i].OBAtom.SetPartialCharge(q-din.step[0].atom[i].Q)
         mol2=aux.write("mol2")
         peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
         #print(mol2)
