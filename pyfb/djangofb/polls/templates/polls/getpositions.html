@@ -1,12 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+
 <form action="{% url 'index' %}" method="post">
 
 mol2 format <br>
-<textarea name="input"  rows="30" cols="120">
+<textarea name="input"  rows="20" cols="120">
 {{peticion}}
 </textarea>
 {% csrf_token %}
 <br>
 <input type="submit" value="go back">
-
 </form>
+<div id="glmol02" style="width: 300px; height: 200px; background-color: white;"></div> 
+
+
+
+<textarea id="glmol02_src" style="display: none;">
+{{pdb}}
+</textarea>
+
+
+<script src="{% static 'js/jquery-1.7.min.js' %}"></script>
+<script src="{% static 'js/Three45.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/GLmol37.js' %}"></script>
+<script type="text/javascript">
+
+// Small molecules can be embedded in the page
+
+var glmol02 = new GLmol('glmol02');
+
+// Proteins can also be embedded in the page but 
+//  you might want to keep it separate.
+
+</script>
+
+
+</body></html>
+
+
+
 

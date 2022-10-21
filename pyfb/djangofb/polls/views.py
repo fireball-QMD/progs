@@ -161,17 +161,18 @@ def getPositions(request):
           aux.atoms[i].OBAtom.SetPartialCharge(q-din.step[0].atom[i].Q)
         mol2=aux.write("mol2")
         peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
+        pdb=aux.write("pdb")
         #print(mol2)
         #print(atomo_infodat)
         #print(carga_infodat)
 
-        return render(request, 'polls/getpositions.html',{ 'peticion': peticion })
+        return render(request, 'polls/getpositions.html',{ 'peticion': peticion , 'pdb' : pdb })
       else:
         peticion=peticion+"\r There are some error in the imput"
         return render(request, 'polls/index.html',{ 'peticion': peticion, 'atomos_cargados': atomos_cargados  })
     else:
       mol = pybel.readstring("smi", "C=C")
-      mol.make3D()
+      #mol.make3D()
       peticion=mol.write("pdb")
       formatos=pybel.informats.keys() 
       return render(request, 'polls/pybel.html',{ 'formatos': formatos, 'peticion': peticion })
