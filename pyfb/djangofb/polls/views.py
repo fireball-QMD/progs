@@ -17,8 +17,8 @@ mol.make3D()
 peticion=mol.write("xyz")
 
 #Para probar con una base mas pequeña
-BASE_minima=True
 BASE_minima=False
+BASE_minima=True
 
 fdatalocation=""
 #Load Fdata
