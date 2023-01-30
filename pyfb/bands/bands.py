@@ -154,7 +154,7 @@ class bands:
         plt.axvline(x=i,color='grey', linewidth=0.50)
     if self.printinfo:
       #getinfo(self.data,self.fermi,self.AE,self.ticks)
-      getinfo() #self.data,self.fermi,self.AE,self.ticks)
+      self.getinfo() #self.data,self.fermi,self.AE,self.ticks)
       if self.paintinfo:
         plt.plot([self.x[self.igapd],self.x[self.igapd]],[self.up[self.igapd],self.down[self.igapd]], '-',color='blue', linewidth=1.0) 
         plt.plot([self.x[self.jgapi],self.x[self.igapi]],[self.down[self.jgapi],self.down[self.jgapi]], '-',color='green', linewidth=1.0) 

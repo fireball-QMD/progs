@@ -34,6 +34,10 @@ for i in range(1,len(sys.argv)):
     bands.cristal=sys.argv[i+1]
     if bands.cristal == "fcc" or bands.cristal == "dia":
       bands.ticks=[[1,52,116,190,227,255],["W","L","G","X","W","K"]]
+    if bands.cristal == "my":
+      bands.ticks=[[1,52,82,142,202,255],["G","M","X","X","G","M"]]
+    if bands.cristal == "my2":
+      bands.ticks=[[1,107,160,255],["G","K","M","G"]]
     if bands.cristal == "bcc" :
       bands.ticks=[[1,77,132,185,255],["G","H","N","G","P"]]
     if bands.cristal == "sc" :
@@ -55,7 +59,7 @@ for i in range(1,len(sys.argv)):
   if sys.argv[i] == '-onlyinfo':
     bands.getinfo()
   if sys.argv[i] == '-paintinfo':
-    bands. printinfo=True
+    bands.printinfo=True
     bands.paintinfo=True
 
 for i in range(1,len(sys.argv)):
