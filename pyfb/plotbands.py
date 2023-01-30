@@ -19,6 +19,7 @@ def help():
   print('plotbands.py -r ek0_Si.pbesol-n-rrkjus_psl.0.1.UPF.dat -ajustargap  -info  -plot')                                 
   print('plotbands.py -r ek0_Si.pbesol-n-rrkjus_psl.0.1.UPF.dat -ajustargap  -info -paintinfo -plot')                       
   print('plotbands.py -c bcc -r ek0_As.pbe-n-van.UPF.dat -onlyinfo')                                                        
+  print('plotbands.py -c bcc -r ek0_As.pbe-n-van.UPF.dat -print_E 0')                                                        
   print('plotbands.py -c bcc -r ek0_As.pbe-n-van.UPF.dat -ajustargap -getMAX')
 
 
@@ -56,6 +57,9 @@ for i in range(1,len(sys.argv)):
     bands.max_read=float(sys.argv[i+1])
   if sys.argv[i] == '-info':
     bands.printinfo=True
+  if sys.argv[i] == '-print_E':
+    bands.print_E=True
+    bands.nE=int(sys.argv[i+1])
   if sys.argv[i] == '-onlyinfo':
     bands.getinfo()
   if sys.argv[i] == '-paintinfo':

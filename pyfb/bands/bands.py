@@ -21,6 +21,8 @@ class bands:
     self.max_read=0.00
     self.ticks=[]
     self.printinfo=False
+    self.print_E=False
+    self.nE=0
     self.up=[]
     self.x=[]
     self.down=[]
@@ -161,7 +163,22 @@ class bands:
         plt.plot([self.x[self.igapi],self.x[self.igapi]],[self.down[self.jgapi],self.up[self.igapi]], '-',color='green', linewidth=1.0) 
         plt.plot(self.x,self.up, '-',color='red', linewidth=1.2)
         plt.plot(self.x,self.down, '-',color='orange', linewidth=1.2)
-    
+
+    if self.print_E:
+      print("print Energy", self.nE )
+      xl=self.nE
+      #print(self.data[self.nE])
+      for il in range(1,len(self.data[self.nE])):
+        yl=self.data[self.nE][il]-self.fermi-self.AE
+        label = "{:.2f}".format(yl)
+        #print(xl,yl,label)
+        plt.annotate(label, # this is the text
+                 (xl,yl), # these are the coordinates to position the label
+                 textcoords="offset points", # how to position the text
+                 xytext=(2,0), # distance from text to points (x,y)
+                 ha='left', # horizontal alignment can be left, right or center
+                 size = 6)
+
     if self.cristal != "null":
       plt.xticks(self.ticks[0],self.ticks[1])
     # plt.figure(figsize=(4,3))
