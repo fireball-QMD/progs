@@ -39,6 +39,8 @@ for i in range(1,len(sys.argv)):
       bands.ticks=[[1,52,82,142,202,255],["G","M","X","X","G","M"]]
     if bands.cristal == "my2":
       bands.ticks=[[1,107,160,255],["G","K","M","G"]]
+    if bands.cristal == "my3":
+      bands.ticks=[[1,94,147,255],["G","K","M","G"]]
     if bands.cristal == "bcc" :
       bands.ticks=[[1,77,132,185,255],["G","H","N","G","P"]]
     if bands.cristal == "sc" :
