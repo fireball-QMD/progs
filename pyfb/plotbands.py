@@ -9,18 +9,19 @@ from pyfb.bands.bands import *
 bands=bands()
 
 def help():                                                                                                                 
-  print(sys.argv[0]+" -c fcc")                                                                                              
-  print('plotbands.py -c bcc -r ek.dat -save -plot')                                                                        
-  print('plotbands.py -c bcc -r ek.dat -plot')                                                                              
-  print('plotbands.py -c bcc -r ek.dat -titulo titulo -plot')                                                               
-  print('plotbands.py -c bcc -r ek0_C.pbe-van_ak.UPF.dat -plot -ajustargap')                                                
+  print(sys.argv[0]+" -c fcc")                                                                 
+  print('plotbands.py -c bcc -r ek.dat -save -plot')                                   
+  print('plotbands.py -c bcc -r ek.dat -plot')                                   
+  print('plotbands.py -c bcc -r ek.dat -titulo titulo -plot')                                  
+  print('plotbands.py -c bcc -r ek0_C.pbe-van_ak.UPF.dat -plot -ajustargap')                   
   print('plotbands.py -r ek0_Si.pbesol-n-rrkjus_psl.0.1.UPF.dat -min -10 -max 2.5 -ajustargap -plot')                       
-  print('plotbands.py -r ek0_Si.pbesol-n-rrkjus_psl.0.1.UPF.dat -min -10 -max 2.5 -info -ajustargap -plot')                 
-  print('plotbands.py -r ek0_Si.pbesol-n-rrkjus_psl.0.1.UPF.dat -ajustargap  -info  -plot')                                 
+  print('plotbands.py -r ek0_Si.pbesol-n-rrkjus_psl.0.1.UPF.dat -min -10 -max 2.5 -info -ajustargap -plot')            
+  print('plotbands.py -r ek0_Si.pbesol-n-rrkjus_psl.0.1.UPF.dat -ajustargap  -info  -plot') 
   print('plotbands.py -r ek0_Si.pbesol-n-rrkjus_psl.0.1.UPF.dat -ajustargap  -info -paintinfo -plot')                       
-  print('plotbands.py -c bcc -r ek0_As.pbe-n-van.UPF.dat -onlyinfo')                                                        
-  print('plotbands.py -c bcc -r ek0_As.pbe-n-van.UPF.dat -print_E 0')                                                        
-  print('plotbands.py -c bcc -r ek0_As.pbe-n-van.UPF.dat -ajustargap -getMAX')
+  print('plotbands.py -c bcc -r ek0_As.pbe-n-van.UPF.dat -onlyinfo')                                  
+  print('plotbands.py -c bcc -r ek0_As.pbe-n-van.UPF.dat -print_label_e 0')
+  print('plotbands.py -c bcc -r ek.dat -paintnei 160 -paintnei 162 -charge_dens dens_001.dat -charge_dens dens_002.dat')
+  print('plotbands.py -c bcc -r ek.dat -ajustargap -getMAX')
 
 
 if len(sys.argv) == 1 :
@@ -45,6 +46,12 @@ for i in range(1,len(sys.argv)):
       bands.ticks=[[1,77,132,185,255],["G","H","N","G","P"]]
     if bands.cristal == "sc" :
       bands.ticks=[[1,86,136,184,255],["R","G","X","M","G"]]
+
+  if sys.argv[i] == '-paint_tick':
+      bands.cristal="not null"
+      bands.ticks[0].append(int(sys.argv[i+1])) 
+      bands.ticks[1].append(str(sys.argv[i+2])) 
+
   if sys.argv[i] == '-r' :
     bands.archivo=sys.argv[i+1]
     bands.data=loadtxt(bands.archivo) 
@@ -59,18 +66,25 @@ for i in range(1,len(sys.argv)):
     bands.max_read=float(sys.argv[i+1])
   if sys.argv[i] == '-info':
     bands.printinfo=True
-  if sys.argv[i] == '-print_E':
-    bands.print_E=True
-    bands.nE=int(sys.argv[i+1])
+  if sys.argv[i] == '-print_label_e':
+    bands.label_e.append(int(sys.argv[i+1]))
   if sys.argv[i] == '-onlyinfo':
     bands.getinfo()
   if sys.argv[i] == '-paintinfo':
     bands.printinfo=True
     bands.paintinfo=True
 
+  if sys.argv[i] == '-charge_dens':
+    bands.charge_dens=True
+    bands.densfile.append(sys.argv[i+1])
+    bands.densfiletitle.append(sys.argv[i+2])
+
+  if sys.argv[i] == '-paintnei':
+    bands.ei.append(int(sys.argv[i+1]))
+
 for i in range(1,len(sys.argv)):
   if sys.argv[i] == '-plot' :
-   bands. plot()
+   bands.plot()
   if sys.argv[i] == '-save':
     bands.savefile=True
     bands.plot()

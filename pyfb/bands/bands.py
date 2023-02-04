@@ -20,9 +20,16 @@ class bands:
     self.min_read=0.00
     self.max_read=0.00
     self.ticks=[]
+    aux1=[]
+    aux2=[]
+    self.ticks.append(aux1)
+    self.ticks.append(aux2)
     self.printinfo=False
-    self.print_E=False
-    self.nE=0
+    self.label_e=[] #pintar label de energía
+    self.ei=[] #pintar bandas
+    self.charge_dens=False
+    self.densfile=[]
+    self.densfiletitle=[]
     self.up=[]
     self.x=[]
     self.down=[]
@@ -109,7 +116,22 @@ class bands:
   #  print("Indirect gap = ",gap)
     self.salida=self.salida+" -indirect = "+str(gap)
     print(self.salida)
-  
+ 
+  def getCarga(self,archivo,iemin,iemax):
+    datachar=np.loadtxt(archivo)
+    qmin=0.00
+    qmax=0.00
+    first=True
+    for i in range(len(datachar)):
+        if datachar[i][0] > iemin and datachar[i][0] < iemax:  
+            #print(datachar[i][0],datachar[i][len(datachar[i])-1])
+            qmax=datachar[i][len(datachar[i])-1]
+            if first:
+                first=False
+                qmin=qmax
+    return float(qmax-qmin)
+
+ 
   def ajustar(self):
     self.AE
     self.y_max
@@ -164,22 +186,58 @@ class bands:
         plt.plot(self.x,self.up, '-',color='red', linewidth=1.2)
         plt.plot(self.x,self.down, '-',color='orange', linewidth=1.2)
 
-    if self.print_E:
-      print("print Energy", self.nE )
-      xl=self.nE
-      #print(self.data[self.nE])
-      for il in range(1,len(self.data[self.nE])):
-        yl=self.data[self.nE][il]-self.fermi-self.AE
-        label = "{:.2f}".format(yl)
-        #print(xl,yl,label)
-        plt.annotate(label, # this is the text
+    if len(self.label_e) > 0:
+      for inE in self.label_e:
+        print("print Energy", inE )
+        xl=inE
+        #print(self.data[self.nE])
+        for il in range(1,len(self.data[inE])):
+          yl=self.data[inE][il]-self.fermi-self.AE
+          label = "{:.2f}".format(yl)
+          #print(xl,yl,label)
+          plt.annotate(label, # this is the text
                  (xl,yl), # these are the coordinates to position the label
                  textcoords="offset points", # how to position the text
                  xytext=(2,0), # distance from text to points (x,y)
                  ha='left', # horizontal alignment can be left, right or center
                  size = 6)
-
+    if len(self.ei)>0:
+      ie=self.ei[0]
+      print(self.ei)
+      iemax=self.data[0][ie]-self.fermi-self.AE
+      iemin=self.data[0][ie]-self.fermi-self.AE
+      for ie in self.ei:
+        plt.plot(self.data[:,0], self.data[:,ie]-self.fermi-self.AE , '-',color='blue', linewidth=1.0)
+        for j in range(len(self.data[:,ie])):
+          if iemax < self.data[j,ie]-self.fermi-self.AE:
+            iemax=self.data[j][ie]-self.fermi-self.AE
+          if iemin > self.data[j,ie]-self.fermi-self.AE:
+            iemin=self.data[j][ie]-self.fermi-self.AE
+      plt.axhline(y=iemin,color='grey', linewidth=0.50)
+      plt.axhline(y=iemax,color='grey', linewidth=0.50)
+      print("iemin = "+str(iemin))
+      print("iemax = "+str(iemax))
+   
+      if self.charge_dens:
+         med=(self.y_min+self.y_max)/2
+         medh=(self.y_max-self.y_min)
+         kk=-medh/24
+         for c in self.densfile:
+           e1=iemin+self.fermi+self.AE
+           e2=iemax+self.fermi+self.AE 
+           titulo=self.densfiletitle[self.densfile.index(c)]
+           print(titulo,c,e1,e2,self.getCarga(c,e1,e2))
+           label = titulo+' '+"{:.2f}".format(self.getCarga(c,e1,e2))
+           print(label,((self.y_min+self.y_max)/2+kk))
+           plt.annotate(label, # this is the text
+                 (150,med+medh*2/4+kk), 
+                 textcoords="offset points", # how to position the text
+                 xytext=(2,0), # distance from text to points (x,y)
+                 ha='left', # horizontal alignment can be left, right or center
+                 size = 8)
+           kk-=medh/24 
     if self.cristal != "null":
+      print(self.ticks)
       plt.xticks(self.ticks[0],self.ticks[1])
     # plt.figure(figsize=(4,3))
     plt.xlim(left=0)
