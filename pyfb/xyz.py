@@ -101,8 +101,13 @@ for i in range(1,len(sys.argv)):
       din.get(sys.argv[i],col)
     acumular_salida=True
 
-  if sys.argv[i] == '-d' or sys.argv[i] == '-D' or sys.argv[i] == '-dx' or sys.argv[i] == '-dy' or sys.argv[i] == '-dz':
+  if sys.argv[i] == '-d' or sys.argv[i] == '-D':
     col=[int(sys.argv[i+1]),int(sys.argv[i+2])]
+    din.get(sys.argv[i],col)
+    acumular_salida=True
+
+  if sys.argv[i] == '-dx' or sys.argv[i] == '-dy' or sys.argv[i] == '-dz':
+    col=[int(sys.argv[i+1]),float(sys.argv[i+2])]
     din.get(sys.argv[i],col)
     acumular_salida=True
 
