@@ -245,7 +245,7 @@ class bands:
     print("self.y_max =",self.y_max)
     plt.ylim(bottom=self.y_min)
     plt.xlim(left=0)
-    plt.xlim(right=len(self.data[:,0]))
+    plt.xlim(right=len(self.data[:,0])-1)
     if self.titulo != "null":
       plt.title(self.titulo)
     if self.savefile:
