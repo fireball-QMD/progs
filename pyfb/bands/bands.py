@@ -240,14 +240,12 @@ class bands:
       print(self.ticks)
       plt.xticks(self.ticks[0],self.ticks[1])
     # plt.figure(figsize=(4,3))
-    plt.xlim(left=0)
-    plt.xlim(right=255)
     plt.ylim(top=self.y_max)
     print("self.y_min =",self.y_min)
     print("self.y_max =",self.y_max)
     plt.ylim(bottom=self.y_min)
+    plt.xlim(left=0)
     plt.xlim(right=len(self.data[:,0]))
-    plt.xlim(left=1)
     if self.titulo != "null":
       plt.title(self.titulo)
     if self.savefile:
