@@ -1528,6 +1528,7 @@ subroutine write_dipole (estring)
       dip_y=0.0d0
       dip_z=0.0d0
 
+      open( unit = 800, file = 'CHARGES'//trim(estring), status ='unknown', position = 'append')
       do iatom = 1, natoms
          Qtot=-Q0_TOT(iatom)+dq_DP(iatom)
          in1 = imass(iatom)
@@ -1535,14 +1536,16 @@ subroutine write_dipole (estring)
              Qtot = Qtot+Qout(imu,iatom)
          end do
          write(*,*) 'Q_new (',iatom,') =',-Qtot
-            
+         
+                 
+         write(800,'(2x, i4,2x,f10.6)') iatom, Q0_TOT(iatom)+Qtot
          !write(*,*) 'ratom is ',ratom(1,iatom),ratom(2,iatom),ratom(3,iatom)
          dip_x = dip_x+Qtot*ratom(1,iatom)
          dip_y = dip_y+Qtot*ratom(2,iatom)
          dip_z = dip_z+Qtot*ratom(3,iatom)
 
       enddo !end do iatom = 1,natoms
-
+      close(800)
 
         dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )   
 
