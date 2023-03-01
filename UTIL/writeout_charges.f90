@@ -572,7 +572,6 @@ write(*,* ) 'MDC writeout_charges'
             intra_dip(2,iatom) = dip_y + res_dip(2,iatom)!/Debye
             intra_dip(3,iatom) = dip_z + res_dip(3,iatom)!/Debye
             dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
-           write(667,445) symbol(iatom), Qtot1, Qtot2, dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
       end do !end do iatom = 1,natoms
 
       dq_DP = 0.0d0
