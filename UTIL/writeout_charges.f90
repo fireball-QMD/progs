@@ -685,7 +685,7 @@ write(*,* ) 'MDC writeout_charges'
       dip_y=0.0d0
       dip_z=0.0d0
 
-      open( unit = 800, file = 'CHARGES'//trim(estring), status ='unknown', position = 'append')
+      open( unit = 800, file = 'CHARGES_MUDINT', status ='unknown', position = 'append')
       do iatom = 1, natoms
          Qtot=-Q0_TOT(iatom)+dq_DP(iatom)
          in1 = imass(iatom)
