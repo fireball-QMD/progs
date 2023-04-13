@@ -51,6 +51,7 @@
         use options 
         use scf
         use energy
+        use outputs
         
         implicit none
  
@@ -113,7 +114,8 @@
           if (itheory .eq. 0) exit
 
           if (scf_achieved) then
-            call compute_all_charges  (ifixcharge, icluster)
+!            call writeout_charges_KS (ifixcharge, icluster)
+!            call writeout_charges_KS (ifixcharge, iqout, icluster, iwrtefermi, tempfe,ebs)
             write (*,*) '  '
             write (*,*) ' ------- THE TOTAL BAND STRUCTURE ENERGY ------- '
             write (*,*) '  '

@@ -102,12 +102,6 @@
         write (*,*) ' Assemble density'
         call assemble_KS_den (icluster)
 
-! save density matrix
-        call writeout_charges_KS (natoms, ifixcharge, iqout, iwrtcharges,     &
-     &                           iwrtdensity, basisfile, symbol,1)
-
-
-
 ! jel-grid
           if (iwrtewf .eq. 1) then
             write (*,*) ' Call ewf2mesh subroutine. '
@@ -223,6 +217,12 @@
          end if
 !END OF DOSNG
 
+
+          if (scf_achieved) then
+            if (iwrtcharges .gt. 0) then            
+              call writeout_charges_KS (ifixcharge, iqout, icluster, iwrtefermi, tempfe,ebs)
+            endif
+          endif
 
         deallocate (eigen_k)
 

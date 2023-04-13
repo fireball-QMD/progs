@@ -106,7 +106,7 @@
          write (*,*) ' ----- WARNING ----'
          write (*,*) ' KS theory requires Mulliken charges'
          write (*,*) ' Mulliken charges switched on'
-         iqout = 2
+         !iqout = 2
         endif
          
         if (ixczw .eq. 1) then
