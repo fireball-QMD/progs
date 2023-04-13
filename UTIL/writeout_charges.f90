@@ -91,10 +91,10 @@ subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, iwrtdensity
   integer jatom
   integer mbeta
   real    Qtot, Qtot1, Qtot2
-  real    dip_x, dipQout_x, dipTot_x, dipProy_x, dipIntra_x, dip_res_x, dipQin_x
-  real    dip_y, dipQout_y, dipTot_y, dipProy_y, dipIntra_y, dip_res_y, dipQin_y
-  real    dip_z, dipQout_z, dipTot_z, dipProy_z, dipIntra_z, dip_res_z, dipQin_z
-  real    dip_tot, dip_proy, dipQin_tot, dipTot_tot, dipIntra_tot, dipQout_tot, dip_res_tot
+  real    dip_x, dipQout_x, dipTot_x, dipProy_x, dipIntra_x, dip_res_x, dipQin_x, dipRes_x
+  real    dip_y, dipQout_y, dipTot_y, dipProy_y, dipIntra_y, dip_res_y, dipQin_y, dipRes_y
+  real    dip_z, dipQout_z, dipTot_z, dipProy_z, dipIntra_z, dip_res_z, dipQin_z, dipRes_z
+  real    dip_tot, dip_proy, dipQin_tot, dipTot_tot, dipIntra_tot, dipQout_tot, dip_res_tot, dipRes_tot
   real, dimension(3) :: r1,r2,Rbc,u21
   real, dimension(3) :: rmedio, raux
   real    w_suma
@@ -395,11 +395,15 @@ subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, iwrtdensity
           end do !end do imu
         end do !end ineigh = 1,natoms
         dip_res_tot = sqrt (dip_res_x**2 + dip_res_y**2 + dip_res_z**2 )
+        dipRes_x = dipRes_x + dip_res_x
+        dipRes_y = dipRes_y + dip_res_y
+        dipRes_z = dipRes_z + dip_res_z
         res_dip(1,iatom) = dip_res_x
         res_dip(2,iatom) = dip_res_y
         res_dip(3,iatom) = dip_res_z
       end do ! end do iatom = 1,natoms
- 
+      dipRes_tot = sqrt (dipRes_x**2 + dipRes_y**2 + dipRes_z**2 ) 
+
       do iatom = 1, natoms
         dip_x = 0.0d0
         dip_y = 0.0d0
@@ -479,7 +483,7 @@ subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, iwrtdensity
         enddo
         v_bwrr = transpose(vt_bwrr)
         ut_bwrr = transpose(u_bwrr)
-        !bwrr_inv=matmul(v_bwrr,zero_bwrr)
+        bwrr_inv=matmul(v_bwrr,zero_bwrr)
         bwrr_inv=matmul(bwrr_inv,ut_bwrr)
         intra_dip_aux(1,1)=intra_dip(1,iatom)
         intra_dip_aux(2,1)=intra_dip(2,iatom)
@@ -530,13 +534,14 @@ subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, iwrtdensity
       dipQout_y   = dip_y
       dipQout_z   = dip_z
       dipQout_tot = dip_tot
- 
+
       open( unit = 667, file = 'Charges_and_Dipoles', status = 'unknown')
       write(667,*)   '+++++++++++++++++++ N E W   S T E P ++++++++++++++++++' 
-      write(667,444) dipTot_x/Debye, dipTot_y/Debye, dipTot_z/Debye, dipTot_tot/Debye
-      write(667,444) dipQin_x/Debye, dipQin_y/Debye, dipQin_z/Debye, dipQin_tot/Debye
-      write(667,444) dipQout_x/Debye, dipQout_y/Debye, dipQout_z/Debye, dipQout_tot/Debye
-      write(667,444) dipIntra_x/Debye, dipIntra_y/Debye, dipIntra_z/Debye, dipIntra_tot/Debye
+      write(667,444) 'dip_TOT',dipTot_x/Debye, dipTot_y/Debye, dipTot_z/Debye, dipTot_tot/Debye
+      write(667,444) 'dip_Qin',dipQin_x/Debye, dipQin_y/Debye, dipQin_z/Debye, dipQin_tot/Debye
+      write(667,444) 'dip_Qout',dipQout_x/Debye, dipQout_y/Debye, dipQout_z/Debye, dipQout_tot/Debye
+      write(667,444) 'dip_Int', dipIntra_x/Debye, dipIntra_y/Debye, dipIntra_z/Debye, dipIntra_tot/Debye
+      write(667,444) 'dip_res',dipRes_x/Debye, dipRes_y/Debye,dipRes_z/Debye, dipRes_tot/Debye
       close(667)
     end if !end iwrtdipole .eq. 2
   end if !end if (iwrtdipole .gt. 0)
@@ -556,7 +561,7 @@ subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, iwrtdensity
 503     format (3x, i5, 7x, a2, 4x, f10.4)
 600     format (2x, i5, 2x, a40, 2x, i2)
 601     format (2x, 10f14.8)
-444     format (4f10.4)
+444     format (a7,4f10.4)
 445     format (a2,6f10.4)
 
         return
