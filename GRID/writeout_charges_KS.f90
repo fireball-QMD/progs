@@ -1065,8 +1065,11 @@ subroutine write_dipole ()
 ! W R I T E   T H E   D I P O L E   (For testing purposes)
 ! ****************************************************************************
       allocate (Q0_TOT(natoms))
+      if ( allocated (Q7)) deallocate (Q7)
+      allocate (Q7(natoms))
       do iatom = 1, natoms
         Q0_TOT(iatom) = 0
+        Q7(iatom) = 0
         in1 = imass(iatom)
         do issh = 1, nssh(in1)
           Q0_TOT(iatom) = Q0_TOT(iatom) + Qneutral(issh,in1)
@@ -1502,8 +1505,8 @@ subroutine write_dipole ()
              Qtot = Qtot+Qout(imu,iatom)
          end do
          write(*,*) 'Q_new (',iatom,') =',-Qtot
-         
-                 
+         Q7(iatom)=-Qtot 
+         write(*,*)'**********',Q7(iatom)
          write(800,'(2x, i4,2x,f10.6)') iatom, -Qtot
          !write(*,*) 'ratom is ',ratom(1,iatom),ratom(2,iatom),ratom(3,iatom)
          dip_x = dip_x+Qtot*ratom(1,iatom)
@@ -1533,6 +1536,7 @@ subroutine write_dipole ()
 
      
       deallocate(Q0_TOT)
+      !deallocate(Q7)
       
 444     format (a7,4f10.4)
 446     format (4f10.4)

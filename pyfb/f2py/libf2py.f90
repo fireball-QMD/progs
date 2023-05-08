@@ -50,6 +50,17 @@ subroutine f2py_print_charges()
 601     format (2x, 10f14.8)
 end
 
+subroutine f2py_print_pcharges()
+  use dimensions
+  use interactions
+  use charges
+  use configuration
+  write(*,*) 'natoms = ',natoms
+  do iatom = 1, natoms
+    write(*,'(2x, i4,2x,f10.6)') iatom,Q7(iatom)
+  end do
+end
+
 
 character(140) function f2py_charge(iaux)
   use dimensions
@@ -69,10 +80,10 @@ subroutine set_icluster(iclusteraux)
   icluster=iclusteraux
 end
 
-subroutine set_iquot(iquotaux)
+subroutine set_iqout(iqoutaux)
   use options
-  integer,intent(in)::iquotaux
-  iquot=iquotaux
+  integer,intent(in)::iqoutaux
+  iqout=iqoutaux
 end
 
 subroutine set_iquench(iquenchaux)
@@ -91,6 +102,45 @@ subroutine set_nstepf(instepfaux)
   integer,intent(in)::instepfaux
   nstepf=instepfaux
 end
+
+
+subroutine set_idipole(inidipoleaux)
+  use options
+  integer,intent(in)::inidipoleaux
+  idipole=inidipoleaux
+end
+
+subroutine set_iwrtcharges(iwrtchargesaux)
+  use outputs
+  integer,intent(in)::iwrtchargesaux
+  iwrtcharges=iwrtchargesaux
+end
+
+subroutine set_iwrtdipole(iwrtdipoleaux)
+  use outputs
+  integer,intent(in)::iwrtdipoleaux
+  iwrtdipole=iwrtdipoleaux
+end
+
+
+subroutine set_iks(iniksaux)
+  use options
+  integer,intent(in)::iniksaux
+  iks=iniksaux
+end
+
+subroutine set_imcweda(inimcwedaaux)
+  use options
+  integer,intent(in)::inimcwedaaux
+  imcweda=inimcwedaaux
+end
+
+subroutine set_idogs(inidogsaux)
+  use options
+  integer,intent(in)::inidogsaux
+  imcweda=indogsaux
+end
+
 
 
 subroutine set_iwrtxyz(iwrtxyzaux)
@@ -1319,9 +1369,11 @@ if ( allocated (Qinmixer)) deallocate (Qinmixer )
 if ( allocated (QLowdin_TOT )) deallocate (QLowdin_TOT )
 if ( allocated (QMulliken_TOT )) deallocate (QMulliken_TOT )
 if ( allocated (Qout)) deallocate (Qout )
+if ( allocated (Q7)) deallocate (Q7 )
 if ( allocated (Qoutmixer)) deallocate (Qoutmixer )
 if ( allocated (dq)) deallocate (dq )
 if ( allocated (Q0_TOT)) deallocate (Q0_TOT )
+if ( allocated (Q7)) deallocate (Q7)
 if ( allocated (Qin_es)) deallocate (Qin_es )
 if ( allocated (QLowdin_TOT_es )) deallocate (QLowdin_TOT_es )
 if ( allocated (Qout_es)) deallocate (Qout_es )
@@ -1332,5 +1384,43 @@ if ( allocated (delX )) deallocate (delX)
 if ( allocated (delF )) deallocate (delF)
 if ( allocated (r2_sav )) deallocate (r2_sav)
 !if ( allocated (atompos)) deallocate (atompos)
+
+if ( allocated (mesh_wf )) deallocate (mesh_wf )
+if ( allocated (drr_wf )) deallocate (drr_wf )
+if ( allocated (rmax_wf )) deallocate (rmax_wf )
+if ( allocated (rr_wf )) deallocate (rr_wf )
+if ( allocated (wf_spline )) deallocate (wf_spline )
+if ( allocated (wf )) deallocate (wf )
+
+! vneutral part
+if ( allocated (mesh_na )) deallocate (mesh_na )
+if ( allocated (rmax_na )) deallocate (rmax_na )
+if ( allocated (drr_na )) deallocate (drr_na )
+if ( allocated (rr_na )) deallocate (rr_na )
+if ( allocated (vnna_spline )) deallocate ( vnna_spline )
+if ( allocated (vnna )) deallocate (vnna )
+
+if ( allocated (e2r )) deallocate (e2r )
+if ( allocated (am2rc)) deallocate (am2rc)
+if ( allocated (ram2rc)) deallocate (ram2rc)
+if ( allocated (ratom2g)) deallocate (ratom2g)
+if ( allocated (e2n )) deallocate (e2n )
+if ( allocated (n2e)) deallocate (n2e)
+if ( allocated (vnaG )) deallocate (vnaG )
+if ( allocated (drhoG )) deallocate (drhoG )
+if ( allocated (rhoG0 )) deallocate (rhoG0 )
+if ( allocated (vcaG )) deallocate (vcaG )
+if ( allocated (vxcG )) deallocate (vxcG )
+
+if ( allocated ( rho_in )) deallocate ( rho_in ) 
+if ( allocated ( rho_out )) deallocate ( rho_out ) 
+if ( allocated ( mwe )) deallocate ( mwe ) 
+if ( allocated ( drwe )) deallocate ( drwe ) 
+if ( allocated ( mwe )) deallocate ( mwe ) 
+if ( allocated ( drwe )) deallocate ( drwe ) 
+if ( allocated ( dngcof )) deallocate ( dngcof ) 
+if ( allocated ( E_KS )) deallocate ( E_KS ) 
+if ( allocated ( DOS_total )) deallocate ( DOS_total ) 
+
 
 end
