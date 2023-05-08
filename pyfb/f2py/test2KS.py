@@ -9,11 +9,7 @@ from pyfb.geometry.dinamic import *
 import numpy as np 
 
 #Load Fdata
-fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/relax/Fdata_HC_minimal"
-if not exists(fdatalocation):
-  file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
-  file.extractall(os.environ["FIREBALLHOME"]+"/TESTS/relax/")
-  file.close()
+fdatalocation="/home/dani/Fdata_HCNOS"
 fb.f2py_initbasics(fdatalocation)
 
 #Load bas
@@ -27,6 +23,9 @@ Zin=np.array(din.step[0].getZarray())
 fb.f2py_getbas(Zin,pos) 
 
 #Load options
+#PARA que funcione poner en READFILES/readparam.f90
+#idipole = 1
+#icluster = 1
 fb.set_icluster(1)
 fb.set_iqout(7)
 fb.set_iquench(-1)

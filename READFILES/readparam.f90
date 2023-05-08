@@ -122,7 +122,7 @@
         iqout = 1
         qstate = 0.0d0
         iquench = -1
-        icluster = 0
+        icluster = 1
         iensemble = 0
         ifixcharge = 0
         ifixneigh = 0
@@ -202,7 +202,7 @@
         dftd3_rs18  = 4.2359
         dftd3_alp = 14.0d0 
 ! Long range dipole
-        idipole = 0
+        idipole = 1
 ! Intra-atomic dipolar potential
         V_intra_dip = 0
 
