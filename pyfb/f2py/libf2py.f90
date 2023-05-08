@@ -61,6 +61,16 @@ subroutine f2py_print_pcharges()
   end do
 end
 
+character(140) function f2py_pcharge(iaux)
+  use dimensions
+  use interactions
+  use charges
+  use configuration
+  integer,intent(in)::iaux 
+  write (f2py_pcharge,'(f14.8)') Q7(iaux)
+  return
+end
+
 
 character(140) function f2py_charge(iaux)
   use dimensions
@@ -69,8 +79,7 @@ character(140) function f2py_charge(iaux)
   use configuration
   integer,intent(in)::iaux 
   in1 = imass(iaux)
-  write (f2py_charge,601) (Qin(issh,iaux), issh = 1, nssh(in1))
-601     format (2x, 10f14.8)
+  write (f2py_charge,'(2x, 10f14.8)') (Qin(issh,iaux), issh = 1, nssh(in1))
   return
 end
 

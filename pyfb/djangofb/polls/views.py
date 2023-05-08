@@ -26,6 +26,7 @@ if BASE_minima:
   fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/relax/Fdata_HC_minimal"
 else:
   fdatalocation="/home/dani/Fdata_HCNOS"
+  fdatalocation="/home/dani/Fdata_HC"
 
 if not exists(fdatalocation):
   file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
@@ -46,19 +47,31 @@ Zin=np.array(din.step[0].getZarray())
 #fb.f2py_nucz(Zin) 
 fb.f2py_getbas(Zin,pos) 
 
+
 #Load options
+#PARA que funcione poner en READFILES/readparam.f90
+#idipole = 1
+#icluster = 1
 fb.set_icluster(1)
-fb.set_iquot(4)
+fb.set_iqout(7)
 fb.set_iquench(-1)
 fb.set_dt(0.5)
 fb.set_nstepf(1)
 fb.set_iwrtxyz(1)
+fb.set_idipole(1)
+fb.set_iks(1)
+fb.set_imcweda(0)
+fb.set_idogs(0)
+fb.set_verbosity(10)
+fb.set_iwrtcharges(1)
+fb.set_iwrtdipole(0)
 
 #Run fireball 
 fb.f2py_init()
 ETOT=fb.f2py_getenergy()
 print(ETOT)
-fb.f2py_print_charges()
+fb.f2py_print_pcharges()
+#fb.f2py_print_charges()
 
 atomo_infodat=[]
 carga_infodat=[]
@@ -141,24 +154,37 @@ def getPositions(request):
         fb.f2py_getbas(Zin,pos)
         fb.f2py_init()
         ETOT=fb.f2py_getenergy()
-
         din.step[0].line2=('')
+        fb.f2py_run()
+
         #din.step[0].line2=('ETOT = {0:12.6f}  eV '.format(ETOT))
-        for i in range(1,din.step[0].getNatoms()+1):
-          line=fb.f2py_charge(i).split()
-          charge=0
-          for j in range(len(line)):
-            din.step[0].atom[i-1].q.append(line[j])
-            charge=charge+float(line[j])
-          din.step[0].atom[i-1].Q=charge
-        # peticion=din.step[0].print_charges_to_string()
+
+        #cargas por shell
+        #for i in range(1,din.step[0].getNatoms()+1):
+        #  line=fb.f2py_charge(i).split()
+        #  charge=0
+        #  for j in range(len(line)):
+        #    din.step[0].atom[i-1].q.append(line[j])
+        #    charge=charge+float(line[j])
+        #  din.step[0].atom[i-1].Q=charge
+       
+       
 
         print(peticion)
         aux=pybel.readstring("xyz",peticion)
         mol2=aux.write("mol2")
-        for i in range(len(aux.atoms)):
-          q=carga_infodat[atomo_infodat.index(aux.atoms[i].OBAtom.GetAtomicNum())]
-          aux.atoms[i].OBAtom.SetPartialCharge(q-din.step[0].atom[i].Q)
+        
+        #cargas por shell las pasamos a parciales
+        #for i in range(len(aux.atoms)):
+        #  q=carga_infodat[atomo_infodat.index(aux.atoms[i].OBAtom.GetAtomicNum())]
+        #  aux.atoms[i].OBAtom.SetPartialCharge(q-din.step[0].atom[i].Q)
+
+        #cargas parciales por atomo las ponemos directamente
+        for i in range(1,len(aux.atoms)+1):
+          #print('pcharge : ',i,fb.f2py_pcharge(i))
+          aux.atoms[i-1].OBAtom.SetPartialCharge(float(fb.f2py_pcharge(i)))
+
+
         mol2=aux.write("mol2")
         peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
         pdb=aux.write("pdb")
