@@ -26,7 +26,7 @@ if BASE_minima:
   fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/relax/Fdata_HC_minimal"
 else:
   fdatalocation="/home/dani/Fdata_HCNOS"
-  fdatalocation="/home/dani/Fdata_HC"
+#  fdatalocation="/home/dani/Fdata_HC"
 
 if not exists(fdatalocation):
   file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
