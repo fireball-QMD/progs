@@ -106,17 +106,17 @@ subroutine set_dt(idtaux)
   dt=idtaux
 end
 
-subroutine set_nstepf(instepfaux)
+subroutine set_nstepf(stepfaux)
   use md
-  integer,intent(in)::instepfaux
-  nstepf=instepfaux
+  integer,intent(in)::stepfaux
+  nstepf=stepfaux
 end
 
 
-subroutine set_idipole(inidipoleaux)
+subroutine set_idipole(idipoleaux)
   use options
-  integer,intent(in)::inidipoleaux
-  idipole=inidipoleaux
+  integer,intent(in)::idipoleaux
+  idipole=idipoleaux
 end
 
 subroutine set_iwrtcharges(iwrtchargesaux)
@@ -138,16 +138,16 @@ subroutine set_iks(iniksaux)
   iks=iniksaux
 end
 
-subroutine set_imcweda(inimcwedaaux)
+subroutine set_imcweda(imcwedaaux)
   use options
-  integer,intent(in)::inimcwedaaux
-  imcweda=inimcwedaaux
+  integer,intent(in)::imcwedaaux
+  imcweda=imcwedaaux
 end
 
-subroutine set_idogs(inidogsaux)
+subroutine set_idogs(idogsaux)
   use options
-  integer,intent(in)::inidogsaux
-  imcweda=indogsaux
+  integer,intent(in)::idogsaux
+  imcweda=dogsaux
 end
 
 
@@ -158,17 +158,17 @@ subroutine set_iwrtxyz(iwrtxyzaux)
   iwrtxyz=iwrtxyzaux
 end
 
-subroutine set_verbosity(aux)
+subroutine set_verbosity(verbosityaux)
   use options
-  integer,intent(in)::aux
-  verbosity=aux
+  integer,intent(in)::verbosityaux
+  verbosity=verbosityaux
   end
 
-subroutine f2py_natoms(aux)
+subroutine f2py_natoms(natomsaux)
   use configuration
   implicit none
-  integer, intent(inout) :: aux
-  natoms = aux
+  integer, intent(inout) :: natomsaux
+  natoms = natomsaux
 end
 
 
@@ -265,8 +265,14 @@ subroutine f2py_ratom(zaux,raux)
 end
 
 
-
 subroutine f2py_initbasics(f2py_fdataLocation)
+  character (len = 200),intent(in) ::  f2py_fdataLocation
+  call f2py_initbasics_opt(f2py_fdataLocation,0)
+end
+
+
+
+subroutine f2py_initbasics_opt(f2py_fdataLocation,idipoleaux)
    ! es como initbasics (), pero sin cargar posiciones de atomos
    use options
    use configuration
@@ -287,6 +293,7 @@ subroutine f2py_initbasics(f2py_fdataLocation)
 
    implicit none
    character (len = 200),intent(in) ::  f2py_fdataLocation
+   integer,intent(in)::idipoleaux
    integer iatom
    integer in1
    integer icount
@@ -308,7 +315,9 @@ subroutine f2py_initbasics(f2py_fdataLocation)
    call initconstants (sigma, sigmaold, scf_achieved)
    call diagnostics (ioff2c, ioff3c, itestrange, testrange)
    call readparam ()
-   !pero fireball.in no existe
+   !pero fireball.in no existe, ponemos opt
+   idipole=idipoleaux
+
    fdatalocation = f2py_fdatalocation
    !cambiamos readinfo para cargar Fdata completa sin necesidad de leer 
    !las posiciones en el bas

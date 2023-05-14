@@ -16,7 +16,11 @@ if not exists(fdatalocation):
   file.extractall(os.environ["FIREBALLHOME"]+"/TESTS/relax/")
   file.close()
 
-fb.f2py_initbasics(fdatalocation)
+#fdatalocation="/home/dani/Fdata_HC/"
+
+idipole=0
+
+fb.f2py_initbasics_opt(fdatalocation,idipole)
 
 
 #Load options
@@ -29,7 +33,7 @@ fb.set_iquench(-1)
 fb.set_dt(0.5)
 fb.set_nstepf(1)
 fb.set_iwrtxyz(1)
-fb.set_idipole(0)
+fb.set_idipole(idipole)
 fb.set_iks(1)
 fb.set_imcweda(0)
 fb.set_idogs(0)
@@ -38,10 +42,15 @@ fb.set_iwrtcharges(1)
 fb.set_iwrtdipole(0)
 
 
+def delauxfiles():
+  for i in ['CHARGES','ac.dat','answer.bas','Charges_and_Dipoles','dipole_Tot','dipole_Tot_proy','restart.xyz','xv.dat','dipole_Qout']:
+    if exists(i):
+      os.remove(i)
+  
+
 def runFB(pos):
+  delauxfiles()
   #Load new positions
-  if exists("CHARGES"):
-    os.remove("CHARGES")
   din=dinamic()
   din.loadbas(pos)
   pos=din.step[0].getnumpy_pos()
