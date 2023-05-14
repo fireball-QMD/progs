@@ -11,22 +11,16 @@ import numpy as np
 
 #Load Fdata
 fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/relax/Fdata_HC_minimal"
+#fdatalocation="/home/dani/Fdata_HC/"
 if not exists(fdatalocation):
   file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
   file.extractall(os.environ["FIREBALLHOME"]+"/TESTS/relax/")
   file.close()
-
-#fdatalocation="/home/dani/Fdata_HC/"
-
 idipole=0
-
 fb.f2py_initbasics_opt(fdatalocation,idipole)
 
 
 #Load options
-#PARA que funcione poner en READFILES/readparam.f90
-#idipole = 1
-#icluster = 1
 fb.set_icluster(1)
 fb.set_iqout(7)
 fb.set_iquench(-1)
@@ -43,7 +37,7 @@ fb.set_iwrtdipole(0)
 
 
 def delauxfiles():
-  for i in ['CHARGES','ac.dat','answer.bas','Charges_and_Dipoles','dipole_Tot','dipole_Tot_proy','restart.xyz','xv.dat','dipole_Qout']:
+  for i in ['CHARGES','ac.dat','answer.bas','Charges_and_Dipoles','dipole_Tot','dipole_Tot_proy','restart.xyz','xv.dat','dipole_Qout','PCHARGES']:
     if exists(i):
       os.remove(i)
   

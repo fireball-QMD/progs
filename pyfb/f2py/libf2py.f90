@@ -83,92 +83,92 @@ character(140) function f2py_charge(iaux)
   return
 end
 
-subroutine set_icluster(iclusteraux)
+subroutine set_icluster(iaux)
   use options
-  integer,intent(in)::iclusteraux
-  icluster=iclusteraux
+  integer,intent(in)::iaux
+  icluster=iaux
 end
 
-subroutine set_iqout(iqoutaux)
+subroutine set_iqout(iaux)
   use options
-  integer,intent(in)::iqoutaux
-  iqout=iqoutaux
+  integer,intent(in)::iaux
+  iqout=iaux
 end
 
-subroutine set_iquench(iquenchaux)
+subroutine set_iquench(iaux)
   use options
-  integer,intent(in)::iquenchaux
-  iquench=iquenchaux
+  integer,intent(in)::iaux
+  iquench=iaux
 end
-subroutine set_dt(idtaux)
+subroutine set_dt(aux)
   use options
-  real,intent(in)::idtaux
-  dt=idtaux
+  real,intent(in)::aux
+  dt=aux
 end
 
-subroutine set_nstepf(stepfaux)
+subroutine set_nstepf(aux)
   use md
-  integer,intent(in)::stepfaux
-  nstepf=stepfaux
+  integer,intent(in)::aux
+  nstepf=aux
 end
 
 
-subroutine set_idipole(idipoleaux)
+subroutine set_idipole(iaux)
   use options
-  integer,intent(in)::idipoleaux
-  idipole=idipoleaux
+  integer,intent(in)::iaux
+  idipole=iaux
 end
 
-subroutine set_iwrtcharges(iwrtchargesaux)
+subroutine set_iwrtcharges(iaux)
   use outputs
-  integer,intent(in)::iwrtchargesaux
-  iwrtcharges=iwrtchargesaux
+  integer,intent(in)::iaux
+  iwrtcharges=iaux
 end
 
-subroutine set_iwrtdipole(iwrtdipoleaux)
+subroutine set_iwrtdipole(iaux)
   use outputs
-  integer,intent(in)::iwrtdipoleaux
-  iwrtdipole=iwrtdipoleaux
+  integer,intent(in)::iaux
+  iwrtdipole=iaux
 end
 
 
-subroutine set_iks(iniksaux)
+subroutine set_iks(iaux)
   use options
-  integer,intent(in)::iniksaux
-  iks=iniksaux
+  integer,intent(in)::iaux
+  iks=iaux
 end
 
-subroutine set_imcweda(imcwedaaux)
+subroutine set_imcweda(iaux)
   use options
-  integer,intent(in)::imcwedaaux
-  imcweda=imcwedaaux
+  integer,intent(in)::iaux
+  imcweda=iaux
 end
 
-subroutine set_idogs(idogsaux)
+subroutine set_idogs(iaux)
   use options
-  integer,intent(in)::idogsaux
-  imcweda=dogsaux
+  integer,intent(in)::iaux
+  imcweda=iaux
 end
 
 
 
-subroutine set_iwrtxyz(iwrtxyzaux)
+subroutine set_iwrtxyz(iaux)
   use outputs
-  integer,intent(in)::iwrtxyzaux
-  iwrtxyz=iwrtxyzaux
+  integer,intent(in)::iaux
+  iwrtxyz=iaux
 end
 
-subroutine set_verbosity(verbosityaux)
+subroutine set_verbosity(iaux)
   use options
-  integer,intent(in)::verbosityaux
-  verbosity=verbosityaux
+  integer,intent(in)::iaux
+  verbosity=iaux
   end
 
-subroutine f2py_natoms(natomsaux)
+subroutine f2py_natoms(aux)
   use configuration
   implicit none
-  integer, intent(inout) :: natomsaux
-  natoms = natomsaux
+  integer, intent(inout) :: aux
+  natoms = aux
 end
 
 
