@@ -15,10 +15,11 @@ from openbabel import pybel
 mol = pybel.readstring("smi", "C")
 mol.make3D()
 peticion=mol.write("xyz")
+calculando=False
 
 #Para probar con una base mas pequeña
-BASE_minima=True
 BASE_minima=False
+BASE_minima=True
 
 fdatalocation=""
 #Load Fdata
@@ -32,7 +33,11 @@ if not exists(fdatalocation):
   file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
   file.extractall(os.environ["FIREBALLHOME"]+"/TESTS/relax/")
   file.close()
-fb.f2py_initbasics(fdatalocation)
+
+
+idipole=0
+fb.f2py_initbasics_opt(fdatalocation,idipole)
+#fb.f2py_initbasics(fdatalocation)
 
 #Load bas
 din=dinamic()
@@ -49,16 +54,13 @@ fb.f2py_getbas(Zin,pos)
 
 
 #Load options
-#PARA que funcione poner en READFILES/readparam.f90
-#idipole = 1
-#icluster = 1
 fb.set_icluster(1)
 fb.set_iqout(7)
 fb.set_iquench(-1)
 fb.set_dt(0.5)
 fb.set_nstepf(1)
 fb.set_iwrtxyz(1)
-fb.set_idipole(1)
+fb.set_idipole(idipole)
 fb.set_iks(1)
 fb.set_imcweda(0)
 fb.set_idogs(0)
@@ -68,9 +70,10 @@ fb.set_iwrtdipole(0)
 
 #Run fireball 
 fb.f2py_init()
-ETOT=fb.f2py_getenergy()
-print(ETOT)
-fb.f2py_print_pcharges()
+fb.f2py_run()
+#ETOT=fb.f2py_getenergy()
+#print(ETOT)
+#fb.f2py_print_pcharges()
 #fb.f2py_print_charges()
 
 atomo_infodat=[]
@@ -133,7 +136,31 @@ def ERROR(peticion):
       else:
           error=True
   return error
+
+def delauxfiles():
+  for i in ['CHARGES','ac.dat','answer.bas','Charges_and_Dipoles','dipole_Tot','dipole_Tot_proy','restart.xyz','xv.dat','dipole_Qout','PCHARGES']:
+    if exists(i):
+      os.remove(i)
    
+def runFB(peticion):
+  fb.f2py_deallocate_all()
+  delauxfiles()
+  din=dinamic()
+  din.loadxyz_fromString(peticion)
+  pos=din.step[0].getnumpy_pos()
+  Zin=np.array(din.step[0].getZarray())
+  fb.f2py_getbas(Zin,pos)
+  fb.f2py_init()
+  fb.f2py_run()
+
+  aux=pybel.readstring("xyz",peticion)
+  mol2=aux.write("mol2")
+  for i in range(1,len(aux.atoms)+1):
+    aux.atoms[i-1].OBAtom.SetPartialCharge(float(fb.f2py_pcharge(i)))
+    mol2=aux.write("mol2")
+  peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
+  pdb=aux.write("pdb")
+  return pdb,peticion
 
 def getPositions(request):
     #print('****************************************')
@@ -143,62 +170,14 @@ def getPositions(request):
     peticion=request.POST['input']
     if request.POST.get('pybel') != "Use pybel to get xyz-format":
       if ERROR(peticion) == False:
-        fb.f2py_deallocate_all()
-        if exists("CHARGES"):
-            remove("CHARGES")
-        din=dinamic()
-        din.loadxyz_fromString(peticion)
-        din.print_total_steps()
-        pos=din.step[0].getnumpy_pos()
-        Zin=np.array(din.step[0].getZarray())
-        fb.f2py_getbas(Zin,pos)
-        fb.f2py_init()
-        ETOT=fb.f2py_getenergy()
-        din.step[0].line2=('')
-        fb.f2py_run()
-
-        #din.step[0].line2=('ETOT = {0:12.6f}  eV '.format(ETOT))
-
-        #cargas por shell
-        #for i in range(1,din.step[0].getNatoms()+1):
-        #  line=fb.f2py_charge(i).split()
-        #  charge=0
-        #  for j in range(len(line)):
-        #    din.step[0].atom[i-1].q.append(line[j])
-        #    charge=charge+float(line[j])
-        #  din.step[0].atom[i-1].Q=charge
-       
-       
-
-        print(peticion)
-        aux=pybel.readstring("xyz",peticion)
-        mol2=aux.write("mol2")
-        
-        #cargas por shell las pasamos a parciales
-        #for i in range(len(aux.atoms)):
-        #  q=carga_infodat[atomo_infodat.index(aux.atoms[i].OBAtom.GetAtomicNum())]
-        #  aux.atoms[i].OBAtom.SetPartialCharge(q-din.step[0].atom[i].Q)
-
-        #cargas parciales por atomo las ponemos directamente
-        for i in range(1,len(aux.atoms)+1):
-          #print('pcharge : ',i,fb.f2py_pcharge(i))
-          aux.atoms[i-1].OBAtom.SetPartialCharge(float(fb.f2py_pcharge(i)))
-
-
-        mol2=aux.write("mol2")
-        peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
-        pdb=aux.write("pdb")
-        #print(mol2)
-        #print(atomo_infodat)
-        #print(carga_infodat)
-
+        pdb,peticion = runFB(peticion)
         return render(request, 'polls/getpositions.html',{ 'peticion': peticion , 'pdb' : pdb })
       else:
         peticion=peticion+"\r There are some error in the imput"
         return render(request, 'polls/index.html',{ 'peticion': peticion, 'atomos_cargados': atomos_cargados  })
     else:
       mol = pybel.readstring("smi", "C=C")
-      #mol.make3D()
+      mol.make3D()
       peticion=mol.write("pdb")
       formatos=pybel.informats.keys() 
       return render(request, 'polls/pybel.html',{ 'formatos': formatos, 'peticion': peticion })
