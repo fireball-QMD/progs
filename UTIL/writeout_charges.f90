@@ -518,7 +518,7 @@ subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, iwrtdensity
       do iatom = 1, natoms
         Qtot=-Q0_TOT(iatom)+dq_DP(iatom)
         in1 = imass(iatom)
-        do imu = 1,num_orb(in1)
+        do imu = 1,nssh(in1)
           Qtot = Qtot+Qout(imu,iatom)
         end do
         ! write(*,*) 'Q_new (',iatom,') =',-Qtot
