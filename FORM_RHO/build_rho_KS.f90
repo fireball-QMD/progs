@@ -219,7 +219,7 @@
 
 
           if (scf_achieved) then
-            if (iwrtcharges .gt. 0) then            
+            if (iwrtcharges .gt. 0) then    
               call writeout_charges_KS (ifixcharge, iqout, icluster, iwrtefermi, tempfe,ebs)
             endif
           endif

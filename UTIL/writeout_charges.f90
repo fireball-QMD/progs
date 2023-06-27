@@ -249,16 +249,7 @@ subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, iwrtdensity
     if (iqout .ne. 7) then
       call Dipole_proyection()
     end if
-    
-    open( unit = 1729, file = 'dipole_Qin', status = 'unknown')
-    write(1729,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
-    close(1729)
-    
-    open( unit = 666, file = 'dipole_Tot', status = 'unknown')
-    write(666,444) dip_x/Debye, dip_y/Debye, dip_z/Debye, dip_tot/Debye
-    close(666)
-    
-    
+ 
      open( unit = 667, file = 'Charges_and_Dipoles', status = 'unknown')
      write(667,*)   '+++++++++++++++++++ N E W   S T E P ++++++++++++++++++' 
      write(667,444) 'dip_TOT',dipTot_x/Debye, dipTot_y/Debye, dipTot_z/Debye, dipTot_tot/Debye

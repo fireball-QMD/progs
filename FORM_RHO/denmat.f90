@@ -1371,7 +1371,7 @@
           intra_dip(3,iatom) = dip_z + res_dip(3,iatom)!/Debye
           dip_tot = sqrt (dip_x**2 + dip_y**2 + dip_z**2 )
         end do !end do iatom = 1,natoms
-   
+
         dq_DP = 0.0d0
    
         do iatom = 1, natoms
