@@ -62,7 +62,7 @@
    use neighbor_map
    use grid
    use density
-   use charges
+   use charges, only : ztot
    use outputs
    implicit none
 

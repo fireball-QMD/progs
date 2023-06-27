@@ -80,7 +80,7 @@
    use neighbor_map
    use grid
    use density
-   use charges
+   use charges, only : Qin
    implicit none
 
 ! Argument Declaration and Description

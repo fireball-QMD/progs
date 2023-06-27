@@ -54,7 +54,6 @@
    use neighbor_map
    use grid
    use density
-   use charges
    use outputs
    implicit none
 

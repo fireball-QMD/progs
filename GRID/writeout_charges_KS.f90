@@ -110,10 +110,6 @@
         integer noccupy
         integer nnu
         real    Qtot, Qtot1, Qtot2
-        real    dip_x, dipQin_x, dipTot_x, dipProy_x, dipIntra_x
-        real    dip_y, dipQin_y, dipTot_y, dipProy_y, dipIntra_y
-        real    dip_z, dipQin_z, dipTot_z, dipProy_z, dipIntra_z
-        real    dip_tot, dip_proy, dipQin_tot, dipProy_tot, dipTot_tot, dipIntra_tot
         real, dimension(3) :: Rbc,u21
         integer, dimension (norbitals) :: ioccupy
         integer, dimension (norbitals, nkpoints) :: ioccupy_k
@@ -1037,11 +1033,6 @@ subroutine write_dipole ()
         integer noccupy
         integer nnu
         real    Qtot, Qtot1, Qtot2
-        real    dip_x, dipQout_x, dipTot_x, dipProy_x, dipIntra_x, dipRes_x
-        real    dip_y, dipQout_y, dipTot_y, dipProy_y, dipIntra_y, dipRes_y
-        real    dip_z, dipQout_z, dipTot_z, dipProy_z, dipIntra_z, dipRes_z
-        real    dip_res_x, dip_res_y, dip_res_z, dip_res_tot
-        real    dip_tot, dip_proy, dipQout_tot, dipProy_tot, dipTot_tot, dipIntra_tot, dipRes_tot
         real, dimension(3) :: Rbc,u21
 
 
@@ -1050,9 +1041,10 @@ subroutine write_dipole ()
         real, parameter ::  klambda = 1.0
         
         real, dimension(3) :: rmedio, raux
+        real    dipProy_tot
         real    w_suma
         real, dimension(3,3) :: bwrr, bwrr_inv, u_bwrr, ut_bwrr, v_bwrr, vt_bwrr, zero_bwrr
-        real, dimension (natoms) :: c_k, dq_DP
+        real, dimension (natoms) :: c_k 
         real, dimension (neigh_max) :: w_k
         real, dimension(3,natoms) :: intra_dip
         real, dimension(3,natoms) :: res_dip

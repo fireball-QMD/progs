@@ -51,5 +51,10 @@
 ! Populations analysis (iwrtpop = 1). energy range
         real  Epop_L
         real  Epop_U
-
+!  Dipoles for iqout = 7
+        real    dip_x, dipQout_x, dipTot_x, dipProy_x, dipIntra_x, dip_res_x, dipQin_x, dipRes_x
+        real    dip_y, dipQout_y, dipTot_y, dipProy_y, dipIntra_y, dip_res_y, dipQin_y, dipRes_y
+        real    dip_z, dipQout_z, dipTot_z, dipProy_z, dipIntra_z, dip_res_z, dipQin_z, dipRes_z
+        real    dip_tot, dip_proy, dipQin_tot, dipTot_tot, dipIntra_tot, dipQout_tot, dip_res_tot, dipRes_tot 
+        real, dimension (:), allocatable :: dq_DP
         end module

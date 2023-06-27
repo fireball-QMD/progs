@@ -103,6 +103,7 @@
         allocate (Qin_es(nsh_max, natoms))
         allocate (QLowdin_TOT_es (natoms))
         allocate (Qout_es(nsh_max, natoms))
+        allocate (dq_DP(natoms))
 
 ! NPA
         allocate (qaux(nsh_max,nspec_max))

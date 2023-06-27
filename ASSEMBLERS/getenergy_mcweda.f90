@@ -145,6 +145,7 @@
           write (*,508) etotper
           write (*,509) atomic_energy
           write (*,510) etot - atomic_energy
+          if (idftd3 .ge. 1) write (*,513) etot_dftd3
           write (*,512) efermi
           write (*,*) '  '
           write (*,511) (etot - atomic_energy)/natoms
@@ -181,6 +182,7 @@
 510     format (2x, '     CohesiveE = ', f15.6)
 511     format (2x, ' Cohesive Energy per atom  = ', f15.6)
 512     format (2x, '   Fermi Level = ', f15.6)
+513     format (2x, '     D3 energy = ', f15.6)
 
         return
         end subroutine getenergy_mcweda

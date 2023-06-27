@@ -415,12 +415,12 @@
 
 ! DIAGONALIZE THE HAMILTONIAN.
 ! ****************************************************************************
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' Call diagonalizer for Hamiltonian. '
-          write (*,*) '            The energy eigenvalues: '
-          write (*,*) ' *********************************************** '
-        end if
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' Call diagonalizer for Hamiltonian. '
+!          write (*,*) '            The energy eigenvalues: '
+!          write (*,*) ' *********************************************** '
+!        end if
 
 ! Eigenvectors are needed to calculate the charges and for forces!
         if (divide) then

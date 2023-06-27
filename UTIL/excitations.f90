@@ -62,8 +62,8 @@
    use neighbor_map
    use grid
    use density
-   use charges
    use kpoints
+   use charges, only : efermi
    implicit none
 
 ! Argument Declaration and Description

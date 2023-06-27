@@ -327,11 +327,11 @@
          end if
          if (info .ne. 0) call diag_error (info, 0)
 
-         if (ishort .eq. 1 .and. wrtout) then
-          write (*,100) slam(1), slam(norbitals)
-         else if (wrtout) then
-          write (*,200) (slam(imu), imu = 1, norbitals)
-         end if
+!         if (ishort .eq. 1 .and. wrtout) then
+!          write (*,100) slam(1), slam(norbitals)
+!         else if (wrtout) then
+!          write (*,200) (slam(imu), imu = 1, norbitals)
+!         end if
 
 ! xxxx = unused
 ! zzzz = Overlap eigenvectors
@@ -491,12 +491,12 @@
 
 ! DIAGONALIZE THE HAMILTONIAN.
 ! ****************************************************************************
-        if (wrtout) then
-          write (*,*) '  '
-          write (*,*) ' Call diagonalizer for Hamiltonian. '
-          write (*,*) '            The energy eigenvalues: '
-          write (*,*) ' *********************************************** '
-        end if
+!        if (wrtout) then
+!          write (*,*) '  '
+!          write (*,*) ' Call diagonalizer for Hamiltonian. '
+!          write (*,*) '            The energy eigenvalues: '
+!          write (*,*) ' *********************************************** '
+!        end if
 
 ! Eigenvectors are needed to calculate the charges and for forces!
         if (divide) then
@@ -524,11 +524,11 @@
 ! eigenvalues will be very close to zero, but not exactly.  Also, we do not
 ! know if a real eigen value is near zero.
 
-        if (ishort .eq. 1 .and. wrtout) then
-         write (*,100) eigen(1), eigen(norbitals)
-        else if (wrtout) then
-         write (*,200) (eigen(imu), imu = 1, norbitals)
-        end if
+!        if (ishort .eq. 1 .and. wrtout) then
+!         write (*,100) eigen(1), eigen(norbitals)
+!        else if (wrtout) then
+!         write (*,200) (eigen(imu), imu = 1, norbitals)
+!        end if
 
 !
 ! INFORMATION FOR THE LOWDIN CHARGES
