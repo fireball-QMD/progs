@@ -1,8 +1,18 @@
-cd progs
-#Makefile : MACHINE = ILINUX_fast05.static
-#create libf2py.a libpyfb*so
+# If you want to do a KS Calculation
+# copi de param for KS:
+cp readparam_KS.f90  ../../../progs/READFILES/readparam.f90
+
+# we need to do that because there are some options must be when the fdata were reading
+# for example idipole=1, iks=1, idogs=imcweda=0
+
+# compile the library libf2py:
+
+cd ../../../progs/
+# Makefile : MACHINE = ILINUX_fast05.static
+# create libf2py.a libpyfb*so
+
 make libf2py
-#test
+# test
 cd TESTS/relax/
 ./start.py
 
