@@ -100,6 +100,7 @@
         allocate (Qoutmixer(nsh_max*natoms))
         allocate (dq(nspecies))
         allocate (Q0_TOT(natoms))
+        allocate (Q_partial(natoms))
         allocate (Qin_es(nsh_max, natoms))
         allocate (QLowdin_TOT_es (natoms))
         allocate (Qout_es(nsh_max, natoms))

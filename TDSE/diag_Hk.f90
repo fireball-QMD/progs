@@ -341,6 +341,7 @@
         lwork = 1
         deallocate (work)
         allocate (work(lwork))
+
 ! first find optimal working space
         call zheev ('V', 'U', norbitals, yyyy, norbitals, eigen, work,      &
      &                 -1, rwork, info)

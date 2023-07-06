@@ -16,6 +16,7 @@ if not exists(fdatalocation):
   file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
   file.extractall(os.environ["FIREBALLHOME"]+"/TESTS/relax/")
   file.close()
+
 idipole=0
 fb.f2py_initbasics_opt(fdatalocation,idipole)
 
@@ -44,6 +45,7 @@ def delauxfiles():
 
 def runFB(pos):
   delauxfiles()
+  fb.f2py_deallocate_all()
   #Load new positions
   din=dinamic()
   din.loadbas(pos)
@@ -54,7 +56,11 @@ def runFB(pos):
   fb.f2py_run()
   fb.f2py_print_pcharges()
   fb.f2py_deallocate_all()
+  delauxfiles()
+
+import time
 
 
 runFB(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
+runFB(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
 runFB(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")

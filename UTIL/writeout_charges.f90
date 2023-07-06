@@ -281,3 +281,24 @@ subroutine writeout_charges (natoms, ifixcharge, iqout, iwrtcharges, iwrtdensity
 
         return
         end
+
+subroutine load_partial_charges()
+  use dimensions
+  use interactions
+  use charges
+  use configuration
+  integer issh
+  integer in1
+  integer iatom
+  Q_partial = 0.0d0
+  do iatom = 1, natoms
+    in1 = imass(iatom)
+    Q_partial(iatom) = 0.0d0
+    do  issh = 1, nssh(in1)
+      Q_partial(iatom) = Q_partial(iatom) + Qneutral(issh,in1) - Qout(issh,iatom)
+    end do
+  end do
+end subroutine load_partial_charges
+
+
+

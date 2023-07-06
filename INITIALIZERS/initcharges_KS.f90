@@ -102,6 +102,7 @@
         allocate (Qout(numorb_max, natoms))
 !        allocate (Qoutmixer(numorb_max*natoms))
         allocate (dq(nspecies))
+        allocate (Q_partial(natoms))
  
 ! Procedure
 ! ===========================================================================

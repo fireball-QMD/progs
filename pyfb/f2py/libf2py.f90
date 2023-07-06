@@ -55,9 +55,10 @@ subroutine f2py_print_pcharges()
   use interactions
   use charges
   use configuration
+  call load_partial_charges()
   write(*,*) 'natoms = ',natoms
   do iatom = 1, natoms
-    write(*,'(2x, i4,2x,f10.6)') iatom,Q7(iatom)
+    write(*,'(2x, i4,2x,f10.6)') iatom,Q_partial(iatom)
   end do
 end
 
@@ -67,7 +68,8 @@ character(140) function f2py_pcharge(iaux)
   use charges
   use configuration
   integer,intent(in)::iaux 
-  write (f2py_pcharge,'(f14.8)') Q7(iaux)
+  call load_partial_charges()
+  write (f2py_pcharge,'(f14.8)') Q_partial(iaux)
   return
 end
 
@@ -1387,11 +1389,10 @@ if ( allocated (Qinmixer)) deallocate (Qinmixer )
 if ( allocated (QLowdin_TOT )) deallocate (QLowdin_TOT )
 if ( allocated (QMulliken_TOT )) deallocate (QMulliken_TOT )
 if ( allocated (Qout)) deallocate (Qout )
-if ( allocated (Q7)) deallocate (Q7 )
+if ( allocated (Q_partial)) deallocate (Q_partial)
 if ( allocated (Qoutmixer)) deallocate (Qoutmixer )
 if ( allocated (dq)) deallocate (dq )
 if ( allocated (Q0_TOT)) deallocate (Q0_TOT )
-if ( allocated (Q7)) deallocate (Q7)
 if ( allocated (Qin_es)) deallocate (Qin_es )
 if ( allocated (QLowdin_TOT_es )) deallocate (QLowdin_TOT_es )
 if ( allocated (Qout_es)) deallocate (Qout_es )
@@ -1440,5 +1441,29 @@ if ( allocated ( dngcof )) deallocate ( dngcof )
 if ( allocated ( E_KS )) deallocate ( E_KS ) 
 if ( allocated ( DOS_total )) deallocate ( DOS_total ) 
 
+if ( allocated ( gcoefficientsVNA )) deallocate ( gcoefficientsVNA )
+if ( allocated ( alphaVNA )) deallocate ( alphaVNA )
+if ( allocated ( nalphaVNA )) deallocate ( nalphaVNA )
+if ( allocated ( gcoefficientsN )) deallocate ( gcoefficientsN )
+if ( allocated ( alphaN )) deallocate ( alphaN )
+if ( allocated ( nalphaN )) deallocate ( nalphaN )
+if ( allocated ( gcoefficientsPSI )) deallocate ( gcoefficientsPSI )
+if ( allocated ( alphaPSI )) deallocate ( alphaPSI )
+if ( allocated ( nalphaPSI )) deallocate ( nalphaPSI )
+if ( allocated ( gcoefficientsPSIS )) deallocate ( gcoefficientsPSIS )
+if ( allocated ( alphaPSIS )) deallocate ( alphaPSIS )
+if ( allocated ( nalphaPSIS )) deallocate ( nalphaPSIS )
+if ( allocated ( gcoefficientsVNA_SH )) deallocate ( gcoefficientsVNA_SH )
+if ( allocated ( alphaVNA_SH )) deallocate ( alphaVNA_SH )
+if ( allocated ( nalphaVNA_SH )) deallocate ( nalphaVNA_SH )
+if ( allocated ( R_na )) deallocate ( R_na )
+if ( allocated (blowim)) deallocate ( blowim )
+if ( allocated (bbnkre)) deallocate ( bbnkre)
+if ( allocated ( E_KS)) deallocate ( E_KS)
+if ( allocated (Uisigma )) deallocate ( Uisigma)
+if ( allocated (Jijsigma )) deallocate ( Jijsigma)
 
+if ( allocated (xintegral_2c )) deallocate (xintegral_2c )
+!if ( allocated ( )) deallocate ( )
+!if ( allocated ( )) deallocate ( )
 end

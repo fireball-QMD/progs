@@ -26,7 +26,7 @@
          real, dimension (:, :), allocatable :: Qout_es      !vlada cdft
          real, dimension (:), allocatable :: QLowdin_TOT_es  !vlada cdft
          real, dimension(:), allocatable  :: Q0_TOT
-         real, dimension(:), allocatable  :: Q7  !Mulliken-dipole with intradipole correction
+         real, dimension(:), allocatable  :: Q_partial
 
 
 ! anderson iteration procedure
