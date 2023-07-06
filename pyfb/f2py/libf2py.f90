@@ -85,12 +85,6 @@ character(140) function f2py_charge(iaux)
   return
 end
 
-subroutine set_icluster(iaux)
-  use options
-  integer,intent(in)::iaux
-  icluster=iaux
-end
-
 subroutine set_iqout(iaux)
   use options
   integer,intent(in)::iaux
@@ -114,13 +108,6 @@ subroutine set_nstepf(aux)
   nstepf=aux
 end
 
-
-subroutine set_idipole(iaux)
-  use options
-  integer,intent(in)::iaux
-  idipole=iaux
-end
-
 subroutine set_iwrtcharges(iaux)
   use outputs
   integer,intent(in)::iaux
@@ -132,26 +119,6 @@ subroutine set_iwrtdipole(iaux)
   integer,intent(in)::iaux
   iwrtdipole=iaux
 end
-
-
-subroutine set_iks(iaux)
-  use options
-  integer,intent(in)::iaux
-  iks=iaux
-end
-
-subroutine set_imcweda(iaux)
-  use options
-  integer,intent(in)::iaux
-  imcweda=iaux
-end
-
-subroutine set_idogs(iaux)
-  use options
-  integer,intent(in)::iaux
-  imcweda=iaux
-end
-
 
 
 subroutine set_iwrtxyz(iaux)
@@ -267,14 +234,8 @@ subroutine f2py_ratom(zaux,raux)
 end
 
 
+
 subroutine f2py_initbasics(f2py_fdataLocation)
-  character (len = 200),intent(in) ::  f2py_fdataLocation
-  call f2py_initbasics_opt(f2py_fdataLocation,0)
-end
-
-
-
-subroutine f2py_initbasics_opt(f2py_fdataLocation,idipoleaux)
    ! es como initbasics (), pero sin cargar posiciones de atomos
    use options
    use configuration
@@ -295,7 +256,6 @@ subroutine f2py_initbasics_opt(f2py_fdataLocation,idipoleaux)
 
    implicit none
    character (len = 200),intent(in) ::  f2py_fdataLocation
-   integer,intent(in)::idipoleaux
    integer iatom
    integer in1
    integer icount
@@ -317,8 +277,6 @@ subroutine f2py_initbasics_opt(f2py_fdataLocation,idipoleaux)
    call initconstants (sigma, sigmaold, scf_achieved)
    call diagnostics (ioff2c, ioff3c, itestrange, testrange)
    call readparam ()
-   !pero fireball.in no existe, ponemos opt
-   idipole=idipoleaux
 
    fdatalocation = f2py_fdatalocation
    !cambiamos readinfo para cargar Fdata completa sin necesidad de leer 
