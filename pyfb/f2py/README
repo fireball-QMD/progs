@@ -12,7 +12,15 @@ cd ../../../progs/
 # create libf2py.a libpyfb*so
 
 make libf2py
-# test
-cd TESTS/relax/
-./start.py
+# use test with Fdata
+# 1                 idipole_z         ! dipole (two-center)
+# 1                 idipole_y         ! dipole (two-center), Note B
+# 1                 idipole_x         ! dipole (two-center), Note B
+# i.e. idipole=1 
 
+./test2KS.py
+
+
+# test2.py and test.py worked with McWeda,
+# However doesn't works because we changed how the options was readed
+# to do KS works in py and in libf2py.f90 f2py_deallocate_all 
