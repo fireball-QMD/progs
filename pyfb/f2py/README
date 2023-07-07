@@ -2,7 +2,7 @@ cp pyfb/f2py/readparam.f90.backup READFILES/readparam.f90
 git commit -a -m 'django' 
 git push 
 cp pyfb/f2py/readparam_KS.f90 READFILES/readparam.f90
-
+make && make libf2py
 
 
 # If you want to do a KS Calculation

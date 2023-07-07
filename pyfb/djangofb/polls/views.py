@@ -15,8 +15,8 @@ from openbabel import pybel
 mol = pybel.readstring("smi", "C")
 mol.make3D()
 peticion=mol.write("xyz")
+calculando=False
 
-#Para probar con una base mas pequeña
 
 modo_testear=False 
 modo_testear=True  #para hacer pruebas cargamos una base pequeña
@@ -24,7 +24,6 @@ modo_testear=True  #para hacer pruebas cargamos una base pequeña
 fdatalocation="/home/dani/Fdata_HC"
 basfile=os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas"
 
-print("··aa··")
 
 if modo_testear == False:
   fdatalocation="/home/dani/Fdata_HCNOS"
@@ -61,6 +60,7 @@ def delauxfiles():
 
 
 def runFB(peticion):
+  calculando=True
   fb.f2py_deallocate_all()
   delauxfiles()
   din=dinamic()
@@ -70,7 +70,6 @@ def runFB(peticion):
   fb.f2py_getbas(Zin,pos)
   fb.f2py_init()
   fb.f2py_run()
-
   aux=pybel.readstring("xyz",peticion)
   mol2=aux.write("mol2")
   for i in range(1,len(aux.atoms)+1):
@@ -78,6 +77,7 @@ def runFB(peticion):
     mol2=aux.write("mol2")
   peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
   pdb=aux.write("pdb")
+  calculando=False
   return pdb,peticion
 
 
@@ -132,9 +132,14 @@ def getPositions(request):
     #print('****************************************')
     peticion=request.POST['input']
     if request.POST.get('pybel') != "Use pybel to get xyz-format":
+      print("calculando =",calculando)
       if ERROR(peticion) == False:
-        pdb,peticion = runFB(peticion)
-        return render(request, 'polls/getpositions.html',{ 'peticion': peticion , 'pdb' : pdb })
+        if calculando == False:
+          pdb,peticion = runFB(peticion)
+          return render(request, 'polls/getpositions.html',{ 'peticion': peticion , 'pdb' : pdb })
+        else:
+          peticion=peticion+"\r Now it is being calculated, wait a moment and send it again"
+          return render(request, 'polls/index.html',{ 'peticion': peticion, 'atomos_cargados': atomos_cargados  })
       else:
         peticion=peticion+"\r There are some error in the imput"
         return render(request, 'polls/index.html',{ 'peticion': peticion, 'atomos_cargados': atomos_cargados  })
