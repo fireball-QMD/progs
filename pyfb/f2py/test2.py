@@ -21,7 +21,7 @@ if not exists(fdatalocation):
 fb.f2py_initbasics(fdatalocation)
 
 #Load options
-fb.set_iqout(3)
+fb.set_iqout(7)
 fb.set_iquench(-1)
 fb.set_dt(0.5)
 fb.set_nstepf(1)
@@ -49,4 +49,5 @@ def runFB(pos):
 
 runFB(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
 runFB(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
+runFB(os.environ["FIREBALLHOME"]+"/pyfb/f2py/CH4.bas")
 

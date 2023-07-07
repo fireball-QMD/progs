@@ -27,7 +27,6 @@ Zin=np.array(din.step[0].getZarray())
 fb.f2py_getbas(Zin,pos) 
 
 #Load options
-fb.set_icluster(1)
 fb.set_iqout(4)
 fb.set_iquench(-1)
 fb.set_dt(0.5)

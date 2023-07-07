@@ -1422,6 +1422,6 @@ if ( allocated (Uisigma )) deallocate ( Uisigma)
 if ( allocated (Jijsigma )) deallocate ( Jijsigma)
 
 if ( allocated (xintegral_2c )) deallocate (xintegral_2c )
-!if ( allocated ( )) deallocate ( )
+if ( allocated ( dq_DP)) deallocate (dq_DP)
 !if ( allocated ( )) deallocate ( )
 end
