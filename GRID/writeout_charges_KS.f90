@@ -1015,10 +1015,11 @@
         use density
         use interactions
         use configuration
+        use options
         implicit none
         real, dimension(natoms):: Ntot
         real Ntot_all
-        integer iatom,in1,imu
+        integer iatom,in1,imu,issh
         Ntot_all=0.0
         do iatom = 1, natoms
           in1 = imass(iatom)
@@ -1028,17 +1029,28 @@
           end do
           Ntot_all = Ntot_all + Ntot(iatom)
         end do
-        open(unit = 101, file = 'CHARGES', status = 'unknown')
-          write(101,'(2x, i4,2x,f10.6)') natoms,Ntot_all
-          do iatom = 1, natoms
-            in1 = imass(iatom)
-            write(101,'(2x, i4,2x,f10.6)',advance='no') iatom, Ntot(iatom)
-            do imu = 1, nssh(in1)
-              write(101,'(f10.6)',advance='no') Qout(imu,iatom)
-            end do
-            write(101,*)
-          end do ! do iatom
-        close(101)
+
+        open (unit = 21, file = 'CHARGES', status = 'unknown')
+        write (21,600) natoms, basisfile, iqout
+        do iatom = 1, natoms
+          in1 = imass(iatom)
+          write (21,601) (Qout(issh,iatom), issh = 1, nssh(in1))
+        end do
+        close (unit = 21)
+        600     format (2x, i5, 2x, a40, 2x, i2)
+        601     format (2x, 10f14.8) 
+
+       ! open(unit = 101, file = 'CHARGES', status = 'unknown')
+       !   write(101,'(2x, i4,2x,f10.6)') natoms,Ntot_all
+       !   do iatom = 1, natoms
+       !     in1 = imass(iatom)
+       !     write(101,'(2x, i4,2x,f10.6)',advance='no') iatom, Ntot(iatom)
+       !     do imu = 1, nssh(in1)
+       !       write(101,'(f10.6)',advance='no') Qout(imu,iatom)
+       !     end do
+       !     write(101,*)
+       !   end do ! do iatom
+       ! close(101)
       end subroutine write_charges_shell
  
 

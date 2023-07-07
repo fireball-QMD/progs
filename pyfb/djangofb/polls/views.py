@@ -18,8 +18,8 @@ peticion=mol.write("xyz")
 calculando=False
 
 
-modo_testear=False 
 modo_testear=True  #para hacer pruebas cargamos una base pequeña
+modo_testear=False 
 
 fdatalocation="/home/dani/Fdata_HC"
 basfile=os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas"
