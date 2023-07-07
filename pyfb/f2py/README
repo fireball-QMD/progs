@@ -1,3 +1,10 @@
+cp pyfb/f2py/readparam.f90.backup READFILES/readparam.f90 
+git commit -a -m 'django' 
+git push 
+cp pyfb/f2py/readparam_KS.f90 READFILES/readparam.f90
+
+
+
 # If you want to do a KS Calculation
 # copi de param for KS:
 cp readparam_KS.f90  ../../../progs/READFILES/readparam.f90
