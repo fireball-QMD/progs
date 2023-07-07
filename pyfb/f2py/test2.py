@@ -17,20 +17,19 @@ if not exists(fdatalocation):
   file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
   file.extractall(os.environ["FIREBALLHOME"]+"/TESTS/relax/")
   file.close()
-idipole=0
-fb.f2py_initbasics_opt(fdatalocation,idipole)
+
+fb.f2py_initbasics(fdatalocation)
 
 #Load options
-fb.set_icluster(1)
 fb.set_iqout(3)
 fb.set_iquench(-1)
 fb.set_dt(0.5)
 fb.set_nstepf(1)
 fb.set_iwrtxyz(1)
-fb.set_idipole(idipole)
 
 def delauxfiles():
-  for i in ['CHARGES','ac.dat','answer.bas','Charges_and_Dipoles','dipole_Tot','dipole_Tot_proy','restart.xyz','xv.dat','dipole_Qout','PCHARGES']:
+  for i in ['CHARGES','ac.dat','answer.bas','Charges_and_Dipoles',
+  'dipole_Tot','dipole_Tot_proy','restart.xyz','xv.dat','dipole_Qout','PCHARGES']:
     if exists(i):
       os.remove(i)
 
