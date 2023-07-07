@@ -290,10 +290,9 @@ subroutine load_partial_charges()
   integer issh
   integer in1
   integer iatom
-  Q_partial = 0.0d0
   do iatom = 1, natoms
     in1 = imass(iatom)
-    Q_partial(iatom) = 0.0d0
+    Q_partial(iatom) = Q0_TOT(iatom)
     do  issh = 1, nssh(in1)
       Q_partial(iatom) = Q_partial(iatom) - Qout(issh,iatom)
     end do
