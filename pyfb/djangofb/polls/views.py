@@ -15,66 +15,26 @@ from openbabel import pybel
 mol = pybel.readstring("smi", "C")
 mol.make3D()
 peticion=mol.write("xyz")
-calculando=False
 
 #Para probar con una base mas pequeña
-BASE_minima=False
-BASE_minima=True
 
-fdatalocation=""
-#Load Fdata
-if BASE_minima:
-  fdatalocation=os.environ["FIREBALLHOME"]+"/TESTS/relax/Fdata_HC_minimal"
-else:
+modo_testear=False 
+modo_testear=True  #para hacer pruebas cargamos una base pequeña
+
+fdatalocation="/home/dani/Fdata_HC"
+basfile=os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas"
+
+print("··aa··")
+
+if modo_testear == False:
   fdatalocation="/home/dani/Fdata_HCNOS"
-#  fdatalocation="/home/dani/Fdata_HC"
+  basfile=os.environ["FIREBALLHOME"]+"/pyfb/djangofb/polls/input.bas"
 
-if not exists(fdatalocation):
-  file = tarfile.open(os.environ["FIREBALLHOME"]+"/TESTS/Fdata.tar.gz")
-  file.extractall(os.environ["FIREBALLHOME"]+"/TESTS/relax/")
-  file.close()
+print("Load Fdata ...")
+fb.f2py_initbasics(fdatalocation)
 
-
-idipole=0
-fb.f2py_initbasics_opt(fdatalocation,idipole)
-#fb.f2py_initbasics(fdatalocation)
-
-#Load bas
-din=dinamic()
-if BASE_minima:
-  din.loadbas(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
-else:
-  din.loadbas(os.environ["FIREBALLHOME"]+"/pyfb/djangofb/polls/input.bas")
-n_atomos=din.step[0].getNatoms()
-pos=din.step[0].getnumpy_pos()
-Zin=np.array(din.step[0].getZarray())
-#fb.f2py_natoms(n_atomos) 
-#fb.f2py_nucz(Zin) 
-fb.f2py_getbas(Zin,pos) 
-
-
-#Load options
-fb.set_icluster(1)
-fb.set_iqout(7)
-fb.set_iquench(-1)
-fb.set_dt(0.5)
-fb.set_nstepf(1)
-fb.set_iwrtxyz(1)
-fb.set_idipole(idipole)
-fb.set_iks(1)
-fb.set_imcweda(0)
-fb.set_idogs(0)
-fb.set_verbosity(10)
-fb.set_iwrtcharges(1)
-fb.set_iwrtdipole(0)
-
-#Run fireball 
-fb.f2py_init()
-fb.f2py_run()
-#ETOT=fb.f2py_getenergy()
-#print(ETOT)
-#fb.f2py_print_pcharges()
-#fb.f2py_print_charges()
+#print("run Fireball ...")
+#runFB(basfile)
 
 atomo_infodat=[]
 carga_infodat=[]
@@ -92,6 +52,34 @@ for line in text:
         q=q+float(iq)
       carga_infodat.append(q)
   linea=linea+1
+
+def delauxfiles():
+  for i in ['CHARGES','ac.dat','answer.bas','Charges_and_Dipoles',
+  'dipole_Tot','dipole_Tot_proy','restart.xyz','xv.dat','dipole_Qout','PCHARGES']:
+    if exists(i):
+      os.remove(i)
+
+
+def runFB(peticion):
+  fb.f2py_deallocate_all()
+  delauxfiles()
+  din=dinamic()
+  din.loadxyz_fromString(peticion)
+  pos=din.step[0].getnumpy_pos()
+  Zin=np.array(din.step[0].getZarray())
+  fb.f2py_getbas(Zin,pos)
+  fb.f2py_init()
+  fb.f2py_run()
+
+  aux=pybel.readstring("xyz",peticion)
+  mol2=aux.write("mol2")
+  for i in range(1,len(aux.atoms)+1):
+    aux.atoms[i-1].OBAtom.SetPartialCharge(float(fb.f2py_pcharge(i)))
+    mol2=aux.write("mol2")
+  peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
+  pdb=aux.write("pdb")
+  return pdb,peticion
+
 
 def index(request):
   #print('****************************')
@@ -136,31 +124,6 @@ def ERROR(peticion):
       else:
           error=True
   return error
-
-def delauxfiles():
-  for i in ['CHARGES','ac.dat','answer.bas','Charges_and_Dipoles','dipole_Tot','dipole_Tot_proy','restart.xyz','xv.dat','dipole_Qout','PCHARGES']:
-    if exists(i):
-      os.remove(i)
-   
-def runFB(peticion):
-  fb.f2py_deallocate_all()
-  delauxfiles()
-  din=dinamic()
-  din.loadxyz_fromString(peticion)
-  pos=din.step[0].getnumpy_pos()
-  Zin=np.array(din.step[0].getZarray())
-  fb.f2py_getbas(Zin,pos)
-  fb.f2py_init()
-  fb.f2py_run()
-
-  aux=pybel.readstring("xyz",peticion)
-  mol2=aux.write("mol2")
-  for i in range(1,len(aux.atoms)+1):
-    aux.atoms[i-1].OBAtom.SetPartialCharge(float(fb.f2py_pcharge(i)))
-    mol2=aux.write("mol2")
-  peticion=mol2.replace("GASTEIGER","Mulliken-dipole")
-  pdb=aux.write("pdb")
-  return pdb,peticion
 
 def getPositions(request):
     #print('****************************************')

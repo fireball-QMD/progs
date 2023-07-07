@@ -208,7 +208,7 @@
 
 ! ------  DEFAULT OUTPUTS  ------
         iwrtcdcoefs = 0
-        iwrtcharges = 0
+        iwrtcharges = 1
         iwrtdensity = 0
         iwrteigen = 0
         iwrtefermi = 0

@@ -1,10 +1,3 @@
-! cp denmat_KS_test_CHARGES.f90  denmat_KS.f90 
-! and make
-! For testing purposes only 
-! For testing purposes only 
-! For testing purposes only 
-! For testing purposes only 
-! For testing purposes only 
 ! copyright info:f
 !
 !                             @Copyright 2005

@@ -112,17 +112,17 @@
 ! default settings
 ! ------  DEFAULT OPTIONS  ------
         iharris = 0
-        idogs = 1
+        idogs = 0
         ihubbard = 0
         ihorsfield = 0
-        imcweda = 1
+        imcweda = 0
         ixczw = 0
-        iks = 0
+        iks = 1
         igsn = 0
-        iqout = 1
+        iqout = 7
         qstate = 0.0d0
         iquench = -1
-        icluster = 0
+        icluster = 1
         iensemble = 0
         ifixcharge = 0
         ifixneigh = 0
@@ -146,7 +146,7 @@
         acfile = 'ac.dat'
         xvfile = 'xv.dat'
         nstepi = 1
-        nstepf = 100
+        nstepf = 1
         dt = 0.5d0
         T_initial = 0.0d0
         T_final = 10.0d0
@@ -202,13 +202,13 @@
         dftd3_rs18  = 4.2359
         dftd3_alp = 14.0d0 
 ! Long range dipole
-        idipole = 0
+        idipole = 1
 ! Intra-atomic dipolar potential
         V_intra_dip = 0
 
 ! ------  DEFAULT OUTPUTS  ------
         iwrtcdcoefs = 0
-        iwrtcharges = 0
+        iwrtcharges = 1
         iwrtdensity = 0
         iwrteigen = 0
         iwrtefermi = 0
