@@ -1203,6 +1203,14 @@
         integer, dimension(3) :: ipiv
         real, dimension(3) :: lwork, s_bwrr, dummy
 
+        do iatom = 1, natoms
+          Q0_TOT(iatom) = 0
+          in1 = imass(iatom)
+          do issh = 1, nssh(in1)
+            Q0_TOT(iatom) = Q0_TOT(iatom) + Qneutral(issh,in1)
+          end do
+        end do
+
         dip_x=0.0d0
         dip_y=0.0d0
         dip_z=0.0d0

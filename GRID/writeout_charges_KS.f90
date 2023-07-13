@@ -505,8 +505,8 @@
           
           if (iwrtdipole .gt. 0) then
 
-           if ( allocated (Q0_TOT)) deallocate (Q0_TOT)
-           allocate (Q0_TOT(natoms))
+           !if ( allocated (Q0_TOT)) deallocate (Q0_TOT)
+           !allocate (Q0_TOT(natoms))
 
            if ( allocated (dq_DP)) deallocate (dq_DP)
            allocate (dq_DP(natoms))
