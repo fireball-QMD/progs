@@ -1218,7 +1218,7 @@
           Qtot=-Q0_TOT(iatom)
           in1 = imass(iatom)
           do issh = 1,nssh(in1)
-            Qtot = Qtot+Qin(issh,iatom)
+            Qtot = Qtot+Qout(issh,iatom)
           end do
           dip_x = dip_x+Qtot*ratom(1,iatom)
           dip_y = dip_y+Qtot*ratom(2,iatom)
