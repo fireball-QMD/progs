@@ -296,7 +296,7 @@ subroutine load_partial_charges()
     do  issh = 1, nssh(in1)
       Q_partial(iatom) = Q_partial(iatom) - Qout(issh,iatom)
     end do
-  write(*,*)'Q_partial',iatom,Q_partial(iatom)
+  ! write(*,*)'Q_partial',iatom,Q_partial(iatom)
   end do
 end subroutine load_partial_charges
 
