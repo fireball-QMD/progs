@@ -457,7 +457,8 @@
           end do
 
         else !ifixcharge
-          
+
+
           Qout = 0.0d0
           QLowdin_TOT = 0.0d0
         
@@ -482,6 +483,22 @@
             if ( allocated (dq_DP)) deallocate (dq_DP)
             allocate (dq_DP(natoms))
 
+            ! Qneutral_total
+            if (iwrtcharges .eq. 4) then
+              print*,'calculate Q0_TOT'
+              if ( .not. allocated (Q0_TOT)) allocate (Q0_TOT(natoms))
+              do iatom = 1, natoms
+                Q0_TOT(iatom) = 0
+                in1 = imass(iatom)
+                do issh = 1, nssh(in1)
+                  Q0_TOT(iatom) = Q0_TOT(iatom) + Qneutral(issh,in1)
+                end do
+              end do
+              print*,'Q0_TOT',Q0_TOT
+              call load_partial_charges()
+              call write_partial_charges('PCHARGES_IN')
+            end if
+ 
             call Dipole_proyection()
            
             do iatom = 1, natoms
@@ -524,6 +541,10 @@
      
           end if !end if (iwrtdipole .gt. 0)
 
+          if (iwrtcharges .eq. 4) then
+            call load_partial_charges()
+            call write_partial_charges('PCHARGES_OUT')
+          end if
         end if !ifixcharge
 
 ! ****************************************************************************

@@ -310,7 +310,7 @@ subroutine write_partial_charges(pchargefile)
     write (41,*) natoms, basisfile, iqout
     do iatom = 1, natoms
              ! in1 = imass(iatom)
-       write (41,*) iatom,Q_partial(iatom)
+       write (41,*) symbol(iatom),Q_partial(iatom)
      end do
      close (unit = 41)
 end subroutine write_partial_charges

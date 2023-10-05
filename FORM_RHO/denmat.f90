@@ -64,6 +64,7 @@
         use neighbor_map
         use kpoints
         use hartree_fock
+        use outputs, only : iwrtcharges
         implicit none
 
 ! Argument Declaration and Description
@@ -418,6 +419,13 @@
           end do
 
         else !ifixcharge
+
+          if (iwrtcharges .eq. 4) then
+            call load_partial_charges()
+            call write_partial_charges('PCHARGES_IN')
+          end if
+
+
           if (iqout .eq. 1 .or. iqout .eq. 3) then
            Qout = 0.0d0
            QLowdin_TOT = 0.0d0
@@ -454,6 +462,8 @@
           end if !iqout = 6
           
           if (iqout .eq. 7) then
+
+
             Qout = 0.0d0                                                   
             QMulliken_TOT = 0.0d0 
             
@@ -475,8 +485,13 @@
               end do ! end do imu
             end do !end do iatom = 1,natoms
 
-          end if !iqout = 7
 
+          end if !iqout = 7
+       
+          if (iwrtcharges .eq. 4) then
+            call load_partial_charges()
+            call write_partial_charges('PCHARGES_OUT')
+          end if
         end if !ifixcharge
 
 
