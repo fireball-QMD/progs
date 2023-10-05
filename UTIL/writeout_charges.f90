@@ -301,4 +301,17 @@ subroutine load_partial_charges()
 end subroutine load_partial_charges
 
 
+subroutine write_partial_charges(pchargefile)
+  use charges
+  use configuration
+  use options
+  character (len=200), intent(in) :: pchargefile
+  open (unit = 41, file = trim(pchargefile), status = 'unknown')
+    write (41,*) natoms, basisfile, iqout
+    do iatom = 1, natoms
+             ! in1 = imass(iatom)
+       write (41,*) iatom,Q_partial(iatom)
+     end do
+     close (unit = 41)
+end subroutine write_partial_charges
 
