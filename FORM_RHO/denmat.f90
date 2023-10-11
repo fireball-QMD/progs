@@ -420,10 +420,6 @@
 
         else !ifixcharge
 
-          if (iwrtcharges .eq. 4) then
-            call load_partial_charges()
-            call write_partial_charges('PCHARGES_IN')
-          end if
 
 
           if (iqout .eq. 1 .or. iqout .eq. 3) then
@@ -468,6 +464,12 @@
             QMulliken_TOT = 0.0d0 
             
             call MULLIKEN_DIPOLE_CHARGES()
+
+            if (iwrtcharges .eq. 4) then
+              call load_partial_charges()
+              call write_partial_charges('PCHARGES_IN')
+            end if
+
             call Dipole_proyection()
             
             do iatom = 1, natoms
