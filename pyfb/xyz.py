@@ -93,11 +93,10 @@ for i in range(1,len(sys.argv)):
       for bas in din.step: #solo debería haber un step cargado
         diff_enlaces.append(bas.enlaces) 
     dis=0.0 
-    for i in range(len(diff_enlaces[0])):
-      dis=dis+(diff_enlaces[0][i]-diff_enlaces[1][i])**2
-    print(dis**0.5)
-   
-
+    for ienlace in range(len(diff_enlaces[0])):
+      dis=dis+(diff_enlaces[0][ienlace]-diff_enlaces[1][ienlace])**2
+    print(dis**0.5) 
+  
   if sys.argv[i] == '-x' or sys.argv[i] == '-y' or sys.argv[i] == '-z' or sys.argv[i] == '-X' or sys.argv[i] == '-Y' or sys.argv[i] == '-Z' or sys.argv[i] == '-rescal':
     if sys.argv[i] == '-rescal':
        din.get(sys.argv[i],[sys.argv[i+1]])
