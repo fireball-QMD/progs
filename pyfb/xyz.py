@@ -92,10 +92,13 @@ for i in range(1,len(sys.argv)):
       din.load_enlaces()
       for bas in din.step: #solo debería haber un step cargado
         diff_enlaces.append(bas.enlaces) 
-    dis=0.0 
-    for ienlace in range(len(diff_enlaces[0])):
-      dis=dis+(diff_enlaces[0][ienlace]-diff_enlaces[1][ienlace])**2
-    print(dis**0.5) 
+    dis=0.0
+    if (len(diff_enlaces[0]) == len(diff_enlaces[1])):
+      for ienlace in range(len(diff_enlaces[0])):
+        dis=dis+(diff_enlaces[0][ienlace]-diff_enlaces[1][ienlace])**2
+      print(dis**0.5)
+    else:
+      print("El número de enlaces ha cambiado") 
   
   if sys.argv[i] == '-x' or sys.argv[i] == '-y' or sys.argv[i] == '-z' or sys.argv[i] == '-X' or sys.argv[i] == '-Y' or sys.argv[i] == '-Z' or sys.argv[i] == '-rescal':
     if sys.argv[i] == '-rescal':
