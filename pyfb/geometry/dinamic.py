@@ -62,9 +62,13 @@ class dinamic:
       print(df2.to_string())
 
   def load_enlaces(self):
-      for bas in self.step: #solo debería haber un step cargado
-          bas.load_enlaces()
-          #bas.print_enlaces()
+    for bas in self.step: #solo debería haber un step cargado
+      bas.load_enlaces()
+      #bas.print_enlaces()
+
+  def print_enlaces(self):
+    for bas in self.step:
+      bas.print_enlaces()
 
   def get(self,info,col):
     count=0.0

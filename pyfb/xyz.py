@@ -26,6 +26,7 @@ def print_help() :
   print (sys.argv[0], '-laststep_charges <file xyz format> -print_charges')
   print (sys.argv[0], '-i <file xyz format> -dintra_matrix')
   print (sys.argv[0], '-loadstep <file xyz format> <step> -enlaces -print_enlaces')
+  print (sys.argv[0], '-loadstep <file xyz format> <step> -loadstep <file xyz format> <step> -diff_enlaces')
   print (sys.argv[0], '-i <file xyz format> -rescal <float>')
 
 if len(sys.argv) == 1 :
@@ -76,22 +77,26 @@ for i in range(1,len(sys.argv)):
       print("nothing is load")
     else:
       din.load_enlaces()
-
+  
   if sys.argv[i] == '-print_enlaces' :
-    neig=[]
-    salida=''
-    for j in din.step:
-      for k in j.atom:
-        noleido=True
-        for q in neig:
-          if q == k:
-            noleido=False
-        if noleido:
-          for e in k.neighbor:
-            neig.append(e)
-            salida=salida+' '+str(k.distancia(e))[0:5]
-    print(salida)    
+    if len(din.step) == 0:
+      print("nothing is load")
+    else:
+      din.print_enlaces()
 
+  diff_enlaces=[]
+  if sys.argv[i] == '-diff_enlaces' :
+    if len(din.step) == 0:
+      print("nothing is load")
+    else:
+      din.load_enlaces()
+      for bas in din.step: #solo debería haber un step cargado
+        diff_enlaces.append(bas.enlaces) 
+    dis=0.0 
+    for i in range(len(diff_enlaces[0])):
+      dis=dis+(diff_enlaces[0][i]-diff_enlaces[1][i])**2
+    print(dis**0.5)
+   
 
   if sys.argv[i] == '-x' or sys.argv[i] == '-y' or sys.argv[i] == '-z' or sys.argv[i] == '-X' or sys.argv[i] == '-Y' or sys.argv[i] == '-Z' or sys.argv[i] == '-rescal':
     if sys.argv[i] == '-rescal':

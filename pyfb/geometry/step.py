@@ -12,6 +12,7 @@ class step:
     self.line2=""
     self.name=""
     self.tol=4
+    self.enlaces=[] #conjunto enlaces primeros vecinos
 
   def append(self,atomo):
     self.atom.append(atomo)
@@ -35,8 +36,16 @@ class step:
             if((100*self.atom[i].distancia(self.atom[j])) < radio ):
                  self.atom[i].neighbor.append(self.atom[j])
                  self.atom[j].neighbor.append(self.atom[i])
+                 self.enlaces.append(self.atom[i].distancia(self.atom[j]))
 
   def print_enlaces(self):
+    salida=''
+    for i in self.enlaces:
+      salida=salida+' '+str(i)[0:5]
+    print(salida)
+
+
+  def print_enlaces_atomo(self):
     for i in self.atom:
       print(i.Z,self.atom.index(i)+1)
       for j in i.neighbor:
