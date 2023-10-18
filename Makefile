@@ -60,8 +60,8 @@ PARALLEL =
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-METHOD = DOUBLE 
-#METHOD = GAMMA 
+#METHOD = DOUBLE 
+METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.

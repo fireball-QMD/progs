@@ -95,8 +95,8 @@ for i in range(1,len(sys.argv)):
     dis=0.0
     if (len(diff_enlaces[0]) == len(diff_enlaces[1])):
       for ienlace in range(len(diff_enlaces[0])):
-        dis=dis+(diff_enlaces[0][ienlace]-diff_enlaces[1][ienlace])**2
-      print(dis**0.5)
+        dis=dis+(diff_enlaces[0][ienlace]-diff_enlaces[1][ienlace])**2     
+      print(dis**0.5/len(diff_enlaces[0]))
     else:
       print("El número de enlaces ha cambiado") 
   
