@@ -3,6 +3,8 @@ from  pyfb.geometry.atom import atom
 from pyfb.geometry.tabla import tabla
 import pandas as pd
 import numpy as np
+import random
+
 
 tabla=tabla()
 
@@ -227,6 +229,64 @@ class dinamic:
     if read_charges: #load after read de step
       bas.loadcharges() 
     self.append(bas) 
+  
+  def merge(self,i,j): 
+    """
+    merge 2 steps of dinamic, -laststep2xyz also merge 2 files.xyz
+    """
+    step1=self.step[i-1].atom
+    step2=self.step[j-1].atom
+    N=(len(step1))+(len(step2))
+    print(N)
+    print()
+    for s1 in step1:
+      s1.print() 
+    for s2 in step2:
+      s2.print() 
+  
+  def distance(self,i,j): 
+    """
+    minimal distance 2 steps of dinamic
+    -laststep2xyz distance 2 files.xyz
+    """
+    step1=self.step[i-1].atom
+    step2=self.step[j-1].atom
+    dmin=step1[0].distancia(step2[0])
+    ri=step1[0].getRadio()
+    rj=step2[0].getRadio()
+    radiomin=(float(ri+rj))/2/self.step[0].tol/100
+    for s1 in step1:
+      for s2 in step2:
+        d=s1.distancia(s2)
+        ri=s1.getRadio()
+        rj=s2.getRadio()
+        radio=(float(ri+rj))/2/self.step[0].tol/100
+        if dmin > d:
+          dmin=d
+          radiomin=radio
+    #      print(dmin,radiomin) 
+    return dmin,radiomin
+
+  def join(self,i,j):
+    """
+    joine 2 steps of dinamic, -laststep2xyz also join 2 files.xyz
+    take in acount that dmin > radiomin, move randon the j step
+    """
+    d,radio=self.distance(i,j)
+    while d < radio:
+      Ax=0.2*random.uniform(-1, 1)
+      Ay=0.2*random.uniform(-1, 1)
+      Az=0.2*random.uniform(-1, 1)
+      for s in range(0,len(self.step[j-1].atom)):
+        self.step[j-1].atom[s].r[0]+=Ax
+        self.step[j-1].atom[s].r[1]+=Ay
+        self.step[j-1].atom[s].r[2]+=Az
+    
+      d,radio=self.distance(i,j)
+    self.merge(i,j)
+    #d,radio=self.distance(i,j)
+    #print(d,radio)
+
 
   def loadbas(self,archivo,name=""):
     bas=step()

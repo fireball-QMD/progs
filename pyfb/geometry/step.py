@@ -4,6 +4,7 @@ import numpy as np
 
 tabla=tabla()
 
+
 class step:
 
   def __init__(self):

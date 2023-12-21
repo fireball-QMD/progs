@@ -28,6 +28,9 @@ def print_help() :
   print (sys.argv[0], '-loadstep <file xyz format> <step> -enlaces -print_enlaces')
   print (sys.argv[0], '-loadstep <file xyz format> <step> -loadstep <file xyz format> <step> -diff_enlaces')
   print (sys.argv[0], '-i <file xyz format> -rescal <float>')
+  print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -merge')
+  print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -distance')
+  print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -join')
 
 if len(sys.argv) == 1 :
   print_help()
@@ -38,6 +41,16 @@ for i in range(1,len(sys.argv)):
 
   if sys.argv[i] == '-ibas' :
     din.loadbas(sys.argv[i+1])
+
+  if sys.argv[i] == '-laststep2xyz' :
+    din.laststep(sys.argv[i+1],False)
+    din.laststep(sys.argv[i+2],False)
+    if sys.argv[i+3] == '-merge' :
+      din.merge(1,2)
+    if sys.argv[i+3] == '-distance' :
+      print(din.distance(1,2))
+    if sys.argv[i+3] == '-join' :
+      din.join(1,2)
 
   if sys.argv[i] == '-loadstep' :
     din.loadstep(sys.argv[i+1],int(sys.argv[i+2]))
