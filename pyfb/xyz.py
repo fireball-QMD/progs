@@ -28,9 +28,13 @@ def print_help() :
   print (sys.argv[0], '-loadstep <file xyz format> <step> -enlaces -print_enlaces')
   print (sys.argv[0], '-loadstep <file xyz format> <step> -loadstep <file xyz format> <step> -diff_enlaces')
   print (sys.argv[0], '-i <file xyz format> -rescal <float>')
+  print (sys.argv[0], '-i <file xyz format> -center <step>')
+  print (sys.argv[0], '-i <file xyz format> -rotX <step> <float>')
+  print (sep[:len(sys.argv[0])], '                     -rotX -rotY'  )
   print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -merge')
   print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -distance')
   print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -join')
+  print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -joinrnd')
 
 if len(sys.argv) == 1 :
   print_help()
@@ -51,6 +55,8 @@ for i in range(1,len(sys.argv)):
       print(din.distance(1,2))
     if sys.argv[i+3] == '-join' :
       din.join(1,2)
+    if sys.argv[i+3] == '-joinrnd' :
+      din.joinrnd(1,2)
 
   if sys.argv[i] == '-loadstep' :
     din.loadstep(sys.argv[i+1],int(sys.argv[i+2]))
@@ -60,6 +66,18 @@ for i in range(1,len(sys.argv)):
 
   if sys.argv[i] == '-laststep_charges' :
     din.laststep(sys.argv[i+1],True)
+
+  if sys.argv[i] == '-center' :
+    din.center(int(sys.argv[i+1]))
+  
+  if sys.argv[i] == '-rotX' :
+    din.rotX(int(sys.argv[i+1]),float(sys.argv[i+2]))
+
+  if sys.argv[i] == '-rotY' :
+    din.rotY(int(sys.argv[i+1]),float(sys.argv[i+2]))
+
+  if sys.argv[i] == '-rotZ' :
+    din.rotZ(int(sys.argv[i+1]),float(sys.argv[i+2]))
 
   if sys.argv[i] == '-print' :
     if len(din.step) == 0:

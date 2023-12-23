@@ -208,7 +208,19 @@ class dinamic:
         bas.append(atom(a,ra))
       i=nmaxlines
       self.append(bas)
- 
+
+  def rotX(self, istep,ang):
+    self.step[istep-1].rotX(ang)
+
+  def rotY(self, istep,ang):
+    self.step[istep-1].rotY(ang)
+
+  def rotZ(self, istep,ang):
+    self.step[istep-1].rotZ(ang)
+    
+  def center(self, istep):
+    self.step[istep-1].center()
+
   def laststep(self,archivo,read_charges):
     natoms = 0
     text = open(archivo).readlines()
@@ -269,25 +281,67 @@ class dinamic:
 
   def join(self,i,j):
     """
-    joine 2 steps of dinamic, -laststep2xyz also join 2 files.xyz
-    take in acount that dmin > radiomin, move randon the j step
+    join 2 steps of dinamic, -laststep2xyz also join 2 files.xyz
+    take in acount that dmin > radiomin, move random the j step
+    and do a random rotate 
     """
     d,radio=self.distance(i,j)
     while d < radio:
-      Ax=0.2*random.uniform(-1, 1)
-      Ay=0.2*random.uniform(-1, 1)
-      Az=0.2*random.uniform(-1, 1)
+      A=0.2*np.array([random.uniform(-1, 1),random.uniform(-1, 1),random.uniform(-1, 1)])
+      self.step[j-1].rotX(np.pi*random.uniform(-1, 1))
+      self.step[j-1].rotY(np.pi*random.uniform(-1, 1))
+      self.step[j-1].rotZ(np.pi*random.uniform(-1, 1))
       for s in range(0,len(self.step[j-1].atom)):
-        self.step[j-1].atom[s].r[0]+=Ax
-        self.step[j-1].atom[s].r[1]+=Ay
-        self.step[j-1].atom[s].r[2]+=Az
+        for k in range(0,3):
+          self.step[j-1].atom[s].r[k]+=A[k]
     
       d,radio=self.distance(i,j)
     self.merge(i,j)
     #d,radio=self.distance(i,j)
     #print(d,radio)
 
+  def joinrnd(self,i,j):
+    """
+    Use de max dimensión of the first step to put random the 2 step
+    """
+    self.step[i-1].setdim()
+    #cambiamos RC dentro de los limites del step i, vaya tela, 
+    #es para que no se nos vaya, ya que no tenemos encuenta lvs
+    Desplaz=np.array([0.0,0.0,0.0])
+    Desplaz=random.uniform(np.array(self.step[i-1].dim[0]),np.array(self.step[i-1].dim[1]))
+    dentro=True
+    self.step[j-1].center()
+    for a in self.step[j-1].atom:
+      a.r=a.r+Desplaz
+    d,radio=self.distance(i,j)
+    #en el caso de que ese muy cerca dejamos que se mueva pero si se sale del dim lo volvemos a meter
+    while d < radio and not dentro:
+      #rotamos de forma aleatoria
+      self.step[j-1].rotX(np.pi*random.uniform(-1, 1))
+      self.step[j-1].rotY(np.pi*random.uniform(-1, 1))
+      self.step[j-1].rotZ(np.pi*random.uniform(-1, 1)) 
+      #desplazamos 
+      A=0.2*np.array([random.uniform(-1, 1),random.uniform(-1, 1),random.uniform(-1, 1)])
+      for a in self.step[j-1].atom:
+        a.r+=A
+      #chequeamos si nos salimos
+      dentro=True
+      for k in range(0,3):
+        if self.step[j-1].RC[k]+A[k] < self.step[i-1].dim[0][k]:
+          dentro=False
+        if self.step[j-1].RC[k]+A[k] > self.step[i-1].dim[1][k]:
+          dentro=False
+ 
+      if dentro: #aceptamos y actulizamos el centro
+        self.step[j-1].center() 
+      else: #media vuelta
+        for a in self.step[j-1].atom:
+          a.r-=A
+      d,radio=self.distance(i,j) #vemos como estamos de cerca de algo
 
+    self.merge(i,j)
+    
+ 
   def loadbas(self,archivo,name=""):
     bas=step()
     text=open(archivo).readlines()
