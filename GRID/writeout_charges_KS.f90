@@ -542,6 +542,14 @@
           end if !end if (iwrtdipole .gt. 0)
 
           if (iwrtcharges .eq. 4) then
+            if ( .not. allocated (Q0_TOT)) allocate (Q0_TOT(natoms))
+            do iatom = 1, natoms
+              Q0_TOT(iatom) = 0
+              in1 = imass(iatom)
+              do issh = 1, nssh(in1)
+                Q0_TOT(iatom) = Q0_TOT(iatom) + Qneutral(issh,in1)
+              end do
+            end do
             call load_partial_charges()
             call write_partial_charges('PCHARGES_OUT')
           end if
