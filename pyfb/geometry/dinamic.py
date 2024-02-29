@@ -19,7 +19,40 @@ class dinamic:
 
   def loadlvs(self,lvsfile):
     self.lvs=np.loadtxt(lvsfile)
+ 
+  def unitlvs(self):
+    self.unitlvs_iatom_max(self,0)
 
+  def unitlvs_iatom_max(self,iatom_max): #solo mapea a partir del iatom_max
+    #ponemos el cero en el punto medio del primer paso
+    rm=np.array([0.00, 0.00, 0.00])
+    for iatom in self.step[0].atom:
+      rm=rm+iatom.r
+    rm=rm/len(self.step[0].atom)
+
+    for istep in self.step:
+      for iatom in istep.atom:
+        if istep.atom.index(iatom) >= iatom_max:
+          d=np.linalg.norm(iatom.r-rm)
+          d_min=d
+          r_min=iatom.r
+          F=4
+          for ia1 in range(-F,F):
+            for ia2 in range(-F,F):
+              for ia3 in range(-F,F):
+                ra=np.array([0.00, 0.00, 0.00])
+                ra[0]=iatom.r[0] + ia1*self.lvs[0][0] + ia2*self.lvs[1][0] + ia3*self.lvs[2][0]
+                ra[1]=iatom.r[1] + ia1*self.lvs[0][1] + ia2*self.lvs[1][1] + ia3*self.lvs[2][1]
+                ra[2]=iatom.r[2] + ia1*self.lvs[0][2] + ia2*self.lvs[1][2] + ia3*self.lvs[2][2]
+                d=np.linalg.norm(ra-rm)
+                if d < d_min:
+                  d_min=d
+                  r_min=ra
+          iatom.r = r_min
+
+    for istep in self.step:
+      istep.print()      
+ 
   def repitelvs(self,a1,a2,a3):
     for istep in self.step:  
       new_atoms=[]    

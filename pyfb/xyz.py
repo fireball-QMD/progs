@@ -36,6 +36,8 @@ def print_help() :
   print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -join')
   print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -joinrnd')
   print (sys.argv[0], '-i <file xyz format> -lvs <file lattice vectors> -R 2 1 1')
+  print (sys.argv[0], '-i <file xyz format> -lvs <file lattice vectors> -unit')
+  print (sys.argv[0], '-i <file xyz format> -lvs <file lattice vectors> -unit_index <iatom_max>')
 
 if len(sys.argv) == 1 :
   print_help()
@@ -160,6 +162,12 @@ for i in range(1,len(sys.argv)):
 
   if sys.argv[i] == '-R' :
     din.repitelvs(int(sys.argv[i+1]),int(sys.argv[i+2]),int(sys.argv[i+3]))
+
+  if sys.argv[i] == '-unit' :
+    din.unitlvs_iatom_max(0)
+
+  if sys.argv[i] == '-unit_index' :
+    din.unitlvs_iatom_max(int(sys.argv[i+1]))
 
 if acumular_salida:
   din.print_out()
