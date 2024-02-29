@@ -9,12 +9,38 @@ import random
 tabla=tabla()
 
 class dinamic:
+  lvs = np.array([[99, 0, 0], [0, 99, 0], [0, 0, 99]])
+
   def __init__(self):
     self.step=[]
     #lee las cargas de cada atomo despues de las posiciones:
     # x y z Qtot qs qp qd .....
     self.out=[]
 
+  def loadlvs(self,lvsfile):
+    self.lvs=np.loadtxt(lvsfile)
+
+  def repitelvs(self,a1,a2,a3):
+    for istep in self.step:  
+      new_atoms=[]    
+      for ia1 in range(a1):
+        for ia2 in range(a2):
+          for ia3 in range(a3):
+            if not (ia1 == ia2 == ia3 == 0) :
+              for iatom in istep.atom:
+                ra=np.array(['0.00', '0.00', '0.00'])
+                ra[0]=iatom.r[0] + ia1*self.lvs[0][0] + ia2*self.lvs[1][0] + ia3*self.lvs[2][0]
+                ra[1]=iatom.r[1] + ia1*self.lvs[0][1] + ia2*self.lvs[1][1] + ia3*self.lvs[2][1]
+                ra[2]=iatom.r[2] + ia1*self.lvs[0][2] + ia2*self.lvs[1][2] + ia3*self.lvs[2][2]                
+                new_atoms.append(atom(iatom.Z,ra))
+                
+      for iatom in new_atoms:
+        istep.append(iatom)
+      
+    for istep in self.step:
+      istep.print()      
+
+ 
   def print_total_steps(self):
     print(len(self.step))
   

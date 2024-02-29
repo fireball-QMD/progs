@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import os
@@ -35,6 +35,7 @@ def print_help() :
   print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -distance')
   print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -join')
   print (sys.argv[0], '-laststep2xyz <file xyz format> <file xyz format> -joinrnd')
+  print (sys.argv[0], '-i <file xyz format> -lvs <file lattice vectors> -R 2 1 1')
 
 if len(sys.argv) == 1 :
   print_help()
@@ -153,6 +154,12 @@ for i in range(1,len(sys.argv)):
     col=[int(sys.argv[i+1]),int(sys.argv[i+2]),int(sys.argv[i+3])]
     din.get(sys.argv[i],col)
     acumular_salida=True
+
+  if sys.argv[i] == '-lvs' :
+    din.loadlvs(sys.argv[i+1])
+
+  if sys.argv[i] == '-R' :
+    din.repitelvs(int(sys.argv[i+1]),int(sys.argv[i+2]),int(sys.argv[i+3]))
 
 if acumular_salida:
   din.print_out()
