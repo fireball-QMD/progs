@@ -5,9 +5,9 @@
 #SERIE-GAMMA : Makefile: METHOD = GAMMA     ; PARALLEL =      (diag. real)
 
 ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
-	F77 = ifort
-	F90 = ifort
-	CC = icc
+	F77 = ifx
+	F90 = ifx
+	CC = icx
 	PATH_MKL = ${MKLROOT}/lib/intel64/
 	PATH_INCL = -I${MKLROOT}/include/
 	PATH_FFTW_LIB = ${MKLROOT}/interfaces/fftw3xf/
