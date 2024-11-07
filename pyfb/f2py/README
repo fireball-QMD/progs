@@ -1,24 +1,11 @@
-cp pyfb/f2py/readparam.f90.backup READFILES/readparam.f90 
-git commit -a -m 'django' 
-git push 
-cp pyfb/f2py/readparam_KS.f90 READFILES/readparam.f90
-make && make libf2py
-
-
 # If you want to do a KS Calculation
-# copi de param for KS:
-cp readparam_KS.f90  ../../../progs/READFILES/readparam.f90
-
 # we need to do that because there are some options must be when the fdata were reading
 # for example idipole=1, iks=1, idogs=imcweda=0
 
-# compile the library libf2py:
-
-cd ../../../progs/
 # Makefile : MACHINE = ILINUX_fast05.static
-# create libf2py.a libpyfb*so
+cp pyfb/f2py/readparam_KS.f90 READFILES/readparam.f90
+make && make libf2py
 
-make libf2py
 # use test with Fdata
 # 1                 idipole_z         ! dipole (two-center)
 # 1                 idipole_y         ! dipole (two-center), Note B
@@ -26,7 +13,6 @@ make libf2py
 # i.e. idipole=1 
 
 ./test2KS.py
-
 
 # test2.py and test.py worked with McWeda,
 # However doesn't works because we changed how the options was readed

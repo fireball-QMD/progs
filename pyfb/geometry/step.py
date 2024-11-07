@@ -40,13 +40,17 @@ class step:
             if((100*self.atom[i].distancia(self.atom[j])) < radio ):
                  self.atom[i].neighbor.append(self.atom[j])
                  self.atom[j].neighbor.append(self.atom[i])
-                 self.enlaces.append(self.atom[i].distancia(self.atom[j]))
+                 aux=[]
+                 aux.append(self.atom[i].Z)
+                 aux.append(i+1)
+                 aux.append(self.atom[j].Z)
+                 aux.append(j+1)
+                 aux.append(self.atom[i].distancia(self.atom[j])) 
+                 self.enlaces.append(aux)
 
   def print_enlaces(self):
-    salida=''
     for i in self.enlaces:
-      salida=salida+' '+str(i)[0:5]
-    print(salida)
+      print(f'{i[0]} ({i[1]}) - {i[2]} ({i[3]}) {i[4]:.2f}')
 
 
   def print_enlaces_atomo(self):

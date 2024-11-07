@@ -60,8 +60,8 @@ PARALLEL =
 # DOUBLE ... double precision
 # LAPACK95 ... lapack_95 
 # GAMMA ... use real artithemtics for gamma k-point calc (large systems)  
-#METHOD = DOUBLE 
-METHOD = GAMMA 
+METHOD = DOUBLE 
+#METHOD = GAMMA 
 #METHOD = SCALAPACK
 # Do you want to do thermodynamic integration (NO,YES)?  If so 
 # you'll need a compatible C compiler.
@@ -475,12 +475,12 @@ all:
 	make fireball.x
 
 libfireball: $(OBJECTS_QMMM)
-	ar rv libfireball.a $(OBJECTS_QMMM)
+	ar rcs libfireball.a $(OBJECTS_QMMM)
 	ranlib libfireball.a
 
 libf2py:
 	make libfireball
-	f2py3 -m libpyfb -c pyfb/f2py/libf2py.f90 --fcompiler='ifort' -I. libfireball.a --link-lapack_opt 
+	FC='ifort -diag-disable=10448' CC=icx f2py -m libpyfb -c pyfb/f2py/libf2py.f90 --backend meson -I$(shell pwd) -L$(shell pwd) -lfireball -L/home/dani/intel/oneapi/mkl/2024.2/interfaces/fftw3xf/ -lfftw3xf_intel.a -L$(MKLROOT)/lib/intel64 -lmkl_rt 
 
 server: $(OBJECTS_SERVER)
 	$(F90)  -o  fireball_server.x $(FFLAGS) $(OBJECTS_SERVER) $(VISFLAGS) $(PARLFLAGS) \
