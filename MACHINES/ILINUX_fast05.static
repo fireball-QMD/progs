@@ -5,8 +5,8 @@
 #SERIE-GAMMA : Makefile: METHOD = GAMMA     ; PARALLEL =      (diag. real)
 
 ifneq (,$(findstring ILINUX_fast05.static, ${MACHINE}))
-	F77 = ifx
-	F90 = ifx
+	F77 = ifort -diag-disable=10448
+	F90 = ifort -diag-disable=10448
 	CC = icx
 	PATH_MKL = ${MKLROOT}/lib/intel64/
 	PATH_INCL = -I${MKLROOT}/include/
