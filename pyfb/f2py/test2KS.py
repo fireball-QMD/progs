@@ -1,9 +1,8 @@
-#!/opt/intel/oneapi/intelpython/python3.7/bin/python3.7
 import sys
 import os
 import tarfile
 from os.path import exists
-sys.path.append(os.environ["FIREBALLHOME"])
+sys.path.append(os.environ["FIREBALLAPP"])
 import libpyfb as fb
 from pyfb.geometry.dinamic import *
 import numpy as np 
@@ -31,9 +30,9 @@ def runFB(pos):
 
 
 #Load Fdata
-fdatalocation="/home/dani/Fdata_HC"
+fdatalocation=os.environ["FIREBALLAPP"]+"/Fdata_HC"
 fb.f2py_initbasics(fdatalocation)
 
 #run Fireball
-runFB(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
-runFB(os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas")
+runFB(os.environ["FIREBALLAPP"]+"/TESTS/relax/input.bas")
+runFB(os.environ["FIREBALLAPP"]+"/TESTS/relax/input.bas")

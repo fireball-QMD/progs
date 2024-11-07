@@ -6,7 +6,7 @@ import tarfile
 import sys
 import os
 from os.path import exists
-sys.path.append(os.environ["FIREBALLHOME"])
+sys.path.append(os.environ["FIREBALLAPP"])
 import libpyfb as fb
 from pyfb.geometry.dinamic import *
 import numpy as np
@@ -21,13 +21,13 @@ calculando=False
 modo_testear=True  #para hacer pruebas cargamos una base pequeña
 modo_testear=False 
 
-fdatalocation="/home/dani/Fdata_HC"
-basfile=os.environ["FIREBALLHOME"]+"/TESTS/relax/input.bas"
+fdatalocation=os.environ["FIREBALLAPP"]+"/Fdata_HC"
+basfile=os.environ["FIREBALLAPP"]+"/TESTS/relax/input.bas"
 
 
 if modo_testear == False:
-  fdatalocation="/home/dani/Fdata_HCNOS"
-  basfile=os.environ["FIREBALLHOME"]+"/pyfb/djangofb/polls/input.bas"
+  fdatalocation=os.environ["FIREBALLAPP"]+"/Fdata_HCNOS"
+  basfile=os.environ["FIREBALLAPP"]+"/pyfb/djangofb/polls/input.bas"
 
 print("Load Fdata ...")
 fb.f2py_initbasics(fdatalocation)
