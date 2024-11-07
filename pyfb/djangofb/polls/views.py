@@ -21,12 +21,12 @@ calculando=False
 modo_testear=True  #para hacer pruebas cargamos una base pequeña
 modo_testear=False 
 
-fdatalocation=os.environ["FIREBALLAPP"]+"/Fdata_HC"
+fdatalocation=os.environ["FIREBALLAPP"]+"/../Fdata_HC"
 basfile=os.environ["FIREBALLAPP"]+"/TESTS/relax/input.bas"
 
 
 if modo_testear == False:
-  fdatalocation=os.environ["FIREBALLAPP"]+"/Fdata_HCNOS"
+  fdatalocation=os.environ["FIREBALLAPP"]+"/../Fdata_HCNOS"
   basfile=os.environ["FIREBALLAPP"]+"/pyfb/djangofb/polls/input.bas"
 
 print("Load Fdata ...")

@@ -30,7 +30,7 @@ def runFB(pos):
 
 
 #Load Fdata
-fdatalocation=os.environ["FIREBALLAPP"]+"/Fdata_HC"
+fdatalocation=os.environ["FIREBALLAPP"]+"/../Fdata_HC"
 fb.f2py_initbasics(fdatalocation)
 
 #run Fireball
