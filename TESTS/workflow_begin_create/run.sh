@@ -42,7 +42,7 @@ rm -fr begin_rcatms/
 cp -r ${BEGINHOME}/begin_rcatms/
 
 #ele='1 5 6 7 8 14 29'
-ele='6'
+ele='14'
 
 #exchange-correlation model
 #LDA = 3   : GGA = 9
