@@ -22,7 +22,11 @@ basis_file=${FIREBALLHOME}/TESTS/workflow_begin_create/basis_configuration
 electronic_configuration=${FIREBALLHOME}/TESTS/workflow_begin_create/electronic_configuration
 
 #preparamos create
-rm create
+if test -f create
+then
+  rm create
+fi
+
 cp -r $CREATEHOME .
 basis_create=create/coutput/basis
 mkdir $basis_create
@@ -38,8 +42,11 @@ if [ ! -d BASE ]; then
 fi
 
 #preparamos begin
-rm -fr begin_rcatms/
-cp -r ${BEGINHOME}/begin_rcatms/
+if test -d begin_rcatms
+then
+  rm -fr begin_rcatms
+fi
+cp -r ${BEGINHOME}/begin_rcatms/ .
 
 #ele='1 5 6 7 8 14 29'
 ele='14'
@@ -92,7 +99,9 @@ cp param/${X[${j}]}_* ${basis_create}/param
 if [ ! -f param/${Z[${j}]}.pp ]; then
     echo "El archivo ${X[${j}]}.pp no existe lo copiamos de $PPFIREBALL"
     pp_path=$PPFIREBALL/${X[${j}]}/${X[${j}]}_00.more/${Z[${j}]}_${X[${j}]}_${label_ex}/${Z[${j}]}
-    cp ${pp_path}.pp ${basis_create}/param
+    cp ${pp_path}.pp ${here}/begin_rcatms
+else
+    cp param/${Z[${j}]}.pp ${here}/begin_rcatms
 fi
 
 
@@ -133,12 +142,14 @@ excited[${j}]=$(head -1 param/${X[j]}_exc)
 if [ ! -f param/${Z[${j}]}++.pp ]; then
     echo "El archivo ${X[${j}]}.pp no existe lo copiamos de $PPFIREBALL"
     pp_path=$PPFIREBALL/${X[${j}]}/${X[${j}]}_00.more/${Z[${j}]}_${X[${j}]}_${label_ex}/${Z[${j}]}
-    if -f ${pp_path}++.pp
+    if test -f ${pp_path}++.pp
     then
-       cp ${pp_path}++.pp ${basis_create}/param
+       cp ${pp_path}++.pp ${here}/begin_rcatms
     else #si no exsite copiamos el 00Z.pp a 00Z++.pp
-       cp ${pp_path}.pp ${basis_create}/param/${Z[${j}]}++.pp
+       cp ${pp_path}.pp ${here}/begin_rcatms/${Z[${j}]}++.pp
     fi
+else
+    cp param/${Z[${j}]}++.pp ${here}/begin_rcatms/
 fi
 
 
@@ -283,6 +294,9 @@ cd $here
  cd begin_rcatms
  for j in $ele 
  do 
+  #Importante nos aseguramos que los *pp son los que hay en param
+  cp ${basis_create}/param/basis/${Z[${j}]}*.pp .
+
   op="-ex $EX -z ${Z[j]} -ele ${X[j]} -mass ${M[j]} "
   if [[ ${Zpp[j]} != FALSE ]]
   then
@@ -380,8 +394,6 @@ cd $here
     op=$op" -ionPP${ionPP[j]} ${dionPP[j]}"
   fi
 
-  #Importante nos aseguramos que los *pp son los que hay en param
-  cp ${basis_create}/param/${Z[${j}]}*.pp .
   echo  ./begin.sh $op  >> ${basedir}/coutput/basis/begin.log
   ./begin.sh $op  > /dev/null
   cp -r cinput/* $basedir/cinput/
@@ -403,6 +415,6 @@ cd $here
 
  cd $here
  
- rm -fr create begin_rcatms 
+# rm -fr create begin_rcatms 
 
 
