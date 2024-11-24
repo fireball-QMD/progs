@@ -1,0 +1,74 @@
+001 H 1.008 mol 0.74 1403 s H.pbe-rrkjus_psl.1.0.0.UPF
+002 He 4.003 fcc 4.5 0.0 s He.pbe-rrkjus_psl.1.0.0.UPF
+003 Li 6.941 bcc 3.491 11.6 sp Li.pbe-mt_fhi.UPF -plot -max 15
+004 Be 9.012 fcc 3.165 118 sp Be.pbe-n-rrkjus_psl.1.0.0.UPF -plot -max 15
+005 B 10.811 fcc 2.869 272 sp B.pbe-n-rrkjus_psl.1.0.0.UPF -plot -max 20
+006 C 12.011 dia 3.567 442 sp C.pbe-n-rrkjus_psl.0.1.UPF -plot -max 20
+007 N 14.007 bcc 2.423 174 sp N.pbe-mt_fhi.UPF -plot -max 20
+008 O 15.999 sc 1.993 188 spd O.pbe-n-rrkjus_psl.1.0.0.UPF  -plot -max 4 
+009 F 18.998 sc 2.143 84 sp F.pbe-n-rrkjus_psl.1.0.0.UPF -plot -max 4
+010 Ne 20.180 fcc 4.5 0.0 sp Ne.pbe-n-kjpaw_spl.1.0.0.UPF -plot -min -0.8 -max 0
+011 Na 22.990 bcc 4.2255 6.8 sp Na.pbe-spn-rrkjus_psl.1.0.0.UPF -plot -min -3.3 -max 2.4
+012 Mg 24.305 fcc 4.525 36 sp Mg.pbe-spn-rrkjus_psl.1.0.0.UPF -plot -min -7.5 -max 5
+013 Al 26.982 fcc 4.05 72 spd Al.pbe-rrkj.UPF -plot -max 5
+014 Si 28.086 dia 5.43 99 spd Si.pbesol-n-rrkjus_psl.0.1.UPF -plot -max 4
+015 P 30.974 bcc 3.061 96.7 spd P.pbe-van_ak.UPF -plot -max 10 
+016 S 32.065 bcc 3.167 84.0 spd S.pbesol-n-kjpaw_psl.0.1.UPF -plot -max 7
+017 Cl 35.453 bcc 3.354 53 spd Cl.pbesol-n-rrkjus_psl.0.1.UPF -plot -min -17 -max 10
+018 Ar 39.948 fcc 4.5 0.0 sp Ar.pbe-n-kjpaw_psl.1.0.0.UPF -plot -min -18 -max 0 
+019 K 39.098 bcc 5.225 3.2 s K.pbe-mt_fhi.UPF -plot -max 1
+020 Ca 40.078 fcc 5.58 15.2 sp Ca.pbe-mt_fhi.UPF -plot -max 1
+021 Sc 44.956 fcc 4.615 51.7 spd Sc.pbe-nsp-van.UPF -plot -min -6 -max 5
+022 Ti 47.867 fcc 4.113 117 spd Ti.pbe-spn-kjpaw_psl.1.0.0.UPF -plot -min -8 -max 5
+023 V 50.942 bcc 3.03 168 spd V.pbe-mt_fhi.UPF -plot -max 2
+024 Cr 51.996 bcc 2.88 190 spd Cr.pbe-mt_fhi.UPF -plot -max 2 
+025 Mn 54.938 fcc 3.507 280 spd Mn.pbe-sp-van.UPF -plot -min -12.5 -max 2.5
+026 Fe 55.845 bcc 2.835 186 spd Fe.pbe-n-rrkjus_psl.1.0.0.UPF -plot -max 2.5
+027 Co 58.933 fcc 3.531 222 spd Co.pbe-spn-rrkjus_psl.1.0.0.UPF -plot -min -13.0 -max 2
+028 Ni 58.693 fcc 3.52 186 spd Ni.pbe-n-rrkjus_psl.0.1.UPF -plot -max 2
+029 Cu 63.546 fcc 3.61 137 spd Cu.pbe-dn-rrkjus_psl.1.0.0.UPF -plot -max 2.5
+030 Zn 65.390 fcc 3.939 70 spd Zn.pbe-van.UPF -plot -max 2.5
+031 Ga 69.723 bcc 3.377 47.6 spd Ga.pbe-dn-rrkjus_psl.0.2.UPF -plot -min -12 -max 5
+032 Ge 72.640 dia 5.658 77.2 spd Ge.pbe-n-rrkjus_psl.1.0.0.UPF -plot -min -12.5 -max 2.5 
+033 As 74.922 bcc 3.368 81 spd As.pbe-dn-kjpaw_psl.1.0.0.UPF -plot -min -18 -max 10
+034 Se 78.960 bcc 3.443 72 spd Se.pbesol-n-rrkjus_psl.0.2.UPF -plot  -max 5
+035 Br 79.904 bcc 3.354 527 spd Br.pbe-n-rrkjus_psl.1.0.0.UPF  -plot  -max 4
+036 Kr 83.800 fcc 4.5 0.0 s Kr.pbe-dn-kjpaw_psl.1.0.0.UPF -plot -min -18 -max 0 
+037 Rb 85.468 bcc 5.585 3.1 sp Rb.pbe-mt_fhi.UPF  -plot -min -2.3 -max 2.0
+038 Sr 87.620 fcc 6.032 11.1 sp Sr.pbe-spn-rrkjus_psl.1.0.0.UPF
+039 Y 88.906 fcc 5.063 39 spd Y.pbe-mt_fhi.UPF -plot -min -5 -max 2
+040 Zr 91.224 fcc 4.528 91 spd Zr.pbe-mt_fhi.UPF -plot -min -6.5 -max 2
+041 Nb 92.906 bcc 3.30 170 spd Nb.pbe-mt_fhi.UPF -plot -max 2.5
+042 Mo 95.940 bcc 3.15 273 spd Mo.pbe-spn-kjpaw_psl.1.0.0.UPF -plot -min -11.0 -max 2.5
+043 Tc 98.0 fcc 3.878 298 spd Tc.pbe-spn-rrkjus_psl.1.0.0.UPF -plot -min -12.0 -max 2.5
+044 Ru 101.070 fcc 3.816 304 spd Ru.pbe-spn-rrkjus_psl.1.0.0.UPF -plot -min -15 -max 2.5 
+045 Rh 102.906 fcc 3.80 270 spd Rh.pbe-rrkjus.UPF -plot -max 2.5 
+046 Pd 106.420 fcc 3.89 181 spd Pd.pbe-rrkjus.UPF -plot -max 2.5
+047 Ag 107.868 fcc 4.08 101 spd Ag.pbesol-dn-rrkjus_psl.0.1.UPF -plot -max 2.5
+048 Cd 112.411 fcc 4.503 154 spd Cd.pbe-n-van.UPF -plot -max 2.5
+049 In 114.818 fcc 4.792 32.9 spd In.pbe-d-mt_fhi.UPF -plot -min -10 -max 3
+050 Sn 118.710 dia 6.663 28.7 spd Sn.pbe-hgh.UPF -plot -min -10 -max 5 
+051 Sb 121.760 fcc 4.788 59 spd Sb.pbe-n-rrkjus_psl.1.0.0.UPF -plot -max 10 
+052 Te 127.600 bcc 3.849 54.1 spd Te.pbe-mt_fhi.UPF  -plot  -max 5
+053 I 126.905 fcc 4.6340 582 spd I.pbe-dn-rrkjus_psl.1.0.0.UPF -plot -min -14 -max 2.5
+054 Xe 131.293 fcc 4.5 0.0 sp Xe.pbe-dn-rrkjus_psl.1.0.0.UPF  -plot -min -20 -max 0
+055 Cs 132.906 bcc 6.045 2.0 sp Cs.pbe-mt_bw.UPF  -plot -min -1.8 -max 0.5
+056 Ba 137.327 bcc 5.02 10.3 sp Ba.pbe-mt_fhi.UPF
+071 Lu 174.967 fcc 4.874 42.9 spd Lu.pbe-spdfn-rrkjus_psl.1.0.0.UPF
+072 Hf 178.490 fcc 4.485 102 spd Hf.pbe-spdfn-kjpaw_psl.1.0.0.UPF -plot -min -8 -max 2.5
+073 Ta 180.948 bcc 3.304 194 spd Ta.pbe-spn-rrkjus_psl.1.0.0.UPF -plot -min -10 -max 2.5
+074 W 183.840 bcc 3.16 309 spd W.pbe-spn-rrkjus_psl.1.0.0.UPF -plot -min -15 -max 2.5
+075 Re 186.207 fcc 3.921 360 spd Re.pbe-spn-rrkjus_psl.1.0.0.UPF -plot -min -15 -max 2.5
+076 Os 190.230 fcc 3.863 390 spd Os.pbe-spn-rrkjus_psl.1.0.0.UPF  -plot -min -15 -max 2.5
+077 Ir 192.217 fcc 3.880 332 spd Ir.pbe-n-rrkjus_psl.1.0.0.UPF  -plot -max 2.5
+078 Pt 195.078 fcc 3.92 278 spd Pt.pbesol-n-kjpaw_psl.0.1.UPF  -plot -max 2.5
+079 Au 196.967 fcc 4.08 173 spd Au.pbesol-dn-rrkjus_psl.0.1.UPF -plot -max 2.5
+080 Hg 200.590 fcc 5.086 6.8 spd Hg.pbe-n-kjpaw_psl.1.0.0.UPF -plot -max 2.5
+081 Tl 204.383 fcc 4.999 26.5 spd Tl.pbe-dn-rrkjus_psl.1.0.0.UPF -plot -min -10 -max 5
+082 Pb 207.200 fcc 4.95 43 spd Pb.pbesol-dn-rrkjus_psl.0.2.2.UPF -plot -min -12.5 -max 10
+083 Bi 208.980 fcc 5.032 50 spd Bi.pbe-mt_fhi.UPF -plot -max 10
+084 Po 209.000 sc 3.34 26 spd Po.pbe-mt_fhi.UPF -plot -max 5
+085 At 210.000 fcc 5.2 382 spd At.pbe-mt_fhi.UPF -plot -min -17 -max 10
+086 Rn 222.000 fcc 4.5 0.0 sp Rn.pbe-dn-rrkjus_psl.1.0.0.UPF -plot -min -25 -max 2
+087 Fr 223.000 fcc 7.7 19 sp
+088 Ra 226.000 bcc 5.2 76 sp

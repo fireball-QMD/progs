@@ -1,0 +1,36 @@
+1                 idensity          ! average density
+1                 imuxc1c           ! one-center integrals
+1                 ikinetic          ! kinetic energy (two-center)
+1                 ioverlap          ! overlap (two-center)
+1                 ina_ontop         ! two-center neutral atom/ontop
+1                 ina_atom          ! two-center neutral atom/atom
+1                 ivnlocal          ! non-local (two-center)
+1                 ixc_ontop         ! two-center xc ontop (vxc)
+1                 ixc_atom          ! two-center xc atom (dvxc)
+1                 ixc_corr          ! two-center xc correction
+1                 idipole_z         ! dipole (two-center)
+1                 idipole_y         ! dipole (two-center), Note B
+1                 idipole_x         ! dipole (two-center), Note B
+1                 icoulomb          ! short range coulomb (two-center)
+1                 ibcna             ! three-center neutral atom
+1                 ibcxc             ! three-center xc
+1                 inuxc1c           ! one-center extended hubbard
+1                 inuxc2c           ! two-center extended hubbard
+0                 isnuxc1c          ! (spin) one-center extended hubbard
+0                 isnuxc2c          ! (spin) two-center extended hubbard
+0                 V_intra_dip       ! Intra-atomic dipolar potential
+!Note A: "1" means ON (This is usually the correct switch), "0" means off.
+!Note B: idipole_x, idipole_y
+!        Worry about following two cases later 
+!        interaction = 9                         ! y-dipole
+!        interaction = 10                        ! x-dipole
+!      - they are needed for IR stuff, so we set them to "0".
+!Note C: ibcna, ibcxc
+!        If you set igauss3C = 1 in itheory.input, there is NO NEED to 
+!        calculate 3C-NA and 3C-XC. So ibcna and ibcxc are IRRELEVANT.
+!Note D: isnuxc1c, isnuxc2c
+!        The spin-polarization option is currently implemented only for 
+!        the LSDA-VWN exchange correlation model.
+!
+!
+!        HAO WANG Sep. 24, 2003, BYU
