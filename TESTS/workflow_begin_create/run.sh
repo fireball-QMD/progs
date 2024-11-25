@@ -35,9 +35,8 @@ then
 fi
 
 cp -r $CREATEHOME .
-basis_create=create/coutput/basis
-mkdir $basis_create
-mkdir ${basis_create}/param
+mkdir ${here}/create/coutput/basis
+mkdir ${here}/create/coutput/basis/param
 if [ ! -e "create/coutput/basis" ]; then
   rm -fr create/cinput/*
 fi
@@ -59,7 +58,8 @@ cp -r ${BEGINHOME}/begin_rcatms/ .
 #LDA = 3   : GGA = 9
 EX=$(head param/EX)
 
-cp param/EX ${basis_create}/param
+cp param/EX ${here}/create/coutput/basis/param
+cp param/ele ${here}/create/coutput/basis/param
 
 if [ "$EX" -eq 3 ]; then
     label_ex="LDA"
@@ -98,7 +98,7 @@ do
 zzz=000$j
 Z[${j}]=${zzz:$((${#zzz}-3))}
 X[${j}]=$(cut -d' ' -f1,2 $basis_file | grep ${zzz:$((${#zzz}-3))} | cut -d' ' -f2) #Na Cl ....
-cp param/${X[${j}]}_* ${basis_create}/param	
+cp param/${X[${j}]}_* ${here}/create/coutput/basis/param	
 
 #Importante, en el caso de que haya un 00Z.pp en param lo copia de param, si no:
 if [ ! -f param/${Z[${j}]}.pp ]; then
@@ -293,7 +293,6 @@ done #atomos
 
 #quitamos los puntos
 create=$(echo $create | sed 's/\.//g')
-basedir=${here}/create
 
 cd $here
  cp ${FIREBALLHOME}/TESTS/workflow_begin_create/switch.input create/
@@ -398,12 +397,12 @@ cd $here
     op=$op" -ionPP${ionPP[j]} ${dionPP[j]}"
   fi
 
-  echo  ./begin.sh $op  >> ${basedir}/coutput/basis/begin.log
+  echo  ./begin.sh $op  >>  ${here}/create/coutput/basis/begin.log
   ./begin.sh $op  > /dev/null
-  cp -r cinput/* $basedir/cinput/
+  cp -r cinput/* ${here}/create/cinput/
  done #en atomos
 
- cd $basedir
+ cd ${here}/create
  cp cinput/*input .
  echo $N > create.input
  for j in $ele
@@ -412,14 +411,14 @@ cd $here
  done
  echo 
  echo start create $create $(date) >> ${outdir}/base.log
- cd $basedir
+ cd ${here}/create
  ./create.com
- echo $create | sed 's/_/\n/g' >  $basedir/cinput/README
- cp -r $basedir/cinput/* ${basedir}/coutput/basis/
+ echo $create | sed 's/_/\n/g' >  ${here}/create/cinput/README
+ cp -r ${here}/create/cinput/* ${here}/create/coutput/basis/
  cd $here
 
- cp -r $basedir/coutput ${outdir}/$create
+ cp -r ${here}/create/coutput ${outdir}/$create
  
-# rm -fr create begin_rcatms 
+rm -fr create begin_rcatms 
 
 
