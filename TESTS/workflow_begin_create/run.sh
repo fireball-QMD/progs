@@ -1,9 +1,9 @@
 #!/bin/bash
+#Daniel G. Trabada GPLv3
 
-### GPLv3 ###
-#autor : Daniel G. Trabada GPLv3
-#
+##################### PATH ############################################
 #El script necesita esas variables:
+
 if [ -z "$FIREBALLHOME" ] || [ -z "$BEGINHOME" ] || [ -z "$CREATEHOME" ]; then
     echo "You should define the following variables in your .bashrc or export them:"
     echo "export FIREBALLHOME=/path/to/fireball"
@@ -12,12 +12,19 @@ if [ -z "$FIREBALLHOME" ] || [ -z "$BEGINHOME" ] || [ -z "$CREATEHOME" ]; then
     exit 1  # Detener el script
 fi
 
-#El caso de que no tengas los ppfiles en el param tendras que tener definido tambien $PPFIREBALL#para ello:
+#El caso de que no tengas los ppfiles en el param tendras que tener definido tambien $PPFIREBALL
+##para ello:
 #git clone git@github.com:fireball-QMD/fireball-qmd.github.io.git
 #export PPFIREBALL=/path/fireball-qmd.github.io/tabla
 
-
 here=$(pwd)
+outdir=${here}/BASE
+
+##################### START ############################################
+
+#Create de fdata for this elements:
+ele=$(head -1 param/ele)
+
 basis_file=${FIREBALLHOME}/TESTS/workflow_begin_create/basis_configuration
 electronic_configuration=${FIREBALLHOME}/TESTS/workflow_begin_create/electronic_configuration
 
@@ -36,9 +43,9 @@ if [ ! -e "create/coutput/basis" ]; then
 fi
 
 # Verificar si el archivo BASE existe
-if [ ! -d BASE ]; then
+if [ ! -d $outdir ]; then
     echo "la carpeta BASE no existe. Creándolo..."
-    mkdir BASE
+    mkdir $outdir
 fi
 
 #preparamos begin
@@ -48,12 +55,10 @@ then
 fi
 cp -r ${BEGINHOME}/begin_rcatms/ .
 
-#ele='1 5 6 7 8 14 29'
-ele='14'
-
 #exchange-correlation model
 #LDA = 3   : GGA = 9
 EX=$(head param/EX)
+
 cp param/EX ${basis_create}/param
 
 if [ "$EX" -eq 3 ]; then
@@ -139,7 +144,9 @@ excited[${j}]=$(head -1 param/${X[j]}_exc)
 
 
 #Importante, en el caso de que haya un 00Z++.pp en param lo copia de param, si no:
-if [ ! -f param/${Z[${j}]}++.pp ]; then
+if [[ ${excited[j]} == Y ]]
+then
+  if [ ! -f param/${Z[${j}]}++.pp ]; then
     echo "El archivo ${X[${j}]}.pp no existe lo copiamos de $PPFIREBALL"
     pp_path=$PPFIREBALL/${X[${j}]}/${X[${j}]}_00.more/${Z[${j}]}_${X[${j}]}_${label_ex}/${Z[${j}]}
     if test -f ${pp_path}++.pp
@@ -148,10 +155,10 @@ if [ ! -f param/${Z[${j}]}++.pp ]; then
     else #si no exsite copiamos el 00Z.pp a 00Z++.pp
        cp ${pp_path}.pp ${here}/begin_rcatms/${Z[${j}]}++.pp
     fi
-else
+  else
     cp param/${Z[${j}]}++.pp ${here}/begin_rcatms/
+  fi
 fi
-
 
 opEx[$j]=$(head -1 param/${X[j]}_opEx)
 mixns[${j}]=$(head -1 param/${X[j]}_mixns); 
@@ -294,9 +301,6 @@ cd $here
  cd begin_rcatms
  for j in $ele 
  do 
-  #Importante nos aseguramos que los *pp son los que hay en param
-  cp ${basis_create}/param/basis/${Z[${j}]}*.pp .
-
   op="-ex $EX -z ${Z[j]} -ele ${X[j]} -mass ${M[j]} "
   if [[ ${Zpp[j]} != FALSE ]]
   then
@@ -407,13 +411,14 @@ cd $here
   echo ${X[j]}.input >> create.input
  done
  echo 
- echo start create $create $(date) >> ${here}/create/base.log
+ echo start create $create $(date) >> ${outdir}/base.log
  cd $basedir
  ./create.com
  echo $create | sed 's/_/\n/g' >  $basedir/cinput/README
  cp -r $basedir/cinput/* ${basedir}/coutput/basis/
-
  cd $here
+
+ cp -r $basedir/coutput ${outdir}/$create
  
 # rm -fr create begin_rcatms 
 
