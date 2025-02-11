@@ -176,7 +176,7 @@
 
         end if
 
-        if (idipole .eq. 1) then
+        if (idipole .eq. 1 .or. iqout .eq. 7) then
 
          if (itheory .eq. 1) then
           interaction = 10
@@ -187,7 +187,6 @@
      &                  ioff2c(interaction), nzx)
 
          end if
-
          if (itheory .eq. 1) then
           interaction = 11
           if (verbosity .ge. 3) write (*,*) '  '

@@ -60,7 +60,7 @@
         use forces
         use interactions
         use neighbor_map
-        use options, only: idipole, itheory_xc, iks
+        use options, only: idipole, itheory_xc, iks, iqout
         implicit none
  
 ! Argument Declaration and Description
@@ -325,7 +325,7 @@
 
 ! JIMM: we read here the Z,Y,X dipole matrix elements and derivatives
 !       for the dipole long-range theory
-          if (idipole .eq. 1) then
+          if (idipole .eq. 1 .or. iqout .eq. 7) then
 
 ! ****************************************************************************
 ! CALL DOSCENTROS AND GET DIP Z
