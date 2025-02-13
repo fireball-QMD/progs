@@ -325,7 +325,6 @@
 
 ! JIMM: we read here the Z,Y,X dipole matrix elements and derivatives
 !       for the dipole long-range theory
-          if (idipole .eq. 1 .or. iqout .eq. 7) then
 
 ! ****************************************************************************
 ! CALL DOSCENTROS AND GET DIP Z
@@ -342,7 +341,8 @@
              dipcm(3,imu,inu) = dipx(imu,inu)
              if (iforce .eq. 1) then 
                 dippcm(:,3,imu,inu) = dippx(:,imu,inu)
-                if (itheory_xc .eq. 4) dipp(:,imu,inu,ineigh,iatom) = dippx(:,imu,inu)
+                !if (itheory_xc .eq. 4) dipp(:,imu,inu,ineigh,iatom) = dippx(:,imu,inu)
+                dipp(:,imu,inu,ineigh,iatom) = dippx(:,imu,inu)
              end if ! end if iforce = 1
             end do
            end do
@@ -351,6 +351,7 @@
 ! ****************************************************************************
 ! CALL DOSCENTROS AND GET DIP Y
 ! ****************************************************************************
+          if (idipole .eq. 1 .or. iqout .eq. 7) then
            isorp = 0
            interaction = 10
            in3 = in2

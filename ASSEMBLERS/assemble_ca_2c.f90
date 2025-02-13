@@ -145,8 +145,8 @@
 ! Initialize interactions to zero.
         vca = 0.0d0
         ewaldsr = 0.0d0
-        dip = 0.0d0
-        dipp = 0.0d0
+        !dip = 0.0d0
+        !dipp = 0.0d0
         if (Kscf .eq. 1 .and. iqout .eq. 6) then
           gvhxc = 0.0d0
         end if ! end if Kscf .eq. 1
@@ -230,18 +230,18 @@
 !
 ! CALL DOSCENTROS AND GET DIP
 ! ****************************************************************************
-          isorp = 0
-          interaction = 9
-          in3 = in2
-          call doscentros (interaction, isorp, iforce, in1, in2, in3, y,     &
-     &                     eps, deps, dipx, dippx)
- 
-          do inu = 1, num_orb(in2)
-           do imu = 1, num_orb(in1)
-            dip(imu,inu,ineigh,iatom) = dipx(imu,inu)
-            if (iforce .eq. 1) dipp(:,imu,inu,ineigh,iatom) = dippx(:,imu,inu)
-           end do
-          end do
+!          isorp = 0
+!          interaction = 9
+!          in3 = in2
+!          call doscentros (interaction, isorp, iforce, in1, in2, in3, y,     &
+!     &                     eps, deps, dipx, dippx)
+! 
+!          do inu = 1, num_orb(in2)
+!           do imu = 1, num_orb(in1)
+!            dip(imu,inu,ineigh,iatom) = dipx(imu,inu)
+!            if (iforce .eq. 1) dipp(:,imu,inu,ineigh,iatom) = dippx(:,imu,inu)
+!           end do
+!          end do
  
 ! ****************************************************************************
 !
