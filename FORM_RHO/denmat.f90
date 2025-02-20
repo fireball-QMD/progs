@@ -751,7 +751,7 @@
         integer imu, inu                                                
         integer in1, in2                                                
         integer issh, jssh
-        integer ineigh , jatom,jneigh                                       
+        integer ineigh , jatom,jneigh,mbeta                                       
         integer noccupy   
         integer mqn                                                     
         real y
@@ -764,8 +764,9 @@
           r1(:) = ratom(:,iatom)
           do ineigh = 1, neighn(iatom)
             jatom = neigh_j(ineigh,iatom)
+            mbeta = neigh_b(ineigh,iatom)
             in2 = imass(jatom)
-            r2(:) = ratom(:,jatom)
+            r2(:) = ratom(:,jatom) + xl(:,mbeta)
             ! Find r21 = vector pointing from r1 to r2, the two ends of the
             ! bondcharge, and the bc distance, y
             r21(:) = r2(:) - r1(:)
